@@ -1,9 +1,11 @@
-package com.xinto.opencord.ui.network.api
+package com.xinto.opencord.network.api
 
+import com.xinto.opencord.network.model.Guild
 import retrofit2.http.GET
 
-class DiscordAPI {
+interface DiscordAPI {
 
-    @GET("")
+    @GET("users/@me/guilds")
+    fun getUserGuilds(): List<Guild>
 
 }
