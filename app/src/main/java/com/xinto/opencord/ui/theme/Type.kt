@@ -16,7 +16,6 @@ private val bold = Font(R.font.inter_bold, FontWeight.Bold)
 
 private val interFontFamily = FontFamily(light, regular, medium, semibold, bold)
 
-// Set of Material typography styles to start with
 val Typography = Typography(
     defaultFontFamily =  interFontFamily,
     h1 = TextStyle(
