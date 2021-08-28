@@ -53,17 +53,19 @@ android {
 }
 
 dependencies {
-    implementation("androidx.activity:activity-compose:1.3.1")
     implementation("androidx.appcompat:appcompat:1.3.1")
     implementation("androidx.core:core-ktx:1.6.0")
 
+    implementation("androidx.activity:activity-compose:1.3.1")
     implementation("androidx.compose.material:material:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
     implementation("androidx.compose.ui:ui:$composeVersion")
 
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
 
-    implementation("com.google.android.material:material:1.4.0")
+    implementation("io.insert-koin:koin-androidx-compose:3.1.2")
+
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
 
     testImplementation("junit:junit:4.13.2")
 
