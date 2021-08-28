@@ -6,9 +6,9 @@ Current discord app sucks as it looks ugly and doesn't support themes. The goal 
 project is to reimagine the Discord experience on mobile devices.
 
 ## Status of OpenCord
-- [] Full (or at least most essential) Discord feature implementation
-- [] Theme support
-- [] Plugin support
+- [ ] Full (or at least most essential) Discord feature implementation
+- [ ] Theme support
+- [ ] Plugin support
 
 ## FAQ
 
