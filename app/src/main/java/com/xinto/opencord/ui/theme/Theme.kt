@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 
 private val DarkColorPalette = darkColors(
     primary = DiscordBlurple,
-    secondary = DiscordGreen,
     surface = DiscordDarkSurface,
     background = DiscordDarkBackground,
     error = DiscordRed
@@ -16,7 +15,6 @@ private val DarkColorPalette = darkColors(
 
 private val LightColorPalette = lightColors(
     primary = DiscordBlurple,
-    secondary = DiscordGreen,
     surface = DiscordLightSurface,
     background = DiscordLightBackground,
     error = DiscordRed
