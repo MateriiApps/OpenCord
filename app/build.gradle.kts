@@ -20,7 +20,7 @@ android {
             useSupportLibrary  = true
         }
 
-        buildConfigField("String", "DISCORD_VERSION_CODE", "88014")
+        buildConfigField("int", "DISCORD_VERSION_CODE", "88014")
     }
 
     buildTypes {
@@ -37,6 +37,8 @@ android {
 
     kotlinOptions {
         jvmTarget = "11"
+        freeCompilerArgs = freeCompilerArgs +
+                "-Xopt-in=kotlin.RequiresOptIn"
     }
 
     buildFeatures {
@@ -64,6 +66,10 @@ dependencies {
     implementation("androidx.compose.ui:ui:$composeVersion")
 
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
+
+    val accompanistVersion = "0.17.0"
+    implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
 
     implementation("com.google.android.material:material:1.4.0")
 

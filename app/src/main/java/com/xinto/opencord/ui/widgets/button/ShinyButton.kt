@@ -1,0 +1,24 @@
+package com.xinto.opencord.ui.widgets.button
+
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import com.xinto.opencord.ui.component.OpenCordButton
+import com.xinto.opencord.ui.theme.DiscordGreen
+
+@Composable
+fun ShinyButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+    content: @Composable RowScope.() -> Unit
+) {
+    OpenCordButton(
+        modifier = modifier,
+        onClick = onClick,
+        content = content,
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = DiscordGreen
+        )
+    )
+}

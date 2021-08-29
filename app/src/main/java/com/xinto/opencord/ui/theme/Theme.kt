@@ -1,6 +1,7 @@
 package com.xinto.opencord.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
@@ -19,6 +20,8 @@ private val LightColorPalette = lightColors(
     background = DiscordLightBackground,
     error = DiscordRed
 )
+
+val Colors.secondaryButtonColor get() = DiscordLightGray
 
 @Composable
 fun OpenCordTheme(
