@@ -1,6 +1,6 @@
 package com.xinto.opencord.network.api
 
-import com.xinto.opencord.network.model.ApiGuild
+import com.xinto.opencord.network.response.ApiGuild
 import retrofit2.http.GET
 
 interface DiscordAPI {

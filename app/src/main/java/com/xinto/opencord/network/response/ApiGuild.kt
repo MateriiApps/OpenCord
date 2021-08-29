@@ -1,4 +1,4 @@
-package com.xinto.opencord.network.model
+package com.xinto.opencord.network.response
 
 import com.google.gson.annotations.SerializedName
 import com.xinto.opencord.domain.model.DomainGuild
