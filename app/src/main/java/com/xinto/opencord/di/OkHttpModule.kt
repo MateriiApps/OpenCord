@@ -7,12 +7,14 @@ import org.koin.dsl.module
 
 val okHttpModule = module {
 
+    val userAgentHeader = "Discord-Android/${BuildConfig.DISCORD_VERSION_CODE}"
+
     fun provideAuthOkHttp() = OkHttpClient.Builder()
         .addInterceptor { chain ->
             val original = chain.request()
 
             val request = original.newBuilder()
-                .addHeader("User-Agent", "Discord-Android/${BuildConfig.DISCORD_VERSION_CODE}")
+                .addHeader("User-Agent", userAgentHeader)
                 .method(original.method(), original.body())
                 .build()
 
@@ -25,7 +27,7 @@ val okHttpModule = module {
             val original = chain.request()
 
             val request = original.newBuilder()
-                .addHeader("User-Agent", "Discord-Android/${BuildConfig.DISCORD_VERSION_CODE}")
+                .addHeader("User-Agent", userAgentHeader)
                 .method(original.method(), original.body())
                 .build()
 
