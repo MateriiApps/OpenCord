@@ -11,7 +11,7 @@ val okHttpModule = module {
             val original = chain.request()
 
             val request = original.newBuilder()
-                .addHeader("User-Agent", "Discord-Android/${BuildConfig.VERSION_CODE}")
+                .addHeader("User-Agent", "Discord-Android/${BuildConfig.DISCORD_VERSION_CODE}")
                 .method(original.method(), original.body())
                 .build()
 

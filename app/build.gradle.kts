@@ -19,6 +19,8 @@ android {
         vectorDrawables {
             useSupportLibrary  = true
         }
+
+        buildConfigField("String", "DISCORD_VERSION_CODE", "88014")
     }
 
     buildTypes {
