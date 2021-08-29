@@ -25,5 +25,9 @@ val Typography = Typography(
     h2 = TextStyle(
         fontSize = 20.sp,
         fontWeight = FontWeight.SemiBold
+    ),
+    button = TextStyle(
+        fontSize = 14.sp,
+        fontWeight = FontWeight.SemiBold,
     )
 )
