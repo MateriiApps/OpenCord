@@ -59,6 +59,7 @@ android {
 dependencies {
     implementation("androidx.appcompat:appcompat:1.3.1")
     implementation("androidx.core:core-ktx:1.6.0")
+    implementation("androidx.preference:preference-ktx:1.1.1")
 
     implementation("androidx.activity:activity-compose:1.3.1")
     implementation("androidx.compose.material:material:$composeVersion")
@@ -73,9 +74,13 @@ dependencies {
 
     implementation("com.google.android.material:material:1.4.0")
 
+    implementation("com.github.hcaptcha:hcaptcha-android-sdk:1.1.0")
+
     val retrofitVersion = "2.9.0"
     implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
+
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.1")
     
     implementation("io.insert-koin:koin-androidx-compose:3.1.2")
 

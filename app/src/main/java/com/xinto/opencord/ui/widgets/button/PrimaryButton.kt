@@ -11,6 +11,7 @@ import com.xinto.opencord.ui.component.button.OpenCordButton
 @Composable
 fun PrimaryButton(
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     onClick: () -> Unit,
     content: @Composable RowScope.() -> Unit
 ) {
@@ -18,6 +19,7 @@ fun PrimaryButton(
         modifier = modifier,
         onClick = onClick,
         content = content,
+        enabled = enabled,
         colors = ButtonDefaults.buttonColors(
             backgroundColor = MaterialTheme.colors.primary,
             contentColor = Color.White

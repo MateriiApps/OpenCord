@@ -6,6 +6,6 @@ import retrofit2.http.GET
 interface DiscordAPI {
 
     @GET("users/@me/guilds")
-    fun getUserGuilds(): List<ApiGuild>
+    suspend fun getUserGuilds(): List<ApiGuild>
 
 }

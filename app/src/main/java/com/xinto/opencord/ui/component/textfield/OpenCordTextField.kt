@@ -17,6 +17,7 @@ fun OpenCordTextField(
     label: String,
     modifier: Modifier = Modifier,
     singleLine: Boolean = false,
+    isError: Boolean = false,
     onValueChange: (value: String) -> Unit,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default
@@ -32,11 +33,12 @@ fun OpenCordTextField(
                 style = MaterialTheme.typography.body1
             )
         },
+        isError = isError,
         colors = TextFieldDefaults.textFieldColors(
             backgroundColor = MaterialTheme.colors.secondaryButtonColor,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
-            focusedLabelColor = MaterialTheme.colors.onSurface.copy(alpha = 0.9f)
+            focusedLabelColor = MaterialTheme.colors.onSurface.copy(alpha = 0.8f),
         ),
         shape = MaterialTheme.shapes.medium,
         visualTransformation = visualTransformation,

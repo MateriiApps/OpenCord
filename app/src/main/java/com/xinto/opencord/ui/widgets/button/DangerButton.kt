@@ -10,6 +10,7 @@ import com.xinto.opencord.ui.component.button.OpenCordButton
 @Composable
 fun DangerButton(
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     onClick: () -> Unit,
     content: @Composable RowScope.() -> Unit
 ) {
@@ -17,6 +18,7 @@ fun DangerButton(
         modifier = modifier,
         onClick = onClick,
         content = content,
+        enabled = enabled,
         colors = ButtonDefaults.buttonColors(
             backgroundColor = MaterialTheme.colors.error
         )
