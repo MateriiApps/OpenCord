@@ -11,20 +11,23 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.xinto.opencord.R
+import com.xinto.opencord.ui.component.text.OpenCordText
 import com.xinto.opencord.ui.widgets.button.PrimaryButton
 import com.xinto.opencord.ui.widgets.button.SecondaryButton
 
 @Composable
-fun LoginLandingScreen() {
+fun LoginLandingScreen(
+    navController: NavHostController
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp),
+            .padding(18.dp),
         verticalArrangement = Arrangement.spacedBy(32.dp)
     ) {
         Column(
@@ -46,24 +49,22 @@ fun LoginLandingScreen() {
             )
         }
         Column(
+            modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text(
+            OpenCordText(
                 modifier = Modifier.fillMaxWidth(),
                 text = "Welcome to OpenCord",
-                //color = MaterialTheme.colors.onBackground,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.h1
             )
             CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                Text(
+                OpenCordText(
                     modifier = Modifier.fillMaxWidth(),
-                    text = "Join over 0 people who use OpenCord as an alternative to the stock Discord app",
-                    //color = MaterialTheme.colors.onBackground,
-                    fontSize = 12.sp,
+                    text = "Join over 0 people who use OpenCord as an alternative to the stock Discord app.",
                     textAlign = TextAlign.Center,
-                    lineHeight = 20.sp
+                    lineHeight = 20.sp,
+                    style = MaterialTheme.typography.body2
                 )
             }
         }
@@ -73,15 +74,15 @@ fun LoginLandingScreen() {
         ) {
            PrimaryButton(
                modifier = Modifier.fillMaxWidth(),
-               onClick = {  }
+               onClick = { navController.navigate("login") }
            ) {
-               Text(text = "Login")
+               OpenCordText(text = "Login")
            }
            SecondaryButton(
                modifier = Modifier.fillMaxWidth(),
                onClick = {  }
            ) {
-               Text(text = "Register")
+               OpenCordText(text = "Register")
            }
         }
     }

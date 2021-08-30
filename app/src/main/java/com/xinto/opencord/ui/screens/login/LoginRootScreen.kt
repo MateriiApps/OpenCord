@@ -1,6 +1,7 @@
 package com.xinto.opencord.ui.screens.login
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import com.google.accompanist.navigation.animation.composable
@@ -11,13 +12,18 @@ import com.xinto.opencord.ui.widgets.navigation.OpenCordNavHost
 @Composable
 fun LoginRootScreen() {
     val navController = rememberAnimatedNavController()
-    Surface {
+    Surface(
+        color = MaterialTheme.colors.background
+    ) {
         OpenCordNavHost(
             navController = navController,
-            startDestination = "loginscreen",
+            startDestination = "landing",
         ) {
-            composable("loginscreen") {
-                LoginLandingScreen()
+            composable("landing") {
+                LoginLandingScreen(navController)
+            }
+            composable("login") {
+                LoginScreen(navController)
             }
         }
     }

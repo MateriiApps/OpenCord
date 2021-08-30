@@ -20,11 +20,19 @@ val Typography = Typography(
     defaultFontFamily =  interFontFamily,
     h1 = TextStyle(
         fontSize = 24.sp,
-        fontWeight = FontWeight.SemiBold
+        fontWeight = FontWeight.Bold
     ),
     h2 = TextStyle(
         fontSize = 20.sp,
         fontWeight = FontWeight.SemiBold
+    ),
+    body1 = TextStyle(
+        fontSize = 13.sp,
+        fontWeight = FontWeight.Normal
+    ),
+    body2 = TextStyle(
+        fontSize = 12.sp,
+        fontWeight = FontWeight.Normal
     ),
     button = TextStyle(
         fontSize = 14.sp,

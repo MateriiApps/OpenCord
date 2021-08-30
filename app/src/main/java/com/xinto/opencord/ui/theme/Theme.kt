@@ -21,7 +21,8 @@ private val LightColorPalette = lightColors(
     error = DiscordRed
 )
 
-val Colors.secondaryButtonColor get() = DiscordLightGray
+val Colors.secondaryButtonColor
+    get() = if (isLight) DiscordLightButtonColor else DiscordDarkButtonColor
 
 @Composable
 fun OpenCordTheme(
