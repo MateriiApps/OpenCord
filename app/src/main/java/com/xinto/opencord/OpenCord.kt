@@ -4,6 +4,7 @@ import android.app.Application
 import com.xinto.opencord.di.okHttpModule
 import com.xinto.opencord.di.repositoryModule
 import com.xinto.opencord.di.retrofitModule
+import com.xinto.opencord.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -18,6 +19,7 @@ class OpenCord : Application() {
                 okHttpModule,
                 repositoryModule,
                 retrofitModule,
+                viewModelModule
             )
         }
     }
