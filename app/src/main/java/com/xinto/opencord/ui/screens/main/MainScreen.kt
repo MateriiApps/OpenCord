@@ -2,7 +2,7 @@ package com.xinto.opencord.ui.screens.main
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.xinto.opencord.ui.component.overlappingpanels.OpenCordOverlappingPanels

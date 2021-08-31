@@ -19,13 +19,13 @@ import androidx.core.content.edit
 import androidx.navigation.NavHostController
 import com.google.gson.GsonBuilder
 import com.hcaptcha.sdk.HCaptcha
-import com.xinto.opencord.ui.MainActivity
 import com.xinto.opencord.domain.model.DomainLoginResult
 import com.xinto.opencord.ext.authPreferences
 import com.xinto.opencord.network.body.LoginBody
 import com.xinto.opencord.network.repository.DiscordAuthAPIRepository
 import com.xinto.opencord.network.response.CaptchaResponse
 import com.xinto.opencord.network.result.DiscordAPIResult
+import com.xinto.opencord.ui.MainActivity
 import com.xinto.opencord.ui.component.text.OpenCordText
 import com.xinto.opencord.ui.component.textfield.OpenCordTextField
 import com.xinto.opencord.ui.widgets.button.PrimaryButton
