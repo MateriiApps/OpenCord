@@ -1,4 +1,4 @@
-package com.xinto.opencord
+package com.xinto.opencord.ui
 
 import android.annotation.SuppressLint
 import android.content.Intent

@@ -1,4 +1,4 @@
-package com.xinto.opencord
+package com.xinto.opencord.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
