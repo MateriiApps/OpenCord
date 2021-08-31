@@ -3,10 +3,7 @@ package com.xinto.opencord.ui.component.overlappingpanels
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FractionalThreshold
 import androidx.compose.material.SwipeableState
@@ -15,10 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import com.xinto.opencord.ext.equalsAny
 import kotlin.math.roundToInt
 
 enum class OverlappingPanelValue {
@@ -45,6 +44,12 @@ class OverlappingPanelState(
 
     val isClosed
         get() = currentValue == OverlappingPanelValue.Closed
+
+    val isRightPanelOpen
+        get() = currentValue == OverlappingPanelValue.OpenRight
+
+    val isLeftPanelOpen
+        get() = currentValue == OverlappingPanelValue.OpenLeft
 
     suspend fun closePanel() {
         swipeableState.animateTo(OverlappingPanelValue.Closed)
@@ -88,42 +93,58 @@ fun OpenCordOverlappingPanels(
     panelMiddle: @Composable BoxScope.() -> Unit,
     panelRight: @Composable BoxScope.() -> Unit,
 ) {
-
-    val middlePanelAlpha by animateFloatAsState(if (panelState.isClosed) 1f else 0.8f)
-
     BoxWithConstraints(
         modifier = modifier
-            .swipeable(
-                panelState.swipeableState,
-                orientation = Orientation.Horizontal,
-                thresholds = { _, _ -> FractionalThreshold(0.5f) },
-                velocityThreshold = 400.dp,
-                anchors = mapOf(
-                    700f to OverlappingPanelValue.OpenLeft,
-                    0f to OverlappingPanelValue.Closed,
-                    -700f to OverlappingPanelValue.OpenRight
-                )
-            )
     ) {
-        Box(
-            modifier = Modifier.alpha(if (panelState.offset.value > 0f) 1f else 0f),
-            content = panelLeft
-        )
-        Box(
-            modifier = Modifier.alpha(if (panelState.offset.value < 0f) 1f else 0f),
-            content = panelRight
-        )
-        Box(
-            modifier = Modifier
-                .alpha(middlePanelAlpha)
-                .offset {
-                    IntOffset(
-                        x = panelState.offset.value.roundToInt(),
-                        y = 0
-                    )
-                },
-            content = panelMiddle
+        val fraction = 0.8f
+        val offsetValue = (constraints.maxWidth * fraction) + 16.dp.value
+
+        val middlePanelAlpha by animateFloatAsState(
+            if (panelState.offset.value.equalsAny(offsetValue, -offsetValue)) 0.8f else 1f
         )
 
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .swipeable(
+                    state = panelState.swipeableState,
+                    orientation = Orientation.Horizontal,
+                    thresholds = { _, _ -> FractionalThreshold(0.5f) },
+                    velocityThreshold = 400.dp,
+                    anchors = mapOf(
+                        offsetValue to OverlappingPanelValue.OpenLeft,
+                        0f to OverlappingPanelValue.Closed,
+                        -offsetValue to OverlappingPanelValue.OpenRight
+                    )
+                )
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .fillMaxWidth(fraction)
+                    .align(Alignment.CenterStart)
+                    .alpha(if (panelState.offset.value > 0f) 1f else 0f),
+                content = panelLeft
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .fillMaxWidth(fraction)
+                    .align(Alignment.CenterEnd)
+                    .alpha(if (panelState.offset.value < 0f) 1f else 0f),
+                content = panelRight
+            )
+            Box(
+                modifier = Modifier
+                    .alpha(middlePanelAlpha)
+                    .offset {
+                        IntOffset(
+                            x = panelState.offset.value.roundToInt(),
+                            y = 0
+                        )
+                    },
+                content = panelMiddle
+            )
+        }
     }
 }

@@ -13,6 +13,7 @@ import com.xinto.opencord.ui.component.overlappingpanels.rememberOverlappingPane
 fun MainScreen() {
     val panelState = rememberOverlappingPanelState(initialValue = OverlappingPanelValue.Closed)
     OpenCordOverlappingPanels(
+        modifier = Modifier.fillMaxSize(),
         panelState = panelState,
         panelLeft = {
             Canvas(
