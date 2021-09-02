@@ -4,10 +4,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.FractionalThreshold
-import androidx.compose.material.SwipeableState
-import androidx.compose.material.swipeable
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.Saver
@@ -17,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import com.xinto.opencord.ext.equalsAny
 import kotlin.math.roundToInt
 
 enum class OverlappingPanelValue {
@@ -100,7 +96,16 @@ fun OpenCordOverlappingPanels(
         val offsetValue = (constraints.maxWidth * fraction) + 16.dp.value
 
         val middlePanelAlpha by animateFloatAsState(
-            if (panelState.offset.value.equalsAny(offsetValue, -offsetValue)) 0.8f else 1f
+            if (
+                panelState.offset.value >= offsetValue ||
+                panelState.offset.value <= -offsetValue
+            ) 0.8f else 1f
+        )
+
+        val anchors = mapOf(
+            offsetValue to OverlappingPanelValue.OpenLeft,
+            0f to OverlappingPanelValue.Closed,
+            -offsetValue to OverlappingPanelValue.OpenRight
         )
 
         Box(
@@ -111,10 +116,11 @@ fun OpenCordOverlappingPanels(
                     orientation = Orientation.Horizontal,
                     thresholds = { _, _ -> FractionalThreshold(0.5f) },
                     velocityThreshold = 400.dp,
-                    anchors = mapOf(
-                        offsetValue to OverlappingPanelValue.OpenLeft,
-                        0f to OverlappingPanelValue.Closed,
-                        -offsetValue to OverlappingPanelValue.OpenRight
+                    anchors = anchors,
+                    resistance = SwipeableDefaults.resistanceConfig(
+                        anchors = anchors.keys,
+                        factorAtMin = 50f,
+                        factorAtMax = 50f,
                     )
                 )
         ) {
