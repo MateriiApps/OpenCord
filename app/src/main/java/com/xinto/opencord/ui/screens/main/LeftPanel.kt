@@ -20,7 +20,7 @@ import com.xinto.opencord.network.result.DiscordAPIResult
 import com.xinto.opencord.ui.component.layout.OpenCordBackground
 import com.xinto.opencord.ui.component.list.OpenCordChannelListItem
 import com.xinto.opencord.ui.component.text.OpenCordListCategory
-import com.xinto.opencord.ui.viewmodel.LeftPanelViewModel
+import com.xinto.opencord.ui.viewmodel.MainViewModel
 import com.xinto.opencord.ui.widgets.guild.ClickableGuildIcon
 import com.xinto.opencord.util.getSortedChannels
 import kotlinx.coroutines.launch
@@ -29,7 +29,7 @@ import org.koin.androidx.compose.getViewModel
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LeftPanel() {
-    val viewModel: LeftPanelViewModel = getViewModel()
+    val viewModel: MainViewModel = getViewModel()
     val coroutineScope = rememberCoroutineScope()
 
     val guilds by viewModel.guilds.collectAsState()

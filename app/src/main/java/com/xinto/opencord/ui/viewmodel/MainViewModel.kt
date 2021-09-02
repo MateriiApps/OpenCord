@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import retrofit2.HttpException
 
-class LeftPanelViewModel(
+class MainViewModel(
     private val repository: DiscordAPIRepository
 ) : ViewModel() {
 
