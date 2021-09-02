@@ -1,9 +1,8 @@
 package com.xinto.opencord.di
 
-import android.util.Log
 import com.xinto.opencord.BuildConfig
+import com.xinto.opencord.util.currentAccountToken
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
@@ -23,11 +22,6 @@ val okHttpModule = module {
 
             chain.proceed(request)
         }
-        .addInterceptor(HttpLoggingInterceptor{
-            Log.d("okhttp", it)
-        }.apply {
-            level = HttpLoggingInterceptor.Level.BODY
-        })
         .build()
 
     fun provideOkHttp() = OkHttpClient.Builder()
@@ -36,6 +30,8 @@ val okHttpModule = module {
 
             val request = original.newBuilder()
                 .addHeader("User-Agent", userAgentHeader)
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Authorization", currentAccountToken)
                 .method(original.method, original.body)
                 .build()
 

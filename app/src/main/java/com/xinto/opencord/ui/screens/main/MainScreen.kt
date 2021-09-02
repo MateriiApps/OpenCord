@@ -8,22 +8,20 @@ import androidx.compose.ui.graphics.Color
 import com.xinto.opencord.ui.component.overlappingpanels.OpenCordOverlappingPanels
 import com.xinto.opencord.ui.component.overlappingpanels.OverlappingPanelValue
 import com.xinto.opencord.ui.component.overlappingpanels.rememberOverlappingPanelState
+import com.xinto.opencord.ui.viewmodel.LeftPanelViewModel
+import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun MainScreen() {
     val panelState = rememberOverlappingPanelState(initialValue = OverlappingPanelValue.Closed)
+
+    val viewModel: LeftPanelViewModel = getViewModel()
+
     OpenCordOverlappingPanels(
         modifier = Modifier.fillMaxSize(),
         panelState = panelState,
         panelLeft = {
-            Canvas(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                drawRect(
-                    color = Color.Red,
-                    size = size
-                )
-            }
+            LeftPanel()
         },
         panelMiddle = {
             Canvas(modifier = Modifier.fillMaxSize()) {

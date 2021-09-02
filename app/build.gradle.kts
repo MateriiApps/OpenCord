@@ -62,11 +62,15 @@ dependencies {
     implementation("androidx.preference:preference-ktx:1.1.1")
 
     implementation("androidx.activity:activity-compose:1.3.1")
+    implementation("androidx.compose.material:material-icons-core:$composeVersion")
+    implementation("androidx.compose.material:material-icons-extended:$composeVersion")
     implementation("androidx.compose.material:material:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
     implementation("androidx.compose.ui:ui:$composeVersion")
 
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
+
+    implementation("io.coil-kt:coil-compose:1.3.2")
 
     val accompanistVersion = "0.17.0"
     implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")

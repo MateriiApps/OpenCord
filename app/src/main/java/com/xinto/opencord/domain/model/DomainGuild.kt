@@ -1,7 +1,8 @@
 package com.xinto.opencord.domain.model
 
 data class DomainGuild(
-    val id: String,
+    val id: Long,
     val name: String,
-    val iconName: String
+    val iconUrl: String,
+    val channels: List<DomainChannel>
 )
