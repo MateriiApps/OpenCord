@@ -5,6 +5,7 @@ import com.xinto.opencord.util.currentAccountToken
 import okhttp3.OkHttpClient
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import java.util.concurrent.TimeUnit
 
 val okHttpModule = module {
 
@@ -39,7 +40,13 @@ val okHttpModule = module {
         }
         .build()
 
+    fun provideGatewayOkHttp() = OkHttpClient.Builder()
+        .readTimeout(30, TimeUnit.SECONDS)
+        .connectTimeout(30, TimeUnit.SECONDS)
+        .build()
+
     single(named("auth")) { provideAuthOkHttp() }
     single(named("normal")) { provideOkHttp() }
+    single(named("gateway")) { provideGatewayOkHttp() }
 
 }

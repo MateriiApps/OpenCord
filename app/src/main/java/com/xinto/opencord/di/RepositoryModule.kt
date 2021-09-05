@@ -1,7 +1,7 @@
 package com.xinto.opencord.di
 
-import com.xinto.opencord.network.api.DiscordAPI
-import com.xinto.opencord.network.api.DiscordAuthAPI
+import com.xinto.opencord.network.restapi.DiscordAPI
+import com.xinto.opencord.network.restapi.DiscordAuthAPI
 import com.xinto.opencord.network.repository.DiscordAPIRepository
 import com.xinto.opencord.network.repository.DiscordAuthAPIRepository
 import org.koin.dsl.module

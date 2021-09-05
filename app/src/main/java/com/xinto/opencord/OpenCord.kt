@@ -1,10 +1,7 @@
 package com.xinto.opencord
 
 import android.app.Application
-import com.xinto.opencord.di.okHttpModule
-import com.xinto.opencord.di.repositoryModule
-import com.xinto.opencord.di.retrofitModule
-import com.xinto.opencord.di.viewModelModule
+import com.xinto.opencord.di.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -16,6 +13,8 @@ class OpenCord : Application() {
         startKoin {
             androidContext(this@OpenCord)
             modules(
+                gatewayModule,
+                gsonModule,
                 okHttpModule,
                 repositoryModule,
                 retrofitModule,

@@ -2,10 +2,8 @@ package com.xinto.opencord.network.repository
 
 import com.xinto.opencord.domain.model.DomainLoginResult
 import com.xinto.opencord.domain.model.DomainLoginUserSettingsResult
-import com.xinto.opencord.network.api.DiscordAuthAPI
+import com.xinto.opencord.network.restapi.DiscordAuthAPI
 import com.xinto.opencord.network.body.LoginBody
-import com.xinto.opencord.network.response.ApiLoginResult
-import com.xinto.opencord.network.response.ApiLoginUserSettingsResult
 import com.xinto.opencord.network.util.getResultOrError
 
 class DiscordAuthAPIRepository(

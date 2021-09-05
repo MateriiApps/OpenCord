@@ -1,7 +1,7 @@
 package com.xinto.opencord.di
 
-import com.xinto.opencord.network.api.DiscordAPI
-import com.xinto.opencord.network.api.DiscordAuthAPI
+import com.xinto.opencord.network.restapi.DiscordAPI
+import com.xinto.opencord.network.restapi.DiscordAuthAPI
 import com.xinto.opencord.network.util.discordApiUrl
 import okhttp3.OkHttpClient
 import org.koin.core.qualifier.named

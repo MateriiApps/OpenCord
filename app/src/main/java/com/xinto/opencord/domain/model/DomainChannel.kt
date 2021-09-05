@@ -1,8 +1,9 @@
 package com.xinto.opencord.domain.model
 
+import com.xinto.opencord.domain.model.base.DomainResponse
 import com.xinto.opencord.network.response.ApiChannel
 
-sealed class DomainChannel {
+sealed class DomainChannel : DomainResponse {
 
     data class TextChannel(
         val id: Long,

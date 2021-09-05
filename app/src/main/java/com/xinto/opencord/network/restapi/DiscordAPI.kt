@@ -1,4 +1,4 @@
-package com.xinto.opencord.network.api
+package com.xinto.opencord.network.restapi
 
 import com.xinto.opencord.network.response.ApiChannel
 import com.xinto.opencord.network.response.ApiGuild

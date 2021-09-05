@@ -1,4 +1,4 @@
-package com.xinto.opencord.network.api
+package com.xinto.opencord.network.restapi
 
 import com.xinto.opencord.network.body.LoginBody
 import com.xinto.opencord.network.response.ApiLoginResult

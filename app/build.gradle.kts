@@ -20,7 +20,7 @@ android {
             useSupportLibrary  = true
         }
 
-        buildConfigField("int", "DISCORD_VERSION_CODE", "88014")
+        buildConfigField("int", "DISCORD_VERSION_CODE", "89108")
     }
 
     buildTypes {
@@ -78,13 +78,17 @@ dependencies {
 
     implementation("com.google.android.material:material:1.4.0")
 
+    implementation("com.google.code.gson:gson:2.8.8")
+
     implementation("com.github.hcaptcha:hcaptcha-android-sdk:1.1.0")
 
     val retrofitVersion = "2.9.0"
     implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
 
-    implementation("com.squareup.okhttp3:logging-interceptor:4.9.1")
+    val okHttpVersion = "4.9.1"
+    implementation("com.squareup.okhttp3:okhttp:$okHttpVersion")
+    implementation("com.squareup.okhttp3:logging-interceptor:$okHttpVersion")
     
     implementation("io.insert-koin:koin-androidx-compose:3.1.2")
 
