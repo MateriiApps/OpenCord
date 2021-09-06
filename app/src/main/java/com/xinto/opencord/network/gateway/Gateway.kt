@@ -9,9 +9,12 @@ import com.xinto.opencord.network.gateway.data.incoming.Heartbeat
 import com.xinto.opencord.network.gateway.data.outgoing.Identification
 import com.xinto.opencord.network.gateway.data.outgoing.IdentificationClientState
 import com.xinto.opencord.network.gateway.data.outgoing.IdentificationProperties
+import com.xinto.opencord.network.gateway.event.Event
+import com.xinto.opencord.network.gateway.event.dummy.DummyEvent
+import com.xinto.opencord.network.gateway.event.message.MessageCreateEvent
 import com.xinto.opencord.network.gateway.io.IncomingPayload
 import com.xinto.opencord.network.gateway.io.OutgoingPayload
-import com.xinto.opencord.network.response.base.ApiResponse
+import com.xinto.opencord.network.response.ApiMessage
 import com.xinto.opencord.util.currentAccountToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +26,7 @@ import okhttp3.WebSocketListener
 import java.util.*
 import kotlin.coroutines.CoroutineContext
 
-typealias EventAction = (response: ApiResponse) -> Unit
+typealias EventAction = (response: Event) -> Unit
 
 class Gateway(
     private val gson: Gson,
@@ -146,11 +149,12 @@ class Gateway(
         data: JsonElement?
     ) {
         notifyListeners(
-            gson.fromJson(data,
-                when (event) {
-                    else -> Nothing::class.java
-                }
-            )
+            when (event) {
+                "MESSAGE_CREATE" -> MessageCreateEvent(
+                    message = gson.fromJson(data, ApiMessage::class.java)
+                )
+                else -> DummyEvent()
+            }
         )
     }
 
@@ -161,7 +165,7 @@ class Gateway(
     }
 
     private fun notifyListeners(
-        response: ApiResponse
+        response: Event
     ) {
         listeners.forEach {
             it.invoke(response)

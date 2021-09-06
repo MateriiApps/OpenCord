@@ -24,26 +24,20 @@ import com.xinto.opencord.ui.viewmodel.MainViewModel
 import com.xinto.opencord.ui.widgets.guild.ClickableGuildIcon
 import com.xinto.opencord.util.getSortedChannels
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.getViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun LeftPanel() {
-    val viewModel: MainViewModel = getViewModel()
-    val coroutineScope = rememberCoroutineScope()
-
+fun LeftPanel(
+    viewModel: MainViewModel
+) {
     val guilds by viewModel.guilds.collectAsState()
     val currentGuild by viewModel.currentGuild.collectAsState()
 
     val channels = getSortedChannels(currentGuild?.channels ?: emptyList())
 
-    LaunchedEffect(key1 = viewModel) {
-        coroutineScope.launch {
-            viewModel.fetchGuilds()
-        }
-    }
-
-    OpenCordBackground {
+    OpenCordBackground(
+        modifier = Modifier.fillMaxSize()
+    ) {
         when (val guildsResult: DiscordAPIResult<List<DomainGuild>> = guilds) {
             is DiscordAPIResult.Loading -> {
                 CircularProgressIndicator()
@@ -56,7 +50,7 @@ fun LeftPanel() {
                         modifier = Modifier.fillMaxHeight(),
                         verticalArrangement = Arrangement.spacedBy(4.dp),
                     ) {
-                        items(guildsResult.result) { guild ->
+                        items(guildsResult.data) { guild ->
                             ClickableGuildIcon(
                                 iconUrl = guild.iconUrl,
                                 selected = currentGuild == guild,
@@ -88,16 +82,16 @@ fun LeftPanel() {
                                     when (channel) {
                                         is DomainChannel.TextChannel -> {
                                             OpenCordChannelListItem(
-                                                title = channel.name,
+                                                title = channel.channelName,
                                                 icon = Icons.Rounded.Tag,
                                                 onClick = {
-
+                                                    viewModel.setCurrentChannel(channel)
                                                 }
                                             )
                                         }
                                         is DomainChannel.VoiceChannel -> {
                                             OpenCordChannelListItem(
-                                                title = channel.name,
+                                                title = channel.channelName,
                                                 icon = Icons.Rounded.VolumeUp,
                                                 onClick = {
 

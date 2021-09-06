@@ -3,7 +3,11 @@ package com.xinto.opencord.domain.model
 import com.xinto.opencord.domain.model.base.DomainResponse
 import com.xinto.opencord.network.response.ApiChannel
 
-sealed class DomainChannel : DomainResponse {
+sealed class DomainChannel(
+    val channelId: Long,
+    val channelName: String,
+    val channelPosition: Int,
+) : DomainResponse {
 
     data class TextChannel(
         val id: Long,
@@ -11,14 +15,14 @@ sealed class DomainChannel : DomainResponse {
         val position: Int,
         val parentId: Long?,
         val nsfw: Boolean,
-    ) : DomainChannel()
+    ) : DomainChannel(id, name, position)
 
     data class VoiceChannel(
         val id: Long,
         val name: String,
         val position: Int,
         val parentId: Long?,
-    ) : DomainChannel()
+    ) : DomainChannel(id, name, position)
 
     data class AnnouncementChannel(
         val id: Long,
@@ -26,17 +30,17 @@ sealed class DomainChannel : DomainResponse {
         val position: Int,
         val parentId: Long?,
         val nsfw: Boolean,
-    ) : DomainChannel()
+    ) : DomainChannel(id, name, position)
 
     data class Category(
         val id: Long,
         val name: String,
         val position: Int,
-    ) : DomainChannel()
+    ) : DomainChannel(id, name, position)
 
     companion object {
 
-        fun toDomainChannel(
+        fun fromApi(
             apiChannel: ApiChannel
         ) = with(apiChannel) {
             when (type) {

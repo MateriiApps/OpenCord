@@ -162,7 +162,7 @@ fun LoginScreen(
                         showLoadingBar = true
                         when (val response = repository.login(LoginBody(login, password, captchaKey = captchaToken))) {
                             is DiscordAPIResult.Success<DomainLoginResult> -> {
-                                val token = response.result.token
+                                val token = response.data.token
 
                                 currentAccountToken = token
                                 context.authPreferences.edit {

@@ -3,6 +3,7 @@ package com.xinto.opencord.network.repository
 import com.xinto.opencord.domain.model.DomainChannel
 import com.xinto.opencord.domain.model.DomainGuild
 import com.xinto.opencord.domain.model.DomainMeGuild
+import com.xinto.opencord.domain.model.DomainMessage
 import com.xinto.opencord.network.restapi.DiscordAPI
 
 class DiscordAPIRepository(
@@ -47,7 +48,13 @@ class DiscordAPIRepository(
     suspend fun getGuildChannels(
         guildId: Long
     ) = discordApi.getGuildChannels(guildId).map { apiChannel ->
-        DomainChannel.toDomainChannel(apiChannel)
+        DomainChannel.fromApi(apiChannel)
+    }
+
+    suspend fun getChannelMessages(
+        channelId: Long
+    ) = discordApi.getChannelMessages(channelId).map { apiMessage ->
+        DomainMessage.fromApi(apiMessage)
     }
 
 }

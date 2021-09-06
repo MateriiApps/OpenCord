@@ -3,12 +3,15 @@ package com.xinto.opencord.ui.screens.main
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.xinto.opencord.ui.component.overlappingpanels.OpenCordOverlappingPanels
 import com.xinto.opencord.ui.component.overlappingpanels.OverlappingPanelValue
 import com.xinto.opencord.ui.component.overlappingpanels.rememberOverlappingPanelState
 import com.xinto.opencord.ui.viewmodel.MainViewModel
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -21,15 +24,10 @@ fun MainScreen() {
         modifier = Modifier.fillMaxSize(),
         panelState = panelState,
         panelLeft = {
-            LeftPanel()
+            LeftPanel(viewModel)
         },
         panelMiddle = {
-            Canvas(modifier = Modifier.fillMaxSize()) {
-                drawRect(
-                    color = Color.Cyan,
-                    size = size
-                )
-            }
+            CenterPanel(viewModel)
         },
         panelRight = {
             Canvas(
