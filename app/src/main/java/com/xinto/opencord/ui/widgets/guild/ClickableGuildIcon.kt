@@ -28,7 +28,6 @@ fun ClickableGuildIcon(
     val onBackground = MaterialTheme.colors.onBackground
     val imagePainter = rememberImagePainter(iconUrl)
 
-
     val indicatorFraction by animateFloatAsState(if (selected) 0.7f else 0.15f)
 
     val imageCornerRadius by animateIntAsState(

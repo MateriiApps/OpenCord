@@ -1,6 +1,5 @@
 package com.xinto.opencord.ui.screens.main
 
-import android.util.Log
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
@@ -11,7 +10,10 @@ import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Tag
 import androidx.compose.material.icons.rounded.VolumeUp
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.domain.model.DomainChannel
@@ -20,37 +22,37 @@ import com.xinto.opencord.network.result.DiscordAPIResult
 import com.xinto.opencord.ui.component.layout.OpenCordBackground
 import com.xinto.opencord.ui.component.list.OpenCordChannelListItem
 import com.xinto.opencord.ui.component.text.OpenCordListCategory
+import com.xinto.opencord.ui.component.text.OpenCordText
 import com.xinto.opencord.ui.viewmodel.MainViewModel
 import com.xinto.opencord.ui.widgets.guild.ClickableGuildIcon
 import com.xinto.opencord.util.getSortedChannels
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LeftPanel(
     viewModel: MainViewModel
 ) {
-    val guilds by viewModel.guilds.collectAsState()
+    val guildsResult by viewModel.guilds.collectAsState()
     val currentGuild by viewModel.currentGuild.collectAsState()
 
-    val channels = getSortedChannels(currentGuild?.channels ?: emptyList())
+    val channelsResult by viewModel.currentGuildChannels.collectAsState()
 
     OpenCordBackground(
         modifier = Modifier.fillMaxSize()
     ) {
-        when (val guildsResult: DiscordAPIResult<List<DomainGuild>> = guilds) {
-            is DiscordAPIResult.Loading -> {
-                CircularProgressIndicator()
-            }
-            is DiscordAPIResult.Success -> {
-                Row(
-                    modifier = Modifier.fillMaxSize(),
-                ) {
+        Row(
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            when (val result: DiscordAPIResult<List<DomainGuild>> = guildsResult) {
+                is DiscordAPIResult.Loading -> {
+                    CircularProgressIndicator()
+                }
+                is DiscordAPIResult.Success -> {
                     LazyColumn(
                         modifier = Modifier.fillMaxHeight(),
                         verticalArrangement = Arrangement.spacedBy(4.dp),
                     ) {
-                        items(guildsResult.data) { guild ->
+                        items(result.data) { guild ->
                             ClickableGuildIcon(
                                 iconUrl = guild.iconUrl,
                                 selected = currentGuild == guild,
@@ -60,13 +62,24 @@ fun LeftPanel(
                             )
                         }
                     }
-                    Divider(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .padding(horizontal = 8.dp)
-                            .width(2.dp)
-                    )
-                    Crossfade(targetState = channels) { channels ->
+                }
+                is DiscordAPIResult.Error -> {
+                    OpenCordText(text = "Failed to load guilds")
+                }
+            }
+            Divider(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(horizontal = 8.dp)
+                    .width(2.dp)
+            )
+            when (val result: DiscordAPIResult<SnapshotStateList<DomainChannel>> = channelsResult) {
+                is DiscordAPIResult.Loading -> {
+                    CircularProgressIndicator()
+                }
+                is DiscordAPIResult.Success -> {
+                    val sortedChannels = getSortedChannels(result.data)
+                    Crossfade(targetState = sortedChannels) { channels ->
                         LazyColumn(
                             modifier = Modifier
                                 .fillMaxHeight()
@@ -105,11 +118,11 @@ fun LeftPanel(
                         }
                     }
                 }
-            }
-            is DiscordAPIResult.Error -> {
-                Log.e("guilds", guildsResult.e.stackTraceToString())
-            }
-        }
+                is DiscordAPIResult.Error -> {
 
+                }
+            }
+
+        }
     }
 }

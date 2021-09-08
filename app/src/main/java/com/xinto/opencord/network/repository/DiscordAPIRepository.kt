@@ -28,7 +28,6 @@ class DiscordAPIRepository(
                     id = id,
                     name = name,
                     iconUrl = iconUrl,
-                    channels = channels
                 )
             }
         }
@@ -40,7 +39,6 @@ class DiscordAPIRepository(
             id = id.toLong(),
             name = name,
             iconUrl = "https://cdn.discordapp.com/icons/$id/$icon",
-            channels = getGuildChannels(guildId)
         )
     }
 

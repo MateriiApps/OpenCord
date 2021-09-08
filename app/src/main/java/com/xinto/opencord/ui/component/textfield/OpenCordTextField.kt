@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.VisualTransformation
 import com.xinto.opencord.ui.component.text.OpenCordText
-import com.xinto.opencord.ui.theme.secondaryButtonColor
+import com.xinto.opencord.ui.theme.secondaryButton
 
 @Composable
 fun OpenCordTextField(
@@ -35,7 +35,7 @@ fun OpenCordTextField(
         },
         isError = isError,
         colors = TextFieldDefaults.textFieldColors(
-            backgroundColor = MaterialTheme.colors.secondaryButtonColor,
+            backgroundColor = MaterialTheme.colors.secondaryButton,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             focusedLabelColor = MaterialTheme.colors.onSurface.copy(alpha = 0.8f),

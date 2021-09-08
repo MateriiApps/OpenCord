@@ -16,8 +16,8 @@ private val bold = Font(R.font.inter_bold, FontWeight.Bold)
 
 private val interFontFamily = FontFamily(light, regular, medium, semibold, bold)
 
-val Typography = Typography(
-    defaultFontFamily =  interFontFamily,
+val typography = Typography(
+    defaultFontFamily = interFontFamily,
     h1 = TextStyle(
         fontSize = 24.sp,
         fontWeight = FontWeight.Bold

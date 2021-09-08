@@ -3,9 +3,13 @@ package com.xinto.opencord.ui.theme
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Typography
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 
 private val DarkColorPalette = darkColors(
     primary = DiscordBlurple,
@@ -21,8 +25,14 @@ private val LightColorPalette = lightColors(
     error = DiscordRed
 )
 
-val Colors.secondaryButtonColor
+val Colors.secondaryButton
     get() = if (isLight) DiscordLightButtonColor else DiscordDarkButtonColor
+
+val Typography.toolbar
+    get() = TextStyle(
+        fontSize = 24.sp,
+        fontWeight = FontWeight.Bold
+    )
 
 @Composable
 fun OpenCordTheme(
@@ -36,7 +46,7 @@ fun OpenCordTheme(
 
     MaterialTheme(
         colors = colors,
-        typography = Typography,
+        typography = typography,
         shapes = Shapes,
         content = content
     )

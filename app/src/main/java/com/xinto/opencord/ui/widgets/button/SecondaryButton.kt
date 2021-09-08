@@ -6,7 +6,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.xinto.opencord.ui.component.button.OpenCordButton
-import com.xinto.opencord.ui.theme.secondaryButtonColor
+import com.xinto.opencord.ui.theme.secondaryButton
 
 @Composable
 fun SecondaryButton(
@@ -21,7 +21,7 @@ fun SecondaryButton(
         content = content,
         enabled = enabled,
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = MaterialTheme.colors.secondaryButtonColor
+            backgroundColor = MaterialTheme.colors.secondaryButton
         )
     )
 }

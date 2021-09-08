@@ -6,5 +6,4 @@ data class DomainGuild(
     val id: Long,
     val name: String,
     val iconUrl: String,
-    val channels: List<DomainChannel>
 ) : DomainResponse
