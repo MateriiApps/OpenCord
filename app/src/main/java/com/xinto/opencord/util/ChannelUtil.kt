@@ -10,22 +10,17 @@ fun getSortedChannels(
     channels: List<DomainChannel>
 ): Map<DomainChannel.Category?, List<DomainChannel>> {
     val categories = channels.filterIsInstance<DomainChannel.Category>().sortedBy { it.position }
-    val textChannels = channels.filterIsInstance<DomainChannel.TextChannel>().sortedBy { it.position }
-    val voiceChannels = channels.filterIsInstance<DomainChannel.VoiceChannel>().sortedBy { it.position }
+    val nonCategories = channels.filter { it !is DomainChannel.Category }.sortedWith(compareBy({ it }, { it.channelPosition}))
 
     val sortedChannels = mutableMapOf<DomainChannel.Category?, List<DomainChannel>>(
-        null to textChannels.filter {
-            it.parentId == null
-        } + voiceChannels.filter {
-            it.parentId == null
+        null to nonCategories.filter {
+            it.channelParentId == null
         }
     )
 
     categories.forEach { category ->
-        sortedChannels[category] = textChannels.filter {
-            category.id == it.parentId
-        } + voiceChannels.filter {
-            category.id == it.parentId
+        sortedChannels[category] = nonCategories.filter {
+            category.id == it.channelParentId
         }
     }
 
