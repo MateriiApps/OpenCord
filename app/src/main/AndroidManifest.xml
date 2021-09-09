@@ -28,7 +28,9 @@
             android:name=".ui.LoginActivity"
             android:theme="@style/Theme.OpenCord.NoActionBar" />
 
-        <activity android:name=".ui.MainActivity" />
+        <activity
+            android:name=".ui.MainActivity"
+            android:windowSoftInputMode="adjustResize"/>
     </application>
 
 </manifest>

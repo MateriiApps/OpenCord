@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.xinto.opencord.domain.model.DomainChannel
 import com.xinto.opencord.domain.model.DomainGuild
 import com.xinto.opencord.domain.model.DomainMessage
+import com.xinto.opencord.network.body.MessageBody
 import com.xinto.opencord.network.gateway.Gateway
 import com.xinto.opencord.network.gateway.event.message.MessageCreateEvent
 import com.xinto.opencord.network.repository.DiscordAPIRepository
@@ -43,6 +44,15 @@ class MainViewModel(
     fun setCurrentChannel(channel: DomainChannel) {
         _currentChannel.value = channel
         fetchMessagesForChannel(channel.channelId)
+    }
+
+    fun sendMessage(message: String) {
+        viewModelScope.launch {
+            repository.postChannelMessage(
+                channelId = _currentChannel.value!!.channelId,
+                messageBody = MessageBody(message)
+            )
+        }
     }
 
     fun fetchGuilds() {

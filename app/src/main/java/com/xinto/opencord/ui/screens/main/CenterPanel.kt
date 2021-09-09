@@ -2,6 +2,7 @@ package com.xinto.opencord.ui.screens.main
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,11 +17,16 @@ import com.xinto.opencord.ui.component.layout.OpenCordBackground
 import com.xinto.opencord.ui.component.text.OpenCordText
 import com.xinto.opencord.ui.viewmodel.MainViewModel
 import com.xinto.opencord.ui.widgets.chat.WidgetChatMessage
+import com.xinto.opencord.ui.widgets.textfield.ChannelTextField
 
 @SuppressLint("UnusedCrossfadeTargetStateParameter")
 @Composable
 fun CenterPanel(viewModel: MainViewModel) {
     val messagesResult by viewModel.currentChannelMessages.collectAsState()
+    val currentChannel by viewModel.currentChannel.collectAsState()
+
+    var message by remember(currentChannel) { mutableStateOf("") }
+
     OpenCordBackground(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -30,17 +36,30 @@ fun CenterPanel(viewModel: MainViewModel) {
                     CircularProgressIndicator()
                 }
                 is DiscordAPIResult.Success -> {
-                    LazyColumn(
-                        reverseLayout = true
-                    ) {
-                        items(result.data) { message ->
-                            WidgetChatMessage(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(4.dp),
-                                message = message
-                            )
+                    Column {
+                        LazyColumn(
+                            modifier = Modifier.weight(1f),
+                            reverseLayout = true
+                        ) {
+                            items(result.data) { message ->
+                                WidgetChatMessage(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(4.dp),
+                                    message = message
+                                )
+                            }
                         }
+                        ChannelTextField(
+                            value = message,
+                            onValueChange = {
+                                message = it
+                            },
+                            onSendClick = {
+                                viewModel.sendMessage(message)
+                                message = ""
+                            }
+                        )
                     }
                 }
                 is DiscordAPIResult.Error -> {
