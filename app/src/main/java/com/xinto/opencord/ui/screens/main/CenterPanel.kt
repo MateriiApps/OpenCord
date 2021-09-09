@@ -1,6 +1,5 @@
 package com.xinto.opencord.ui.screens.main
 
-import android.annotation.SuppressLint
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,7 +18,6 @@ import com.xinto.opencord.ui.viewmodel.MainViewModel
 import com.xinto.opencord.ui.widgets.chat.WidgetChatMessage
 import com.xinto.opencord.ui.widgets.textfield.ChannelTextField
 
-@SuppressLint("UnusedCrossfadeTargetStateParameter")
 @Composable
 fun CenterPanel(viewModel: MainViewModel) {
     val messagesResult by viewModel.currentChannelMessages.collectAsState()
