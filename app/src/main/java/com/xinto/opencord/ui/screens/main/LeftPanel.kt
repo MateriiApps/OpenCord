@@ -25,11 +25,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.annotation.ExperimentalCoilApi
-import coil.compose.rememberImagePainter
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainChannel
 import com.xinto.opencord.domain.model.DomainGuild
 import com.xinto.opencord.network.result.DiscordAPIResult
+import com.xinto.opencord.ui.component.image.rememberOpenCordCachePainter
 import com.xinto.opencord.ui.component.layout.OpenCordBackground
 import com.xinto.opencord.ui.component.list.ChannelItem
 import com.xinto.opencord.ui.component.list.GuildItem
@@ -98,7 +98,7 @@ fun LeftPanel(
                         }
 
                         items(result.data) { guild ->
-                            val imagePainter = rememberImagePainter(guild.iconUrl)
+                            val imagePainter = rememberOpenCordCachePainter(guild.iconUrl)
 
                             GuildItem(
                                 selected = currentGuild == guild,
@@ -137,9 +137,7 @@ fun LeftPanel(
                                 val bannerUrl = channelData.bannerUrl
 
                                 if (bannerUrl != null) {
-                                    val painter = rememberImagePainter(
-                                        data = bannerUrl,
-                                    )
+                                    val painter = rememberOpenCordCachePainter(bannerUrl)
                                     Image(
                                         modifier = Modifier
                                             .fillMaxWidth()

@@ -11,16 +11,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.annotation.ExperimentalCoilApi
-import coil.compose.rememberImagePainter
-import coil.request.CachePolicy
-import coil.request.ImageRequest
 import com.xinto.opencord.domain.model.DomainMessage
+import com.xinto.opencord.ui.component.image.rememberOpenCordCachePainter
 import com.xinto.opencord.ui.component.text.OpenCordText
 
 @OptIn(ExperimentalCoilApi::class)
@@ -29,12 +26,7 @@ fun WidgetChatMessage(
     message: DomainMessage,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
-    val request = ImageRequest.Builder(context)
-        .data(message.author.avatarUrl)
-        .diskCachePolicy(CachePolicy.ENABLED)
-        .build()
-    val userImage = rememberImagePainter(request)
+    val userImage = rememberOpenCordCachePainter(message.author.avatarUrl)
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
