@@ -23,26 +23,11 @@ class DiscordAPIRepository(
             }
         }
 
-    suspend fun getGuilds() =
-        getMeGuilds().map {
-            with (getGuild(it.id)) {
-                DomainGuild(
-                    id = id,
-                    name = name,
-                    iconUrl = iconUrl,
-                )
-            }
-        }
+    suspend fun getGuilds() = getMeGuilds().map { getGuild(it.id) }
 
     suspend fun getGuild(
         guildId: Long
-    ) = with (discordApi.getGuild(guildId)) {
-        DomainGuild(
-            id = id.toLong(),
-            name = name,
-            iconUrl = "https://cdn.discordapp.com/icons/$id/$icon",
-        )
-    }
+    ) = DomainGuild.fromApi(discordApi.getGuild(guildId))
 
     suspend fun getGuildChannels(
         guildId: Long
@@ -59,6 +44,6 @@ class DiscordAPIRepository(
     suspend fun postChannelMessage(
         channelId: Long,
         messageBody: MessageBody,
-    )= discordApi.postChannelMessage(channelId, messageBody)
+    ) = discordApi.postChannelMessage(channelId, messageBody)
 
 }

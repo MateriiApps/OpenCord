@@ -3,6 +3,10 @@ package com.xinto.opencord.ui
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.material.MaterialTheme
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.xinto.opencord.network.gateway.Gateway
 import com.xinto.opencord.network.util.gatewayUrl
 import com.xinto.opencord.ui.screens.main.MainScreen
@@ -27,6 +31,16 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             OpenCordTheme {
+                val systemUiController = rememberSystemUiController()
+                val isLight = MaterialTheme.colors.isLight
+
+                SideEffect {
+                    systemUiController.setSystemBarsColor(
+                        color = Color.Transparent,
+                        darkIcons = isLight,
+                    )
+                }
+
                 MainScreen()
             }
         }

@@ -16,6 +16,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
@@ -32,18 +33,10 @@ fun OpenCordBasicTextField(
     hint: String = "",
     singleLine: Boolean = false,
     maxLines: Int = Int.MAX_VALUE,
+    shape: Shape = MaterialTheme.shapes.medium,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ) {
-    val shapePercent by animateIntAsState(
-        targetValue = when (value.lines().size) {
-            0 -> 50
-            1 -> 50
-            2 -> 40
-            3 -> 30
-            else -> 25
-        }
-    )
     BasicTextField(
         value = value,
         modifier = modifier,
@@ -61,11 +54,11 @@ fun OpenCordBasicTextField(
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 backgroundColor = MaterialTheme.colors.secondaryButton,
-                shape = RoundedCornerShape(percent = shapePercent),
+                shape = shape,
                 elevation = 0.dp
             ) {
                 Box(
-                    modifier = Modifier.padding(12.dp)
+                    modifier = Modifier.padding(vertical = 10.dp, horizontal = 12.dp)
                 ) {
                     box()
                     if (value.isBlank()) {

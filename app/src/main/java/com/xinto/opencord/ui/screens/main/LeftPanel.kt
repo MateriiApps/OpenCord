@@ -2,104 +2,172 @@ package com.xinto.opencord.ui.screens.main
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Divider
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Tag
 import androidx.compose.material.icons.rounded.VolumeUp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.rememberImagePainter
+import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainChannel
 import com.xinto.opencord.domain.model.DomainGuild
 import com.xinto.opencord.network.result.DiscordAPIResult
 import com.xinto.opencord.ui.component.layout.OpenCordBackground
+import com.xinto.opencord.ui.component.list.GuildItem
 import com.xinto.opencord.ui.component.list.OpenCordChannelListItem
+import com.xinto.opencord.ui.component.overlappingpanels.OverlappingPanelState
 import com.xinto.opencord.ui.component.text.OpenCordListCategory
 import com.xinto.opencord.ui.component.text.OpenCordText
 import com.xinto.opencord.ui.viewmodel.MainViewModel
-import com.xinto.opencord.ui.widgets.guild.ClickableGuildIcon
-import com.xinto.opencord.util.getSortedChannels
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalCoilApi::class)
 @Composable
 fun LeftPanel(
-    viewModel: MainViewModel
+    viewModel: MainViewModel,
+    panelState: OverlappingPanelState
 ) {
-    val guildsResult by viewModel.guilds.collectAsState()
-    val currentGuild by viewModel.currentGuild.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
 
+    val guildsResult by viewModel.guilds.collectAsState()
     val channelsResult by viewModel.currentGuildChannels.collectAsState()
 
-    OpenCordBackground(
-        modifier = Modifier.fillMaxSize()
+    val currentGuild by viewModel.currentGuild.collectAsState()
+    val currentChannel by viewModel.currentChannel.collectAsState()
+
+    Row(
+        modifier = Modifier.fillMaxSize(),
     ) {
-        Row(
-            modifier = Modifier.fillMaxSize(),
+        OpenCordBackground(
+            modifier = Modifier.fillMaxHeight(),
+            backgroundColorAlpha = 0.3f
         ) {
-            when (val result: DiscordAPIResult<List<DomainGuild>> = guildsResult) {
-                is DiscordAPIResult.Loading -> {
-                    CircularProgressIndicator()
-                }
-                is DiscordAPIResult.Success -> {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxHeight(),
-                        verticalArrangement = Arrangement.spacedBy(4.dp),
-                    ) {
-                        items(result.data) { guild ->
-                            ClickableGuildIcon(
-                                iconUrl = guild.iconUrl,
-                                selected = currentGuild == guild,
-                                onClick = {
-                                    viewModel.setCurrentGuild(guild)
+            Box {
+                when (val result: DiscordAPIResult<List<DomainGuild>> = guildsResult) {
+                    is DiscordAPIResult.Loading -> {
+                        CircularProgressIndicator()
+                    }
+                    is DiscordAPIResult.Success -> {
+                        LazyColumn(
+                            verticalArrangement = Arrangement.spacedBy(4.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            contentPadding = PaddingValues(vertical = 8.dp)
+                        ) {
+                            item {
+                                val discordIcon = painterResource(R.drawable.ic_discord_logo)
+                                GuildItem(
+                                    selected = false,
+                                    onClick = {}
+                                ) {
+                                    Icon(
+                                        modifier = Modifier.size(28.dp).align(Alignment.Center),
+                                        painter = discordIcon,
+                                        contentDescription = "Home",
+                                        tint = MaterialTheme.colors.primary
+                                    )
                                 }
-                            )
+                            }
+
+                            item {
+                                Divider(
+                                    modifier = Modifier
+                                        .width(32.dp)
+                                        .padding(vertical = 4.dp)
+                                        .clip(MaterialTheme.shapes.medium),
+                                    thickness = 2.dp
+                                )
+                            }
+
+                            items(result.data) { guild ->
+                                val imagePainter = rememberImagePainter(guild.iconUrl)
+
+                                GuildItem(
+                                    selected = currentGuild == guild,
+                                    onClick = {
+                                        viewModel.setCurrentGuild(guild)
+                                    }
+                                ) {
+                                    Image(
+                                        modifier = Modifier.size(48.dp),
+                                        painter = imagePainter,
+                                        contentDescription = "Guild Icon")
+                                }
+                            }
                         }
                     }
-                }
-                is DiscordAPIResult.Error -> {
-                    OpenCordText(text = "Failed to load guilds")
+                    is DiscordAPIResult.Error -> {
+                        OpenCordText(text = "Failed to load guilds")
+                    }
                 }
             }
-            Divider(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .padding(horizontal = 8.dp)
-                    .width(2.dp)
-            )
-            when (val result: DiscordAPIResult<SnapshotStateList<DomainChannel>> = channelsResult) {
+        }
+        OpenCordBackground(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxHeight(),
+            backgroundColorAlpha = 0.6f
+        ) {
+            when (val result: DiscordAPIResult<MainViewModel.ChannelListData> = channelsResult) {
                 is DiscordAPIResult.Loading -> {
                     CircularProgressIndicator()
                 }
                 is DiscordAPIResult.Success -> {
-                    val sortedChannels = getSortedChannels(result.data)
-                    Crossfade(targetState = sortedChannels) { channels ->
-                        LazyColumn(
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .weight(1f),
-                        ) {
-                            channels.forEach { (category, channels) ->
+                    Crossfade(result.data) { channelData ->
+                        LazyColumn {
+                            item {
+                                val bannerUrl = channelData.bannerUrl
+
+                                if (bannerUrl != null) {
+                                    val painter = rememberImagePainter(
+                                        data = bannerUrl,
+                                    )
+                                    Image(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .heightIn(min = 100.dp, max = 150.dp)
+                                            .clip(RoundedCornerShape(8.dp)),
+                                        painter = painter,
+                                        contentScale = ContentScale.Crop,
+                                        contentDescription = "Guild Banner"
+                                    )
+                                }
+                            }
+
+                            channelData.channels.forEach { (category, channels) ->
                                 if (category != null) {
                                     item {
                                         OpenCordListCategory(text = category.name)
                                     }
                                 }
-                                items (channels) { channel ->
+                                items(channels) { channel ->
                                     when (channel) {
                                         is DomainChannel.TextChannel -> {
                                             OpenCordChannelListItem(
                                                 title = channel.channelName,
                                                 icon = Icons.Rounded.Tag,
                                                 onClick = {
+                                                    coroutineScope.launch {
+                                                        panelState.closePanel()
+                                                    }
                                                     viewModel.setCurrentChannel(channel)
-                                                }
+                                                },
+                                                selected = currentChannel == channel
                                             )
                                         }
                                         is DomainChannel.VoiceChannel -> {
@@ -108,7 +176,8 @@ fun LeftPanel(
                                                 icon = Icons.Rounded.VolumeUp,
                                                 onClick = {
 
-                                                }
+                                                },
+                                                selected = currentChannel == channel
                                             )
                                         }
                                         else -> Unit
@@ -122,7 +191,6 @@ fun LeftPanel(
 
                 }
             }
-
         }
     }
 }

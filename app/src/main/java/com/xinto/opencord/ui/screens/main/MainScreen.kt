@@ -2,12 +2,16 @@ package com.xinto.opencord.ui.screens.main
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.google.accompanist.insets.ProvideWindowInsets
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.xinto.opencord.ui.component.layout.OpenCordBackground
 import com.xinto.opencord.ui.component.overlappingpanels.OpenCordOverlappingPanels
 import com.xinto.opencord.ui.component.overlappingpanels.OverlappingPanelValue
 import com.xinto.opencord.ui.component.overlappingpanels.rememberOverlappingPanelState
@@ -20,27 +24,30 @@ fun MainScreen() {
     val panelState = rememberOverlappingPanelState(initialValue = OverlappingPanelValue.Closed)
 
     val viewModel: MainViewModel = getViewModel()
-
     ProvideWindowInsets(windowInsetsAnimationsEnabled = true) {
-        OpenCordOverlappingPanels(
-            modifier = Modifier.fillMaxSize(),
-            panelState = panelState,
-            panelLeft = {
-                LeftPanel(viewModel)
-            },
-            panelMiddle = {
-                CenterPanel(viewModel)
-            },
-            panelRight = {
-                Canvas(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    drawRect(
-                        color = Color.Magenta,
-                        size = size
-                    )
+        OpenCordBackground(
+            backgroundColorAlpha = 0.2f
+        ) {
+            OpenCordOverlappingPanels(
+                modifier = Modifier.fillMaxSize(),
+                panelState = panelState,
+                panelLeft = {
+                    LeftPanel(viewModel, panelState)
+                },
+                panelMiddle = {
+                    CenterPanel(viewModel)
+                },
+                panelRight = {
+                    Canvas(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        drawRect(
+                            color = Color.Magenta,
+                            size = size
+                        )
+                    }
                 }
-            }
-        )
+            )
+        }
     }
 }

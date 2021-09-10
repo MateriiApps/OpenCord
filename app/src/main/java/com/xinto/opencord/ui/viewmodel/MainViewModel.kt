@@ -12,6 +12,7 @@ import com.xinto.opencord.network.gateway.Gateway
 import com.xinto.opencord.network.gateway.event.message.MessageCreateEvent
 import com.xinto.opencord.network.repository.DiscordAPIRepository
 import com.xinto.opencord.network.result.DiscordAPIResult
+import com.xinto.opencord.util.getSortedChannels
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -21,14 +22,19 @@ class MainViewModel(
     private val repository: DiscordAPIRepository,
 ) : ViewModel() {
 
+    data class ChannelListData(
+        val bannerUrl: String?,
+        val channels: Map<DomainChannel.Category?, List<DomainChannel>>
+    )
+
     private val _guilds = MutableStateFlow<DiscordAPIResult<List<DomainGuild>>>(DiscordAPIResult.Loading)
     val guilds: StateFlow<DiscordAPIResult<List<DomainGuild>>> = _guilds
 
     private val _currentGuild = MutableStateFlow<DomainGuild?>(null)
     val currentGuild: StateFlow<DomainGuild?> = _currentGuild
 
-    private val _currentGuildChannels = MutableStateFlow<DiscordAPIResult<SnapshotStateList<DomainChannel>>>(DiscordAPIResult.Loading)
-    val currentGuildChannels: StateFlow<DiscordAPIResult<SnapshotStateList<DomainChannel>>> = _currentGuildChannels
+    private val _currentGuildChannels = MutableStateFlow<DiscordAPIResult<ChannelListData>>(DiscordAPIResult.Loading)
+    val currentGuildChannels: StateFlow<DiscordAPIResult<ChannelListData>> = _currentGuildChannels
 
     private val _currentChannel = MutableStateFlow<DomainChannel?>(null)
     val currentChannel: StateFlow<DomainChannel?> = _currentChannel
@@ -38,7 +44,7 @@ class MainViewModel(
 
     fun setCurrentGuild(guild: DomainGuild) {
         _currentGuild.value = guild
-        fetchChannelsForGuild(guild.id)
+        fetchChannelsForGuild(guild)
     }
 
     fun setCurrentChannel(channel: DomainChannel) {
@@ -66,14 +72,16 @@ class MainViewModel(
         }
     }
 
-    fun fetchChannelsForGuild(guildId: Long) {
+    fun fetchChannelsForGuild(guild: DomainGuild) {
         viewModelScope.launch {
             _currentGuildChannels.value =
                 try {
                     DiscordAPIResult.Success(
-                        repository
-                            .getGuildChannels(guildId)
-                            .toMutableStateList())
+                        ChannelListData(
+                            bannerUrl = guild.bannerUrl,
+                            channels = getSortedChannels(repository
+                                .getGuildChannels(guild.id)
+                                .toMutableStateList())))
                 } catch (e: HttpException) {
                     DiscordAPIResult.Error(e)
                 }
