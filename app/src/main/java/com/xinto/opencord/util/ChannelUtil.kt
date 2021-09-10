@@ -10,7 +10,8 @@ fun getSortedChannels(
     channels: List<DomainChannel>
 ): Map<DomainChannel.Category?, List<DomainChannel>> {
     val categories = channels.filterIsInstance<DomainChannel.Category>().sortedBy { it.position }
-    val nonCategories = channels.filter { it !is DomainChannel.Category }.sortedWith(compareBy({ it }, { it.channelPosition}))
+    val nonCategories = channels.filter { it !is DomainChannel.Category }
+        .sortedWith(compareBy({ it }, { it.channelPosition }))
 
     val sortedChannels = mutableMapOf<DomainChannel.Category?, List<DomainChannel>>(
         null to nonCategories.filter {

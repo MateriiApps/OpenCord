@@ -71,18 +71,18 @@ fun LoginLandingScreen(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-           PrimaryButton(
-               modifier = Modifier.fillMaxWidth(),
-               onClick = { navController.navigate("login") }
-           ) {
-               OpenCordText(text = "Login")
-           }
-           SecondaryButton(
-               modifier = Modifier.fillMaxWidth(),
-               onClick = {  }
-           ) {
-               OpenCordText(text = "Register")
-           }
+            PrimaryButton(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { navController.navigate("login") }
+            ) {
+                OpenCordText(text = "Login")
+            }
+            SecondaryButton(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { }
+            ) {
+                OpenCordText(text = "Register")
+            }
         }
     }
 }

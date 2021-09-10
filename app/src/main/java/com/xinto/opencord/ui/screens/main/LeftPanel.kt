@@ -6,9 +6,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Divider
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Tag
 import androidx.compose.material.icons.rounded.VolumeUp
@@ -29,10 +31,10 @@ import com.xinto.opencord.domain.model.DomainChannel
 import com.xinto.opencord.domain.model.DomainGuild
 import com.xinto.opencord.network.result.DiscordAPIResult
 import com.xinto.opencord.ui.component.layout.OpenCordBackground
+import com.xinto.opencord.ui.component.list.ChannelItem
 import com.xinto.opencord.ui.component.list.GuildItem
-import com.xinto.opencord.ui.component.list.OpenCordChannelListItem
+import com.xinto.opencord.ui.component.list.ListCategoryItem
 import com.xinto.opencord.ui.component.overlappingpanels.OverlappingPanelState
-import com.xinto.opencord.ui.component.text.OpenCordListCategory
 import com.xinto.opencord.ui.component.text.OpenCordText
 import com.xinto.opencord.ui.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
@@ -58,62 +60,63 @@ fun LeftPanel(
             modifier = Modifier.fillMaxHeight(),
             backgroundColorAlpha = 0.3f
         ) {
-            Box {
-                when (val result: DiscordAPIResult<List<DomainGuild>> = guildsResult) {
-                    is DiscordAPIResult.Loading -> {
-                        CircularProgressIndicator()
-                    }
-                    is DiscordAPIResult.Success -> {
-                        LazyColumn(
-                            verticalArrangement = Arrangement.spacedBy(4.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            contentPadding = PaddingValues(vertical = 8.dp)
-                        ) {
-                            item {
-                                val discordIcon = painterResource(R.drawable.ic_discord_logo)
-                                GuildItem(
-                                    selected = false,
-                                    onClick = {}
-                                ) {
-                                    Icon(
-                                        modifier = Modifier.size(28.dp).align(Alignment.Center),
-                                        painter = discordIcon,
-                                        contentDescription = "Home",
-                                        tint = MaterialTheme.colors.primary
-                                    )
-                                }
-                            }
-
-                            item {
-                                Divider(
+            when (val result: DiscordAPIResult<List<DomainGuild>> = guildsResult) {
+                is DiscordAPIResult.Loading -> {
+                    CircularProgressIndicator()
+                }
+                is DiscordAPIResult.Success -> {
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        contentPadding = PaddingValues(vertical = 8.dp)
+                    ) {
+                        item {
+                            val discordIcon = painterResource(R.drawable.ic_discord_logo)
+                            GuildItem(
+                                selected = false,
+                                onClick = {}
+                            ) {
+                                Icon(
                                     modifier = Modifier
-                                        .width(32.dp)
-                                        .padding(vertical = 4.dp)
-                                        .clip(MaterialTheme.shapes.medium),
-                                    thickness = 2.dp
+                                        .size(28.dp)
+                                        .align(Alignment.Center),
+                                    painter = discordIcon,
+                                    contentDescription = "Home",
+                                    tint = MaterialTheme.colors.primary
                                 )
                             }
+                        }
 
-                            items(result.data) { guild ->
-                                val imagePainter = rememberImagePainter(guild.iconUrl)
+                        item {
+                            Divider(
+                                modifier = Modifier
+                                    .width(32.dp)
+                                    .padding(vertical = 4.dp)
+                                    .clip(MaterialTheme.shapes.medium),
+                                thickness = 2.dp
+                            )
+                        }
 
-                                GuildItem(
-                                    selected = currentGuild == guild,
-                                    onClick = {
-                                        viewModel.setCurrentGuild(guild)
-                                    }
-                                ) {
-                                    Image(
-                                        modifier = Modifier.size(48.dp),
-                                        painter = imagePainter,
-                                        contentDescription = "Guild Icon")
+                        items(result.data) { guild ->
+                            val imagePainter = rememberImagePainter(guild.iconUrl)
+
+                            GuildItem(
+                                selected = currentGuild == guild,
+                                onClick = {
+                                    viewModel.setCurrentGuild(guild)
                                 }
+                            ) {
+                                Image(
+                                    modifier = Modifier.size(48.dp),
+                                    painter = imagePainter,
+                                    contentDescription = "Guild Icon"
+                                )
                             }
                         }
                     }
-                    is DiscordAPIResult.Error -> {
-                        OpenCordText(text = "Failed to load guilds")
-                    }
+                }
+                is DiscordAPIResult.Error -> {
+                    OpenCordText(text = "Failed to load guilds")
                 }
             }
         }
@@ -152,13 +155,13 @@ fun LeftPanel(
                             channelData.channels.forEach { (category, channels) ->
                                 if (category != null) {
                                     item {
-                                        OpenCordListCategory(text = category.name)
+                                        ListCategoryItem(text = category.name)
                                     }
                                 }
                                 items(channels) { channel ->
                                     when (channel) {
                                         is DomainChannel.TextChannel -> {
-                                            OpenCordChannelListItem(
+                                            ChannelItem(
                                                 title = channel.channelName,
                                                 icon = Icons.Rounded.Tag,
                                                 onClick = {
@@ -171,7 +174,7 @@ fun LeftPanel(
                                             )
                                         }
                                         is DomainChannel.VoiceChannel -> {
-                                            OpenCordChannelListItem(
+                                            ChannelItem(
                                                 title = channel.channelName,
                                                 icon = Icons.Rounded.VolumeUp,
                                                 onClick = {

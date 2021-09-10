@@ -21,7 +21,10 @@ fun UnreadIndicator(
                     topStartPercent = 0,
                     bottomStartPercent = 0,
                     topEndPercent = 100,
-                    bottomEndPercent = 100))
+                    bottomEndPercent = 100
+                )
+            )
             .background(MaterialTheme.colors.onBackground)
-            .width(4.dp))
+            .width(4.dp)
+    )
 }

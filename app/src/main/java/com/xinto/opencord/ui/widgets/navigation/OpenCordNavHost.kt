@@ -42,7 +42,7 @@ fun OpenCordNavHost(
         popExitTransition = { _, _ ->
             slideOutOfContainer(
                 towards = AnimatedContentScope.SlideDirection.Start
-             )
+            )
         }
     )
 }

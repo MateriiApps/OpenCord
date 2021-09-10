@@ -17,7 +17,7 @@ import com.xinto.opencord.ui.component.indicator.UnreadIndicator
 import com.xinto.opencord.ui.component.text.OpenCordText
 
 @Composable
-fun OpenCordChannelListItem(
+fun ChannelItem(
     title: String,
     icon: ImageVector,
     selected: Boolean,
@@ -31,10 +31,11 @@ fun OpenCordChannelListItem(
         UnreadIndicator(
             modifier = Modifier
                 .align(Alignment.CenterStart)
-                .height(6.dp))
+                .height(6.dp)
+        )
         Row(
             modifier = Modifier
-                .padding(horizontal = 12.dp)
+                .padding(horizontal = 6.dp)
                 .clip(MaterialTheme.shapes.medium)
                 .background(MaterialTheme.colors.onBackground.copy(backgroundAlpha))
                 .clickable(onClick = onClick)
@@ -48,8 +49,7 @@ fun OpenCordChannelListItem(
                 contentDescription = "Channel Type"
             )
             OpenCordText(
-                modifier = Modifier
-                    .align(Alignment.CenterVertically),
+                modifier = Modifier.align(Alignment.CenterVertically),
                 text = title,
                 style = MaterialTheme.typography.h5
             )

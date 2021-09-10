@@ -13,7 +13,8 @@ import com.xinto.opencord.network.gateway.event.message.MessageCreateEvent
 import com.xinto.opencord.network.repository.DiscordAPIRepository
 import com.xinto.opencord.network.result.DiscordAPIResult
 import com.xinto.opencord.util.getSortedChannels
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
@@ -27,20 +28,24 @@ class MainViewModel(
         val channels: Map<DomainChannel.Category?, List<DomainChannel>>
     )
 
-    private val _guilds = MutableStateFlow<DiscordAPIResult<List<DomainGuild>>>(DiscordAPIResult.Loading)
+    private val _guilds =
+        MutableStateFlow<DiscordAPIResult<List<DomainGuild>>>(DiscordAPIResult.Loading)
     val guilds: StateFlow<DiscordAPIResult<List<DomainGuild>>> = _guilds
 
     private val _currentGuild = MutableStateFlow<DomainGuild?>(null)
     val currentGuild: StateFlow<DomainGuild?> = _currentGuild
 
-    private val _currentGuildChannels = MutableStateFlow<DiscordAPIResult<ChannelListData>>(DiscordAPIResult.Loading)
+    private val _currentGuildChannels =
+        MutableStateFlow<DiscordAPIResult<ChannelListData>>(DiscordAPIResult.Loading)
     val currentGuildChannels: StateFlow<DiscordAPIResult<ChannelListData>> = _currentGuildChannels
 
     private val _currentChannel = MutableStateFlow<DomainChannel?>(null)
     val currentChannel: StateFlow<DomainChannel?> = _currentChannel
 
-    private val _currentChannelMessages = MutableStateFlow<DiscordAPIResult<SnapshotStateList<DomainMessage>>>(DiscordAPIResult.Loading)
-    val currentChannelMessages: StateFlow<DiscordAPIResult<SnapshotStateList<DomainMessage>>> = _currentChannelMessages
+    private val _currentChannelMessages =
+        MutableStateFlow<DiscordAPIResult<SnapshotStateList<DomainMessage>>>(DiscordAPIResult.Loading)
+    val currentChannelMessages: StateFlow<DiscordAPIResult<SnapshotStateList<DomainMessage>>> =
+        _currentChannelMessages
 
     fun setCurrentGuild(guild: DomainGuild) {
         _currentGuild.value = guild
@@ -79,9 +84,13 @@ class MainViewModel(
                     DiscordAPIResult.Success(
                         ChannelListData(
                             bannerUrl = guild.bannerUrl,
-                            channels = getSortedChannels(repository
-                                .getGuildChannels(guild.id)
-                                .toMutableStateList())))
+                            channels = getSortedChannels(
+                                repository
+                                    .getGuildChannels(guild.id)
+                                    .toMutableStateList()
+                            )
+                        )
+                    )
                 } catch (e: HttpException) {
                     DiscordAPIResult.Error(e)
                 }
@@ -95,7 +104,8 @@ class MainViewModel(
                     DiscordAPIResult.Success(
                         repository
                             .getChannelMessages(channelId)
-                            .toMutableStateList())
+                            .toMutableStateList()
+                    )
                 } catch (e: HttpException) {
                     DiscordAPIResult.Error(e)
                 }

@@ -85,7 +85,8 @@ class Gateway(
             0 -> handleEvent(t!!, data)
             10 -> {
                 launch {
-                    heartbeatInterval = gson.fromJson(data, Heartbeat::class.java).heartbeat_interval
+                    heartbeatInterval =
+                        gson.fromJson(data, Heartbeat::class.java).heartbeat_interval
                     heartbeat(
                         webSocket = webSocket,
                         previousInterval = 0L

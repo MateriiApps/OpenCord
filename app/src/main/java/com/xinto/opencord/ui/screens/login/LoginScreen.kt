@@ -160,7 +160,13 @@ fun LoginScreen(
 
                     coroutineScope.launch(Dispatchers.IO) {
                         showLoadingBar = true
-                        when (val response = repository.login(LoginBody(login, password, captchaKey = captchaToken))) {
+                        when (val response = repository.login(
+                            LoginBody(
+                                login,
+                                password,
+                                captchaKey = captchaToken
+                            )
+                        )) {
                             is DiscordAPIResult.Success<DomainLoginResult> -> {
                                 val token = response.data.token
 
@@ -177,7 +183,8 @@ fun LoginScreen(
                                 val error = response.e.response()?.errorBody()?.string()
                                 val gson = GsonBuilder().create()
 
-                                val captchaResponse = gson.fromJson(error, CaptchaResponse::class.java)
+                                val captchaResponse =
+                                    gson.fromJson(error, CaptchaResponse::class.java)
                                 val captchaKey = captchaResponse.captcha_sitekey
 
                                 if (captchaKey != null) {

@@ -20,10 +20,10 @@ data class DomainMessageAuthor(
                 username = username,
                 discriminator = discriminator,
                 avatarUrl =
-                    if (avatar != null)
-                        "${discordCdnUrl}/avatars/$id/$avatar.png"
-                    else
-                        "${discordCdnUrl}/embed/avatars/${discriminator.toInt() % 5}.png"
+                if (avatar != null)
+                    "${discordCdnUrl}/avatars/$id/$avatar.png"
+                else
+                    "${discordCdnUrl}/embed/avatars/${discriminator.toInt() % 5}.png"
             )
         }
 

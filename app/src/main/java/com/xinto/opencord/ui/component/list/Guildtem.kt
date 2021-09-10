@@ -3,7 +3,6 @@ package com.xinto.opencord.ui.component.list
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -38,7 +37,8 @@ fun GuildItem(
         UnreadIndicator(
             modifier = Modifier
                 .align(Alignment.CenterStart)
-                .fillMaxHeight(indicatorFraction))
+                .fillMaxHeight(indicatorFraction)
+        )
         Box(
             modifier = Modifier
                 .align(Alignment.Center)

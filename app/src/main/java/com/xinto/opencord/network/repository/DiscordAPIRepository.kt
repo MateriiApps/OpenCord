@@ -5,7 +5,6 @@ import com.xinto.opencord.domain.model.DomainGuild
 import com.xinto.opencord.domain.model.DomainMeGuild
 import com.xinto.opencord.domain.model.DomainMessage
 import com.xinto.opencord.network.body.MessageBody
-import com.xinto.opencord.network.response.ApiMessage
 import com.xinto.opencord.network.restapi.DiscordAPI
 
 class DiscordAPIRepository(
@@ -14,7 +13,7 @@ class DiscordAPIRepository(
 
     suspend fun getMeGuilds() =
         discordApi.getMeGuilds().map { apiMeGuild ->
-            with (apiMeGuild) {
+            with(apiMeGuild) {
                 DomainMeGuild(
                     id = id.toLong(),
                     name = name,

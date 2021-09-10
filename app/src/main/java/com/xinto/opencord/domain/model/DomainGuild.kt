@@ -15,7 +15,7 @@ data class DomainGuild(
 
         fun fromApi(
             apiGuild: ApiGuild
-        ) = with (apiGuild) {
+        ) = with(apiGuild) {
             DomainGuild(
                 id = id.toLong(),
                 name = name,
