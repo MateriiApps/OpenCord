@@ -13,7 +13,7 @@ data class DomainMessageAuthor(
     companion object {
 
         fun fromApi(
-            apiMessageAuthor: ApiMessageAuthor
+            apiMessageAuthor: ApiMessageAuthor,
         ) = with(apiMessageAuthor) {
             DomainMessageAuthor(
                 userId = id,

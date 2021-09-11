@@ -7,7 +7,7 @@ sealed class DomainChannel(
     val channelId: Long,
     val channelName: String,
     val channelPosition: Int,
-    val channelParentId: Long?
+    val channelParentId: Long?,
 ) : DomainResponse, Comparable<DomainChannel> {
 
     override fun compareTo(other: DomainChannel): Int {
@@ -55,7 +55,7 @@ sealed class DomainChannel(
         )
 
         fun fromApi(
-            apiChannel: ApiChannel
+            apiChannel: ApiChannel,
         ) = with(apiChannel) {
             when (type) {
                 2 -> VoiceChannel(

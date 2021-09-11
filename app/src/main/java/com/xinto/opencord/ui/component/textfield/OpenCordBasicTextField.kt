@@ -32,7 +32,7 @@ fun OpenCordBasicTextField(
     maxLines: Int = Int.MAX_VALUE,
     shape: Shape = MaterialTheme.shapes.medium,
     visualTransformation: VisualTransformation = VisualTransformation.None,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
 ) {
     BasicTextField(
         value = value,

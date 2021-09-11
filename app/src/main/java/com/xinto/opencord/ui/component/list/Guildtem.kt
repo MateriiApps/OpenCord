@@ -22,7 +22,7 @@ import com.xinto.opencord.ui.component.indicator.UnreadIndicator
 fun GuildItem(
     selected: Boolean,
     onClick: () -> Unit,
-    image: @Composable BoxScope.() -> Unit
+    image: @Composable BoxScope.() -> Unit,
 ) {
     val indicatorFraction by animateFloatAsState(if (selected) 0.7f else 0.15f)
 

@@ -21,7 +21,7 @@ import com.xinto.opencord.ui.widgets.button.SecondaryButton
 
 @Composable
 fun LoginLandingScreen(
-    navController: NavHostController
+    navController: NavHostController,
 ) {
     Column(
         modifier = Modifier

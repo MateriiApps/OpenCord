@@ -12,7 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 val retrofitModule = module {
 
     fun provideAuthClient(
-        okHttpClient: OkHttpClient
+        okHttpClient: OkHttpClient,
     ) = Retrofit.Builder()
         .baseUrl(discordApiUrl)
         .client(okHttpClient)
@@ -21,7 +21,7 @@ val retrofitModule = module {
         .create(DiscordAuthAPI::class.java)
 
     fun provideClient(
-        okHttpClient: OkHttpClient
+        okHttpClient: OkHttpClient,
     ) = Retrofit.Builder()
         .baseUrl(discordApiUrl)
         .client(okHttpClient)

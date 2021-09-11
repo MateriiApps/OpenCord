@@ -8,7 +8,7 @@ import coil.request.CachePolicy
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 fun rememberOpenCordCachePainter(
-    url: String?
+    url: String?,
 ) = rememberImagePainter(data = url) {
     diskCachePolicy(CachePolicy.ENABLED)
 }

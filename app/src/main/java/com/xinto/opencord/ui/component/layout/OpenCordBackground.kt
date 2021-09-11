@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 fun OpenCordBackground(
     modifier: Modifier = Modifier,
     backgroundColorAlpha: Float = 1f,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val backgroundColor = MaterialTheme.colors.background
     Surface(

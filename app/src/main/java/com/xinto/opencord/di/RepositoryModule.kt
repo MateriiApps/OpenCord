@@ -9,11 +9,11 @@ import org.koin.dsl.module
 val repositoryModule = module {
 
     fun getAuthRepository(
-        api: DiscordAuthAPI
+        api: DiscordAuthAPI,
     ) = DiscordAuthAPIRepository(api)
 
     fun getRepository(
-        api: DiscordAPI
+        api: DiscordAPI,
     ) = DiscordAPIRepository(api)
 
     single { getAuthRepository(get()) }

@@ -14,7 +14,7 @@ data class DomainGuild(
     companion object {
 
         fun fromApi(
-            apiGuild: ApiGuild
+            apiGuild: ApiGuild,
         ) = with(apiGuild) {
             DomainGuild(
                 id = id.toLong(),

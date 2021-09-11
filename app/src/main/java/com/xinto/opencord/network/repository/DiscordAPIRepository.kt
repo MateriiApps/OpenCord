@@ -8,7 +8,7 @@ import com.xinto.opencord.network.body.MessageBody
 import com.xinto.opencord.network.restapi.DiscordAPI
 
 class DiscordAPIRepository(
-    private val discordApi: DiscordAPI
+    private val discordApi: DiscordAPI,
 ) {
 
     suspend fun getMeGuilds() =
@@ -25,17 +25,17 @@ class DiscordAPIRepository(
     suspend fun getGuilds() = getMeGuilds().map { getGuild(it.id) }
 
     suspend fun getGuild(
-        guildId: Long
+        guildId: Long,
     ) = DomainGuild.fromApi(discordApi.getGuild(guildId))
 
     suspend fun getGuildChannels(
-        guildId: Long
+        guildId: Long,
     ) = discordApi.getGuildChannels(guildId).map { apiChannel ->
         DomainChannel.fromApi(apiChannel)
     }
 
     suspend fun getChannelMessages(
-        channelId: Long
+        channelId: Long,
     ) = discordApi.getChannelMessages(channelId).map { apiMessage ->
         DomainMessage.fromApi(apiMessage)
     }

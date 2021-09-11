@@ -43,7 +43,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun LeftPanel(
     viewModel: MainViewModel,
-    panelState: OverlappingPanelState
+    panelState: OverlappingPanelState,
 ) {
     val coroutineScope = rememberCoroutineScope()
 

@@ -23,7 +23,7 @@ enum class OverlappingPanelValue {
 @OptIn(ExperimentalMaterialApi::class)
 class OverlappingPanelState(
     initialValue: OverlappingPanelValue,
-    confirmStateChange: (OverlappingPanelValue) -> Boolean = { true }
+    confirmStateChange: (OverlappingPanelValue) -> Boolean = { true },
 ) {
 
     val swipeableState = SwipeableState(
@@ -73,7 +73,7 @@ class OverlappingPanelState(
 @Composable
 fun rememberOverlappingPanelState(
     initialValue: OverlappingPanelValue,
-    confirmStateChange: (OverlappingPanelValue) -> Boolean = { true }
+    confirmStateChange: (OverlappingPanelValue) -> Boolean = { true },
 ): OverlappingPanelState {
     return rememberSaveable(saver = OverlappingPanelState.Saver(confirmStateChange)) {
         OverlappingPanelState(initialValue, confirmStateChange)

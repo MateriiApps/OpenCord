@@ -12,7 +12,7 @@ fun ShinyButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     onClick: () -> Unit,
-    content: @Composable RowScope.() -> Unit
+    content: @Composable RowScope.() -> Unit,
 ) {
     OpenCordButton(
         modifier = modifier,

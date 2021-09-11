@@ -16,7 +16,7 @@ fun OpenCordNavHost(
     startDestination: String,
     modifier: Modifier = Modifier,
     contentAlignment: Alignment = Alignment.Center,
-    builder: NavGraphBuilder.() -> Unit
+    builder: NavGraphBuilder.() -> Unit,
 ) {
     AnimatedNavHost(
         navController = navController,

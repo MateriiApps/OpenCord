@@ -26,7 +26,7 @@ import com.xinto.opencord.ui.component.textfield.OpenCordBasicTextField
 fun ChannelTextField(
     value: String,
     onValueChange: (value: String) -> Unit,
-    onSendClick: () -> Unit
+    onSendClick: () -> Unit,
 ) {
     val shapePercent by animateIntAsState(
         targetValue = when (value.lines().size) {

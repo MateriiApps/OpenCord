@@ -32,7 +32,7 @@ val Typography.toolbar
 
 @Composable
 fun OpenCordTheme(
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val colors = if (isSystemInDarkTheme()) {
         DarkColorPalette

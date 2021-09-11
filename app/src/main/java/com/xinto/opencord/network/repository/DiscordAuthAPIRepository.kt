@@ -7,7 +7,7 @@ import com.xinto.opencord.network.restapi.DiscordAuthAPI
 import com.xinto.opencord.network.util.getResultOrError
 
 class DiscordAuthAPIRepository(
-    private val api: DiscordAuthAPI
+    private val api: DiscordAuthAPI,
 ) {
 
     suspend fun login(loginBody: LoginBody) =

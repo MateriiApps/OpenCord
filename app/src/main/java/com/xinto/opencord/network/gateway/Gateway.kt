@@ -42,7 +42,7 @@ class Gateway(
 
     override fun onOpen(
         webSocket: WebSocket,
-        response: Response
+        response: Response,
     ) {
         val payload = OutgoingPayload(
             op = 2,
@@ -123,7 +123,7 @@ class Gateway(
     override fun onClosing(
         webSocket: WebSocket,
         code: Int,
-        reason: String
+        reason: String,
     ) {
         Log.d("gateway", "Closing connection: $reason $code")
         webSocket.close(code, reason)
@@ -132,7 +132,7 @@ class Gateway(
     override fun onClosed(
         webSocket: WebSocket,
         code: Int,
-        reason: String
+        reason: String,
     ) {
         Log.d("gateway", "Closed connection: $reason $code")
     }
@@ -140,14 +140,14 @@ class Gateway(
     override fun onFailure(
         webSocket: WebSocket,
         t: Throwable,
-        response: Response?
+        response: Response?,
     ) {
         Log.d("gateway", "Gateway failure: $t")
     }
 
     private fun handleEvent(
         event: String,
-        data: JsonElement?
+        data: JsonElement?,
     ) {
         notifyListeners(
             when (event) {
@@ -160,13 +160,13 @@ class Gateway(
     }
 
     fun onEvent(
-        action: EventAction
+        action: EventAction,
     ) {
         listeners.add(action)
     }
 
     private fun notifyListeners(
-        response: Event
+        response: Event,
     ) {
         listeners.forEach {
             it.invoke(response)

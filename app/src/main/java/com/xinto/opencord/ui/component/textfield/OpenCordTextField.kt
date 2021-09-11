@@ -20,7 +20,7 @@ fun OpenCordTextField(
     isError: Boolean = false,
     onValueChange: (value: String) -> Unit,
     visualTransformation: VisualTransformation = VisualTransformation.None,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
 ) {
     TextField(
         value = value,

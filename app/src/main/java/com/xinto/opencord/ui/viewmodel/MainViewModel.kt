@@ -25,27 +25,23 @@ class MainViewModel(
 
     data class ChannelListData(
         val bannerUrl: String?,
-        val channels: Map<DomainChannel.Category?, List<DomainChannel>>
+        val channels: Map<DomainChannel.Category?, List<DomainChannel>>,
     )
 
-    private val _guilds =
-        MutableStateFlow<DiscordAPIResult<List<DomainGuild>>>(DiscordAPIResult.Loading)
+    private val _guilds = MutableStateFlow<DiscordAPIResult<List<DomainGuild>>>(DiscordAPIResult.Loading)
     val guilds: StateFlow<DiscordAPIResult<List<DomainGuild>>> = _guilds
 
     private val _currentGuild = MutableStateFlow<DomainGuild?>(null)
     val currentGuild: StateFlow<DomainGuild?> = _currentGuild
 
-    private val _currentGuildChannels =
-        MutableStateFlow<DiscordAPIResult<ChannelListData>>(DiscordAPIResult.Loading)
+    private val _currentGuildChannels = MutableStateFlow<DiscordAPIResult<ChannelListData>>(DiscordAPIResult.Loading)
     val currentGuildChannels: StateFlow<DiscordAPIResult<ChannelListData>> = _currentGuildChannels
 
     private val _currentChannel = MutableStateFlow<DomainChannel?>(null)
     val currentChannel: StateFlow<DomainChannel?> = _currentChannel
 
-    private val _currentChannelMessages =
-        MutableStateFlow<DiscordAPIResult<SnapshotStateList<DomainMessage>>>(DiscordAPIResult.Loading)
-    val currentChannelMessages: StateFlow<DiscordAPIResult<SnapshotStateList<DomainMessage>>> =
-        _currentChannelMessages
+    private val _currentChannelMessages = MutableStateFlow<DiscordAPIResult<SnapshotStateList<DomainMessage>>>(DiscordAPIResult.Loading)
+    val currentChannelMessages: StateFlow<DiscordAPIResult<SnapshotStateList<DomainMessage>>> = _currentChannelMessages
 
     fun setCurrentGuild(guild: DomainGuild) {
         _currentGuild.value = guild

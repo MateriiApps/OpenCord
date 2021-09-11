@@ -13,7 +13,7 @@ data class DomainMessage(
     companion object {
 
         fun fromApi(
-            apiMessage: ApiMessage
+            apiMessage: ApiMessage,
         ) = with(apiMessage) {
             DomainMessage(
                 id = id,

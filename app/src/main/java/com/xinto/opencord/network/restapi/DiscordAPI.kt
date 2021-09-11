@@ -27,6 +27,6 @@ interface DiscordAPI {
     @POST("channels/{channelId}/messages")
     suspend fun postChannelMessage(
         @Path("channelId") channelId: Long,
-        @Body messageBody: MessageBody
+        @Body messageBody: MessageBody,
     )
 }

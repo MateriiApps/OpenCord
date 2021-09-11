@@ -5,7 +5,7 @@ enum class TextType {
 }
 
 fun parseText(
-    input: String
+    input: String,
 ) {
 
 }

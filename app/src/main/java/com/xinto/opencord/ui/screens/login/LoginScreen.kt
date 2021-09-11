@@ -35,7 +35,7 @@ import org.koin.androidx.compose.get
 
 @Composable
 fun LoginScreen(
-    navController: NavHostController
+    navController: NavHostController,
 ) {
     val context = LocalContext.current
 

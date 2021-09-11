@@ -9,5 +9,5 @@ data class IdentificationProperties(
     val os: String,
     val os_sdk_version: String,
     val os_version: String,
-    val system_locale: String
+    val system_locale: String,
 )

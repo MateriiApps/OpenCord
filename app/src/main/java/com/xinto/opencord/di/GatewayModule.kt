@@ -7,7 +7,7 @@ import org.koin.dsl.module
 val gatewayModule = module {
 
     fun provideGateway(
-        gson: Gson
+        gson: Gson,
     ) = Gateway(gson)
 
     single { provideGateway(get()) }

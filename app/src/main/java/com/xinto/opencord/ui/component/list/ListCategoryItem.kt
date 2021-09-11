@@ -19,7 +19,7 @@ import java.util.*
 
 @Composable
 fun ListCategoryItem(
-    text: String
+    text: String,
 ) {
     CompositionLocalProvider(
         LocalContentAlpha provides ContentAlpha.medium

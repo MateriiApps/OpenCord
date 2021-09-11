@@ -16,7 +16,7 @@ fun OpenCordText(
     color: Color = Color.Unspecified,
     textAlign: TextAlign? = null,
     lineHeight: TextUnit = TextUnit.Unspecified,
-    style: TextStyle = LocalTextStyle.current
+    style: TextStyle = LocalTextStyle.current,
 ) {
     Text(
         text = text,
