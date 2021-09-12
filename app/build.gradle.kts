@@ -59,6 +59,7 @@ android {
 dependencies {
     implementation("androidx.appcompat:appcompat:1.3.1")
     implementation("androidx.core:core-ktx:1.6.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
     implementation("androidx.preference:preference-ktx:1.1.1")
 
     implementation("androidx.activity:activity-compose:1.3.1")
@@ -68,8 +69,6 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
     implementation("androidx.compose.ui:ui:$composeVersion")
 
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
-
     implementation("io.coil-kt:coil-compose:1.3.2")
 
     val accompanistVersion = "0.18.0"
@@ -78,7 +77,6 @@ dependencies {
     implementation("com.google.accompanist:accompanist-insets:$accompanistVersion")
 
     implementation("com.google.android.material:material:1.4.0")
-
     implementation("com.google.code.gson:gson:2.8.8")
 
     implementation("com.github.hcaptcha:hcaptcha-android-sdk:1.1.0")
