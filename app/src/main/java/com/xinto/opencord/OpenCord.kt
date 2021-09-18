@@ -18,7 +18,8 @@ class OpenCord : Application() {
                 okHttpModule,
                 repositoryModule,
                 retrofitModule,
-                viewModelModule
+                simpleAstModule,
+                viewModelModule,
             )
         }
     }

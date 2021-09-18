@@ -1,11 +1,6 @@
 package com.xinto.opencord.util
 
-enum class TextType {
-    Text, BoldText, ItalicText, Emote, Mention, Channel, Spoiler,
-}
+import com.xinto.opencord.ui.simpleast.core.node.Node
+import com.xinto.opencord.ui.simpleast.core.parser.Parser
 
-fun parseText(
-    input: String,
-) {
-
-}
+typealias SimpleAstParser = Parser<Any?, Node<Any?>, Any?>
