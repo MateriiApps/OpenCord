@@ -6,8 +6,8 @@ class ParseSpec<RC, S> private constructor(
     val root: Node<RC>,
     val isTerminal: Boolean,
     val state: S,
-    var startIndex: Int = 0,
-    var endIndex: Int = 0,
+    var startIndex: Int,
+    var endIndex: Int,
 ) {
 
     fun applyOffset(offset: Int) {
@@ -36,7 +36,9 @@ class ParseSpec<RC, S> private constructor(
         ) = ParseSpec(
             root = node,
             isTerminal = true,
-            state = state
+            state = state,
+            startIndex = 0,
+            endIndex = 0
         )
     }
 }
