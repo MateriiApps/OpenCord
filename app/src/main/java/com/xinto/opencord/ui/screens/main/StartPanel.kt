@@ -7,10 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Tag
 import androidx.compose.material.icons.rounded.VolumeUp
@@ -25,6 +22,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.annotation.ExperimentalCoilApi
+import com.discord.panels.OverlappingPanelsState
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainChannel
 import com.xinto.opencord.domain.model.DomainGuild
@@ -34,16 +32,15 @@ import com.xinto.opencord.ui.component.layout.OpenCordBackground
 import com.xinto.opencord.ui.component.list.ChannelItem
 import com.xinto.opencord.ui.component.list.GuildItem
 import com.xinto.opencord.ui.component.list.ListCategoryItem
-import com.xinto.opencord.ui.component.overlappingpanels.OverlappingPanelState
 import com.xinto.opencord.ui.component.text.OpenCordText
 import com.xinto.opencord.ui.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalCoilApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalCoilApi::class, ExperimentalMaterialApi::class)
 @Composable
-fun LeftPanel(
+fun StartPanel(
     viewModel: MainViewModel,
-    panelState: OverlappingPanelState,
+    panelState: OverlappingPanelsState,
 ) {
     val coroutineScope = rememberCoroutineScope()
 
@@ -164,7 +161,7 @@ fun LeftPanel(
                                                 icon = Icons.Rounded.Tag,
                                                 onClick = {
                                                     coroutineScope.launch {
-                                                        panelState.closePanel()
+                                                        panelState.closePanels()
                                                     }
                                                     viewModel.setCurrentChannel(channel)
                                                 },

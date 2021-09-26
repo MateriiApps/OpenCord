@@ -19,7 +19,9 @@ import com.xinto.opencord.ui.widgets.chat.WidgetChatMessage
 import com.xinto.opencord.ui.widgets.textfield.ChannelTextField
 
 @Composable
-fun CenterPanel(viewModel: MainViewModel) {
+fun CenterPanel(
+    viewModel: MainViewModel
+) {
     val messagesResult by viewModel.currentChannelMessages.collectAsState()
     val currentChannel by viewModel.currentChannel.collectAsState()
 

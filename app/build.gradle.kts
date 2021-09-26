@@ -88,6 +88,8 @@ dependencies {
     val okHttpVersion = "4.9.1"
     implementation("com.squareup.okhttp3:okhttp:$okHttpVersion")
     implementation("com.squareup.okhttp3:logging-interceptor:$okHttpVersion")
+
+    implementation("com.github.X1nto:OverlappingPanelsCompose:1.0.0")
     
     implementation("io.insert-koin:koin-androidx-compose:3.1.2")
 
