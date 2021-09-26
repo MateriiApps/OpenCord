@@ -15,7 +15,7 @@ val simpleAstModule = module {
             rule(createUnderlineTextRule())
             rule(createItalicTextRule())
             rule(createStrikeThroughRule())
-            //rule(createEmoteRule()) //TODO Fix emote issues
+            rule(createEmoteRule())
             rule(createUserMentionRule())
             rule(createChannelMentionRule())
             rule(createOtherRule())

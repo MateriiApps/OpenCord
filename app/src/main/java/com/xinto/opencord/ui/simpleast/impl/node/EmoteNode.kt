@@ -12,8 +12,7 @@ class EmoteNode<RC>(
         builder: AnnotatedString.Builder,
         renderContext: RC
     ) {
-        builder.append(emoteId)
-        //builder.appendInlineContent("emote", emoteId)
+        builder.appendInlineContent("emote", emoteId)
     }
 
 }

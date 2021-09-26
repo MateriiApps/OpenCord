@@ -70,8 +70,8 @@ fun WidgetChatMessage(
                 inlineContent = mapOf(
                     "emote" to InlineTextContent(
                         placeholder = Placeholder(
-                            width = 24.sp,
-                            height = 24.sp,
+                            width = 20.sp,
+                            height = 20.sp,
                             placeholderVerticalAlign = PlaceholderVerticalAlign.Center
                         )
                     ) { emoteId ->
