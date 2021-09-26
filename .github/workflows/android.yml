@@ -43,7 +43,7 @@ jobs:
           path: app/build/outputs/apk/debug/app-debug.apk
 
       - name: Push build
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository == "X1nto/OpenCord"
         uses: sinshutu/upload-to-discord@v2.0.0
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
