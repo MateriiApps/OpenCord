@@ -30,11 +30,8 @@ jobs:
           java-version: 11
           distribution: 'zulu'
 
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
-
       - name: Build Debug APK with Gradle
-        run: ./gradlew assembleDebug
+        run: chmod +x ./gradlew && ./gradlew assembleDebug
 
       - name: Upload apk as artifact
         uses: actions/upload-artifact@v2
