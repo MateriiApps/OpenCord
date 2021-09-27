@@ -23,7 +23,7 @@ import coil.annotation.ExperimentalCoilApi
 import com.xinto.opencord.domain.model.DomainMessage
 import com.xinto.opencord.network.util.discordCdnUrl
 import com.xinto.opencord.ui.component.image.rememberOpenCordCachePainter
-import com.xinto.opencord.ui.component.text.OpenCordText
+import com.xinto.opencord.ui.component.text.Text
 import com.xinto.opencord.ui.simpleast.render.render
 import com.xinto.opencord.util.SimpleAstParser
 import org.koin.androidx.compose.get
@@ -53,14 +53,14 @@ fun WidgetChatMessage(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
-            OpenCordText(
+            Text(
                 text = message.author.username,
                 style = TextStyle(
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold
                 )
             )
-            OpenCordText(
+            Text(
                 text = parser.render(
                     source = message.content,
                     initialState = null,

@@ -6,6 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -32,7 +33,8 @@ import com.xinto.opencord.ui.component.layout.OpenCordBackground
 import com.xinto.opencord.ui.component.list.ChannelItem
 import com.xinto.opencord.ui.component.list.GuildItem
 import com.xinto.opencord.ui.component.list.ListCategoryItem
-import com.xinto.opencord.ui.component.text.OpenCordText
+import com.xinto.opencord.ui.component.text.Text
+import com.xinto.opencord.ui.theme.topLargeCorners
 import com.xinto.opencord.ui.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
 
@@ -50,12 +52,18 @@ fun StartPanel(
     val currentGuild by viewModel.currentGuild.collectAsState()
     val currentChannel by viewModel.currentChannel.collectAsState()
 
-    Row(
-        modifier = Modifier.fillMaxSize(),
+    OpenCordBackground(
+        modifier = Modifier
+            .fillMaxHeight()
+            .clip(
+                shape = MaterialTheme.shapes.topLargeCorners.copy(
+                    topStart = CornerSize(0.dp)
+                )
+            ),
+        backgroundColorAlpha = 0.3f
     ) {
-        OpenCordBackground(
-            modifier = Modifier.fillMaxHeight(),
-            backgroundColorAlpha = 0.3f
+        Row(
+            modifier = Modifier.fillMaxSize(),
         ) {
             when (val result: DiscordAPIResult<List<DomainGuild>> = guildsResult) {
                 is DiscordAPIResult.Loading -> {
@@ -63,7 +71,7 @@ fun StartPanel(
                 }
                 is DiscordAPIResult.Success -> {
                     LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         contentPadding = PaddingValues(vertical = 8.dp)
                     ) {
@@ -88,7 +96,6 @@ fun StartPanel(
                             Divider(
                                 modifier = Modifier
                                     .width(32.dp)
-                                    .padding(vertical = 4.dp)
                                     .clip(MaterialTheme.shapes.medium),
                                 thickness = 2.dp
                             )
@@ -113,80 +120,82 @@ fun StartPanel(
                     }
                 }
                 is DiscordAPIResult.Error -> {
-                    OpenCordText(text = "Failed to load guilds")
+                    Text(text = "Failed to load guilds")
                 }
             }
-        }
-        OpenCordBackground(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxHeight(),
-            backgroundColorAlpha = 0.6f
-        ) {
-            when (val result: DiscordAPIResult<MainViewModel.ChannelListData> = channelsResult) {
-                is DiscordAPIResult.Loading -> {
-                    CircularProgressIndicator()
-                }
-                is DiscordAPIResult.Success -> {
-                    Crossfade(result.data) { channelData ->
-                        LazyColumn {
-                            item {
-                                val bannerUrl = channelData.bannerUrl
+            OpenCordBackground(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+                    .clip(MaterialTheme.shapes.topLargeCorners),
+                backgroundColorAlpha = 0.6f
+            ) {
+                when (val result: DiscordAPIResult<MainViewModel.ChannelListData> =
+                    channelsResult) {
+                    is DiscordAPIResult.Loading -> {
+                        CircularProgressIndicator()
+                    }
+                    is DiscordAPIResult.Success -> {
+                        Crossfade(result.data) { channelData ->
+                            LazyColumn {
+                                item {
+                                    val bannerUrl = channelData.bannerUrl
 
-                                if (bannerUrl != null) {
-                                    val painter = rememberOpenCordCachePainter(bannerUrl)
-                                    Image(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .heightIn(min = 100.dp, max = 150.dp)
-                                            .clip(RoundedCornerShape(8.dp)),
-                                        painter = painter,
-                                        contentScale = ContentScale.Crop,
-                                        contentDescription = "Guild Banner"
-                                    )
-                                }
-                            }
-
-                            channelData.channels.forEach { (category, channels) ->
-                                if (category != null) {
-                                    item {
-                                        ListCategoryItem(text = category.name)
+                                    if (bannerUrl != null) {
+                                        val painter = rememberOpenCordCachePainter(bannerUrl)
+                                        Image(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .heightIn(min = 100.dp, max = 180.dp)
+                                                .clip(RoundedCornerShape(8.dp)),
+                                            painter = painter,
+                                            contentScale = ContentScale.Crop,
+                                            contentDescription = "Guild Banner"
+                                        )
                                     }
                                 }
-                                items(channels) { channel ->
-                                    when (channel) {
-                                        is DomainChannel.TextChannel -> {
-                                            ChannelItem(
-                                                title = channel.channelName,
-                                                icon = Icons.Rounded.Tag,
-                                                onClick = {
-                                                    coroutineScope.launch {
-                                                        panelState.closePanels()
-                                                    }
-                                                    viewModel.setCurrentChannel(channel)
-                                                },
-                                                selected = currentChannel == channel
-                                            )
-                                        }
-                                        is DomainChannel.VoiceChannel -> {
-                                            ChannelItem(
-                                                title = channel.channelName,
-                                                icon = Icons.Rounded.VolumeUp,
-                                                onClick = {
 
-                                                },
-                                                selected = currentChannel == channel
-                                            )
+                                channelData.channels.forEach { (category, channels) ->
+                                    if (category != null) {
+                                        item {
+                                            ListCategoryItem(text = category.name)
                                         }
-                                        else -> Unit
+                                    }
+                                    items(channels) { channel ->
+                                        when (channel) {
+                                            is DomainChannel.TextChannel -> {
+                                                ChannelItem(
+                                                    title = channel.channelName,
+                                                    icon = Icons.Rounded.Tag,
+                                                    onClick = {
+                                                        viewModel.setCurrentChannel(channel)
+                                                        coroutineScope.launch {
+                                                            panelState.closePanels()
+                                                        }
+                                                    },
+                                                    selected = currentChannel == channel
+                                                )
+                                            }
+                                            is DomainChannel.VoiceChannel -> {
+                                                ChannelItem(
+                                                    title = channel.channelName,
+                                                    icon = Icons.Rounded.VolumeUp,
+                                                    onClick = {
+
+                                                    },
+                                                    selected = currentChannel == channel
+                                                )
+                                            }
+                                            else -> Unit
+                                        }
                                     }
                                 }
                             }
                         }
                     }
-                }
-                is DiscordAPIResult.Error -> {
+                    is DiscordAPIResult.Error -> {
 
+                    }
                 }
             }
         }

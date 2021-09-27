@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.xinto.opencord.R
-import com.xinto.opencord.ui.component.text.OpenCordText
+import com.xinto.opencord.ui.component.text.Text
 import com.xinto.opencord.ui.widgets.button.PrimaryButton
 import com.xinto.opencord.ui.widgets.button.SecondaryButton
 
@@ -51,14 +51,14 @@ fun LoginLandingScreen(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            OpenCordText(
+            Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = "Welcome to OpenCord",
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.h1
             )
             CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                OpenCordText(
+                Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = "Join over 0 people who use OpenCord as an alternative to the stock Discord app.",
                     textAlign = TextAlign.Center,
@@ -75,13 +75,13 @@ fun LoginLandingScreen(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = { navController.navigate("login") }
             ) {
-                OpenCordText(text = "Login")
+                Text(text = "Login")
             }
             SecondaryButton(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = { }
             ) {
-                OpenCordText(text = "Register")
+                Text(text = "Register")
             }
         }
     }

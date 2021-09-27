@@ -3,11 +3,9 @@ package com.xinto.opencord.ui.component.list
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -45,7 +43,6 @@ fun GuildItem(
                 .padding(horizontal = 12.dp)
                 .size(48.dp)
                 .clip(RoundedCornerShape(imageCornerRadius))
-                .background(color = MaterialTheme.colors.surface)
                 .clickable(onClick = onClick),
             content = image
         )

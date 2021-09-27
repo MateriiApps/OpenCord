@@ -26,7 +26,7 @@ import com.xinto.opencord.network.repository.DiscordAuthAPIRepository
 import com.xinto.opencord.network.response.CaptchaResponse
 import com.xinto.opencord.network.result.DiscordAPIResult
 import com.xinto.opencord.ui.MainActivity
-import com.xinto.opencord.ui.component.text.OpenCordText
+import com.xinto.opencord.ui.component.text.Text
 import com.xinto.opencord.ui.component.textfield.OpenCordTextField
 import com.xinto.opencord.ui.widgets.button.PrimaryButton
 import com.xinto.opencord.util.currentAccountToken
@@ -59,7 +59,7 @@ fun LoginScreen(
                 TopAppBar(
                     modifier = Modifier.fillMaxWidth(),
                     title = {
-                        OpenCordText(
+                        Text(
                             text = "Login",
                             style = MaterialTheme.typography.h2
                         )
@@ -95,14 +95,14 @@ fun LoginScreen(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                OpenCordText(
+                Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = "Welcome back!",
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.h1
                 )
                 CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                    OpenCordText(
+                    Text(
                         modifier = Modifier.fillMaxWidth(),
                         text = "We're so excited to see you again!",
                         textAlign = TextAlign.Center,
@@ -206,7 +206,7 @@ fun LoginScreen(
                     }
                 }
             ) {
-                OpenCordText(text = "Login")
+                Text(text = "Login")
             }
         }
     }
