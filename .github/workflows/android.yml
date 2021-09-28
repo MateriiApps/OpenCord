@@ -15,20 +15,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
       - name: set up JDK 11
         uses: actions/setup-java@v2
         with:
           java-version: 11
           distribution: 'zulu'
+          cache: 'grade'
 
       - name: Build Debug APK with Gradle
         run: chmod +x ./gradlew && ./gradlew assembleDebug
@@ -38,11 +30,3 @@ jobs:
         with:
           name: app
           path: app/build/outputs/apk/debug/app-debug.apk
-
-      - name: Push build
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository == 'X1nto/OpenCord'
-        uses: sinshutu/upload-to-discord@v2.0.0
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-        with:
-          args: app/build/outputs/apk/debug/app-debug.apk
