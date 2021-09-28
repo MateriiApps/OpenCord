@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.VisualTransformation
-import com.xinto.opencord.ui.component.text.OpenCordText
+import com.xinto.opencord.ui.component.text.Text
 import com.xinto.opencord.ui.theme.secondaryButton
 
 @Composable
@@ -28,7 +28,7 @@ fun OpenCordTextField(
         modifier = modifier,
         singleLine = singleLine,
         label = {
-            OpenCordText(
+            Text(
                 text = label,
                 style = MaterialTheme.typography.body1
             )

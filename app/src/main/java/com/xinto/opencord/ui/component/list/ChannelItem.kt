@@ -14,7 +14,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.ui.component.indicator.UnreadIndicator
-import com.xinto.opencord.ui.component.text.OpenCordText
+import com.xinto.opencord.ui.component.text.Text
 
 @Composable
 fun ChannelItem(
@@ -41,15 +41,14 @@ fun ChannelItem(
                 .clickable(onClick = onClick)
                 .padding(6.dp)
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                modifier = Modifier.align(Alignment.CenterVertically),
                 imageVector = icon,
                 contentDescription = "Channel Type"
             )
-            OpenCordText(
-                modifier = Modifier.align(Alignment.CenterVertically),
+            Text(
                 text = title,
                 style = MaterialTheme.typography.h5
             )

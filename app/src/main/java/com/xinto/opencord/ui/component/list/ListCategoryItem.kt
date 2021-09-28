@@ -14,7 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.xinto.opencord.ui.component.text.OpenCordText
+import com.xinto.opencord.ui.component.text.Text
 import java.util.*
 
 @Composable
@@ -40,7 +40,7 @@ fun ListCategoryItem(
                 imageVector = Icons.Default.KeyboardArrowDown,
                 contentDescription = "Collapse"
             )
-            OpenCordText(
+            Text(
                 modifier = Modifier.align(Alignment.CenterVertically),
                 text = text.uppercase(Locale.getDefault()),
                 style = MaterialTheme.typography.h6

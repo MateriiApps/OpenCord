@@ -1,8 +1,8 @@
 package com.xinto.opencord.ui.component.text
 
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.material.LocalTextStyle
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -13,16 +13,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 
 @Composable
-fun OpenCordText(
+fun Text(
     text: String,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
     textAlign: TextAlign? = null,
+    style: TextStyle = LocalTextStyle.current,
     lineHeight: TextUnit = TextUnit.Unspecified,
     onTextLayout: (TextLayoutResult) -> Unit = {},
-    style: TextStyle = LocalTextStyle.current,
 ) {
-    Text(
+    androidx.compose.material.Text(
         text = text,
         modifier = modifier,
         color = color,
@@ -34,17 +34,17 @@ fun OpenCordText(
 }
 
 @Composable
-fun OpenCordText(
+fun Text(
     text: AnnotatedString,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
     textAlign: TextAlign? = null,
-    lineHeight: TextUnit = TextUnit.Unspecified,
     style: TextStyle = LocalTextStyle.current,
-    onTextLayout: (TextLayoutResult) -> Unit = {},
+    lineHeight: TextUnit = TextUnit.Unspecified,
     inlineContent: Map<String, InlineTextContent> = mapOf(),
+    onTextLayout: (TextLayoutResult) -> Unit = {},
 ) {
-    Text(
+    androidx.compose.material.Text(
         text = text,
         modifier = modifier,
         color = color,

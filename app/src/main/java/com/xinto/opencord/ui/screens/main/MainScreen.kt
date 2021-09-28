@@ -4,6 +4,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.discord.panels.OverlappingPanels
@@ -12,12 +13,15 @@ import com.discord.panels.rememberOverlappingPanelsState
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.xinto.opencord.ui.component.layout.OpenCordBackground
 import com.xinto.opencord.ui.viewmodel.MainViewModel
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MainScreen() {
     val panelState = rememberOverlappingPanelsState(initialValue = OverlappingPanelsValue.Closed)
+
+    val coroutineScope = rememberCoroutineScope()
 
     val viewModel: MainViewModel = getViewModel()
     ProvideWindowInsets(windowInsetsAnimationsEnabled = true) {
@@ -31,7 +35,19 @@ fun MainScreen() {
                     StartPanel(viewModel, panelState)
                 },
                 panelCenter = {
-                    CenterPanel(viewModel)
+                    CenterPanel(
+                        viewModel = viewModel,
+                        onChannelsButtonClick = {
+                            coroutineScope.launch {
+                                panelState.openStartPanel()
+                            }
+                        },
+                        onMembersButtonClick = {
+                            coroutineScope.launch {
+                                panelState.openEndPanel()
+                            }
+                        }
+                    )
                 },
                 panelEnd = {
                     Canvas(

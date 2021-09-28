@@ -19,7 +19,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.xinto.opencord.ui.component.text.OpenCordText
+import com.xinto.opencord.ui.component.text.Text
 import com.xinto.opencord.ui.theme.secondaryButton
 
 @Composable
@@ -62,7 +62,7 @@ fun OpenCordBasicTextField(
                         CompositionLocalProvider(
                             LocalContentAlpha provides ContentAlpha.medium
                         ) {
-                            OpenCordText(text = hint)
+                            Text(text = hint)
                         }
                     }
                 }
