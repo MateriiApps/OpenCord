@@ -20,7 +20,7 @@ jobs:
         with:
           java-version: 11
           distribution: 'zulu'
-          cache: 'grade'
+          cache: 'gradle'
 
       - name: Build Debug APK with Gradle
         run: chmod +x ./gradlew && ./gradlew assembleDebug
