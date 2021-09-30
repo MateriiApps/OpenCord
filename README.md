@@ -3,6 +3,11 @@
 
 An open-source reimplementation of the Discord Android app.
 
+Chat                       |  Drawer
+:-------------------------:|:-------------------------:
+![](media/screenshot_chat.png)  | ![](media/screenshot_drawer.png)
+
+
 Why does this exist?
 -------
 Current discord app sucks as it looks ugly and doesn't support themes. The goal of this
