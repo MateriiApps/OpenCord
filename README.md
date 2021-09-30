@@ -13,6 +13,7 @@ Status of OpenCord
 - [ ] Full (or at least most essential) Discord feature implementation
 - [ ] Theme support
 - [ ] Plugin support
+- [ ] Multiplatform support (Windows, macOS, Linux, Android)
 
 FAQ
 -------
