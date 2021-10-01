@@ -3,9 +3,9 @@
 
 An open-source reimplementation of the Discord Android app.
 
-Chat                       |  Drawer
-:-------------------------:|:-------------------------:
-![](media/screenshot_chat.png)  | ![](media/screenshot_drawer.png)
+Chat                            |  Drawer
+:------------------------------:|:------------------------------:
+ ![](media/screenshot_chat.png) | ![](media/screenshot_drawer.png)
 
 
 Why does this exist?
