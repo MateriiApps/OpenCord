@@ -1,8 +1,12 @@
 package com.xinto.opencord.ui.component.list
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,10 +19,11 @@ import androidx.compose.ui.unit.dp
 import coil.annotation.ExperimentalCoilApi
 import com.xinto.opencord.ui.component.indicator.UnreadIndicator
 
-@OptIn(ExperimentalCoilApi::class)
+@OptIn(ExperimentalCoilApi::class, ExperimentalAnimationApi::class)
 @Composable
 fun GuildItem(
     selected: Boolean,
+    showIndicator: Boolean,
     onClick: () -> Unit,
     image: @Composable BoxScope.() -> Unit,
 ) {
@@ -32,11 +37,17 @@ fun GuildItem(
     Box(
         modifier = Modifier.height(48.dp),
     ) {
-        UnreadIndicator(
-            modifier = Modifier
-                .align(Alignment.CenterStart)
-                .fillMaxHeight(indicatorFraction)
-        )
+        AnimatedVisibility(
+            visible = showIndicator,
+            enter = slideInHorizontally(),
+            exit = slideOutHorizontally()
+        ) {
+            UnreadIndicator(
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
+                    .fillMaxHeight(indicatorFraction)
+            )
+        }
         Box(
             modifier = Modifier
                 .align(Alignment.Center)

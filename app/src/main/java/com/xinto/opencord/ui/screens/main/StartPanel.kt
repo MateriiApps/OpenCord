@@ -79,6 +79,7 @@ fun StartPanel(
                             val discordIcon = painterResource(R.drawable.ic_discord_logo)
                             GuildItem(
                                 selected = false,
+                                showIndicator = false,
                                 onClick = {}
                             ) {
                                 Icon(
@@ -106,6 +107,7 @@ fun StartPanel(
 
                             GuildItem(
                                 selected = currentGuild == guild,
+                                showIndicator = true,
                                 onClick = {
                                     viewModel.setCurrentGuild(guild)
                                 }
@@ -167,23 +169,25 @@ fun StartPanel(
                                                 ChannelItem(
                                                     title = channel.channelName,
                                                     icon = Icons.Rounded.Tag,
+                                                    selected = currentChannel == channel,
+                                                    showIndicator = true,
                                                     onClick = {
                                                         viewModel.setCurrentChannel(channel)
                                                         coroutineScope.launch {
                                                             panelState.closePanels()
                                                         }
                                                     },
-                                                    selected = currentChannel == channel
                                                 )
                                             }
                                             is DomainChannel.VoiceChannel -> {
                                                 ChannelItem(
                                                     title = channel.channelName,
                                                     icon = Icons.Rounded.VolumeUp,
+                                                    selected = currentChannel == channel,
+                                                    showIndicator = true,
                                                     onClick = {
 
                                                     },
-                                                    selected = currentChannel == channel
                                                 )
                                             }
                                             else -> Unit
