@@ -53,146 +53,134 @@ fun StartPanel(
 
     val channelData = viewModel.channels[currentGuild?.id]
 
-    OpenCordBackground(
-        modifier = Modifier
-            .fillMaxHeight()
-            .clip(
-                shape = MaterialTheme.shapes.topLargeCorners.copy(
-                    topStart = CornerSize(0.dp)
-                )
-            ),
-        backgroundColorAlpha = 0.3f
+    Row(
+        modifier = Modifier.fillMaxSize(),
     ) {
-        Row(
-            modifier = Modifier.fillMaxSize(),
-        ) {
-            when (val result: DiscordAPIResult<List<DomainGuild>> = guildsResult) {
-                is DiscordAPIResult.Loading -> {
-                    CircularProgressIndicator()
-                }
-                is DiscordAPIResult.Success -> {
-                    LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        contentPadding = PaddingValues(vertical = 8.dp)
-                    ) {
-                        item {
-                            val discordIcon = painterResource(R.drawable.ic_discord_logo)
-                            GuildItem(
-                                selected = false,
-                                showIndicator = false,
-                                onClick = {}
-                            ) {
-                                Icon(
-                                    modifier = Modifier
-                                        .size(28.dp)
-                                        .align(Alignment.Center),
-                                    painter = discordIcon,
-                                    contentDescription = "Home",
-                                    tint = MaterialTheme.colors.primary
-                                )
-                            }
-                        }
-
-                        item {
-                            Divider(
+        when (val result: DiscordAPIResult<List<DomainGuild>> = guildsResult) {
+            is DiscordAPIResult.Loading -> {
+                CircularProgressIndicator()
+            }
+            is DiscordAPIResult.Success -> {
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    contentPadding = PaddingValues(vertical = 8.dp)
+                ) {
+                    item {
+                        val discordIcon = painterResource(R.drawable.ic_discord_logo)
+                        GuildItem(
+                            selected = false,
+                            showIndicator = false,
+                            onClick = {}
+                        ) {
+                            Icon(
                                 modifier = Modifier
-                                    .width(32.dp)
-                                    .clip(MaterialTheme.shapes.medium),
-                                thickness = 2.dp
+                                    .size(28.dp)
+                                    .align(Alignment.Center),
+                                painter = discordIcon,
+                                contentDescription = "Home",
+                                tint = MaterialTheme.colors.primary
                             )
                         }
+                    }
 
-                        items(result.data) { guild ->
-                            val imagePainter = rememberOpenCordCachePainter(guild.iconUrl)
+                    item {
+                        Divider(
+                            modifier = Modifier
+                                .width(32.dp)
+                                .clip(MaterialTheme.shapes.medium),
+                            thickness = 2.dp
+                        )
+                    }
 
-                            GuildItem(
-                                selected = currentGuild == guild,
-                                showIndicator = true,
-                                onClick = {
-                                    viewModel.setCurrentGuild(guild)
-                                }
-                            ) {
-                                Image(
-                                    modifier = Modifier.size(48.dp),
-                                    painter = imagePainter,
-                                    contentDescription = "Guild Icon"
-                                )
+                    items(result.data) { guild ->
+                        val imagePainter = rememberOpenCordCachePainter(guild.iconUrl)
+
+                        GuildItem(
+                            selected = currentGuild == guild,
+                            showIndicator = true,
+                            onClick = {
+                                viewModel.setCurrentGuild(guild)
                             }
+                        ) {
+                            Image(
+                                modifier = Modifier.size(48.dp),
+                                painter = imagePainter,
+                                contentDescription = "Guild Icon"
+                            )
                         }
                     }
                 }
-                is DiscordAPIResult.Error -> {
-                    Text(text = "Failed to load guilds")
-                }
             }
-            OpenCordBackground(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight()
-                    .clip(MaterialTheme.shapes.topLargeCorners),
-                backgroundColorAlpha = 0.6f
-            ) {
-                Crossfade(channelData) { channelData ->
-                    LazyColumn {
+            is DiscordAPIResult.Error -> {
+                Text(text = "Failed to load guilds")
+            }
+        }
+        OpenCordBackground(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxHeight()
+                .clip(MaterialTheme.shapes.topLargeCorners),
+            backgroundColorAlpha = 0.6f
+        ) {
+            Crossfade(channelData) { channelData ->
+                val bannerUrl = channelData?.bannerUrl
+                LazyColumn {
+                    if (bannerUrl != null) {
                         item {
-                            val bannerUrl = channelData?.bannerUrl
+                            val painter = rememberOpenCordCachePainter(bannerUrl)
+                            Image(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .heightIn(min = 100.dp, max = 180.dp)
+                                    .clip(RoundedCornerShape(8.dp)),
+                                painter = painter,
+                                contentScale = ContentScale.Crop,
+                                contentDescription = "Guild Banner"
+                            )
+                        }
+                    }
+                    if (channelData != null) {
+                        for ((category, categoryChannels) in channelData.channels) {
+                            if (category != null) {
+                                item {
+                                    ListCategoryItem(text = category.name)
+                                }
+                            }
+                            items(categoryChannels) { channel ->
+                                when (channel) {
+                                    is DomainChannel.TextChannel -> {
+                                        ChannelItem(
+                                            title = channel.channelName,
+                                            icon = Icons.Rounded.Tag,
+                                            selected = currentChannel == channel,
+                                            showIndicator = currentChannel != channel,
+                                            onClick = {
+                                                viewModel.setCurrentChannel(channel)
+                                                coroutineScope.launch {
+                                                    panelState.closePanels()
+                                                }
+                                            },
+                                        )
+                                    }
+                                    is DomainChannel.VoiceChannel -> {
+                                        ChannelItem(
+                                            title = channel.channelName,
+                                            icon = Icons.Rounded.VolumeUp,
+                                            selected = currentChannel == channel,
+                                            showIndicator = true,
+                                            onClick = {
 
-                            if (bannerUrl != null) {
-                                val painter = rememberOpenCordCachePainter(bannerUrl)
-                                Image(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .heightIn(min = 100.dp, max = 180.dp)
-                                        .clip(RoundedCornerShape(8.dp)),
-                                    painter = painter,
-                                    contentScale = ContentScale.Crop,
-                                    contentDescription = "Guild Banner"
-                                )
+                                            },
+                                        )
+                                    }
+                                    else -> Unit
+                                }
                             }
                         }
-                        if (channelData != null) {
-                            for ((category, categoryChannels) in channelData.channels) {
-                                if (category != null) {
-                                    item {
-                                        ListCategoryItem(text = category.name)
-                                    }
-                                }
-                                items(categoryChannels) { channel ->
-                                    when (channel) {
-                                        is DomainChannel.TextChannel -> {
-                                            ChannelItem(
-                                                title = channel.channelName,
-                                                icon = Icons.Rounded.Tag,
-                                                selected = currentChannel == channel,
-                                                showIndicator = true,
-                                                onClick = {
-                                                    viewModel.setCurrentChannel(channel)
-                                                    coroutineScope.launch {
-                                                        panelState.closePanels()
-                                                    }
-                                                },
-                                            )
-                                        }
-                                        is DomainChannel.VoiceChannel -> {
-                                            ChannelItem(
-                                                title = channel.channelName,
-                                                icon = Icons.Rounded.VolumeUp,
-                                                selected = currentChannel == channel,
-                                                showIndicator = true,
-                                                onClick = {
-
-                                                },
-                                            )
-                                        }
-                                        else -> Unit
-                                    }
-                                }
-                            }
-                        } else {
-                            item {
-                                CircularProgressIndicator()
-                            }
+                    } else {
+                        item {
+                            CircularProgressIndicator()
                         }
                     }
                 }

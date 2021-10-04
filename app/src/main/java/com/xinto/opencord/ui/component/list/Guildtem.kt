@@ -38,14 +38,13 @@ fun GuildItem(
         modifier = Modifier.height(48.dp),
     ) {
         AnimatedVisibility(
+            modifier = Modifier.align(Alignment.CenterStart),
             visible = showIndicator,
             enter = slideInHorizontally(),
             exit = slideOutHorizontally()
         ) {
             UnreadIndicator(
-                modifier = Modifier
-                    .align(Alignment.CenterStart)
-                    .fillMaxHeight(indicatorFraction)
+                modifier = Modifier.fillMaxHeight(indicatorFraction)
             )
         }
         Box(

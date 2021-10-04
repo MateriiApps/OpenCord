@@ -55,12 +55,14 @@ class MainViewModel(
             _currentGuild.value = guild
 
             if (_channels[guild.id] == null) {
-                _channels[guild.id] = ChannelListData(
-                    bannerUrl = guild.bannerUrl,
-                    channels = getSortedChannels(
-                        repository.getGuildChannels(guild.id)
+                try {
+                    _channels[guild.id] = ChannelListData(
+                        bannerUrl = guild.bannerUrl,
+                        channels = getSortedChannels(
+                            repository.getGuildChannels(guild.id)
+                        )
                     )
-                )
+                } catch (e: HttpException) {}
             }
         }
     }
@@ -70,11 +72,13 @@ class MainViewModel(
             _currentChannel.value = channel
 
             if (_messages[channel.channelId] == null) {
-                _messages[channel.channelId] = MessageListData(
-                    messages = repository
-                        .getChannelMessages(channel.channelId)
-                        .toMutableStateList()
-                )
+                try {
+                    _messages[channel.channelId] = MessageListData(
+                        messages = repository
+                            .getChannelMessages(channel.channelId)
+                            .toMutableStateList()
+                    )
+                } catch (e: HttpException) {}
             }
         }
     }

@@ -14,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
@@ -37,14 +36,13 @@ fun ChannelItem(
         modifier = modifier,
     ) {
         AnimatedVisibility(
+            modifier = Modifier.align(Alignment.CenterStart),
             visible = showIndicator,
             enter = slideInHorizontally(),
             exit = slideOutHorizontally()
         ) {
             UnreadIndicator(
-                modifier = Modifier
-                    .align(Alignment.CenterStart)
-                    .height(6.dp)
+                modifier = Modifier.height(6.dp)
             )
         }
         Row(

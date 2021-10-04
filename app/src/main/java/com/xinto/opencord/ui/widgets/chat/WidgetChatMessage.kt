@@ -1,10 +1,7 @@
 package com.xinto.opencord.ui.widgets.chat
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.material.ExperimentalMaterialApi
@@ -50,8 +47,10 @@ fun WidgetChatMessage(
             contentDescription = null
         )
         Column(
-            modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(2.dp)
+            modifier = Modifier
+                .weight(1f)
+                .heightIn(min = 40.dp),
+            verticalArrangement = Arrangement.SpaceEvenly,
         ) {
             Text(
                 text = message.author.username,

@@ -20,7 +20,7 @@ fun AppBar(
     TopAppBar(
         modifier = modifier,
         backgroundColor = MaterialTheme.colors.surface,
-        contentPadding = PaddingValues(4.dp),
+        contentPadding = PaddingValues(horizontal = 4.dp),
         elevation = 0.dp,
     ) {
         CompositionLocalProvider(
