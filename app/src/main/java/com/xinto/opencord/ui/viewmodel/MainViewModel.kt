@@ -50,36 +50,32 @@ class MainViewModel(
     private val _messages = mutableStateMapOf<Long, MessageListData>()
     val messages: SnapshotStateMap<Long, MessageListData> = _messages
 
-    fun setCurrentGuild(guild: DomainGuild) {
-        viewModelScope.launch {
-            _currentGuild.value = guild
+    suspend fun setCurrentGuild(guild: DomainGuild) {
+        _currentGuild.value = guild
 
-            if (_channels[guild.id] == null) {
-                try {
-                    _channels[guild.id] = ChannelListData(
-                        bannerUrl = guild.bannerUrl,
-                        channels = getSortedChannels(
-                            repository.getGuildChannels(guild.id)
-                        )
+        if (_channels[guild.id] == null) {
+            try {
+                _channels[guild.id] = ChannelListData(
+                    bannerUrl = guild.bannerUrl,
+                    channels = getSortedChannels(
+                        repository.getGuildChannels(guild.id)
                     )
-                } catch (e: HttpException) {}
-            }
+                )
+            } catch (e: HttpException) {}
         }
     }
 
-    fun setCurrentChannel(channel: DomainChannel) {
-        viewModelScope.launch {
-            _currentChannel.value = channel
+    suspend fun setCurrentChannel(channel: DomainChannel) {
+        _currentChannel.value = channel
 
-            if (_messages[channel.channelId] == null) {
-                try {
-                    _messages[channel.channelId] = MessageListData(
-                        messages = repository
-                            .getChannelMessages(channel.channelId)
-                            .toMutableStateList()
-                    )
-                } catch (e: HttpException) {}
-            }
+        if (_messages[channel.channelId] == null) {
+            try {
+                _messages[channel.channelId] = MessageListData(
+                    messages = repository
+                        .getChannelMessages(channel.channelId)
+                        .toMutableStateList()
+                )
+            } catch (e: HttpException) {}
         }
     }
 

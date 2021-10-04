@@ -100,7 +100,9 @@ fun StartPanel(
                             selected = currentGuild == guild,
                             showIndicator = true,
                             onClick = {
-                                viewModel.setCurrentGuild(guild)
+                                coroutineScope.launch {
+                                    viewModel.setCurrentGuild(guild)
+                                }
                             }
                         ) {
                             Image(
@@ -156,9 +158,9 @@ fun StartPanel(
                                             selected = currentChannel == channel,
                                             showIndicator = currentChannel != channel,
                                             onClick = {
-                                                viewModel.setCurrentChannel(channel)
                                                 coroutineScope.launch {
                                                     panelState.closePanels()
+                                                    viewModel.setCurrentChannel(channel)
                                                 }
                                             },
                                         )
