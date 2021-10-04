@@ -1,6 +1,8 @@
 package com.xinto.opencord.ui.viewmodel
 
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -28,6 +30,10 @@ class MainViewModel(
         val channels: Map<DomainChannel.Category?, List<DomainChannel>>,
     )
 
+    data class MessageListData(
+        val messages: SnapshotStateList<DomainMessage>
+    )
+
     private val _guilds =
         MutableStateFlow<DiscordAPIResult<List<DomainGuild>>>(DiscordAPIResult.Loading)
     val guilds: StateFlow<DiscordAPIResult<List<DomainGuild>>> = _guilds
@@ -35,26 +41,42 @@ class MainViewModel(
     private val _currentGuild = MutableStateFlow<DomainGuild?>(null)
     val currentGuild: StateFlow<DomainGuild?> = _currentGuild
 
-    private val _currentGuildChannels =
-        MutableStateFlow<DiscordAPIResult<ChannelListData>>(DiscordAPIResult.Loading)
-    val currentGuildChannels: StateFlow<DiscordAPIResult<ChannelListData>> = _currentGuildChannels
-
     private val _currentChannel = MutableStateFlow<DomainChannel?>(null)
     val currentChannel: StateFlow<DomainChannel?> = _currentChannel
 
-    private val _currentChannelMessages =
-        MutableStateFlow<DiscordAPIResult<SnapshotStateList<DomainMessage>>>(DiscordAPIResult.Loading)
-    val currentChannelMessages: StateFlow<DiscordAPIResult<SnapshotStateList<DomainMessage>>> =
-        _currentChannelMessages
+    private val _channels = mutableStateMapOf<Long, ChannelListData>()
+    val channels: SnapshotStateMap<Long, ChannelListData> = _channels
+
+    private val _messages = mutableStateMapOf<Long, MessageListData>()
+    val messages: SnapshotStateMap<Long, MessageListData> = _messages
 
     fun setCurrentGuild(guild: DomainGuild) {
-        _currentGuild.value = guild
-        fetchChannelsForGuild(guild)
+        viewModelScope.launch {
+            _currentGuild.value = guild
+
+            if (_channels[guild.id] == null) {
+                _channels[guild.id] = ChannelListData(
+                    bannerUrl = guild.bannerUrl,
+                    channels = getSortedChannels(
+                        repository.getGuildChannels(guild.id)
+                    )
+                )
+            }
+        }
     }
 
     fun setCurrentChannel(channel: DomainChannel) {
-        _currentChannel.value = channel
-        fetchMessagesForChannel(channel.channelId)
+        viewModelScope.launch {
+            _currentChannel.value = channel
+
+            if (_messages[channel.channelId] == null) {
+                _messages[channel.channelId] = MessageListData(
+                    messages = repository
+                        .getChannelMessages(channel.channelId)
+                        .toMutableStateList()
+                )
+            }
+        }
     }
 
     fun sendMessage(message: String) {
@@ -76,42 +98,6 @@ class MainViewModel(
                 }
         }
     }
-
-    fun fetchChannelsForGuild(guild: DomainGuild) {
-        viewModelScope.launch {
-            _currentGuildChannels.value =
-                try {
-                    DiscordAPIResult.Success(
-                        ChannelListData(
-                            bannerUrl = guild.bannerUrl,
-                            channels = getSortedChannels(
-                                repository
-                                    .getGuildChannels(guild.id)
-                                    .toMutableStateList()
-                            )
-                        )
-                    )
-                } catch (e: HttpException) {
-                    DiscordAPIResult.Error(e)
-                }
-        }
-    }
-
-    fun fetchMessagesForChannel(channelId: Long) {
-        viewModelScope.launch {
-            _currentChannelMessages.value =
-                try {
-                    DiscordAPIResult.Success(
-                        repository
-                            .getChannelMessages(channelId)
-                            .toMutableStateList()
-                    )
-                } catch (e: HttpException) {
-                    DiscordAPIResult.Error(e)
-                }
-        }
-    }
-
     init {
         fetchGuilds()
         gateway.onEvent { event ->
@@ -119,15 +105,7 @@ class MainViewModel(
                 is MessageCreateEvent -> {
                     val message = DomainMessage.fromApi(event.message)
 
-                    if (message.channelId == currentChannel.value?.channelId) {
-                        val currentChannelMessages = _currentChannelMessages.value
-                        if (currentChannelMessages is DiscordAPIResult.Success) {
-                            val data = currentChannelMessages.data
-                            if (!data.contains(message)) {
-                                data.add(0, message)
-                            }
-                        }
-                    }
+                    _messages[message.channelId]?.messages?.add(0, message)
                 }
             }
         }
