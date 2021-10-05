@@ -61,7 +61,8 @@ class MainViewModel(
                         repository.getGuildChannels(guild.id)
                     )
                 )
-            } catch (e: HttpException) {}
+            } catch (e: HttpException) {
+            }
         }
     }
 
@@ -75,7 +76,8 @@ class MainViewModel(
                         .getChannelMessages(channel.channelId)
                         .toMutableStateList()
                 )
-            } catch (e: HttpException) {}
+            } catch (e: HttpException) {
+            }
         }
     }
 
@@ -98,6 +100,7 @@ class MainViewModel(
                 }
         }
     }
+
     init {
         fetchGuilds()
         gateway.onEvent { event ->

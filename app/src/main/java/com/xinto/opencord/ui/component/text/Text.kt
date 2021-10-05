@@ -1,6 +1,5 @@
 package com.xinto.opencord.ui.component.text
 
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.material.LocalTextStyle
 import androidx.compose.runtime.Composable
