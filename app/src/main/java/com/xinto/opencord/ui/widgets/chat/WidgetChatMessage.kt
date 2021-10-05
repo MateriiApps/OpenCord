@@ -17,8 +17,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.annotation.ExperimentalCoilApi
+import com.xinto.opencord.BuildConfig
 import com.xinto.opencord.domain.model.DomainMessage
-import com.xinto.opencord.network.util.discordCdnUrl
 import com.xinto.opencord.ui.component.image.rememberOpenCordCachePainter
 import com.xinto.opencord.ui.component.text.Text
 import com.xinto.opencord.ui.simpleast.render.render
@@ -74,7 +74,7 @@ fun WidgetChatMessage(
                             placeholderVerticalAlign = PlaceholderVerticalAlign.Center
                         )
                     ) { emoteId ->
-                        val image = rememberOpenCordCachePainter("$discordCdnUrl/emojis/$emoteId")
+                        val image = rememberOpenCordCachePainter("${BuildConfig.URL_CDN}/emojis/$emoteId")
                         Image(
                             painter = image,
                             contentDescription = "Emote"

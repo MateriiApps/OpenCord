@@ -1,8 +1,8 @@
 package com.xinto.opencord.di
 
+import com.xinto.opencord.BuildConfig
 import com.xinto.opencord.network.restapi.DiscordAPI
 import com.xinto.opencord.network.restapi.DiscordAuthAPI
-import com.xinto.opencord.network.util.discordApiUrl
 import okhttp3.OkHttpClient
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -11,10 +11,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 val retrofitModule = module {
 
+    val apiUrl = BuildConfig.URL_API
+
     fun provideAuthClient(
         okHttpClient: OkHttpClient,
     ) = Retrofit.Builder()
-        .baseUrl(discordApiUrl)
+        .baseUrl(apiUrl)
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
@@ -23,7 +25,7 @@ val retrofitModule = module {
     fun provideClient(
         okHttpClient: OkHttpClient,
     ) = Retrofit.Builder()
-        .baseUrl(discordApiUrl)
+        .baseUrl(apiUrl)
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create())
         .build()

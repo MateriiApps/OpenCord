@@ -7,8 +7,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.xinto.opencord.BuildConfig
 import com.xinto.opencord.network.gateway.Gateway
-import com.xinto.opencord.network.util.gatewayUrl
 import com.xinto.opencord.ui.screens.main.MainScreen
 import com.xinto.opencord.ui.theme.OpenCordTheme
 import okhttp3.OkHttpClient
@@ -25,7 +25,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         gatewayClient.newWebSocket(
-            request = Request.Builder().url(gatewayUrl).build(),
+            request = Request.Builder().url(BuildConfig.URL_GATEWAY).build(),
             listener = gateway,
         )
 

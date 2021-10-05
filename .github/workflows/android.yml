@@ -22,11 +22,19 @@ jobs:
           distribution: 'zulu'
           cache: 'gradle'
 
-      - name: Build Debug APK with Gradle
-        run: chmod +x ./gradlew && ./gradlew assembleDebug
+      - name: Build project with Gradle
+        run: chmod +x ./gradlew && ./gradlew build
+
+      - name: Build Discord APK
+        run: ./gradlew assembleDiscordDebug
+
+      - name: Build Fosscord APK
+        run: ./gradlew assembleFosscordDebug
 
       - name: Upload apk as artifact
         uses: actions/upload-artifact@v2
         with:
           name: app
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: |
+            app/build/outputs/apk/discord/debug/app-discord-debug.apk
+            app/build/outputs/apk/fosscord/debug/app-fosscord-debug.apk

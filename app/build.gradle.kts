@@ -8,6 +8,8 @@ val composeVersion = "1.0.1"
 android {
     compileSdk = 31
 
+    flavorDimensions.add("api")
+
     defaultConfig {
         applicationId = "com.xinto.opencord"
         minSdk = 21
@@ -27,6 +29,29 @@ android {
         getByName("release") {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
+    }
+
+    productFlavors {
+        create("discord") {
+            dimension = "api"
+            
+            isDefault = true
+
+            buildConfigField("String", "URL_API", "\"https://discord.com/api/v9\"")
+            buildConfigField("String", "URL_CDN", "\"wss://gateway.discord.gg/?v=9&encoding=json\"")
+            buildConfigField("String", "URL_GATEWAY", "\"https://cdn.discordapp.com\"")
+        }
+
+        create("fosscord") {
+            dimension = "api"
+
+            applicationIdSuffix = ".fosscord"
+            versionNameSuffix = "-fosscord"
+
+            buildConfigField("String", "URL_API", "\"https://fosscord.com/api/v9\"")
+            buildConfigField("String", "URL_CDN", "\"wss://gateway.fosscord.com/?v=9&encoding=json\"")
+            buildConfigField("String", "URL_GATEWAY", "\"https://cdn.fosscord.com\"")
         }
     }
 

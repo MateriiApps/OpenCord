@@ -1,7 +1,7 @@
 package com.xinto.opencord.domain.model
 
+import com.xinto.opencord.BuildConfig
 import com.xinto.opencord.network.response.ApiMessageAuthor
-import com.xinto.opencord.network.util.discordCdnUrl
 
 data class DomainMessageAuthor(
     val userId: Long,
@@ -21,9 +21,9 @@ data class DomainMessageAuthor(
                 discriminator = discriminator,
                 avatarUrl =
                 if (avatar != null)
-                    "${discordCdnUrl}/avatars/$id/$avatar.png"
+                    "${BuildConfig.URL_CDN}/avatars/$id/$avatar.png"
                 else
-                    "${discordCdnUrl}/embed/avatars/${discriminator.toInt() % 5}.png"
+                    "${BuildConfig.URL_CDN}/embed/avatars/${discriminator.toInt() % 5}.png"
             )
         }
 
