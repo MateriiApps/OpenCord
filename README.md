@@ -30,5 +30,13 @@ Unfortunately, it is. Although I'm pretty sure Discord won't start banning anyon
 for using OpenCord, considering how many mods of the stock clients already exist.
 Even with that, use this client at your own risk.
 
-### Working version wen?
+### Where download???!?!?!?!?
+Head over to [repository actions](https://github.com/X1nto/OpenCord/actions), click the latest run and download the `app` artifact.
+After downloading, unzip it. Inside you'll find 2 files: `app-discord-debug.apk` and `app-fosscord-debug.apk`.
+
+#### Differences between these versions
+The `discord` version is considered as the standard version of the app, while the `fosscord` version is meant to be used by users familiar with [Fosscord](https://github.com/fosscord/fosscord).
+Fosscord version of the app redirects to Fosscord API, CDN and Gateway instead of Discord's URLs, allowing you to fully experience OpenCord without being scared of getting banned by Discord.
+
+### Stable version wen?
 Soon™
