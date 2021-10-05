@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 val retrofitModule = module {
 
-    val apiUrl = BuildConfig.URL_API
+    val apiUrl = BuildConfig.URL_API + "/"
 
     fun provideAuthClient(
         okHttpClient: OkHttpClient,
