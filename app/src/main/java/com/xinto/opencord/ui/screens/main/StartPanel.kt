@@ -22,7 +22,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.annotation.ExperimentalCoilApi
-import com.discord.panels.OverlappingPanelsState
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainChannel
 import com.xinto.opencord.domain.model.DomainGuild
@@ -35,6 +34,7 @@ import com.xinto.opencord.ui.component.list.ListCategoryItem
 import com.xinto.opencord.ui.component.text.Text
 import com.xinto.opencord.ui.theme.topLargeCorners
 import com.xinto.opencord.ui.viewmodel.MainViewModel
+import com.xinto.overlappingpanels.OverlappingPanelsState
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalCoilApi::class, ExperimentalMaterialApi::class)

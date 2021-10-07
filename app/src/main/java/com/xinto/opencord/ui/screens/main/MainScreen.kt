@@ -7,12 +7,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.discord.panels.OverlappingPanels
-import com.discord.panels.OverlappingPanelsValue
-import com.discord.panels.rememberOverlappingPanelsState
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.xinto.opencord.ui.component.layout.OpenCordBackground
 import com.xinto.opencord.ui.viewmodel.MainViewModel
+import com.xinto.overlappingpanels.OverlappingPanels
+import com.xinto.overlappingpanels.OverlappingPanelsValue
+import com.xinto.overlappingpanels.rememberOverlappingPanelsState
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
