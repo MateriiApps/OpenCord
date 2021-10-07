@@ -3,7 +3,7 @@ plugins {
     id("kotlin-android")
 }
 
-val composeVersion = "1.0.1"
+val composeVersion = "1.0.3"
 
 android {
     compileSdk = 31
@@ -94,7 +94,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
     implementation("androidx.compose.ui:ui:$composeVersion")
 
-    implementation("io.coil-kt:coil-compose:1.3.2")
+    implementation("io.coil-kt:coil-compose:1.4.0")
 
     val accompanistVersion = "0.18.0"
     implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
@@ -114,7 +114,7 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:$okHttpVersion")
     implementation("com.squareup.okhttp3:logging-interceptor:$okHttpVersion")
 
-    implementation("com.github.X1nto:OverlappingPanelsCompose:1.0.0")
+    implementation("com.github.X1nto:OverlappingPanelsCompose:1.1.0")
     
     implementation("io.insert-koin:koin-androidx-compose:3.1.2")
 
