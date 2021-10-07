@@ -10,6 +10,7 @@ import com.xinto.opencord.network.gateway.data.outgoing.Identification
 import com.xinto.opencord.network.gateway.data.outgoing.IdentificationClientState
 import com.xinto.opencord.network.gateway.data.outgoing.IdentificationProperties
 import com.xinto.opencord.network.gateway.event.Event
+import com.xinto.opencord.network.gateway.event.EventListener
 import com.xinto.opencord.network.gateway.event.dummy.DummyEvent
 import com.xinto.opencord.network.gateway.event.message.MessageCreateEvent
 import com.xinto.opencord.network.gateway.io.IncomingPayload
@@ -26,8 +27,6 @@ import okhttp3.WebSocketListener
 import java.util.*
 import kotlin.coroutines.CoroutineContext
 
-typealias EventAction = (response: Event) -> Unit
-
 class Gateway(
     private val gson: Gson,
 ) : WebSocketListener(), CoroutineScope {
@@ -35,7 +34,7 @@ class Gateway(
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.IO
 
-    private val listeners: MutableList<EventAction> = mutableListOf()
+    val listeners: MutableList<EventListener> = mutableListOf()
 
     private var heartbeatInterval: Long = 0
     private var sequenceNumber: Int = 0
@@ -149,28 +148,30 @@ class Gateway(
         event: String,
         data: JsonElement?,
     ) {
-        notifyListeners(
-            when (event) {
-                "MESSAGE_CREATE" -> MessageCreateEvent(
-                    message = gson.fromJson(data, ApiMessage::class.java)
-                )
-                else -> DummyEvent()
+        for (listener in listeners) {
+            listener.onEvent(
+                when (event) {
+                    "MESSAGE_CREATE" -> MessageCreateEvent(
+                        message = gson.fromJson(data, ApiMessage::class.java)
+                    )
+                    else -> DummyEvent()
+                }
+            )
+        }
+    }
+
+    inline fun <reified T : Event> onEvent(
+        crossinline block: T.() -> Unit
+    ) {
+        listeners.add(
+            object : EventListener {
+                override fun onEvent(event: Event) {
+                    if (event is T) {
+                        block(event)
+                    }
+                }
             }
         )
-    }
-
-    fun onEvent(
-        action: EventAction,
-    ) {
-        listeners.add(action)
-    }
-
-    private fun notifyListeners(
-        response: Event,
-    ) {
-        listeners.forEach {
-            it.invoke(response)
-        }
     }
 
 }

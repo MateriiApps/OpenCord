@@ -103,14 +103,10 @@ class MainViewModel(
 
     init {
         fetchGuilds()
-        gateway.onEvent { event ->
-            when (event) {
-                is MessageCreateEvent -> {
-                    val message = DomainMessage.fromApi(event.message)
+        gateway.onEvent<MessageCreateEvent> {
+            val domainMessage = DomainMessage.fromApi(message)
 
-                    _messages[message.channelId]?.messages?.add(0, message)
-                }
-            }
+            _messages[domainMessage.channelId]?.messages?.add(0, domainMessage)
         }
     }
 
