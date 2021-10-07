@@ -10,7 +10,7 @@ Chat                            |  Drawer
 
 Why does this exist?
 -------
-Current discord app sucks as it looks ugly and doesn't support themes. The goal of this
+Current Discord app sucks as it doesn't support any type of customization (themes, plugins, layout etc...). The goal of this
 project is to reimagine the Discord experience on mobile devices.
 
 Status of OpenCord
