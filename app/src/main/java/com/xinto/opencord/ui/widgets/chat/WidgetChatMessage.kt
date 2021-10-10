@@ -1,12 +1,14 @@
 package com.xinto.opencord.ui.widgets.chat
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.InlineTextContent
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.Composable
+import androidx.compose.material.*
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -16,6 +18,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.xinto.opencord.ui.component.bottomsheet.BottomSheetDialog
 import coil.annotation.ExperimentalCoilApi
 import com.xinto.opencord.BuildConfig
 import com.xinto.opencord.domain.model.DomainMessage
@@ -25,7 +28,11 @@ import com.xinto.opencord.ui.simpleast.render.render
 import com.xinto.opencord.util.SimpleAstParser
 import org.koin.androidx.compose.get
 
-@OptIn(ExperimentalCoilApi::class, ExperimentalMaterialApi::class)
+@OptIn(
+    ExperimentalCoilApi::class,
+    ExperimentalMaterialApi::class,
+    ExperimentalFoundationApi::class
+)
 @Composable
 fun WidgetChatMessage(
     message: DomainMessage,
@@ -34,8 +41,18 @@ fun WidgetChatMessage(
     val parser = get<SimpleAstParser>()
 
     val userImage = rememberOpenCordCachePainter(message.author.avatarUrl)
+
+    var showBottomDialog by rememberSaveable { mutableStateOf(false) }
+
     Row(
-        modifier = modifier,
+        modifier = Modifier
+            .combinedClickable(
+                onLongClick = {
+                    showBottomDialog = true
+                },
+                onClick = {}
+            )
+            .then(modifier),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.Top
     ) {
@@ -82,6 +99,15 @@ fun WidgetChatMessage(
                     }
                 )
             )
+        }
+    }
+
+    if (showBottomDialog) {
+        BottomSheetDialog(
+            onDismissRequest = {
+                showBottomDialog = false
+            }
+        ) {
         }
     }
 }
