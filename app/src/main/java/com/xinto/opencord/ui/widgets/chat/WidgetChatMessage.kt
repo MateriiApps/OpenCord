@@ -18,6 +18,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.xinto.opencord.ui.component.bottomsheet.BottomSheetDialog
 import coil.annotation.ExperimentalCoilApi
 import com.xinto.opencord.BuildConfig

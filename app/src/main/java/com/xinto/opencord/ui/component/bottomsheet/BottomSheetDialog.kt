@@ -15,14 +15,14 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.*
+import androidx.compose.ui.semantics.dialog
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import androidx.compose.ui.util.fastMap
 import androidx.compose.ui.util.fastMaxBy
-import androidx.compose.ui.window.DialogProperties
-import androidx.compose.ui.window.DialogWindowProvider
 import androidx.lifecycle.ViewTreeLifecycleOwner
 import androidx.lifecycle.ViewTreeViewModelStoreOwner
 import androidx.savedstate.ViewTreeSavedStateRegistryOwner
@@ -37,7 +37,7 @@ class BottomDialogProperties(
     @OptIn(ExperimentalComposeUiApi::class)
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is DialogProperties) return false
+        if (other !is BottomDialogProperties) return false
 
         if (dismissOnBackPress != other.dismissOnBackPress) return false
         if (dismissOnClickOutside != other.dismissOnClickOutside) return false
@@ -75,7 +75,9 @@ fun BottomSheetDialog(
             dialogId = dialogId
         ).apply {
             setContent(composition) {
-                BottomDialogLayout {
+                BottomDialogLayout(
+                    modifier = Modifier.semantics { dialog() },
+                ) {
                     currentContent()
                 }
             }
@@ -184,11 +186,15 @@ private class BottomSheetDialogWrapper(
     }
 }
 
+interface BottomDialogWindowProvider {
+    val window: Window
+}
+
 @SuppressLint("ViewConstructor")
 private class BottomDialogLayout(
     context: Context,
     override val window: Window
-) : AbstractComposeView(context), DialogWindowProvider {
+) : AbstractComposeView(context), BottomDialogWindowProvider {
 
     private var content: @Composable () -> Unit by mutableStateOf({})
 
