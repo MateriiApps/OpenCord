@@ -83,11 +83,11 @@ android {
 
 dependencies {
     implementation("androidx.appcompat:appcompat:1.3.1")
-    implementation("androidx.core:core-ktx:1.6.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
+    implementation("androidx.core:core-ktx:1.7.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.4.0")
     implementation("androidx.preference:preference-ktx:1.1.1")
 
-    implementation("androidx.activity:activity-compose:1.3.1")
+    implementation("androidx.activity:activity-compose:1.4.0")
     implementation("androidx.compose.foundation:foundation:$composeVersion")
     implementation("androidx.compose.material:material-icons-core:$composeVersion")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
@@ -98,7 +98,7 @@ dependencies {
 
     implementation("io.coil-kt:coil-compose:1.4.0")
 
-    val accompanistVersion = "0.18.0"
+    val accompanistVersion = "0.20.0"
     implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-insets:$accompanistVersion")
