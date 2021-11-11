@@ -1,9 +1,8 @@
 package com.xinto.opencord.ui.viewmodel
 
-import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateMap
-import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xinto.opencord.domain.model.DomainChannel
@@ -15,8 +14,6 @@ import com.xinto.opencord.network.gateway.event.message.MessageCreateEvent
 import com.xinto.opencord.network.repository.DiscordAPIRepository
 import com.xinto.opencord.network.result.DiscordAPIResult
 import com.xinto.opencord.util.getSortedChannels
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
@@ -34,15 +31,24 @@ class MainViewModel(
         val messages: SnapshotStateList<DomainMessage>
     )
 
-    private val _guilds =
-        MutableStateFlow<DiscordAPIResult<List<DomainGuild>>>(DiscordAPIResult.Loading)
-    val guilds: StateFlow<DiscordAPIResult<List<DomainGuild>>> = _guilds
+    sealed class CurrentGuild {
+        object None : CurrentGuild()
+        data class Guild(val data: DomainGuild) : CurrentGuild()
+    }
 
-    private val _currentGuild = MutableStateFlow<DomainGuild?>(null)
-    val currentGuild: StateFlow<DomainGuild?> = _currentGuild
+    sealed class CurrentChannel {
+        object None : CurrentChannel()
+        data class Channel(val data: DomainChannel) : CurrentChannel()
+    }
 
-    private val _currentChannel = MutableStateFlow<DomainChannel?>(null)
-    val currentChannel: StateFlow<DomainChannel?> = _currentChannel
+    var guilds by mutableStateOf<DiscordAPIResult<List<DomainGuild>>>(DiscordAPIResult.Loading)
+        private set
+
+    var currentGuild by mutableStateOf<CurrentGuild>(CurrentGuild.None)
+        private set
+
+    var currentChannel by mutableStateOf<CurrentChannel>(CurrentChannel.None)
+        private set
 
     private val _channels = mutableStateMapOf<Long, ChannelListData>()
     val channels: SnapshotStateMap<Long, ChannelListData> = _channels
@@ -51,7 +57,7 @@ class MainViewModel(
     val messages: SnapshotStateMap<Long, MessageListData> = _messages
 
     suspend fun setCurrentGuild(guild: DomainGuild) {
-        _currentGuild.value = guild
+        currentGuild = CurrentGuild.Guild(guild)
 
         if (_channels[guild.id] == null) {
             try {
@@ -67,7 +73,7 @@ class MainViewModel(
     }
 
     suspend fun setCurrentChannel(channel: DomainChannel) {
-        _currentChannel.value = channel
+        currentChannel = CurrentChannel.Channel(channel)
 
         if (_messages[channel.channelId] == null) {
             try {
@@ -82,17 +88,21 @@ class MainViewModel(
     }
 
     fun sendMessage(message: String) {
-        viewModelScope.launch {
-            repository.postChannelMessage(
-                channelId = _currentChannel.value!!.channelId,
-                messageBody = MessageBody(message)
-            )
+        val currentChannelAsChannel = currentChannel as? CurrentChannel.Channel
+
+        if (currentChannelAsChannel != null) {
+            viewModelScope.launch {
+                repository.postChannelMessage(
+                    channelId =currentChannelAsChannel.data.channelId,
+                    messageBody = MessageBody(message)
+                )
+            }
         }
     }
 
     fun fetchGuilds() {
         viewModelScope.launch {
-            _guilds.value =
+            guilds =
                 try {
                     DiscordAPIResult.Success(repository.getGuilds())
                 } catch (e: HttpException) {

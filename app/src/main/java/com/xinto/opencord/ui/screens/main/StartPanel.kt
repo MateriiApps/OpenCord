@@ -12,8 +12,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Tag
 import androidx.compose.material.icons.rounded.VolumeUp
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,12 +43,10 @@ fun StartPanel(
 ) {
     val coroutineScope = rememberCoroutineScope()
 
-    val guildsResult by viewModel.guilds.collectAsState()
+    val guildsResult = viewModel.guilds
 
-    val currentGuild by viewModel.currentGuild.collectAsState()
-    val currentChannel by viewModel.currentChannel.collectAsState()
-
-    val channelData = viewModel.channels[currentGuild?.id]
+    val currentGuild = viewModel.currentGuild
+    val currentChannel = viewModel.currentChannel
 
     Row(
         modifier = Modifier.fillMaxSize(),
@@ -96,7 +92,8 @@ fun StartPanel(
                         val imagePainter = rememberOpenCordCachePainter(guild.iconUrl)
 
                         GuildItem(
-                            selected = currentGuild == guild,
+                            selected = currentGuild is MainViewModel.CurrentGuild.Guild
+                                    && currentGuild.data.id == guild.id,
                             showIndicator = true,
                             onClick = {
                                 coroutineScope.launch {
@@ -124,65 +121,75 @@ fun StartPanel(
                 .clip(MaterialTheme.shapes.topLargeCorners),
             backgroundColorAlpha = 0.6f
         ) {
-            Crossfade(channelData) { channelData ->
-                val bannerUrl = channelData?.bannerUrl
-                LazyColumn {
-                    if (bannerUrl != null) {
-                        item {
-                            val painter = rememberOpenCordCachePainter(bannerUrl)
-                            Image(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .heightIn(min = 100.dp, max = 180.dp)
-                                    .clip(RoundedCornerShape(8.dp)),
-                                painter = painter,
-                                contentScale = ContentScale.Crop,
-                                contentDescription = "Guild Banner"
-                            )
+            Crossfade(currentGuild) { currentGuild ->
+                when (currentGuild) {
+                    is MainViewModel.CurrentGuild.Guild -> {
+                        val guildChannelData = viewModel.channels[currentGuild.data.id]
+                        val bannerUrl = guildChannelData?.bannerUrl
+                        LazyColumn {
+                            if (bannerUrl != null) {
+                                item {
+                                    val painter = rememberOpenCordCachePainter(bannerUrl)
+                                    Image(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .heightIn(min = 100.dp, max = 180.dp)
+                                            .clip(RoundedCornerShape(8.dp)),
+                                        painter = painter,
+                                        contentScale = ContentScale.Crop,
+                                        contentDescription = "Guild Banner"
+                                    )
+                                }
+                            }
+                            if (guildChannelData != null) {
+                                for ((category, categoryChannels) in guildChannelData.channels) {
+                                    if (category != null) {
+                                        item {
+                                            ListCategoryItem(text = category.name)
+                                        }
+                                    }
+                                    items(categoryChannels) { channel ->
+                                        when (channel) {
+                                            is DomainChannel.TextChannel -> {
+                                                ChannelItem(
+                                                    title = channel.channelName,
+                                                    icon = Icons.Rounded.Tag,
+                                                    selected = currentChannel is MainViewModel.CurrentChannel.Channel
+                                                            && currentChannel.data.channelId == channel.id,
+                                                    showIndicator = currentChannel is MainViewModel.CurrentChannel.Channel
+                                                            && currentChannel.data.channelId != channel.id,
+                                                    onClick = {
+                                                        coroutineScope.launch {
+                                                            panelState.closePanels()
+                                                            viewModel.setCurrentChannel(channel)
+                                                        }
+                                                    },
+                                                )
+                                            }
+                                            is DomainChannel.VoiceChannel -> {
+                                                ChannelItem(
+                                                    title = channel.channelName,
+                                                    icon = Icons.Rounded.VolumeUp,
+                                                    selected = currentChannel == channel,
+                                                    showIndicator = false,
+                                                    onClick = {
+
+                                                    },
+                                                )
+                                            }
+                                            else -> Unit
+                                        }
+                                    }
+                                }
+                            } else {
+                                item {
+                                    CircularProgressIndicator()
+                                }
+                            }
                         }
                     }
-                    if (channelData != null) {
-                        for ((category, categoryChannels) in channelData.channels) {
-                            if (category != null) {
-                                item {
-                                    ListCategoryItem(text = category.name)
-                                }
-                            }
-                            items(categoryChannels) { channel ->
-                                when (channel) {
-                                    is DomainChannel.TextChannel -> {
-                                        ChannelItem(
-                                            title = channel.channelName,
-                                            icon = Icons.Rounded.Tag,
-                                            selected = currentChannel == channel,
-                                            showIndicator = currentChannel != channel,
-                                            onClick = {
-                                                coroutineScope.launch {
-                                                    panelState.closePanels()
-                                                    viewModel.setCurrentChannel(channel)
-                                                }
-                                            },
-                                        )
-                                    }
-                                    is DomainChannel.VoiceChannel -> {
-                                        ChannelItem(
-                                            title = channel.channelName,
-                                            icon = Icons.Rounded.VolumeUp,
-                                            selected = currentChannel == channel,
-                                            showIndicator = true,
-                                            onClick = {
+                    is MainViewModel.CurrentGuild.None -> {
 
-                                            },
-                                        )
-                                    }
-                                    else -> Unit
-                                }
-                            }
-                        }
-                    } else {
-                        item {
-                            CircularProgressIndicator()
-                        }
                     }
                 }
             }

@@ -34,134 +34,139 @@ fun CenterPanel(
     onChannelsButtonClick: () -> Unit,
     onMembersButtonClick: () -> Unit
 ) {
-    val currentChannel by viewModel.currentChannel.collectAsState()
-
-    val messageData = viewModel.messages[currentChannel?.channelId]
-
-    var message by rememberSaveable(currentChannel, key = "message-${currentChannel?.channelId}") { mutableStateOf("") }
+    val currentChannel = viewModel.currentChannel
 
     OpenCordBackground(
         modifier = Modifier
             .fillMaxSize()
             .clip(MaterialTheme.shapes.topLargeCorners)
     ) {
-        Crossfade(targetState = messageData) { messages ->
-            Scaffold(
-                topBar = {
-                    AppBar(
-                        title = {
-                            Text(text = currentChannel?.channelName.toString())
-                        },
-                        navigation = {
-                            IconButton(onChannelsButtonClick) {
-                                Icon(
-                                    imageVector = Icons.Rounded.Menu,
-                                    contentDescription = null
-                                )
-                            }
-                        },
-                        actions = {
-                            IconButton(onMembersButtonClick) {
-                                Icon(
-                                    imageVector = Icons.Rounded.People,
-                                    contentDescription = null
-                                )
-                            }
-                        },
-                    )
-                },
-                bottomBar = {
-                    ChannelTextField(
-                        value = message,
-                        onValueChange = {
-                            message = it
-                        },
-                        onSendClick = {
-                            viewModel.sendMessage(message)
-                            message = ""
-                        }
-                    )
-                }
-            ) { paddingValues ->
-                LazyColumn(
-                    modifier = Modifier.padding(paddingValues),
-                    reverseLayout = true,
-                ) {
-                    if (messages != null) {
-                        items(messages.messages) { message ->
-                            var showBottomDialog by rememberSaveable { mutableStateOf(false) }
-
-                            WidgetChatMessage(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clip(MaterialTheme.shapes.medium)
-                                    .combinedClickable(
-                                        onLongClick = {
-                                            showBottomDialog = true
-                                        },
-                                        onClick = {}
-                                    )
-                                    .padding(6.dp),
-                                message = message,
-                                parser = parser,
-                            )
-
-                            if (showBottomDialog) {
-                                BottomSheetDialog(
-                                    onDismissRequest = {
-                                        showBottomDialog = false
+        Crossfade(targetState = currentChannel) { currentChannel ->
+            when (currentChannel) {
+                is MainViewModel.CurrentChannel.Channel -> {
+                    val messages = viewModel.messages[currentChannel.data.channelId]
+                    var message by rememberSaveable(currentChannel, key = "message-${currentChannel.data.channelId}") { mutableStateOf("") }
+                    Scaffold(
+                        topBar = {
+                            AppBar(
+                                title = {
+                                    Text(text = currentChannel.data.channelName.toString())
+                                },
+                                navigation = {
+                                    IconButton(onChannelsButtonClick) {
+                                        Icon(
+                                            imageVector = Icons.Rounded.Menu,
+                                            contentDescription = null
+                                        )
                                     }
-                                ) {
-                                    Surface(
-                                        color = MaterialTheme.colors.background
-                                    ) {
-                                        Column {
-                                            FullWidthButton(
-                                                modifier = Modifier.fillMaxWidth(),
-                                                icon = {},
-                                                content = {
-                                                    Text("Reply")
-                                                }
-                                            ) {
+                                },
+                                actions = {
+                                    IconButton(onMembersButtonClick) {
+                                        Icon(
+                                            imageVector = Icons.Rounded.People,
+                                            contentDescription = null
+                                        )
+                                    }
+                                },
+                            )
+                        },
+                        bottomBar = {
+                            ChannelTextField(
+                                value = message,
+                                onValueChange = {
+                                    message = it
+                                },
+                                onSendClick = {
+                                    viewModel.sendMessage(message)
+                                    message = ""
+                                }
+                            )
+                        }
+                    ) { paddingValues ->
+                        LazyColumn(
+                            modifier = Modifier.padding(paddingValues),
+                            reverseLayout = true,
+                        ) {
+                            if (messages != null) {
+                                items(messages.messages) { message ->
+                                    var showBottomDialog by rememberSaveable { mutableStateOf(false) }
 
+                                    WidgetChatMessage(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .clip(MaterialTheme.shapes.medium)
+                                            .combinedClickable(
+                                                onLongClick = {
+                                                    showBottomDialog = true
+                                                },
+                                                onClick = {}
+                                            )
+                                            .padding(6.dp),
+                                        message = message,
+                                        parser = parser,
+                                    )
+
+                                    if (showBottomDialog) {
+                                        BottomSheetDialog(
+                                            onDismissRequest = {
+                                                showBottomDialog = false
                                             }
-                                            FullWidthButton(
-                                                modifier = Modifier.fillMaxWidth(),
-                                                icon = {},
-                                                content = {
-                                                    Text("Create Thread")
-                                                }
+                                        ) {
+                                            Surface(
+                                                color = MaterialTheme.colors.background
                                             ) {
+                                                Column {
+                                                    FullWidthButton(
+                                                        modifier = Modifier.fillMaxWidth(),
+                                                        icon = {},
+                                                        content = {
+                                                            Text("Reply")
+                                                        }
+                                                    ) {
 
-                                            }
-                                            FullWidthButton(
-                                                modifier = Modifier.fillMaxWidth(),
-                                                icon = {},
-                                                content = {
-                                                    Text("Copy Text")
+                                                    }
+                                                    FullWidthButton(
+                                                        modifier = Modifier.fillMaxWidth(),
+                                                        icon = {},
+                                                        content = {
+                                                            Text("Create Thread")
+                                                        }
+                                                    ) {
+
+                                                    }
+                                                    FullWidthButton(
+                                                        modifier = Modifier.fillMaxWidth(),
+                                                        icon = {},
+                                                        content = {
+                                                            Text("Copy Text")
+                                                        }
+                                                    ) {
+
+                                                    }
+                                                    FullWidthButton(
+                                                        modifier = Modifier.fillMaxWidth(),
+                                                        icon = {},
+                                                        content = {
+                                                            Text("Delete")
+                                                        }
+                                                    ) {
+
+                                                    }
                                                 }
-                                            ) {
-
-                                            }
-                                            FullWidthButton(
-                                                modifier = Modifier.fillMaxWidth(),
-                                                icon = {},
-                                                content = {
-                                                    Text("Delete")
-                                                }
-                                            ) {
-
                                             }
                                         }
                                     }
                                 }
+                            } else {
+                                item {
+                                    CircularProgressIndicator()
+                                }
                             }
                         }
-                    } else {
-                        item {
-                            CircularProgressIndicator()
-                        }
                     }
+                }
+                is MainViewModel.CurrentChannel.None -> {
+
                 }
             }
         }
