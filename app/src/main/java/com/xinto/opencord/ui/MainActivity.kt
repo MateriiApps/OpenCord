@@ -3,6 +3,8 @@ package com.xinto.opencord.ui
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
@@ -21,6 +23,10 @@ class MainActivity : ComponentActivity() {
     private val gatewayClient: OkHttpClient by inject(named("gateway"))
     private val gateway: Gateway by inject()
 
+    @OptIn(
+        ExperimentalFoundationApi::class,
+        ExperimentalMaterialApi::class
+    )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

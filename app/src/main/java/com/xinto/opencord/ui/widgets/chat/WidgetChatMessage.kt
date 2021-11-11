@@ -5,8 +5,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.InlineTextContent
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,7 +24,6 @@ import com.xinto.opencord.ui.component.image.rememberOpenCordCachePainter
 import com.xinto.opencord.ui.component.text.Text
 import com.xinto.opencord.ui.simpleast.render.render
 import com.xinto.opencord.util.SimpleAstParser
-import org.koin.androidx.compose.get
 
 @OptIn(
     ExperimentalCoilApi::class,
@@ -33,10 +33,9 @@ import org.koin.androidx.compose.get
 @Composable
 fun WidgetChatMessage(
     message: DomainMessage,
+    parser: SimpleAstParser,
     modifier: Modifier = Modifier,
 ) {
-    val parser = get<SimpleAstParser>()
-
     val userImage = rememberOpenCordCachePainter(message.author.avatarUrl)
 
     Row(

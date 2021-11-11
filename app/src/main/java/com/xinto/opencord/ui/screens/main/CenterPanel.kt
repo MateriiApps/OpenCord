@@ -24,11 +24,13 @@ import com.xinto.opencord.ui.theme.topLargeCorners
 import com.xinto.opencord.ui.viewmodel.MainViewModel
 import com.xinto.opencord.ui.widgets.chat.WidgetChatMessage
 import com.xinto.opencord.ui.widgets.textfield.ChannelTextField
+import com.xinto.opencord.util.SimpleAstParser
 
 @ExperimentalFoundationApi
 @Composable
 fun CenterPanel(
     viewModel: MainViewModel,
+    parser: SimpleAstParser,
     onChannelsButtonClick: () -> Unit,
     onMembersButtonClick: () -> Unit
 ) {
@@ -36,7 +38,7 @@ fun CenterPanel(
 
     val messageData = viewModel.messages[currentChannel?.channelId]
 
-    var message by rememberSaveable(currentChannel) { mutableStateOf("") }
+    var message by rememberSaveable(currentChannel, key = "message-${currentChannel?.channelId}") { mutableStateOf("") }
 
     OpenCordBackground(
         modifier = Modifier
@@ -100,7 +102,8 @@ fun CenterPanel(
                                         onClick = {}
                                     )
                                     .padding(6.dp),
-                                message = message
+                                message = message,
+                                parser = parser,
                             )
 
                             if (showBottomDialog) {
