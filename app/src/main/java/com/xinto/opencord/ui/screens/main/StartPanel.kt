@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import coil.annotation.ExperimentalCoilApi
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainChannel
-import com.xinto.opencord.domain.model.DomainGuild
+import com.xinto.opencord.domain.model.DomainMeGuild
 import com.xinto.opencord.network.result.DiscordAPIResult
 import com.xinto.opencord.ui.component.image.rememberOpenCordCachePainter
 import com.xinto.opencord.ui.component.layout.OpenCordBackground
@@ -43,7 +43,7 @@ fun StartPanel(
 ) {
     val coroutineScope = rememberCoroutineScope()
 
-    val guildsResult = viewModel.guilds
+    val guildsResult = viewModel.meGuilds
 
     val currentGuild = viewModel.currentGuild
     val currentChannel = viewModel.currentChannel
@@ -51,7 +51,7 @@ fun StartPanel(
     Row(
         modifier = Modifier.fillMaxSize(),
     ) {
-        when (val result: DiscordAPIResult<List<DomainGuild>> = guildsResult) {
+        when (val result: DiscordAPIResult<List<DomainMeGuild>> = guildsResult) {
             is DiscordAPIResult.Loading -> {
                 CircularProgressIndicator()
             }

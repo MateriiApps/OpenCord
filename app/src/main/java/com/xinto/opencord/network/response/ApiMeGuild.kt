@@ -7,4 +7,5 @@ data class ApiMeGuild(
     @SerializedName("id") val id: String,
     @SerializedName("name") val name: String,
     @SerializedName("icon") val icon: String,
+    @SerializedName("permissions") val permissions: String,
 ) : ApiResponse

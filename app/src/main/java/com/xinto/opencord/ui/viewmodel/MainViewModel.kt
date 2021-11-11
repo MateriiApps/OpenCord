@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xinto.opencord.domain.model.DomainChannel
 import com.xinto.opencord.domain.model.DomainGuild
+import com.xinto.opencord.domain.model.DomainMeGuild
 import com.xinto.opencord.domain.model.DomainMessage
 import com.xinto.opencord.network.body.MessageBody
 import com.xinto.opencord.network.gateway.Gateway
@@ -41,7 +42,7 @@ class MainViewModel(
         data class Channel(val data: DomainChannel) : CurrentChannel()
     }
 
-    var guilds by mutableStateOf<DiscordAPIResult<List<DomainGuild>>>(DiscordAPIResult.Loading)
+    var meGuilds by mutableStateOf<DiscordAPIResult<List<DomainMeGuild>>>(DiscordAPIResult.Loading)
         private set
 
     var currentGuild by mutableStateOf<CurrentGuild>(CurrentGuild.None)
@@ -50,13 +51,22 @@ class MainViewModel(
     var currentChannel by mutableStateOf<CurrentChannel>(CurrentChannel.None)
         private set
 
+    private val _guilds = mutableStateMapOf<Long, DomainGuild>()
+    val guilds: SnapshotStateMap<Long, DomainGuild> = _guilds
+
     private val _channels = mutableStateMapOf<Long, ChannelListData>()
     val channels: SnapshotStateMap<Long, ChannelListData> = _channels
 
     private val _messages = mutableStateMapOf<Long, MessageListData>()
     val messages: SnapshotStateMap<Long, MessageListData> = _messages
 
-    suspend fun setCurrentGuild(guild: DomainGuild) {
+    suspend fun setCurrentGuild(meGuild: DomainMeGuild) {
+        if (guilds[meGuild.id] == null)  {
+            guilds[meGuild.id] = repository.getGuild(meGuild.id)
+        }
+
+        val guild = guilds[meGuild.id]!!
+
         currentGuild = CurrentGuild.Guild(guild)
 
         if (_channels[guild.id] == null) {
@@ -102,9 +112,9 @@ class MainViewModel(
 
     fun fetchGuilds() {
         viewModelScope.launch {
-            guilds =
+            meGuilds =
                 try {
-                    DiscordAPIResult.Success(repository.getGuilds())
+                    DiscordAPIResult.Success(repository.getMeGuilds())
                 } catch (e: HttpException) {
                     DiscordAPIResult.Error(e)
                 }

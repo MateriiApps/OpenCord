@@ -12,17 +12,7 @@ class DiscordAPIRepository(
 ) {
 
     suspend fun getMeGuilds() =
-        discordApi.getMeGuilds().map { apiMeGuild ->
-            with(apiMeGuild) {
-                DomainMeGuild(
-                    id = id.toLong(),
-                    name = name,
-                    iconUrl = "https://cdn.discordapp.com/icons/$id/$icon"
-                )
-            }
-        }
-
-    suspend fun getGuilds() = getMeGuilds().map { getGuild(it.id) }
+        discordApi.getMeGuilds().map { DomainMeGuild.fromApi(it) }
 
     suspend fun getGuild(
         guildId: Long,
