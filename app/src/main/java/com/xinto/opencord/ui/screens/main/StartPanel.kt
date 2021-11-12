@@ -156,8 +156,8 @@ fun StartPanel(
                                                     icon = Icons.Rounded.Tag,
                                                     selected = currentChannel is MainViewModel.CurrentChannel.Channel
                                                             && currentChannel.data.channelId == channel.id,
-                                                    showIndicator = currentChannel is MainViewModel.CurrentChannel.Channel
-                                                            && currentChannel.data.channelId != channel.id,
+                                                    showIndicator = !(currentChannel is MainViewModel.CurrentChannel.Channel
+                                                            && currentChannel.data.channelId == channel.id),
                                                     onClick = {
                                                         coroutineScope.launch {
                                                             panelState.closePanels()
