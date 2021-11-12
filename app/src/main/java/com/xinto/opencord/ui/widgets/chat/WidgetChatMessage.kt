@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.annotation.ExperimentalCoilApi
 import com.xinto.opencord.BuildConfig
+import com.xinto.opencord.domain.model.DomainAttachment
 import com.xinto.opencord.domain.model.DomainMessage
 import com.xinto.opencord.ui.component.image.rememberOpenCordCachePainter
 import com.xinto.opencord.ui.component.text.Text
@@ -63,29 +64,52 @@ fun WidgetChatMessage(
                     fontWeight = FontWeight.SemiBold
                 )
             )
-            Text(
-                text = parser.render(
-                    source = message.content,
-                    initialState = null,
-                    renderContext = null
-                ).toAnnotatedString(),
-                style = MaterialTheme.typography.body2,
-                inlineContent = mapOf(
-                    "emote" to InlineTextContent(
-                        placeholder = Placeholder(
-                            width = 20.sp,
-                            height = 20.sp,
-                            placeholderVerticalAlign = PlaceholderVerticalAlign.Center
-                        )
-                    ) { emoteId ->
-                        val image = rememberOpenCordCachePainter("${BuildConfig.URL_CDN}/emojis/$emoteId")
+            if (message.content.isNotEmpty()) {
+                Text(
+                    text = parser.render(
+                        source = message.content,
+                        initialState = null,
+                        renderContext = null
+                    ).toAnnotatedString(),
+                    style = MaterialTheme.typography.body2,
+                    inlineContent = mapOf(
+                        "emote" to InlineTextContent(
+                            placeholder = Placeholder(
+                                width = 20.sp,
+                                height = 20.sp,
+                                placeholderVerticalAlign = PlaceholderVerticalAlign.Center
+                            )
+                        ) { emoteId ->
+                            val image = rememberOpenCordCachePainter("${BuildConfig.URL_CDN}/emojis/$emoteId")
+                            Image(
+                                painter = image,
+                                contentDescription = "Emote"
+                            )
+                        }
+                    )
+                )
+            }
+            for (attachment in message.attachments) {
+                when (attachment) {
+                    is DomainAttachment.Picture -> {
+                        val picture = rememberOpenCordCachePainter(attachment.url) {
+                            size(
+                                width = attachment.width,
+                                height = attachment.height
+                            )
+                        }
+
                         Image(
-                            painter = image,
-                            contentDescription = "Emote"
+                            modifier = Modifier
+                                .padding(top = 4.dp)
+                                .clip(MaterialTheme.shapes.large),
+                            painter = picture,
+                            contentDescription = null
                         )
                     }
-                )
-            )
+                    else -> { /* TODO */}
+                }
+            }
         }
     }
 }
