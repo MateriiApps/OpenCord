@@ -1,6 +1,7 @@
 package com.xinto.opencord.network.response
 
 import com.google.gson.annotations.SerializedName
+import com.xinto.opencord.network.response.base.ApiAttachment
 import com.xinto.opencord.network.response.base.ApiResponse
 
 data class ApiMessage(
@@ -8,4 +9,5 @@ data class ApiMessage(
     @SerializedName("channel_id") val channelId: Long,
     @SerializedName("content") val content: String,
     @SerializedName("author") val author: ApiMessageAuthor,
+    @SerializedName("attachments") val attachments: List<ApiAttachment>,
 ) : ApiResponse
