@@ -51,13 +51,13 @@ class MainViewModel(
     var currentChannel by mutableStateOf<CurrentChannel>(CurrentChannel.None)
         private set
 
-    private val _guilds = mutableStateMapOf<Long, DomainGuild>()
+    private val _guilds = mutableStateMapOf<Long /* Guild ID */, DomainGuild>()
     val guilds: SnapshotStateMap<Long, DomainGuild> = _guilds
 
-    private val _channels = mutableStateMapOf<Long, ChannelListData>()
+    private val _channels = mutableStateMapOf<Long /* Guild ID */, ChannelListData>()
     val channels: SnapshotStateMap<Long, ChannelListData> = _channels
 
-    private val _messages = mutableStateMapOf<Long, MessageListData>()
+    private val _messages = mutableStateMapOf<Long /* Channel ID */, MessageListData>()
     val messages: SnapshotStateMap<Long, MessageListData> = _messages
 
     suspend fun setCurrentGuild(meGuild: DomainMeGuild) {
