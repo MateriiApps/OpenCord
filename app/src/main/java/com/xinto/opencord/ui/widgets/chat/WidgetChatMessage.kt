@@ -22,6 +22,8 @@ import com.xinto.opencord.BuildConfig
 import com.xinto.opencord.domain.model.DomainAttachment
 import com.xinto.opencord.domain.model.DomainMessage
 import com.xinto.opencord.ui.component.image.rememberOpenCordCachePainter
+import com.xinto.opencord.ui.component.media.Picture
+import com.xinto.opencord.ui.component.media.VideoPlayer
 import com.xinto.opencord.ui.component.text.Text
 import com.xinto.opencord.ui.simpleast.render.render
 import com.xinto.opencord.util.SimpleAstParser
@@ -29,7 +31,7 @@ import com.xinto.opencord.util.SimpleAstParser
 @OptIn(
     ExperimentalCoilApi::class,
     ExperimentalMaterialApi::class,
-    ExperimentalFoundationApi::class
+    ExperimentalFoundationApi::class,
 )
 @Composable
 fun WidgetChatMessage(
@@ -89,25 +91,34 @@ fun WidgetChatMessage(
                     )
                 )
             }
-            for (attachment in message.attachments) {
-                when (attachment) {
-                    is DomainAttachment.Picture -> {
-                        val picture = rememberOpenCordCachePainter(attachment.url) {
-                            size(
-                                width = attachment.width,
-                                height = attachment.height
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(0.95f)
+                    .padding(vertical = 4.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                for (attachment in message.attachments) {
+                    when (attachment) {
+                        is DomainAttachment.Picture -> {
+                            Picture(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clip(MaterialTheme.shapes.medium),
+                                imageUrl = attachment.url,
+                                imageWidth = attachment.width,
+                                imageHeight = attachment.height
                             )
                         }
-
-                        Image(
-                            modifier = Modifier
-                                .padding(top = 4.dp)
-                                .clip(MaterialTheme.shapes.large),
-                            painter = picture,
-                            contentDescription = null
-                        )
+                        is DomainAttachment.Video -> {
+                            VideoPlayer(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clip(MaterialTheme.shapes.medium),
+                                videoUrl = attachment.url,
+                            )
+                        }
+                        else -> { /* TODO */ }
                     }
-                    else -> { /* TODO */}
                 }
             }
         }

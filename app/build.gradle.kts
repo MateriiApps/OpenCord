@@ -108,6 +108,11 @@ dependencies {
 
     implementation("com.github.hcaptcha:hcaptcha-android-sdk:1.1.0")
 
+    val exoplayerVersion = "2.16.0"
+    implementation("com.google.android.exoplayer:exoplayer-core:$exoplayerVersion")
+    implementation("com.google.android.exoplayer:exoplayer-dash:$exoplayerVersion")
+    implementation("com.google.android.exoplayer:exoplayer-ui:$exoplayerVersion")
+
     val retrofitVersion = "2.9.0"
     implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
