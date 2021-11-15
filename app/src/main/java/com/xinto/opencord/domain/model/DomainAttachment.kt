@@ -1,6 +1,6 @@
 package com.xinto.opencord.domain.model
 
-import com.xinto.opencord.network.response.base.ApiAttachment
+import com.xinto.opencord.network.response.ApiAttachment
 
 sealed class DomainAttachment {
 

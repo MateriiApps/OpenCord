@@ -1,4 +1,4 @@
-package com.xinto.opencord.network.response.base
+package com.xinto.opencord.network.response
 
 import com.google.gson.annotations.SerializedName
 
