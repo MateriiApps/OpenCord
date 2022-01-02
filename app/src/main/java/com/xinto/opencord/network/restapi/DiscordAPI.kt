@@ -1,14 +1,8 @@
 package com.xinto.opencord.network.restapi
 
 import com.xinto.opencord.network.body.MessageBody
-import com.xinto.opencord.network.response.ApiChannel
-import com.xinto.opencord.network.response.ApiGuild
-import com.xinto.opencord.network.response.ApiMeGuild
-import com.xinto.opencord.network.response.ApiMessage
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
+import com.xinto.opencord.network.response.*
+import retrofit2.http.*
 
 interface DiscordAPI {
 

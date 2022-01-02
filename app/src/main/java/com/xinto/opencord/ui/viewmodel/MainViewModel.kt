@@ -5,12 +5,10 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.xinto.opencord.domain.model.DomainChannel
-import com.xinto.opencord.domain.model.DomainGuild
-import com.xinto.opencord.domain.model.DomainMeGuild
-import com.xinto.opencord.domain.model.DomainMessage
+import com.xinto.opencord.domain.model.*
 import com.xinto.opencord.network.body.MessageBody
 import com.xinto.opencord.network.gateway.Gateway
+import com.xinto.opencord.network.gateway.event.member.GuildMemberChunkEvent
 import com.xinto.opencord.network.gateway.event.message.MessageCreateEvent
 import com.xinto.opencord.network.repository.DiscordAPIRepository
 import com.xinto.opencord.network.result.DiscordAPIResult
@@ -30,6 +28,10 @@ class MainViewModel(
 
     data class MessageListData(
         val messages: SnapshotStateList<DomainMessage>
+    )
+
+    data class MemberListData(
+        val members: SnapshotStateList<DomainGuildMember>
     )
 
     sealed class CurrentGuild {
@@ -60,6 +62,9 @@ class MainViewModel(
     private val _messages = mutableStateMapOf<Long /* Channel ID */, MessageListData>()
     val messages: SnapshotStateMap<Long, MessageListData> = _messages
 
+    private val _members = mutableStateMapOf<Long /* Guild ID*/, MemberListData>()
+    val members: SnapshotStateMap<Long, MemberListData> = _members
+
     suspend fun setCurrentGuild(meGuild: DomainMeGuild) {
         if (guilds[meGuild.id] == null)  {
             guilds[meGuild.id] = repository.getGuild(meGuild.id)
@@ -80,6 +85,8 @@ class MainViewModel(
             } catch (e: HttpException) {
             }
         }
+
+        gateway.requestGuildMembers(guild.id)
     }
 
     suspend fun setCurrentChannel(channel: DomainChannel) {
@@ -127,6 +134,13 @@ class MainViewModel(
             val domainMessage = DomainMessage.fromApi(message)
 
             _messages[domainMessage.channelId]?.messages?.add(0, domainMessage)
+        }
+        gateway.onEvent<GuildMemberChunkEvent> {
+            val domainGuildMemberChunk = DomainGuildMemberChunk.fromApi(apiGuildMemberChunk)
+
+            _members[domainGuildMemberChunk.guildId] = MemberListData(
+                members = domainGuildMemberChunk.guildMembers.toMutableStateList()
+            )
         }
     }
 

@@ -9,12 +9,15 @@ import com.xinto.opencord.network.gateway.data.incoming.Heartbeat
 import com.xinto.opencord.network.gateway.data.outgoing.Identification
 import com.xinto.opencord.network.gateway.data.outgoing.IdentificationClientState
 import com.xinto.opencord.network.gateway.data.outgoing.IdentificationProperties
+import com.xinto.opencord.network.gateway.data.outgoing.RequestGuildMembers
 import com.xinto.opencord.network.gateway.event.Event
 import com.xinto.opencord.network.gateway.event.EventListener
 import com.xinto.opencord.network.gateway.event.dummy.DummyEvent
+import com.xinto.opencord.network.gateway.event.member.GuildMemberChunkEvent
 import com.xinto.opencord.network.gateway.event.message.MessageCreateEvent
 import com.xinto.opencord.network.gateway.io.IncomingPayload
 import com.xinto.opencord.network.gateway.io.OutgoingPayload
+import com.xinto.opencord.network.response.ApiGuildMemberChunk
 import com.xinto.opencord.network.response.ApiMessage
 import com.xinto.opencord.util.currentAccountToken
 import kotlinx.coroutines.CoroutineScope
@@ -36,6 +39,8 @@ class Gateway(
 
     val listeners: MutableList<EventListener> = mutableListOf()
 
+    private lateinit var _webSocket: WebSocket
+
     private var heartbeatInterval: Long = 0
     private var sequenceNumber: Int = 0
 
@@ -43,6 +48,7 @@ class Gateway(
         webSocket: WebSocket,
         response: Response,
     ) {
+        _webSocket = webSocket
         val payload = OutgoingPayload(
             op = 2,
             d = Identification(
@@ -154,10 +160,25 @@ class Gateway(
                     "MESSAGE_CREATE" -> MessageCreateEvent(
                         message = gson.fromJson(data, ApiMessage::class.java)
                     )
+                    "GUILD_MEMBERS_CHUNK" -> GuildMemberChunkEvent(
+                        apiGuildMemberChunk = gson.fromJson(data, ApiGuildMemberChunk::class.java)
+                    )
                     else -> DummyEvent()
                 }
             )
         }
+    }
+
+    fun requestGuildMembers(guildId: Long) {
+        _webSocket.send(gson.toJson(
+            OutgoingPayload(
+                op = 8,
+                d = RequestGuildMembers(
+                    guildId = listOf(guildId),
+                    presences = true
+                )
+            )
+        ))
     }
 
     inline fun <reified T : Event> onEvent(

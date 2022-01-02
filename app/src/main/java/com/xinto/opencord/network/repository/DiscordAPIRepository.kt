@@ -1,9 +1,6 @@
 package com.xinto.opencord.network.repository
 
-import com.xinto.opencord.domain.model.DomainChannel
-import com.xinto.opencord.domain.model.DomainGuild
-import com.xinto.opencord.domain.model.DomainMeGuild
-import com.xinto.opencord.domain.model.DomainMessage
+import com.xinto.opencord.domain.model.*
 import com.xinto.opencord.network.body.MessageBody
 import com.xinto.opencord.network.restapi.DiscordAPI
 
