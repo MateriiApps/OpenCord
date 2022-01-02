@@ -3,7 +3,7 @@ plugins {
     id("kotlin-android")
 }
 
-val composeVersion = "1.0.3"
+val composeVersion = "1.1.0-rc01"
 
 android {
     compileSdk = 31
@@ -82,12 +82,13 @@ android {
 }
 
 dependencies {
-    implementation("androidx.appcompat:appcompat:1.3.1")
+    implementation("androidx.activity:activity-compose:1.4.0")
+    implementation("androidx.appcompat:appcompat:1.4.0")
     implementation("androidx.core:core-ktx:1.7.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.4.0")
     implementation("androidx.preference:preference-ktx:1.1.1")
 
-    implementation("androidx.activity:activity-compose:1.4.0")
+    implementation("androidx.compose.compiler:compiler:1.1.0-rc02")
     implementation("androidx.compose.foundation:foundation:$composeVersion")
     implementation("androidx.compose.material:material-icons-core:$composeVersion")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
@@ -104,7 +105,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-insets:$accompanistVersion")
 
     implementation("com.google.android.material:material:1.4.0")
-    implementation("com.google.code.gson:gson:2.8.8")
+    implementation("com.google.code.gson:gson:2.8.9")
 
     implementation("com.github.hcaptcha:hcaptcha-android-sdk:1.1.0")
 
@@ -121,9 +122,9 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:$okHttpVersion")
     implementation("com.squareup.okhttp3:logging-interceptor:$okHttpVersion")
 
-    implementation("com.github.X1nto:OverlappingPanelsCompose:1.1.0")
+    implementation("com.github.X1nto:OverlappingPanelsCompose:1.2.0")
     
-    implementation("io.insert-koin:koin-androidx-compose:3.1.2")
+    implementation("io.insert-koin:koin-androidx-compose:3.1.3")
 
     testImplementation("junit:junit:4.13.2")
 
