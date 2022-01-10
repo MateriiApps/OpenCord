@@ -83,6 +83,7 @@ class MainViewModel(
                     )
                 )
             } catch (e: HttpException) {
+                e.printStackTrace()
             }
         }
 
@@ -100,6 +101,7 @@ class MainViewModel(
                         .toMutableStateList()
                 )
             } catch (e: HttpException) {
+                e.printStackTrace()
             }
         }
     }

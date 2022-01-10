@@ -24,22 +24,22 @@ fun OpenCordNavHost(
         modifier = modifier,
         contentAlignment = contentAlignment,
         builder = builder,
-        enterTransition = { _, _ ->
+        enterTransition = {
             slideIntoContainer(
                 towards = AnimatedContentScope.SlideDirection.Start
             )
         },
-        exitTransition = { _, _ ->
+        exitTransition = {
             slideOutOfContainer(
                 towards = AnimatedContentScope.SlideDirection.End
             )
         },
-        popEnterTransition = { _, _ ->
+        popEnterTransition = {
             slideIntoContainer(
                 towards = AnimatedContentScope.SlideDirection.End
             )
         },
-        popExitTransition = { _, _ ->
+        popExitTransition = {
             slideOutOfContainer(
                 towards = AnimatedContentScope.SlideDirection.Start
             )

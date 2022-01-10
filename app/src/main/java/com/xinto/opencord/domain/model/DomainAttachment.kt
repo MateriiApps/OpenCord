@@ -51,8 +51,8 @@ sealed class DomainAttachment {
                         size = size,
                         url = url,
                         proxyUrl = proxyUrl,
-                        width = width!!,
-                        height = height!!
+                        width = width ?: 0,
+                        height = height ?: 0
                     )
                     else -> Picture(
                         id = id,
@@ -60,8 +60,8 @@ sealed class DomainAttachment {
                         size = size,
                         url = url,
                         proxyUrl = proxyUrl,
-                        width = width!!,
-                        height = height!!
+                        width = width ?: 0,
+                        height = height ?: 0
                     )
                 }
             } else {

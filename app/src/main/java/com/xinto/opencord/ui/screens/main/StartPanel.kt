@@ -160,8 +160,10 @@ fun StartPanel(
                                                             && currentChannel.data.channelId == channel.id),
                                                     onClick = {
                                                         coroutineScope.launch {
-                                                            panelState.closePanels()
+                                                            // FIXME calling closePanels before setCurrentChannel
+                                                            // results in nothing
                                                             viewModel.setCurrentChannel(channel)
+                                                            panelState.closePanels()
                                                         }
                                                     },
                                                 )

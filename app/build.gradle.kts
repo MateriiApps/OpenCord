@@ -99,7 +99,7 @@ dependencies {
 
     implementation("io.coil-kt:coil-compose:1.4.0")
 
-    val accompanistVersion = "0.20.0"
+    val accompanistVersion = "0.22.0-rc"
     implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-insets:$accompanistVersion")
