@@ -8,7 +8,8 @@ data class DomainMessage(
     val channelId: Long,
     val content: String,
     val author: DomainUser,
-    val attachments: List<DomainAttachment>
+    val attachments: List<DomainAttachment>,
+    val embeds: List<DomainEmbed>
 ) : DomainResponse {
 
     companion object {
@@ -23,7 +24,8 @@ data class DomainMessage(
                 author = DomainUser.fromApi(author),
                 attachments = attachments.map { apiAttachment ->
                     DomainAttachment.fromApi(apiAttachment)
-                }
+                },
+                embeds = listOf()
             )
         }
 
