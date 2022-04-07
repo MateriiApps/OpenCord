@@ -59,10 +59,11 @@ fun LoginScreen(
                 }
             }
         }
-    ) {
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(paddingValues)
                 .padding(18.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
