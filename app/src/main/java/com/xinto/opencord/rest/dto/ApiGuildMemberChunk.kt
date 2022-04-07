@@ -1,0 +1,19 @@
+package com.xinto.opencord.rest.dto
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class ApiGuildMemberChunk(
+    @SerialName("guild_id")
+    val guildId: Long,
+
+    @SerialName("members")
+    val members: List<ApiGuildMember>,
+
+    @SerialName("chunk_index")
+    val chunkIndex: Int,
+
+    @SerialName("chunk_count")
+    val chunkCount: Int,
+)

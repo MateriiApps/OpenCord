@@ -12,25 +12,17 @@ data class DomainEmbed(
         val proxyUrl: String,
         val height: Int?,
         val width: Int?
-    ) {
-
-    }
+    )
 
     data class Footer(
         val text: String
-    ) {
-
-    }
+    )
 
     data class Field(
         val name: String,
         val value: String,
-    ) {
+    )
 
-    }
-
-    companion object {
-
-    }
+    companion object
 
 }

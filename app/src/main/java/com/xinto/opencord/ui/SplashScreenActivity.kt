@@ -4,21 +4,18 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import com.xinto.opencord.ext.authPreferences
-import com.xinto.opencord.util.currentAccountToken
+import com.xinto.opencord.domain.manager.AccountManager
+import org.koin.android.ext.android.inject
 
 @SuppressLint("CustomSplashScreen")
 class SplashScreenActivity : ComponentActivity() {
 
+    private val accountManager: AccountManager by inject()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        //TODO Storing token in preferences is NOT a very good idea
-        //TODO Must move this to somewhere else
-        val token = authPreferences.getString("user_token", "") ?: ""
-
-        if (token.isNotEmpty()) {
-            currentAccountToken = token
+        if (accountManager.isLoggedIn) {
             startActivity(Intent(this, MainActivity::class.java))
         } else {
             startActivity(Intent(this, LoginActivity::class.java))

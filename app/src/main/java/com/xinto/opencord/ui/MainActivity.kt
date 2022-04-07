@@ -9,19 +9,14 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.xinto.opencord.BuildConfig
-import com.xinto.opencord.network.gateway.Gateway
-import com.xinto.opencord.ui.screens.main.MainScreen
+import com.xinto.opencord.ui.screen.MainScreen
 import com.xinto.opencord.ui.theme.OpenCordTheme
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import org.koin.android.ext.android.inject
-import org.koin.core.qualifier.named
+import com.xinto.opencord.ui.viewmodel.MainViewModel
+import org.koin.android.ext.android.get
 
 class MainActivity : ComponentActivity() {
 
-    private val gatewayClient: OkHttpClient by inject(named("gateway"))
-    private val gateway: Gateway by inject()
+    private val viewModel: MainViewModel = get()
 
     @OptIn(
         ExperimentalFoundationApi::class,
@@ -29,12 +24,6 @@ class MainActivity : ComponentActivity() {
     )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        gatewayClient.newWebSocket(
-            request = Request.Builder().url(BuildConfig.URL_GATEWAY).build(),
-            listener = gateway,
-        )
-
         setContent {
             OpenCordTheme {
                 val systemUiController = rememberSystemUiController()

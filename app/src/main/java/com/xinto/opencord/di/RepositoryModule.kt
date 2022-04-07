@@ -1,22 +1,34 @@
 package com.xinto.opencord.di
 
-import com.xinto.opencord.network.repository.DiscordAPIRepository
-import com.xinto.opencord.network.repository.DiscordAuthAPIRepository
-import com.xinto.opencord.network.restapi.DiscordAPI
-import com.xinto.opencord.network.restapi.DiscordAuthAPI
+import com.xinto.opencord.domain.repository.DiscordApiRepository
+import com.xinto.opencord.domain.repository.DiscordApiRepositoryImpl
+import com.xinto.opencord.domain.repository.DiscordAuthRepository
+import com.xinto.opencord.domain.repository.DiscordAuthRepositoryImpl
+import com.xinto.opencord.gateway.DiscordGateway
+import com.xinto.opencord.rest.service.DiscordApiService
+import com.xinto.opencord.rest.service.DiscordAuthService
 import org.koin.dsl.module
 
 val repositoryModule = module {
 
-    fun getAuthRepository(
-        api: DiscordAuthAPI,
-    ) = DiscordAuthAPIRepository(api)
+    fun provideDiscordAuthRepository(
+        service: DiscordAuthService
+    ): DiscordAuthRepository {
+        return DiscordAuthRepositoryImpl(
+            service = service
+        )
+    }
 
-    fun getRepository(
-        api: DiscordAPI,
-    ) = DiscordAPIRepository(api)
+    fun provideDiscordApiRepository(
+        gateway: DiscordGateway,
+        service: DiscordApiService
+    ): DiscordApiRepository {
+        return DiscordApiRepositoryImpl(
+            gateway = gateway,
+            service = service
+        )
+    }
 
-    single { getAuthRepository(get()) }
-    single { getRepository(get()) }
-
+    single { provideDiscordAuthRepository(get()) }
+    single { provideDiscordApiRepository(get(), get()) }
 }

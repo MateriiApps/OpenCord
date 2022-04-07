@@ -1,7 +1,7 @@
 package com.xinto.opencord.domain.model
 
 import com.xinto.opencord.BuildConfig
-import com.xinto.opencord.network.response.ApiUser
+import com.xinto.opencord.rest.dto.ApiUser
 
 data class DomainUser(
     val id: Long,
@@ -23,10 +23,10 @@ data class DomainUser(
                 username = username,
                 discriminator = discriminator,
                 avatarUrl =
-                    if (avatar != null)
-                        "${BuildConfig.URL_CDN}/avatars/$id/$avatar.png"
-                    else
-                        "${BuildConfig.URL_CDN}/embed/avatars/${discriminator.toInt() % 5}.png",
+                if (avatar != null)
+                    "${BuildConfig.URL_CDN}/avatars/$id/$avatar.png"
+                else
+                    "${BuildConfig.URL_CDN}/embed/avatars/${discriminator.toInt() % 5}.png",
                 bot = bot,
             )
         }

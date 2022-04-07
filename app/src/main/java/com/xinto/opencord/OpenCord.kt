@@ -14,10 +14,10 @@ class OpenCord : Application() {
             androidContext(this@OpenCord)
             modules(
                 gatewayModule,
-                gsonModule,
-                okHttpModule,
+                httpModule,
+                managerModule,
                 repositoryModule,
-                retrofitModule,
+                serviceModule,
                 simpleAstModule,
                 viewModelModule,
             )
