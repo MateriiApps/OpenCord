@@ -1,6 +1,6 @@
 package com.xinto.opencord.di
 
-import com.xinto.opencord.simpleast.impl.rule.*
+import com.xinto.opencord.ast.rule.*
 import com.xinto.opencord.util.SimpleAstParser
 import org.koin.dsl.module
 

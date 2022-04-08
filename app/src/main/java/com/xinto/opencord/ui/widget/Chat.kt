@@ -27,10 +27,10 @@ import androidx.compose.ui.unit.sp
 import com.xinto.opencord.BuildConfig
 import com.xinto.opencord.domain.model.DomainAttachment
 import com.xinto.opencord.domain.model.DomainMessage
-import com.xinto.opencord.simpleast.render.render
 import com.xinto.opencord.ui.component.OCBasicTextField
 import com.xinto.opencord.ui.component.rememberOCCoilPainter
 import com.xinto.opencord.util.SimpleAstParser
+import com.xinto.simpleast.render
 
 @Composable
 fun WidgetChatMessage(

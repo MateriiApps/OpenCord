@@ -1,6 +1,6 @@
 package com.xinto.opencord.util
 
-import com.xinto.opencord.simpleast.core.node.Node
-import com.xinto.opencord.simpleast.core.parser.Parser
+import com.xinto.simpleast.Node
+import com.xinto.simpleast.Parser
 
 typealias SimpleAstParser = Parser<Any?, Node<Any?>, Any?>

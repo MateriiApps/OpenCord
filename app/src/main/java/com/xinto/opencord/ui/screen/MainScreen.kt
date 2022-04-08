@@ -7,12 +7,12 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import com.xinto.opc.OverlappingPanels
+import com.xinto.opc.OverlappingPanelsValue
+import com.xinto.opc.rememberOverlappingPanelsState
 import com.xinto.opencord.ui.viewmodel.ChannelsViewModel
 import com.xinto.opencord.ui.viewmodel.ChatViewModel
 import com.xinto.opencord.ui.viewmodel.GuildsViewModel
-import com.xinto.overlappingpanels.OverlappingPanels
-import com.xinto.overlappingpanels.OverlappingPanelsValue
-import com.xinto.overlappingpanels.rememberOverlappingPanelsState
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
