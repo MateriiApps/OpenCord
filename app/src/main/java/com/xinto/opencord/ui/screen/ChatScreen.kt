@@ -18,8 +18,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import com.xinto.bdc.BottomSheetDialog
 import com.xinto.opencord.domain.model.DomainMessage
-import com.xinto.opencord.ui.component.BottomSheetDialog
 import com.xinto.opencord.ui.component.OCTopAppBar
 import com.xinto.opencord.ui.viewmodel.ChatViewModel
 import com.xinto.opencord.ui.widget.WidgetChatInput
