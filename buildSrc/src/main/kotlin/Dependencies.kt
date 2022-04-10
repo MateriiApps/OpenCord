@@ -28,7 +28,7 @@ sealed class Dependencies {
 
         const val core = "androidx.core:core:$version"
         const val coreKtx = "androidx.core:core-ktx:$version"
-        const val coreSplashScreen = "androidx.core:core-splashscreen:1.0.0-beta01"
+        const val coreSplashScreen = "androidx.core:core-splashscreen:1.0.0-beta02"
 
         override fun invoke(scope: DependencyHandlerScope) {
             scope {

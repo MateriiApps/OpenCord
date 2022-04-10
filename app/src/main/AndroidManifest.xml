@@ -11,12 +11,10 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.OpenCord">
+        android:theme="@style/Theme.OpenCord.Splash">
         <activity
             android:name=".ui.SplashScreenActivity"
-            android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.OpenCord.NoActionBar">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,13 +22,12 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".ui.LoginActivity"
-            android:theme="@style/Theme.OpenCord.NoActionBar" />
+        <activity android:name=".ui.LoginActivity"/>
 
         <activity
             android:name=".ui.MainActivity"
             android:windowSoftInputMode="adjustResize"/>
+
     </application>
 
 </manifest>
