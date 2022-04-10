@@ -2,7 +2,9 @@ package com.xinto.opencord.ui.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.LocalContentAlpha
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
@@ -12,78 +14,76 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.xinto.opencord.R
-import com.xinto.opencord.ui.component.OCButton
 
 @Composable
 fun LoginLandingScreen(
     onLoginClick: () -> Unit,
     onRegisterClick: () -> Unit,
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(18.dp),
-        verticalArrangement = Arrangement.spacedBy(32.dp)
-    ) {
+    Scaffold(
+        modifier = Modifier.fillMaxSize()
+    ) { paddingValues ->
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(32.dp)
         ) {
-            Image(
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Image(
+                    modifier = Modifier.fillMaxWidth(),
+                    painter = painterResource(id = R.drawable.ic_discord_logo_text),
+                    contentDescription = "Discord logo",
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
+                )
+                Image(
+                    modifier = Modifier.fillMaxSize(),
+                    painter = painterResource(id = R.drawable.img_login_splash),
+                    contentDescription = "Splash image"
+                )
+            }
+            Column(
                 modifier = Modifier.fillMaxWidth(),
-                painter = painterResource(id = R.drawable.ic_discord_logo_text),
-                contentDescription = "Discord logo",
-                colorFilter = ColorFilter.tint(MaterialTheme.colors.onBackground)
-            )
-            Image(
-                modifier = Modifier.fillMaxSize(),
-                painter = painterResource(id = R.drawable.img_login_splash),
-                contentDescription = "Splash image"
-            )
-        }
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = "Welcome to OpenCord",
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.h1
-            )
-            CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
-                    text = "Join over 0 people who use OpenCord as an alternative to the stock Discord app.",
+                    text = "Welcome to OpenCord",
                     textAlign = TextAlign.Center,
-                    lineHeight = 20.sp,
-                    style = MaterialTheme.typography.body2
+                    style = MaterialTheme.typography.displaySmall
                 )
+                CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "Join over 0 people who use OpenCord as an alternative to the stock Discord app.",
+                        textAlign = TextAlign.Center,
+                        lineHeight = 20.sp,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
             }
-        }
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            OCButton(
+            Column(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = onLoginClick,
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = MaterialTheme.colors.primary
-                )
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Text("Login")
-            }
-            OCButton(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = onRegisterClick,
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = MaterialTheme.colors.secondary
-                )
-            ) {
-                Text("Register")
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = onLoginClick,
+                ) {
+                    Text("Login")
+                }
+                FilledTonalButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = onRegisterClick,
+                ) {
+                    Text("Register")
+                }
             }
         }
     }

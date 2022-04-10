@@ -1,9 +1,7 @@
 package com.xinto.opencord.ui.screen
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Surface
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -16,8 +14,6 @@ import com.xinto.opencord.ui.viewmodel.GuildsViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
-@ExperimentalFoundationApi
-@ExperimentalMaterialApi
 @Composable
 fun MainScreen() {
     val panelState = rememberOverlappingPanelsState(OverlappingPanelsValue.Closed)

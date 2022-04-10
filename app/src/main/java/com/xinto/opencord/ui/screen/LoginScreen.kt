@@ -2,9 +2,11 @@ package com.xinto.opencord.ui.screen
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
@@ -16,8 +18,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hcaptcha.sdk.HCaptcha
-import com.xinto.opencord.ui.component.OCButton
-import com.xinto.opencord.ui.component.OCTextField
 import com.xinto.opencord.ui.viewmodel.LoginViewModel
 import org.koin.androidx.compose.getViewModel
 
@@ -31,12 +31,10 @@ fun LoginScreen(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             Column {
-                TopAppBar(
-                    modifier = Modifier.fillMaxWidth(),
+                SmallTopAppBar(
                     title = {
                         Text(
                             text = "Login",
-                            style = MaterialTheme.typography.h2
                         )
                     },
                     navigationIcon = {
@@ -49,8 +47,6 @@ fun LoginScreen(
                             )
                         }
                     },
-                    backgroundColor = MaterialTheme.colors.background,
-                    elevation = 0.dp
                 )
                 if (viewModel.isLoading) {
                     LinearProgressIndicator(
@@ -58,24 +54,24 @@ fun LoginScreen(
                     )
                 }
             }
-        }
+        },
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(18.dp),
+                .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(6.dp)
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = "Welcome back!",
                     textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.h1
+                    style = MaterialTheme.typography.displaySmall
                 )
                 CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
                     Text(
@@ -83,18 +79,20 @@ fun LoginScreen(
                         text = "We're so excited to see you again!",
                         textAlign = TextAlign.Center,
                         lineHeight = 20.sp,
-                        style = MaterialTheme.typography.body2
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
             }
             Column(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                OCTextField(
+                OutlinedTextField(
                     modifier = Modifier.fillMaxWidth(),
                     value = viewModel.username,
-                    label = "Email or Phone Number",
+                    label = { Text("Email or Phone Number") },
                     onValueChange = viewModel::updateUsername,
                     isError = viewModel.usernameError,
                     singleLine = true,
@@ -103,10 +101,10 @@ fun LoginScreen(
                         autoCorrect = false
                     )
                 )
-                OCTextField(
+                OutlinedTextField(
                     modifier = Modifier.fillMaxWidth(),
                     value = viewModel.password,
-                    label = "Password",
+                    label = { Text("Password") },
                     onValueChange = viewModel::updatePassword,
                     isError = viewModel.passwordError,
                     singleLine = true,
@@ -116,13 +114,10 @@ fun LoginScreen(
                     )
                 )
             }
-            OCButton(
+            Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = { viewModel.login() },
                 enabled = !viewModel.isLoading,
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = MaterialTheme.colors.primary
-                )
             ) {
                 Text(text = "Login")
             }

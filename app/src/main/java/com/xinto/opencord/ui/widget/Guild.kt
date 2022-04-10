@@ -20,16 +20,17 @@ fun WidgetGuildListItem(
     onClick: () -> Unit,
     selected: Boolean,
     showIndicator: Boolean,
+    modifier: Modifier = Modifier,
     content: @Composable BoxScope.() -> Unit,
 ) {
-    val indicatorFraction by animateFloatAsState(if (selected) 0.7f else 0.15f)
+    val indicatorFraction by animateFloatAsState(if (selected) 0.8f else 0.15f)
     val imageCornerRadius by animateIntAsState(if (selected) 25 else 50)
     Box(
-        modifier = Modifier.height(48.dp),
+        modifier = modifier.height(48.dp),
     ) {
         AnimatedVisibility(
             modifier = Modifier.align(Alignment.CenterStart),
-            visible = showIndicator,
+            visible = showIndicator || selected,
             enter = slideInHorizontally(),
             exit = slideOutHorizontally()
         ) {

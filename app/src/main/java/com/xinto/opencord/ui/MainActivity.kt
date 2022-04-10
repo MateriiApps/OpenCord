@@ -3,11 +3,8 @@ package com.xinto.opencord.ui
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.graphics.Color
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.xinto.opencord.ui.screen.MainScreen
 import com.xinto.opencord.ui.theme.OpenCordTheme
@@ -18,20 +15,17 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel = get()
 
-    @OptIn(
-        ExperimentalFoundationApi::class,
-        ExperimentalMaterialApi::class
-    )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            OpenCordTheme {
+            OpenCordTheme(darkMode = true) {
                 val systemUiController = rememberSystemUiController()
-                val isLight = MaterialTheme.colors.isLight
+                val isLight = false
+                val surface = MaterialTheme.colorScheme.surface
 
                 SideEffect {
                     systemUiController.setSystemBarsColor(
-                        color = Color.Transparent,
+                        color = surface,
                         darkIcons = isLight,
                     )
                 }

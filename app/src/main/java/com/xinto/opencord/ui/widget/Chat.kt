@@ -1,18 +1,18 @@
 package com.xinto.opencord.ui.widget
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.InlineTextContent
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Send
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProvideTextStyle
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import com.xinto.opencord.BuildConfig
 import com.xinto.opencord.domain.model.DomainAttachment
 import com.xinto.opencord.domain.model.DomainMessage
+import com.xinto.opencord.ui.component.FilledIconButton
 import com.xinto.opencord.ui.component.OCBasicTextField
 import com.xinto.opencord.ui.component.rememberOCCoilPainter
 import com.xinto.opencord.util.SimpleAstParser
@@ -58,13 +59,15 @@ fun WidgetChatMessage(
                 .heightIn(min = 40.dp),
             verticalArrangement = Arrangement.SpaceEvenly,
         ) {
-            Text(
-                text = message.author.username,
-                style = TextStyle(
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold
+            ProvideTextStyle(MaterialTheme.typography.titleSmall) {
+                Text(
+                    text = message.author.username,
+                    style = TextStyle(
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
                 )
-            )
+            }
             if (message.content.isNotEmpty()) {
                 WidgetMessageContent(
                     text = parser.render(
@@ -89,42 +92,35 @@ fun WidgetChatInput(
     value: String,
     onValueChange: (value: String) -> Unit,
     onSendClick: () -> Unit,
+    hint: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    val shapePercent = when (value.lines().size) {
-        0 -> 50
-        1 -> 50
-        2 -> 40
-        3 -> 30
-        else -> 25
-    }
     Row(
-        modifier = Modifier
-            .padding(8.dp)
+        modifier = modifier
+            .fillMaxWidth()
+            .heightIn(min = 48.dp)
             .imePadding(),
+        verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         OCBasicTextField(
             modifier = Modifier.weight(1f),
             value = value,
             onValueChange = onValueChange,
-            shape = RoundedCornerShape(shapePercent),
-            maxLines = 4
+            hint = hint,
+            maxLines = 4,
         )
         AnimatedVisibility(
-            modifier = Modifier.align(Alignment.CenterVertically),
+            modifier = Modifier.size(48.dp),
             visible = value.isNotBlank(),
+            enter = slideInHorizontally { it },
+            exit = slideOutHorizontally { it },
         ) {
-            Box(
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colors.primary)
-                    .clickable(onClick = onSendClick)
-                    .size(36.dp),
-            ) {
+            FilledIconButton(onClick = onSendClick) {
                 Icon(
-                    modifier = Modifier.align(Alignment.Center),
                     imageVector = Icons.Rounded.Send,
-                    contentDescription = "Send"
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                    contentDescription = null
                 )
             }
         }
@@ -136,26 +132,27 @@ private fun WidgetMessageContent(
     text: AnnotatedString,
     modifier: Modifier = Modifier,
 ) {
-    Text(
-        modifier = modifier,
-        text = text,
-        style = MaterialTheme.typography.body2,
-        inlineContent = mapOf(
-            "emote" to InlineTextContent(
-                placeholder = Placeholder(
-                    width = 20.sp,
-                    height = 20.sp,
-                    placeholderVerticalAlign = PlaceholderVerticalAlign.Center
-                )
-            ) { emoteId ->
-                val image = rememberOCCoilPainter("${BuildConfig.URL_CDN}/emojis/$emoteId")
-                Image(
-                    painter = image,
-                    contentDescription = "Emote"
-                )
-            }
+    ProvideTextStyle(MaterialTheme.typography.bodyMedium) {
+        Text(
+            modifier = modifier,
+            text = text,
+            inlineContent = mapOf(
+                "emote" to InlineTextContent(
+                    placeholder = Placeholder(
+                        width = 20.sp,
+                        height = 20.sp,
+                        placeholderVerticalAlign = PlaceholderVerticalAlign.Center
+                    )
+                ) { emoteId ->
+                    val image = rememberOCCoilPainter("${BuildConfig.URL_CDN}/emojis/$emoteId")
+                    Image(
+                        painter = image,
+                        contentDescription = "Emote"
+                    )
+                }
+            )
         )
-    )
+    }
 }
 
 @Composable

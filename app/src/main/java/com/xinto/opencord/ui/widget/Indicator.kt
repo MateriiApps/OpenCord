@@ -4,7 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.LocalContentColor
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -18,10 +18,8 @@ fun UnreadIndicator(
         modifier = modifier
             .clip(
                 RoundedCornerShape(
-                    topStartPercent = 0,
-                    topEndPercent = 100,
-                    bottomStartPercent = 0,
-                    bottomEndPercent = 100
+                    topEnd = 12.dp,
+                    bottomEnd = 12.dp
                 )
             )
             .background(LocalContentColor.current)

@@ -3,7 +3,6 @@ package com.xinto.opencord.ui
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -18,7 +17,7 @@ class LoginActivity : AppCompatActivity() {
         setContent {
             OpenCordTheme {
                 val systemUiController = rememberSystemUiController()
-                val useDarkIcons = MaterialTheme.colors.isLight
+                val useDarkIcons = false
 
                 SideEffect {
                     systemUiController.setSystemBarsColor(

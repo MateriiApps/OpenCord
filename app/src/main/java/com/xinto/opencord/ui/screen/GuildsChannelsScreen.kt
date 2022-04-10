@@ -4,13 +4,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Tag
 import androidx.compose.material.icons.rounded.VolumeUp
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,6 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainChannel
+import com.xinto.opencord.domain.model.DomainMeGuild
 import com.xinto.opencord.ui.component.rememberOCCoilPainter
 import com.xinto.opencord.ui.viewmodel.ChannelsViewModel
 import com.xinto.opencord.ui.viewmodel.GuildsViewModel
@@ -38,14 +36,16 @@ fun GuildsChannelsScreen(
         modifier = Modifier.fillMaxSize(),
     ) {
         GuildsList(
-            modifier = Modifier.fillMaxHeight(),
+            modifier = Modifier
+                .fillMaxHeight()
+                .weight(1f),
             onGuildSelect = onGuildSelect,
             viewModel = guildsViewModel
         )
         ChannelsList(
             modifier = Modifier
                 .fillMaxHeight()
-                .weight(1f),
+                .weight(3.5f),
             onChannelSelect = onChannelSelect,
             viewModel = channelsViewModel
         )
@@ -58,71 +58,97 @@ private fun GuildsList(
     modifier: Modifier = Modifier,
     viewModel: GuildsViewModel = getViewModel()
 ) {
-    val discordIcon = painterResource(R.drawable.ic_discord_logo)
-
     when (viewModel.state) {
         GuildsViewModel.State.Loading -> {
-            Box(
-                modifier = modifier,
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
+            GuildsListLoading(modifier = modifier)
         }
         GuildsViewModel.State.Loaded -> {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                contentPadding = PaddingValues(vertical = 8.dp)
-            ) {
-                item {
-                    WidgetGuildListItem(
-                        selected = false,
-                        showIndicator = false,
-                        onClick = {}
-                    ) {
-                        Icon(
-                            modifier = Modifier
-                                .size(28.dp)
-                                .align(Alignment.Center),
-                            painter = discordIcon,
-                            contentDescription = "Home",
-                            tint = MaterialTheme.colors.primary
-                        )
-                    }
-                }
-
-                item {
-                    Divider(
-                        modifier = Modifier
-                            .width(32.dp)
-                            .clip(MaterialTheme.shapes.medium),
-                        thickness = 2.dp
-                    )
-                }
-
-                items(viewModel.guilds) { guild ->
-                    val imagePainter = rememberOCCoilPainter(guild.iconUrl)
-
-                    WidgetGuildListItem(
-                        selected = viewModel.selectedGuildId == guild.id,
-                        showIndicator = true,
-                        onClick = {
-                            viewModel.selectGuild(guild.id)
-                            onGuildSelect(guild.id)
-                        }
-                    ) {
-                        Image(
-                            modifier = Modifier.size(48.dp),
-                            painter = imagePainter,
-                            contentDescription = "Guild Icon"
-                        )
-                    }
-                }
-            }
+            GuildsListLoaded(
+                modifier = modifier,
+                onGuildSelect = {
+                    onGuildSelect(it)
+                    viewModel.selectGuild(it)
+                },
+                guilds = viewModel.guilds,
+                selectedGuildId = viewModel.selectedGuildId
+            )
         }
         GuildsViewModel.State.Error -> {
 
+        }
+    }
+}
+
+@Composable
+fun GuildsListLoading(
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator()
+    }
+}
+
+@Composable
+fun GuildsListLoaded(
+    onGuildSelect: (Long) -> Unit,
+    selectedGuildId: Long,
+    guilds: List<DomainMeGuild>,
+    modifier: Modifier = Modifier
+) {
+    val discordIcon = painterResource(R.drawable.ic_discord_logo)
+    LazyColumn(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        contentPadding = PaddingValues(vertical = 8.dp)
+    ) {
+        item {
+            WidgetGuildListItem(
+                modifier = Modifier.fillParentMaxWidth(),
+                selected = false,
+                showIndicator = false,
+                onClick = {}
+            ) {
+                Icon(
+                    modifier = Modifier
+                        .size(28.dp)
+                        .align(Alignment.Center),
+                    painter = discordIcon,
+                    contentDescription = "Home",
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
+        }
+
+        item {
+            Divider(
+                modifier = Modifier
+                    .fillParentMaxWidth(0.5f)
+                    .padding(bottom = 6.dp)
+                    .clip(MaterialTheme.shapes.medium),
+                thickness = 2.dp
+            )
+        }
+
+        items(guilds) { guild ->
+            val imagePainter = rememberOCCoilPainter(guild.iconUrl)
+
+            WidgetGuildListItem(
+                selected = selectedGuildId == guild.id,
+                showIndicator = true,
+                onClick = {
+                    onGuildSelect(guild.id)
+                }
+            ) {
+                Image(
+                    modifier = Modifier.size(48.dp),
+                    painter = imagePainter,
+                    contentDescription = "Guild Icon"
+                )
+            }
         }
     }
 }
@@ -133,12 +159,43 @@ private fun ChannelsList(
     viewModel: ChannelsViewModel,
     modifier: Modifier = Modifier
 ) {
-    when (viewModel.state) {
-        is ChannelsViewModel.State.Loading -> {
+    Surface(
+        modifier = modifier,
+        shape = MaterialTheme.shapes.large,
+        tonalElevation = 1.dp
+    ) {
+        when (viewModel.state) {
+            is ChannelsViewModel.State.Loading -> {
 
+            }
+            is ChannelsViewModel.State.Loaded -> {
+                ChannelsListLoaded(
+                    modifier = Modifier.fillMaxSize(),
+                    onChannelSelect = {
+                        onChannelSelect(it)
+                        viewModel.selectChannel(it)
+                    },
+                    channels = viewModel.channels,
+                    selectedChannelId = viewModel.selectedChannelId
+                )
+            }
+            is ChannelsViewModel.State.Error -> {
+
+            }
         }
-        is ChannelsViewModel.State.Loaded -> {
-            LazyColumn(modifier = modifier) {
+    }
+}
+
+@Composable
+private fun ChannelsListLoaded(
+    onChannelSelect: (Long) -> Unit,
+    selectedChannelId: Long,
+    channels: Map<DomainChannel.Category?, List<DomainChannel>>,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(
+        modifier = modifier,
+    ) {
 //                if (bannerUrl != null) {
 //                    item {
 //                        val painter = rememberOpenCordCachePainter(bannerUrl)
@@ -153,45 +210,48 @@ private fun ChannelsList(
 //                        )
 //                    }
 //                }
-                for ((category, categoryChannels) in viewModel.channels) {
-                    if (category != null) {
-                        item {
-                            WidgetCategory(category.name)
-                        }
-                    }
-                    items(categoryChannels) { channel ->
-                        when (channel) {
-                            is DomainChannel.TextChannel -> {
-                                WidgetChannelListItem(
-                                    title = channel.name,
-                                    icon = Icons.Rounded.Tag,
-                                    selected = viewModel.selectedChannelId == channel.id,
-                                    showIndicator = viewModel.selectedChannelId != channel.id,
-                                    onClick = {
-                                        viewModel.selectChannel(channel.id)
-                                        onChannelSelect(channel.id)
-                                    },
-                                )
-                            }
-                            is DomainChannel.VoiceChannel -> {
-                                WidgetChannelListItem(
-                                    title = channel.name,
-                                    icon = Icons.Rounded.VolumeUp,
-                                    selected = viewModel.selectedChannelId == channel.id,
-                                    showIndicator = false,
-                                    onClick = {
-
-                                    },
-                                )
-                            }
-                            else -> Unit
-                        }
-                    }
+        for ((category, categoryChannels) in channels) {
+            if (category != null) {
+                item {
+                    WidgetCategory(
+                        modifier = Modifier.padding(
+                            start = 6.dp,
+                            top = 12.dp,
+                            bottom = 4.dp
+                        ),
+                        title = category.name
+                    )
                 }
             }
-        }
-        is ChannelsViewModel.State.Error -> {
+            items(categoryChannels) { channel ->
+                when (channel) {
+                    is DomainChannel.TextChannel -> {
+                        WidgetChannelListItem(
+                            modifier = Modifier.padding(vertical = 2.dp),
+                            title = channel.name,
+                            icon = Icons.Rounded.Tag,
+                            selected = selectedChannelId == channel.id,
+                            showIndicator = selectedChannelId != channel.id,
+                            onClick = {
+                                onChannelSelect(channel.id)
+                            },
+                        )
+                    }
+                    is DomainChannel.VoiceChannel -> {
+                        WidgetChannelListItem(
+                            modifier = Modifier.padding(vertical = 2.dp),
+                            title = channel.name,
+                            icon = Icons.Rounded.VolumeUp,
+                            selected = false,
+                            showIndicator = false,
+                            onClick = {
 
+                            },
+                        )
+                    }
+                    else -> Unit
+                }
+            }
         }
     }
 }
