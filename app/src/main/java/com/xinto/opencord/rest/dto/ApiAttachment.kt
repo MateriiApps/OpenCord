@@ -21,10 +21,10 @@ data class ApiAttachment(
     val proxyUrl: String,
 
     @SerialName("width")
-    val width: Int?,
+    val width: Int? = null,
 
     @SerialName("height")
-    val height: Int?,
+    val height: Int? = null,
 
     @SerialName("content_type")
     val contentType: String = ""

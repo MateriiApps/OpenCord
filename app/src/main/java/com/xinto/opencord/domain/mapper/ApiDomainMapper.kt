@@ -13,8 +13,8 @@ fun ApiAttachment.toDomain(): DomainAttachment {
                 size = size,
                 url = url,
                 proxyUrl = proxyUrl,
-                width = width ?: 0,
-                height = height ?: 0
+                width = width ?: 100,
+                height = height ?: 100
             )
             else -> DomainAttachment.Picture(
                 id = id,
@@ -22,8 +22,8 @@ fun ApiAttachment.toDomain(): DomainAttachment {
                 size = size,
                 url = url,
                 proxyUrl = proxyUrl,
-                width = width ?: 0,
-                height = height ?: 0
+                width = width ?: 100,
+                height = height ?: 100
             )
         }
     } else {
