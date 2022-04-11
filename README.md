@@ -5,23 +5,59 @@ An open-source reimplementation of the Discord Android app.
 
 Chat                            |  Drawer
 :------------------------------:|:------------------------------:
- ![](media/screenshot_chat.png) | ![](media/screenshot_drawer.png)
+ ![](github/screenshot_chat.png) | ![](github/screenshot_drawer.png)
 
 
 Why does this exist?
--------
+--------------------
 Current Discord app sucks as it doesn't support any type of customization (themes, plugins, layout etc...). The goal of this
 project is to reimagine the Discord experience on mobile devices.
 
 Status of OpenCord
--------
+------------------
 - [ ] Full (or at least most essential) Discord feature implementation
 - [ ] Theme support
 - [ ] Plugin support
 - [ ] Multiplatform support (Windows, macOS, Linux, Android)
 
+Building
+--------
+## Build the project
+
+Windows:
+```shell
+.\gradlew.bat build
+```
+
+Linux/macOS:
+```shell
+chmod +x ./gradlew && ./gradlew build
+```
+
+## Build APKs
+
+### Discord Version
+```shell
+.\gradlew.bat assembleDiscordDebug
+```
+
+Linux/macOS:
+```shell
+./gradlew assembleDiscordDebug
+```
+
+### Fosscord Version
+```shell
+.\gradlew.bat assembleFosscordDebug
+```
+
+Linux/macOS:
+```shell
+./gradlew assembleFosscordDebug
+```
+
 FAQ
--------
+---
 ### Will this client support themes/plugins?
 Yes, but my first priority is to implement most of the stock client's features
 
