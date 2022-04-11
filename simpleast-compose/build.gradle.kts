@@ -23,13 +23,8 @@ android {
     }
 
     buildFeatures {
-        compose = true
         buildConfig = false
         resValues = false
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = Dependencies.Compose.version
     }
 
     compileOptions {
