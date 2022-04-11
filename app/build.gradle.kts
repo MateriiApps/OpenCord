@@ -4,8 +4,6 @@ plugins {
     kotlin("plugin.serialization")
 }
 
-val composeVersion = "1.2.0-alpha07"
-
 android {
     compileSdk = 31
 
@@ -19,7 +17,7 @@ android {
         versionName = "1.0"
 
         vectorDrawables {
-            useSupportLibrary  = true
+            useSupportLibrary = true
         }
 
         buildConfigField("int", "DISCORD_VERSION_CODE", "89108")
@@ -27,7 +25,7 @@ android {
 
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
