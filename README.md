@@ -22,7 +22,7 @@ Status of OpenCord
 
 Building
 --------
-## Build the project
+### Build the project
 
 Windows:
 ```shell
@@ -34,9 +34,9 @@ Linux/macOS:
 chmod +x ./gradlew && ./gradlew build
 ```
 
-## Build APKs
+### Build APKs
 
-### Discord Version
+#### Discord Version
 ```shell
 .\gradlew.bat assembleDiscordDebug
 ```
@@ -46,7 +46,7 @@ Linux/macOS:
 ./gradlew assembleDiscordDebug
 ```
 
-### Fosscord Version
+#### Fosscord Version
 ```shell
 .\gradlew.bat assembleFosscordDebug
 ```
