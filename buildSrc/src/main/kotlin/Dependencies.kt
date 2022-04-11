@@ -74,6 +74,7 @@ sealed class Dependencies {
 
         const val activity = "androidx.activity:activity-compose:1.4.0"
         const val animation = "androidx.compose.animation:animation:$version"
+        const val compiler = "androidx.compose.compiler:compiler:$version"
         const val foundation = "androidx.compose.foundation:foundation:$version"
         const val material = "androidx.compose.material:material:$version"
         const val material3 = "androidx.compose.material3:material3:1.0.0-alpha09"
