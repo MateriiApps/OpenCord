@@ -9,15 +9,14 @@ import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.hcaptcha.sdk.HCaptcha
 import com.xinto.opencord.R
 import com.xinto.opencord.ui.viewmodel.LoginViewModel
@@ -32,28 +31,11 @@ fun LoginScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            Column {
-                SmallTopAppBar(
-                    title = {
-                        Text("Login")
-                    },
-                    navigationIcon = {
-                        IconButton(
-                            onClick = onBackClick
-                        ) {
-                            Icon(
-                                imageVector = Icons.Rounded.ArrowBack,
-                                contentDescription = "Return back"
-                            )
-                        }
-                    },
-                )
-                if (viewModel.isLoading) {
-                    LinearProgressIndicator(
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-            }
+            LoginAppBar(
+                modifier = Modifier.fillMaxWidth(),
+                onBackClick = onBackClick,
+                isLoading = viewModel.isLoading,
+            )
         },
     ) { paddingValues ->
         Column(
@@ -65,28 +47,22 @@ fun LoginScreen(
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 Text(
-                    modifier = Modifier.fillMaxWidth(),
                     text = stringResource(R.string.login_login_title),
-                    textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.displaySmall
                 )
                 CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
                     Text(
-                        modifier = Modifier.fillMaxWidth(),
                         text = stringResource(R.string.login_login_subtitle),
-                        textAlign = TextAlign.Center,
-                        lineHeight = 20.sp,
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
             }
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
+                modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedTextField(
@@ -114,6 +90,7 @@ fun LoginScreen(
                     )
                 )
             }
+            Spacer(Modifier.weight(1f))
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = { viewModel.login() },
@@ -134,5 +111,33 @@ fun LoginScreen(
             .addOnFailureListener {
                 //TODO
             }
+    }
+}
+
+@Composable
+private fun LoginAppBar(
+    onBackClick: () -> Unit,
+    isLoading: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier) {
+        SmallTopAppBar(
+            title = { Text(stringResource(R.string.login_action_login)) },
+            navigationIcon = {
+                IconButton(
+                    onClick = onBackClick
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.ArrowBack,
+                        contentDescription = "Back"
+                    )
+                }
+            },
+        )
+        if (isLoading) {
+            LinearProgressIndicator(
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
     }
 }
