@@ -37,6 +37,7 @@ chmod +x ./gradlew && ./gradlew build
 ### Build APKs
 
 #### Discord Version
+Windows:
 ```shell
 .\gradlew.bat assembleDiscordDebug
 ```
@@ -47,6 +48,7 @@ Linux/macOS:
 ```
 
 #### Fosscord Version
+Windows:
 ```shell
 .\gradlew.bat assembleFosscordDebug
 ```
