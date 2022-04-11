@@ -98,7 +98,8 @@ fun ApiMeGuild.toDomain(): DomainMeGuild {
     return DomainMeGuild(
         id = id.toLong(),
         name = name,
-        iconUrl = "https://cdn.discordapp.com/icons/$id/$icon",
+        iconUrl = icon?.let { "https://cdn.discordapp.com/icons/$id/$icon" },
+        iconText = name.split("""\s+""".toRegex()).map { it[0] }.joinToString(),
         permissions = permissions.toLong()
     )
 }

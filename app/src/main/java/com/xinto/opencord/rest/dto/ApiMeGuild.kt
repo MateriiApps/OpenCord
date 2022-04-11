@@ -12,7 +12,7 @@ data class ApiMeGuild(
     val name: String,
 
     @SerialName("icon")
-    val icon: String,
+    val icon: String? = null,
 
     @SerialName("permissions")
     val permissions: String,

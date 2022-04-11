@@ -124,7 +124,6 @@ fun GuildsListLoaded(
                         .align(Alignment.Center),
                     painter = discordIcon,
                     contentDescription = "Home",
-                    tint = MaterialTheme.colorScheme.primary
                 )
             }
         }
@@ -140,8 +139,6 @@ fun GuildsListLoaded(
         }
 
         items(guilds) { guild ->
-            val imagePainter = rememberOCCoilPainter(guild.iconUrl)
-
             WidgetGuildListItem(
                 selected = selectedGuildId == guild.id,
                 showIndicator = true,
@@ -149,11 +146,16 @@ fun GuildsListLoaded(
                     onGuildSelect(guild.id)
                 }
             ) {
-                Image(
-                    modifier = Modifier.size(48.dp),
-                    painter = imagePainter,
-                    contentDescription = "Guild Icon"
-                )
+                if (guild.iconUrl != null) {
+                    val imagePainter = rememberOCCoilPainter(guild.iconUrl)
+                    Image(
+                        modifier = Modifier.size(48.dp),
+                        painter = imagePainter,
+                        contentDescription = "Guild Icon"
+                    )
+                } else {
+                    Text(guild.iconText)
+                }
             }
         }
     }
