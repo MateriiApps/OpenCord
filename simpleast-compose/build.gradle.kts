@@ -21,6 +21,17 @@ android {
             )
         }
     }
+
+    buildFeatures {
+        compose = true
+        buildConfig = false
+        resValues = false
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = Dependencies.Compose.version
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11

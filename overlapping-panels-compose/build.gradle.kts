@@ -24,6 +24,8 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = false
+        resValues = false
     }
 
     composeOptions {
