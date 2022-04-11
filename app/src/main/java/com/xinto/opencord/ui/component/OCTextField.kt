@@ -9,6 +9,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.LocalContentAlpha
+import androidx.compose.material3.LocalAbsoluteTonalElevation
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.contentColorFor
@@ -25,7 +26,7 @@ fun OCBasicTextField(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     hint: @Composable () -> Unit = {},
-    containerColor: Color = MaterialTheme.colorScheme.surfaceVariant,
+    containerColor: Color = MaterialTheme.colorScheme.surface,
     contentColor: Color = contentColorFor(containerColor),
     enabled: Boolean = true,
     readOnly: Boolean = false,
@@ -63,15 +64,17 @@ fun OCBasicTextField(
         interactionSource = interactionSource,
         cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
         decorationBox = { innerTextField ->
-            Surface(
-                shape = RoundedCornerShape(shapePercent),
-                color = containerColor
-            ) {
-                Box(modifier = Modifier.padding(12.dp)) {
-                    innerTextField()
-                    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                        if (value.isBlank()) {
-                            hint()
+            CompositionLocalProvider(LocalAbsoluteTonalElevation provides 0.dp) {
+                Surface(
+                    shape = RoundedCornerShape(shapePercent),
+                    color = containerColor
+                ) {
+                    Box(modifier = Modifier.padding(12.dp)) {
+                        innerTextField()
+                        CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+                            if (value.isBlank()) {
+                                hint()
+                            }
                         }
                     }
                 }
