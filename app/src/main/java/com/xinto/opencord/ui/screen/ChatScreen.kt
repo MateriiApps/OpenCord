@@ -16,8 +16,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.xinto.bdc.BottomSheetDialog
+import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainMessage
 import com.xinto.opencord.ui.viewmodel.ChatViewModel
 import com.xinto.opencord.ui.widget.WidgetChatInput
@@ -38,9 +40,7 @@ fun ChatScreen(
         modifier = modifier,
         topBar = {
             SmallTopAppBar(
-                title = {
-                    Text(viewModel.channelName)
-                },
+                title = { Text(viewModel.channelName) },
                 navigationIcon = {
                     IconButton(onChannelsButtonClick) {
                         Icon(
@@ -75,10 +75,10 @@ fun ChatScreen(
                 }
                 is ChatViewModel.State.Loaded -> {
                     ChatScreenLoaded(
-                        modifier = Modifier
-                            .fillMaxSize(),
+                        modifier = Modifier.fillMaxSize(),
                         parser = parser,
                         messages = viewModel.messages,
+                        channelName = viewModel.channelName,
                         userMessage = viewModel.userMessage,
                         onUserMessageUpdate = viewModel::updateMessage,
                         onUserMessageSend = viewModel::sendMessage,
@@ -107,6 +107,7 @@ fun ChatScreenLoading(
 @Composable
 private fun ChatScreenLoaded(
     messages: List<DomainMessage>,
+    channelName: String,
     userMessage: String,
     onUserMessageUpdate: (String) -> Unit,
     onUserMessageSend: () -> Unit,
@@ -157,9 +158,7 @@ private fun ChatScreenLoaded(
             value = userMessage,
             onValueChange = onUserMessageUpdate,
             onSendClick = onUserMessageSend,
-            hint = {
-
-            }
+            hint = { Text(stringResource(R.string.chat_input_hint, channelName)) }
         )
     }
 }

@@ -29,7 +29,6 @@ class ChatViewModel(
         private set
 
     val messages = mutableStateListOf<DomainMessage>()
-
     var channelName by mutableStateOf("")
         private set
     var userMessage by mutableStateOf("")
@@ -39,9 +38,12 @@ class ChatViewModel(
         viewModelScope.launch {
             try {
                 state = State.Loading
-                val channelMessages = repository.getChannelMessages(persistentDataManager.currentChannelId)
+                val currentChannelId = persistentDataManager.currentChannelId
+                val channelMessages = repository.getChannelMessages(currentChannelId)
+                val channel = repository.getChannel(currentChannelId)
                 messages.clear()
                 messages.addAll(channelMessages)
+                channelName = channel.name
                 state = State.Loaded
             } catch (e: Exception) {
                 state = State.Error

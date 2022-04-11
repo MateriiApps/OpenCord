@@ -20,6 +20,8 @@ interface DiscordApiService {
 
     suspend fun getGuildChannels(guildId: Long): List<ApiChannel>
 
+    suspend fun getChannel(channelId: Long): ApiChannel
+
     suspend fun getChannelMessages(channelId: Long): List<ApiMessage>
 
     suspend fun postChannelMessage(channelId: Long, body: MessageBody)
@@ -40,6 +42,13 @@ class DiscordApiServiceImpl(
     override suspend fun getGuild(guildId: Long): ApiGuild {
         return withContext(Dispatchers.IO) {
             val url = getGuildUrl(guildId)
+            client.get(url).body()
+        }
+    }
+
+    override suspend fun getChannel(channelId: Long): ApiChannel {
+        return withContext(Dispatchers.IO) {
+            val url = getChannelUrl(channelId)
             client.get(url).body()
         }
     }
@@ -81,8 +90,13 @@ class DiscordApiServiceImpl(
             return "$guildUrl/channels"
         }
 
+        fun getChannelUrl(channelId: Long): String {
+            return "$BASE/channels/$channelId"
+        }
+
         fun getChannelMessagesUrl(channelId: Long): String {
-            return "$BASE/channels/$channelId/messages"
+            val channelUrl = getChannelUrl(channelId)
+            return "$channelUrl/messages"
         }
     }
 

@@ -9,10 +9,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.LocalContentAlpha
-import androidx.compose.material3.LocalAbsoluteTonalElevation
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.contentColorFor
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -71,7 +68,10 @@ fun OCBasicTextField(
                 ) {
                     Box(modifier = Modifier.padding(12.dp)) {
                         innerTextField()
-                        CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+                        CompositionLocalProvider(
+                            LocalContentAlpha provides ContentAlpha.medium,
+                            LocalTextStyle provides MaterialTheme.typography.bodyMedium
+                        ) {
                             if (value.isBlank()) {
                                 hint()
                             }

@@ -10,4 +10,6 @@
     <string name="login_field_username">Email or Phone Number</string>
     <string name="login_field_password">Password</string>
 
+    <string name="chat_input_hint">Message #%1$s</string>
+
 </resources>

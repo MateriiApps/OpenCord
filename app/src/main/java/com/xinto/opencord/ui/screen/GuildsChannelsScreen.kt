@@ -1,6 +1,7 @@
 package com.xinto.opencord.ui.screen
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -12,7 +13,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainChannel
@@ -175,6 +180,8 @@ private fun ChannelsList(
                         viewModel.selectChannel(it)
                         onChannelSelect()
                     },
+                    bannerUrl = viewModel.guildBannerUrl,
+                    guildName = viewModel.guildName,
                     channels = viewModel.channels,
                     selectedChannelId = viewModel.selectedChannelId
                 )
@@ -190,26 +197,57 @@ private fun ChannelsList(
 private fun ChannelsListLoaded(
     onChannelSelect: (Long) -> Unit,
     selectedChannelId: Long,
+    bannerUrl: String?,
+    guildName: String,
     channels: Map<DomainChannel.Category?, List<DomainChannel>>,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
         modifier = modifier,
     ) {
-//                if (bannerUrl != null) {
-//                    item {
-//                        val painter = rememberOpenCordCachePainter(bannerUrl)
-//                        Image(
-//                            modifier = Modifier
-//                                .fillMaxWidth()
-//                                .heightIn(min = 100.dp, max = 180.dp)
-//                                .clip(RoundedCornerShape(8.dp)),
-//                            painter = painter,
-//                            contentScale = ContentScale.Crop,
-//                            contentDescription = "Guild Banner"
-//                        )
-//                    }
-//                }
+        item {
+            Box(
+                modifier = Modifier
+                    .fillParentMaxWidth()
+                    .height(IntrinsicSize.Min)
+            ) {
+                if (bannerUrl != null) {
+                    val painter = rememberOCCoilPainter(bannerUrl)
+                    Image(
+                        modifier = Modifier
+                            .fillParentMaxWidth()
+                            .clip(MaterialTheme.shapes.large)
+                            .height(150.dp),
+                        painter = painter,
+                        contentScale = ContentScale.Crop,
+                        contentDescription = "Guild Banner"
+                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .fillParentMaxWidth()
+                            .background(
+                                brush = Brush.verticalGradient(
+                                    colors = listOf(
+                                        Color.DarkGray,
+                                        Color.Transparent
+                                    ),
+                                ),
+                                alpha = 0.8f
+                            )
+                    )
+                }
+                ProvideTextStyle(MaterialTheme.typography.titleLarge) {
+                    Text(
+                        modifier = Modifier
+                            .align(Alignment.TopStart)
+                            .padding(12.dp),
+                        text = guildName,
+                        fontWeight = FontWeight.SemiBold,
+                    )
+                }
+            }
+        }
         for ((category, categoryChannels) in channels) {
             if (category != null) {
                 item {

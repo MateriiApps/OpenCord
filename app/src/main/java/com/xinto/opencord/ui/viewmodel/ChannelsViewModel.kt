@@ -26,6 +26,10 @@ class ChannelsViewModel(
         private set
 
     val channels = mutableStateMapOf<DomainChannel.Category?, List<DomainChannel>>()
+    var guildName by mutableStateOf("")
+        private set
+    var guildBannerUrl by mutableStateOf<String?>(null)
+        private set
     var selectedChannelId by mutableStateOf(0L)
         private set
 
@@ -33,9 +37,13 @@ class ChannelsViewModel(
         viewModelScope.launch {
             try {
                 state = State.Loading
-                val guildChannels = repository.getGuildChannels(persistentDataManager.currentGuildId)
+                val currentGuildId = persistentDataManager.currentGuildId
+                val guildChannels = repository.getGuildChannels(currentGuildId)
+                val guild = repository.getGuild(currentGuildId)
                 channels.clear()
                 channels.putAll(getSortedChannels(guildChannels))
+                guildName = guild.name
+                guildBannerUrl = guild.bannerUrl
                 state = State.Loaded
             } catch (e: Exception) {
                 state = State.Error
