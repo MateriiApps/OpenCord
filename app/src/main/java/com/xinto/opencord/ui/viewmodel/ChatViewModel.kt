@@ -20,12 +20,13 @@ class ChatViewModel(
 ) : ViewModel() {
 
     sealed interface State {
+        object Unselected : State
         object Loading : State
         object Loaded : State
         object Error : State
     }
 
-    var state by mutableStateOf<State>(State.Loading)
+    var state by mutableStateOf<State>(State.Unselected)
         private set
 
     val messages = mutableStateListOf<DomainMessage>()

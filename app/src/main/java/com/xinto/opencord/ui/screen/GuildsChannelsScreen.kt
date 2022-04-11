@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
@@ -170,8 +171,15 @@ private fun ChannelsList(
         tonalElevation = 1.dp
     ) {
         when (viewModel.state) {
+            is ChannelsViewModel.State.Unselected -> {
+                ChannelsListUnselected(
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
             is ChannelsViewModel.State.Loading -> {
-
+                ChannelsListLoading(
+                    modifier = Modifier.fillMaxSize()
+                )
             }
             is ChannelsViewModel.State.Loaded -> {
                 ChannelsListLoaded(
@@ -190,6 +198,32 @@ private fun ChannelsList(
 
             }
         }
+    }
+}
+
+@Composable
+private fun ChannelsListUnselected(
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ) {
+        ProvideTextStyle(MaterialTheme.typography.titleLarge) {
+            Text(stringResource(R.string.channel_unselected_message))
+        }
+    }
+}
+
+@Composable
+private fun ChannelsListLoading(
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator()
     }
 }
 

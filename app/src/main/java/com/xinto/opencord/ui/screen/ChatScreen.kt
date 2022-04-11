@@ -67,10 +67,14 @@ fun ChatScreen(
             tonalElevation = 2.dp
         ) {
             when (viewModel.state) {
+                is ChatViewModel.State.Unselected -> {
+                    ChatScreenUnselected(
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
                 is ChatViewModel.State.Loading -> {
                     ChatScreenLoading(
-                        modifier = Modifier
-                            .fillMaxSize()
+                        modifier = Modifier.fillMaxSize()
                     )
                 }
                 is ChatViewModel.State.Loaded -> {
@@ -93,7 +97,21 @@ fun ChatScreen(
 }
 
 @Composable
-fun ChatScreenLoading(
+private fun ChatScreenUnselected(
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ) {
+        ProvideTextStyle(MaterialTheme.typography.titleLarge) {
+            Text(stringResource(R.string.chat_unselected_message))
+        }
+    }
+}
+
+@Composable
+private fun ChatScreenLoading(
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -164,7 +182,7 @@ private fun ChatScreenLoaded(
 }
 
 @Composable
-fun MessageActionMenu(
+private fun MessageActionMenu(
     onDismissRequest: () -> Unit
 ) {
     BottomSheetDialog(
