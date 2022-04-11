@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">OpenCord</string>
+
+    <string name="login_landing_title">Welcome to OpenCord!</string>
+    <string name="login_landing_subtitle">Join over 0 people who use OpenCord as an alternative to the stock Discord app.</string>
+    <string name="login_login_title">Welcome back!</string>
+    <string name="login_login_subtitle">We\'re so excited to see you again!</string>
+    <string name="login_action_login">Login</string>
+    <string name="login_action_register">Register</string>
+    <string name="login_field_username">Email or Phone Number</string>
+    <string name="login_field_password">Password</string>
+
 </resources>
