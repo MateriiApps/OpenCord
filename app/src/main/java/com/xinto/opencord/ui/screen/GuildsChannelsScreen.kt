@@ -27,8 +27,8 @@ import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun GuildsChannelsScreen(
-    onGuildSelect: (Long) -> Unit,
-    onChannelSelect: (Long) -> Unit,
+    onGuildSelect: () -> Unit,
+    onChannelSelect: () -> Unit,
     guildsViewModel: GuildsViewModel = getViewModel(),
     channelsViewModel: ChannelsViewModel = getViewModel(),
 ) {
@@ -54,7 +54,7 @@ fun GuildsChannelsScreen(
 
 @Composable
 private fun GuildsList(
-    onGuildSelect: (Long) -> Unit,
+    onGuildSelect: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: GuildsViewModel = getViewModel()
 ) {
@@ -66,8 +66,8 @@ private fun GuildsList(
             GuildsListLoaded(
                 modifier = modifier,
                 onGuildSelect = {
-                    onGuildSelect(it)
                     viewModel.selectGuild(it)
+                    onGuildSelect()
                 },
                 guilds = viewModel.guilds,
                 selectedGuildId = viewModel.selectedGuildId
@@ -155,7 +155,7 @@ fun GuildsListLoaded(
 
 @Composable
 private fun ChannelsList(
-    onChannelSelect: (Long) -> Unit,
+    onChannelSelect: () -> Unit,
     viewModel: ChannelsViewModel,
     modifier: Modifier = Modifier
 ) {
@@ -172,8 +172,8 @@ private fun ChannelsList(
                 ChannelsListLoaded(
                     modifier = Modifier.fillMaxSize(),
                     onChannelSelect = {
-                        onChannelSelect(it)
                         viewModel.selectChannel(it)
+                        onChannelSelect()
                     },
                     channels = viewModel.channels,
                     selectedChannelId = viewModel.selectedChannelId

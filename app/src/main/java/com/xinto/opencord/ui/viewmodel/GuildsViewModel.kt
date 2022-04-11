@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.xinto.opencord.domain.manager.PersistentDataManager
 import com.xinto.opencord.domain.model.DomainMeGuild
 import com.xinto.opencord.domain.repository.DiscordApiRepository
 import com.xinto.opencord.gateway.DiscordGateway
@@ -13,7 +14,8 @@ import kotlinx.coroutines.launch
 
 class GuildsViewModel(
     gateway: DiscordGateway,
-    private val repository: DiscordApiRepository
+    private val repository: DiscordApiRepository,
+    private val persistentDataManager: PersistentDataManager
 ) : ViewModel() {
 
     sealed interface State {
@@ -46,10 +48,15 @@ class GuildsViewModel(
 
     fun selectGuild(guildId: Long) {
         selectedGuildId = guildId
+        persistentDataManager.currentGuildId = guildId
     }
 
     init {
         load()
+
+        if (persistentDataManager.currentGuildId != 0L) {
+            selectedGuildId = persistentDataManager.currentGuildId
+        }
     }
 
 }

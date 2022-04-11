@@ -37,10 +37,10 @@ fun MainScreen() {
             panelStart = {
                 GuildsChannelsScreen(
                     onGuildSelect = {
-                        channelsViewModel.load(it)
+                        channelsViewModel.load()
                     },
                     onChannelSelect = {
-                        chatViewModel.load(it)
+                        chatViewModel.load()
                     },
                     guildsViewModel = guildsViewModel,
                     channelsViewModel = channelsViewModel

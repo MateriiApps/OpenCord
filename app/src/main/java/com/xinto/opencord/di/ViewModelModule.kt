@@ -2,6 +2,7 @@ package com.xinto.opencord.di
 
 import com.xinto.opencord.domain.manager.AccountManager
 import com.xinto.opencord.domain.manager.ActivityManager
+import com.xinto.opencord.domain.manager.PersistentDataManager
 import com.xinto.opencord.domain.repository.DiscordApiRepository
 import com.xinto.opencord.domain.repository.DiscordAuthRepository
 import com.xinto.opencord.gateway.DiscordGateway
@@ -34,31 +35,37 @@ val viewModelModule = module {
 
     fun provideChatViewModel(
         gateway: DiscordGateway,
-        repository: DiscordApiRepository
+        repository: DiscordApiRepository,
+        persistentDataManager: PersistentDataManager
     ): ChatViewModel {
         return ChatViewModel(
             gateway = gateway,
-            repository = repository
+            repository = repository,
+            persistentDataManager = persistentDataManager
         )
     }
 
     fun provideGuildsViewModel(
         gateway: DiscordGateway,
-        repository: DiscordApiRepository
+        repository: DiscordApiRepository,
+        persistentDataManager: PersistentDataManager
     ): GuildsViewModel {
         return GuildsViewModel(
             gateway = gateway,
-            repository = repository
+            repository = repository,
+            persistentDataManager = persistentDataManager
         )
     }
 
     fun provideChannelsViewModel(
         gateway: DiscordGateway,
-        repository: DiscordApiRepository
+        repository: DiscordApiRepository,
+        persistentDataManager: PersistentDataManager
     ): ChannelsViewModel {
         return ChannelsViewModel(
             gateway = gateway,
-            repository = repository
+            repository = repository,
+            persistentDataManager = persistentDataManager
         )
     }
 
@@ -74,8 +81,8 @@ val viewModelModule = module {
 
     viewModel { provideMainViewModel(get()) }
     viewModel { provideLoginViewModel(get(), get(), get()) }
-    viewModel { provideChatViewModel(get(), get()) }
-    viewModel { provideGuildsViewModel(get(), get()) }
-    viewModel { provideChannelsViewModel(get(), get()) }
+    viewModel { provideChatViewModel(get(), get(), get()) }
+    viewModel { provideGuildsViewModel(get(), get(), get()) }
+    viewModel { provideChannelsViewModel(get(), get(), get()) }
     viewModel { provideMembersViewModel(get(), get()) }
 }

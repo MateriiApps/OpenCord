@@ -1,7 +1,7 @@
 package com.xinto.opencord.domain.manager
 
 import android.content.SharedPreferences
-import androidx.core.content.edit
+import com.xinto.opencord.domain.manager.base.BasePreferenceManager
 
 interface AccountManager {
 
@@ -12,15 +12,13 @@ interface AccountManager {
 }
 
 class AccountManagerImpl(
-    private val authPrefs: SharedPreferences
-) : AccountManager {
+    authPrefs: SharedPreferences
+) : BasePreferenceManager(authPrefs), AccountManager {
 
     override var currentAccountToken: String?
-        get() = authPrefs.getString(USER_TOKEN_KEY, null)
+        get() = getString(USER_TOKEN_KEY, null)
         set(value) {
-            authPrefs.edit {
-                putString(USER_TOKEN_KEY, value)
-            }
+            putString(USER_TOKEN_KEY, value)
         }
 
     override val isLoggedIn: Boolean

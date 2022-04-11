@@ -3,6 +3,7 @@ package com.xinto.opencord.ui.viewmodel
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.xinto.opencord.domain.manager.PersistentDataManager
 import com.xinto.opencord.domain.mapper.toDomain
 import com.xinto.opencord.domain.model.DomainMessage
 import com.xinto.opencord.domain.repository.DiscordApiRepository
@@ -14,10 +15,9 @@ import kotlinx.coroutines.launch
 
 class ChatViewModel(
     gateway: DiscordGateway,
-    private val repository: DiscordApiRepository
+    private val repository: DiscordApiRepository,
+    private val persistentDataManager: PersistentDataManager
 ) : ViewModel() {
-
-    private var _channelId = 0L
 
     sealed interface State {
         object Loading : State
@@ -35,12 +35,11 @@ class ChatViewModel(
     var userMessage by mutableStateOf("")
         private set
 
-    fun load(channelId: Long) {
+    fun load() {
         viewModelScope.launch {
-            _channelId = channelId
             try {
                 state = State.Loading
-                val channelMessages = repository.getChannelMessages(channelId)
+                val channelMessages = repository.getChannelMessages(persistentDataManager.currentChannelId)
                 messages.clear()
                 messages.addAll(channelMessages)
                 state = State.Loaded
@@ -54,7 +53,7 @@ class ChatViewModel(
     fun sendMessage() {
         viewModelScope.launch {
             repository.postChannelMessage(
-                channelId = _channelId,
+                channelId = persistentDataManager.currentChannelId,
                 MessageBody(
                     content = userMessage
                 )
@@ -69,10 +68,14 @@ class ChatViewModel(
 
     init {
         gateway.onEvent<MessageCreateEvent>(
-            filterPredicate = { it.data.channelId == _channelId }
+            filterPredicate = { it.data.channelId == persistentDataManager.currentChannelId }
         ) {
             val domainData = it.data.toDomain()
             messages.add(0, domainData)
+        }
+
+        if (persistentDataManager.currentChannelId != 0L) {
+            load()
         }
     }
 
