@@ -14,6 +14,7 @@ import com.xinto.opencord.gateway.io.EventName
 import com.xinto.opencord.gateway.io.IncomingPayload
 import com.xinto.opencord.gateway.io.OpCode
 import com.xinto.opencord.gateway.io.OutgoingPayload
+import com.xinto.opencord.util.Logger
 import io.ktor.client.*
 import io.ktor.client.plugins.websocket.*
 import io.ktor.websocket.*
@@ -42,7 +43,8 @@ interface DiscordGateway : CoroutineScope {
 class DiscordGatewayImpl(
     private val client: HttpClient,
     private val json: Json,
-    private val accountManager: AccountManager
+    private val accountManager: AccountManager,
+    private val logger: Logger
 ) : DiscordGateway {
 
     override val coroutineContext: CoroutineContext
@@ -70,7 +72,7 @@ class DiscordGatewayImpl(
     }
 
     override suspend fun disconnect() {
-        Log.d("Gateway", "Disconnecting")
+        logger.debug("Gateway", "Disconnecting")
         isActive = false
         webSocketSession.close()
         client.close()
@@ -109,10 +111,10 @@ class DiscordGatewayImpl(
                     }
                 }
                 OpCode.INVALID_SESSION -> {
-                    Log.d("Gateway", "invalid session")
+                    logger.debug("Gateway", "invalid session")
                 }
                 OpCode.HEARTBEAT_ACK -> {
-                    Log.d("Gateway", "Heartbeat acked!")
+                    logger.debug("Gateway", "Heartbeat acked!")
                 }
                 else -> {}
             }
