@@ -5,8 +5,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RequestGuildMembers(
-    @SerialName("guildId")
-    val guildId: List<Long>,
+    @SerialName("guild_id")
+    val guildId: Long,
 
     @SerialName("query")
     val query: String = "",
@@ -15,8 +15,8 @@ data class RequestGuildMembers(
     val limit: Int = 0,
 
     @SerialName("presences")
-    val presences: Boolean = false,
+    val presences: Boolean? = null,
 
-    @SerialName("userIds")
-    val userIds: List<Long> = emptyList(),
+    @SerialName("user_ids")
+    val userIds: List<Long>? = null,
 )

@@ -11,7 +11,7 @@ import kotlinx.serialization.encoding.Encoder
 @Serializable(EventName.Serializer::class)
 enum class EventName(val eventName: String) {
     MESSAGE_CREATE("MESSAGE_CREATE"),
-    GUILD_MEMBER_CHUNK("MESSAGE_CREATE"),
+    GUILD_MEMBER_CHUNK("GUILD_MEMBER_CHUNK"),
     UNKNOWN("");
 
     companion object Serializer : KSerializer<EventName> {

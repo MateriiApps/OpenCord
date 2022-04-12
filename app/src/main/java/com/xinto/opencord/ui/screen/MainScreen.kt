@@ -17,6 +17,7 @@ import com.xinto.opencord.ui.util.animateCornerBasedShapeAsState
 import com.xinto.opencord.ui.viewmodel.ChannelsViewModel
 import com.xinto.opencord.ui.viewmodel.ChatViewModel
 import com.xinto.opencord.ui.viewmodel.GuildsViewModel
+import com.xinto.opencord.ui.viewmodel.MembersViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
@@ -29,6 +30,7 @@ fun MainScreen() {
     val chatViewModel: ChatViewModel = getViewModel()
     val guildsViewModel: GuildsViewModel = getViewModel()
     val channelsViewModel: ChannelsViewModel = getViewModel()
+    val membersViewModel: MembersViewModel = getViewModel()
 
     Surface(modifier = Modifier.fillMaxSize()) {
         OverlappingPanels(
@@ -36,7 +38,10 @@ fun MainScreen() {
             panelsState = panelState,
             panelStart = {
                 GuildsChannelsScreen(
-                    onGuildSelect = channelsViewModel::load,
+                    onGuildSelect = {
+                        channelsViewModel.load()
+                        membersViewModel.load()
+                    },
                     onChannelSelect = chatViewModel::load,
                     guildsViewModel = guildsViewModel,
                     channelsViewModel = channelsViewModel
@@ -67,7 +72,9 @@ fun MainScreen() {
                 )
             },
             panelEnd = {
-                ChannelMembersScreen()
+                ChannelMembersScreen(
+                    viewModel = membersViewModel
+                )
             }
         )
     }

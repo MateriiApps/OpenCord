@@ -1,14 +1,11 @@
 package com.xinto.opencord.gateway
 
 import android.os.Build
-import android.util.Log
 import com.xinto.opencord.BuildConfig
 import com.xinto.opencord.domain.manager.AccountManager
-import com.xinto.opencord.gateway.dto.Heartbeat
-import com.xinto.opencord.gateway.dto.Identification
-import com.xinto.opencord.gateway.dto.IdentificationClientState
-import com.xinto.opencord.gateway.dto.IdentificationProperties
+import com.xinto.opencord.gateway.dto.*
 import com.xinto.opencord.gateway.event.Event
+import com.xinto.opencord.gateway.event.GuildMemberChunkEvent
 import com.xinto.opencord.gateway.event.MessageCreateEvent
 import com.xinto.opencord.gateway.io.EventName
 import com.xinto.opencord.gateway.io.IncomingPayload
@@ -30,13 +27,22 @@ import kotlin.coroutines.CoroutineContext
 
 interface DiscordGateway : CoroutineScope {
 
+    sealed interface State {
+        object Started : State
+        object Connected : State
+        object Disconnected : State
+        object Stopped : State
+    }
+
     val events: SharedFlow<Event<*>>
+
+    val state: SharedFlow<State>
 
     suspend fun connect()
 
     suspend fun disconnect()
 
-    suspend fun requestGuildMembers()
+    suspend fun requestGuildMembers(guildId: Long)
 
 }
 
@@ -50,21 +56,22 @@ class DiscordGatewayImpl(
     override val coroutineContext: CoroutineContext
         get() = SupervisorJob() + Dispatchers.Default
 
-    var isActive = false
-        private set
-
     private lateinit var webSocketSession: DefaultClientWebSocketSession
 
     private val _events = MutableSharedFlow<Event<*>>()
     override val events = _events.asSharedFlow()
 
+    private val _state = MutableSharedFlow<DiscordGateway.State>()
+    override val state = _state.asSharedFlow()
+
     private var sequenceNumber: Int = 0
 
     override suspend fun connect() {
-        isActive = true
+        _state.emit(DiscordGateway.State.Started)
         try {
             webSocketSession = client.webSocketSession(BuildConfig.URL_GATEWAY)
             sendIdentification()
+            _state.emit(DiscordGateway.State.Connected)
             listenToSocket()
         } catch (e: Exception) {
             e.printStackTrace()
@@ -73,9 +80,8 @@ class DiscordGatewayImpl(
 
     override suspend fun disconnect() {
         logger.debug("Gateway", "Disconnecting")
-        isActive = false
         webSocketSession.close()
-        client.close()
+        _state.emit(DiscordGateway.State.Disconnected)
     }
 
     private suspend fun listenToSocket() {
@@ -98,6 +104,9 @@ class DiscordGatewayImpl(
                     when (eventName) {
                         EventName.MESSAGE_CREATE -> {
                             _events.emit(MessageCreateEvent(json.decodeFromJsonElement(data)))
+                        }
+                        EventName.GUILD_MEMBER_CHUNK -> {
+                            _events.emit(GuildMemberChunkEvent(json.decodeFromJsonElement(data)))
                         }
                         else -> {}
                     }
@@ -171,13 +180,20 @@ class DiscordGatewayImpl(
         )
     }
 
+    override suspend fun requestGuildMembers(guildId: Long) {
+        sendSerializedData(
+            OutgoingPayload(
+                opCode = OpCode.REQUEST_GUILD_MEMBERS,
+                data = RequestGuildMembers(
+                    guildId = guildId
+                )
+            )
+        )
+    }
+
     private suspend inline fun <reified T> sendSerializedData(data: T) {
         val json = json.encodeToString(data)
         webSocketSession.send(Frame.Text(json))
-    }
-
-    override suspend fun requestGuildMembers() {
-
     }
 }
 
@@ -191,6 +207,17 @@ inline fun <reified E : Event<*>> DiscordGateway.onEvent(
         .onEach {
             launch {
                 block(it)
+            }
+        }.launchIn(this)
+}
+
+inline fun DiscordGateway.scheduleOnConnection(
+    crossinline block: suspend () -> Unit
+) {
+    state.buffer(Channel.UNLIMITED)
+        .onEach {
+            if (it is DiscordGateway.State.Connected) {
+                block()
             }
         }.launchIn(this)
 }

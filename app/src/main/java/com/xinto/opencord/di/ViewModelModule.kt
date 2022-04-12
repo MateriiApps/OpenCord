@@ -70,10 +70,12 @@ val viewModelModule = module {
     }
 
     fun provideMembersViewModel(
+        persistentDataManager: PersistentDataManager,
         gateway: DiscordGateway,
         repository: DiscordApiRepository
     ): MembersViewModel {
         return MembersViewModel(
+            persistentDataManager = persistentDataManager,
             gateway = gateway,
             repository = repository
         )
@@ -84,5 +86,5 @@ val viewModelModule = module {
     viewModel { provideChatViewModel(get(), get(), get()) }
     viewModel { provideGuildsViewModel(get(), get(), get()) }
     viewModel { provideChannelsViewModel(get(), get(), get()) }
-    viewModel { provideMembersViewModel(get(), get()) }
+    viewModel { provideMembersViewModel(get(), get(), get()) }
 }

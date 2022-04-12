@@ -17,7 +17,7 @@ class MainViewModel(
     }
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             gateway.connect()
         }
     }
