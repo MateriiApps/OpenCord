@@ -211,7 +211,7 @@ private fun ChannelsListUnselected(
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
-        ProvideTextStyle(MaterialTheme.typography.titleLarge) {
+        ProvideTextStyle(MaterialTheme.typography.titleMedium) {
             Text(stringResource(R.string.channel_unselected_message))
         }
     }

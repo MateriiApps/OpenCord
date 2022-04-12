@@ -106,7 +106,7 @@ private fun ChatScreenUnselected(
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
-        ProvideTextStyle(MaterialTheme.typography.titleLarge) {
+        ProvideTextStyle(MaterialTheme.typography.titleMedium) {
             Text(stringResource(R.string.chat_unselected_message))
         }
     }
