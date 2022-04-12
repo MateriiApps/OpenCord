@@ -8,15 +8,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.People
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.xinto.bdc.BottomSheetDialog
 import com.xinto.opencord.R
@@ -90,7 +89,9 @@ fun ChatScreen(
                     )
                 }
                 is ChatViewModel.State.Error -> {
-
+                    ChatScreenError(
+                        modifier = Modifier.fillMaxSize()
+                    )
                 }
             }
         }
@@ -181,6 +182,32 @@ private fun ChatScreenLoaded(
             onSendClick = onUserMessageSend,
             hint = { Text(stringResource(R.string.chat_input_hint, channelName)) }
         )
+    }
+}
+
+@Composable
+private fun ChatScreenError(
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
+    ) {
+        CompositionLocalProvider(
+            LocalContentColor provides MaterialTheme.colorScheme.error,
+            LocalTextStyle provides MaterialTheme.typography.titleMedium
+        ) {
+            Icon(
+                modifier = Modifier.size(56.dp),
+                painter = painterResource(R.drawable.ic_error_outline),
+                contentDescription = null
+            )
+            Text(
+                text = stringResource(R.string.chat_loading_error),
+                textAlign = TextAlign.Center
+            )
+        }
     }
 }
 

@@ -12,6 +12,7 @@
 
     <string name="chat_unselected_message">Please select a channel.</string>
     <string name="chat_input_hint">Message #%1$s</string>
+    <string name="chat_loading_error">An error occurred while loading the chat.</string>
 
     <string name="channel_unselected_message">Please select a guild.</string>
 
