@@ -5,6 +5,7 @@ import com.xinto.opencord.domain.manager.AccountManager
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.*
+import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.websocket.*
 import io.ktor.client.request.*
 import io.ktor.http.*
@@ -31,6 +32,18 @@ val httpModule = module {
                 header(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                 header(HttpHeaders.UserAgent, userAgent)
             }
+            install(HttpRequestRetry) {
+                maxRetries = 5
+                retryIf { _, httpResponse ->
+                    !httpResponse.status.isSuccess()
+                }
+                retryOnExceptionIf { _, error ->
+                    error is HttpRequestTimeoutException
+                }
+                delayMillis { retry ->
+                    retry * 1000L
+                }
+            }
             install(ContentNegotiation) {
                 json(json)
             }
@@ -46,6 +59,18 @@ val httpModule = module {
                 header(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                 header(HttpHeaders.Authorization, accountManager.currentAccountToken)
                 header(HttpHeaders.UserAgent, userAgent)
+            }
+            install(HttpRequestRetry) {
+                maxRetries = 5
+                retryIf { _, httpResponse ->
+                     !httpResponse.status.isSuccess()
+                }
+                retryOnExceptionIf { _, error ->
+                    error is HttpRequestTimeoutException
+                }
+                delayMillis { retry ->
+                    retry * 2000L
+                }
             }
             install(ContentNegotiation) {
                 json(json)
