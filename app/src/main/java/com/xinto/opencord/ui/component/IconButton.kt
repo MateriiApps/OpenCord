@@ -6,25 +6,27 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ripple.rememberRipple
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.contentColorFor
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 
 @Composable
 fun FilledIconButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    containerColor: Color = MaterialTheme.colorScheme.primary,
+    enabled: Boolean = true,
+    colors: ButtonColors = ButtonDefaults.buttonColors(),
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     content: @Composable () -> Unit,
 ) {
-    val rippleColor = contentColorFor(containerColor).copy(alpha = 0.2f)
+    val containerColor by colors.containerColor(enabled)
+    val contentColor by colors.contentColor(enabled)
     Box(
         modifier = modifier
             .clip(CircleShape)
@@ -33,12 +35,13 @@ fun FilledIconButton(
                 onClick = onClick,
                 role = Role.Button,
                 interactionSource = interactionSource,
-                indication = rememberRipple(
-                    color = rippleColor
-                )
+                indication = rememberRipple(),
+                enabled = enabled,
             ),
         contentAlignment = Alignment.Center
     ) {
-        content()
+        CompositionLocalProvider(LocalContentColor provides contentColor) {
+            content()
+        }
     }
 }

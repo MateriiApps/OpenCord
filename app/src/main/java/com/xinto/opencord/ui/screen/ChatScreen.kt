@@ -86,6 +86,7 @@ fun ChatScreen(
                         userMessage = viewModel.userMessage,
                         onUserMessageUpdate = viewModel::updateMessage,
                         onUserMessageSend = viewModel::sendMessage,
+                        sendEnabled = viewModel.sendEnabled,
                     )
                 }
                 is ChatViewModel.State.Error -> {
@@ -127,6 +128,7 @@ private fun ChatScreenLoaded(
     messages: List<DomainMessage>,
     channelName: String,
     userMessage: String,
+    sendEnabled: Boolean,
     onUserMessageUpdate: (String) -> Unit,
     onUserMessageSend: () -> Unit,
     parser: SimpleAstParser,
@@ -175,6 +177,7 @@ private fun ChatScreenLoaded(
             ),
             value = userMessage,
             onValueChange = onUserMessageUpdate,
+            sendEnabled = sendEnabled,
             onSendClick = onUserMessageSend,
             hint = { Text(stringResource(R.string.chat_input_hint, channelName)) }
         )

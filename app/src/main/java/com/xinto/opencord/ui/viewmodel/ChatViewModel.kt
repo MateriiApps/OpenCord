@@ -34,6 +34,8 @@ class ChatViewModel(
         private set
     var userMessage by mutableStateOf("")
         private set
+    var sendEnabled by mutableStateOf(true)
+        private set
 
     fun load() {
         viewModelScope.launch {
@@ -55,13 +57,16 @@ class ChatViewModel(
 
     fun sendMessage() {
         viewModelScope.launch {
+            sendEnabled = false
+            val message = userMessage
+            userMessage = ""
             repository.postChannelMessage(
                 channelId = persistentDataManager.currentChannelId,
                 MessageBody(
-                    content = userMessage
+                    content = message
                 )
             )
-            userMessage = ""
+            sendEnabled = true
         }
     }
 

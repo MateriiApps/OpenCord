@@ -91,6 +91,7 @@ fun WidgetChatMessage(
 fun WidgetChatInput(
     value: String,
     onValueChange: (value: String) -> Unit,
+    sendEnabled: Boolean,
     onSendClick: () -> Unit,
     hint: @Composable () -> Unit,
     modifier: Modifier = Modifier,
@@ -116,10 +117,12 @@ fun WidgetChatInput(
             enter = slideInHorizontally { it },
             exit = slideOutHorizontally { it },
         ) {
-            FilledIconButton(onClick = onSendClick) {
+            FilledIconButton(
+                onClick = onSendClick,
+                enabled = sendEnabled
+            ) {
                 Icon(
                     imageVector = Icons.Rounded.Send,
-                    tint = MaterialTheme.colorScheme.onPrimary,
                     contentDescription = null
                 )
             }
