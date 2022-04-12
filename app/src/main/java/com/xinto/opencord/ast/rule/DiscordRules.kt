@@ -1,11 +1,11 @@
 package com.xinto.opencord.ast.rule
 
+import com.xinto.opencord.ast.node.*
+import com.xinto.opencord.ast.util.*
 import com.xinto.simpleast.Node
 import com.xinto.simpleast.ParseSpec
 import com.xinto.simpleast.Parser
 import com.xinto.simpleast.Rule
-import com.xinto.opencord.ast.node.*
-import com.xinto.opencord.ast.util.*
 import java.util.regex.Matcher
 
 fun <RC, S> createSpoilerRule() =

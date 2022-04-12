@@ -4,12 +4,12 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import com.xinto.opencord.ast.node.StyledNode
+import com.xinto.opencord.ast.util.*
 import com.xinto.simpleast.Node
 import com.xinto.simpleast.ParseSpec
 import com.xinto.simpleast.Parser
 import com.xinto.simpleast.Rule
-import com.xinto.opencord.ast.node.StyledNode
-import com.xinto.opencord.ast.util.*
 import java.util.regex.Matcher
 
 fun <RC, S> createBoldTextRule() =

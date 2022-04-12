@@ -63,7 +63,7 @@ val httpModule = module {
             install(HttpRequestRetry) {
                 maxRetries = 5
                 retryIf { _, httpResponse ->
-                     !httpResponse.status.isSuccess()
+                    !httpResponse.status.isSuccess()
                 }
                 retryOnExceptionIf { _, error ->
                     error is HttpRequestTimeoutException

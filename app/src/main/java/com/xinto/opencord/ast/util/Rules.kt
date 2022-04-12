@@ -1,11 +1,11 @@
 package com.xinto.opencord.ast.util
 
 import androidx.compose.ui.text.SpanStyle
+import com.xinto.opencord.ast.node.StyledNode
 import com.xinto.simpleast.Node
 import com.xinto.simpleast.ParseSpec
 import com.xinto.simpleast.Parser
 import com.xinto.simpleast.Rule
-import com.xinto.opencord.ast.node.StyledNode
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 

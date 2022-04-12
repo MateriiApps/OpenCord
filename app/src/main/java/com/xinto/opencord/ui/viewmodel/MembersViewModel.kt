@@ -1,7 +1,6 @@
 package com.xinto.opencord.ui.viewmodel
 
 import androidx.compose.runtime.mutableStateListOf
-import androidx.lifecycle.viewModelScope
 import com.xinto.opencord.domain.manager.PersistentDataManager
 import com.xinto.opencord.domain.mapper.toDomain
 import com.xinto.opencord.domain.model.DomainGuildMember
@@ -11,7 +10,6 @@ import com.xinto.opencord.gateway.event.GuildMemberChunkEvent
 import com.xinto.opencord.gateway.onEvent
 import com.xinto.opencord.gateway.scheduleOnConnection
 import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
-import kotlinx.coroutines.launch
 
 class MembersViewModel(
     persistentDataManager: PersistentDataManager,

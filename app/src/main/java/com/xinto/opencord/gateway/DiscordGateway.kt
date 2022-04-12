@@ -115,7 +115,8 @@ class DiscordGatewayImpl(
                 OpCode.RECONNECT -> {}
                 OpCode.HELLO -> {
                     launch {
-                        val interval = json.decodeFromJsonElement<Heartbeat>(data!!).heartbeatInterval
+                        val interval =
+                            json.decodeFromJsonElement<Heartbeat>(data!!).heartbeatInterval
                         runHeartbeat(interval, initial = true)
                     }
                 }

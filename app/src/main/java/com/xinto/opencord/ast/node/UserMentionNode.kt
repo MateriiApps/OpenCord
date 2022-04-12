@@ -3,8 +3,8 @@ package com.xinto.opencord.ast.node
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontWeight
-import com.xinto.simpleast.Node
 import com.xinto.opencord.ui.theme.DiscordBlurple
+import com.xinto.simpleast.Node
 
 class UserMentionNode<RC>(
     val userId: String?
