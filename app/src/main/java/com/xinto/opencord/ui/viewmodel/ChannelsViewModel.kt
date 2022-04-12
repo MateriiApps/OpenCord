@@ -1,20 +1,20 @@
 package com.xinto.opencord.ui.viewmodel
 
 import androidx.compose.runtime.*
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xinto.opencord.domain.manager.PersistentDataManager
 import com.xinto.opencord.domain.model.DomainChannel
 import com.xinto.opencord.domain.repository.DiscordApiRepository
 import com.xinto.opencord.gateway.DiscordGateway
+import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
 import com.xinto.opencord.util.getSortedChannels
 import kotlinx.coroutines.launch
 
 class ChannelsViewModel(
     gateway: DiscordGateway,
-    private val repository: DiscordApiRepository,
-    private val persistentDataManager: PersistentDataManager
-) : ViewModel() {
+    persistentDataManager: PersistentDataManager,
+    private val repository: DiscordApiRepository
+) : BasePersistenceViewModel(persistentDataManager) {
 
     sealed interface State {
         object Unselected : State
@@ -38,9 +38,8 @@ class ChannelsViewModel(
         viewModelScope.launch {
             try {
                 state = State.Loading
-                val currentGuildId = persistentDataManager.currentGuildId
-                val guildChannels = repository.getGuildChannels(currentGuildId)
-                val guild = repository.getGuild(currentGuildId)
+                val guildChannels = repository.getGuildChannels(persistentGuildId)
+                val guild = repository.getGuild(persistentGuildId)
                 channels.clear()
                 channels.putAll(getSortedChannels(guildChannels))
                 guildName = guild.name
@@ -55,15 +54,15 @@ class ChannelsViewModel(
 
     fun selectChannel(channelId: Long) {
         selectedChannelId = channelId
-        persistentDataManager.currentChannelId = channelId
+        persistentChannelId = channelId
     }
 
     init {
-        if (persistentDataManager.currentGuildId != 0L) {
+        if (persistentGuildId != 0L) {
             load()
         }
-        if (persistentDataManager.currentChannelId != 0L) {
-            selectedChannelId = persistentDataManager.currentChannelId
+        if (persistentChannelId != 0L) {
+            selectedChannelId = persistentDataManager.persistentChannelId
         }
     }
 

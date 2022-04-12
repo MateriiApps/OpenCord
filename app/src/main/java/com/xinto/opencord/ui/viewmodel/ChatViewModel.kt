@@ -11,13 +11,14 @@ import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.event.MessageCreateEvent
 import com.xinto.opencord.gateway.onEvent
 import com.xinto.opencord.rest.body.MessageBody
+import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
 import kotlinx.coroutines.launch
 
 class ChatViewModel(
     gateway: DiscordGateway,
-    private val repository: DiscordApiRepository,
-    private val persistentDataManager: PersistentDataManager
-) : ViewModel() {
+    persistentDataManager: PersistentDataManager,
+    private val repository: DiscordApiRepository
+) : BasePersistenceViewModel(persistentDataManager) {
 
     sealed interface State {
         object Unselected : State
@@ -41,9 +42,8 @@ class ChatViewModel(
         viewModelScope.launch {
             try {
                 state = State.Loading
-                val currentChannelId = persistentDataManager.currentChannelId
-                val channelMessages = repository.getChannelMessages(currentChannelId)
-                val channel = repository.getChannel(currentChannelId)
+                val channelMessages = repository.getChannelMessages(persistentChannelId)
+                val channel = repository.getChannel(persistentChannelId)
                 messages.clear()
                 messages.addAll(channelMessages)
                 channelName = channel.name
@@ -61,7 +61,7 @@ class ChatViewModel(
             val message = userMessage
             userMessage = ""
             repository.postChannelMessage(
-                channelId = persistentDataManager.currentChannelId,
+                channelId = persistentChannelId,
                 MessageBody(
                     content = message
                 )
@@ -76,13 +76,13 @@ class ChatViewModel(
 
     init {
         gateway.onEvent<MessageCreateEvent>(
-            filterPredicate = { it.data.channelId == persistentDataManager.currentChannelId }
+            filterPredicate = { it.data.channelId == persistentChannelId }
         ) {
             val domainData = it.data.toDomain()
             messages.add(0, domainData)
         }
 
-        if (persistentDataManager.currentChannelId != 0L) {
+        if (persistentChannelId != 0L) {
             load()
         }
     }

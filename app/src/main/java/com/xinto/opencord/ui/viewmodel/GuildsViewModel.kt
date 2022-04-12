@@ -4,19 +4,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xinto.opencord.domain.manager.PersistentDataManager
 import com.xinto.opencord.domain.model.DomainMeGuild
 import com.xinto.opencord.domain.repository.DiscordApiRepository
 import com.xinto.opencord.gateway.DiscordGateway
+import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
 import kotlinx.coroutines.launch
 
 class GuildsViewModel(
     gateway: DiscordGateway,
-    private val repository: DiscordApiRepository,
-    private val persistentDataManager: PersistentDataManager
-) : ViewModel() {
+    persistentDataManager: PersistentDataManager,
+    private val repository: DiscordApiRepository
+) : BasePersistenceViewModel(persistentDataManager) {
 
     sealed interface State {
         object Loading : State
@@ -48,14 +48,14 @@ class GuildsViewModel(
 
     fun selectGuild(guildId: Long) {
         selectedGuildId = guildId
-        persistentDataManager.currentGuildId = guildId
+        persistentGuildId = guildId
     }
 
     init {
         load()
 
-        if (persistentDataManager.currentGuildId != 0L) {
-            selectedGuildId = persistentDataManager.currentGuildId
+        if (persistentGuildId != 0L) {
+            selectedGuildId = persistentGuildId
         }
     }
 
