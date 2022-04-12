@@ -5,9 +5,7 @@ import com.xinto.opencord.BuildConfig
 import com.xinto.opencord.domain.manager.AccountManager
 import com.xinto.opencord.gateway.dto.*
 import com.xinto.opencord.gateway.event.Event
-import com.xinto.opencord.gateway.event.GuildMemberChunkEvent
-import com.xinto.opencord.gateway.event.MessageCreateEvent
-import com.xinto.opencord.gateway.io.EventName
+import com.xinto.opencord.gateway.event.EventDeserializationStrategy
 import com.xinto.opencord.gateway.io.IncomingPayload
 import com.xinto.opencord.gateway.io.OpCode
 import com.xinto.opencord.gateway.io.OutgoingPayload
@@ -34,7 +32,7 @@ interface DiscordGateway : CoroutineScope {
         object Stopped : State
     }
 
-    val events: SharedFlow<Event<*>>
+    val events: SharedFlow<Event>
 
     val state: SharedFlow<State>
 
@@ -58,7 +56,7 @@ class DiscordGatewayImpl(
 
     private lateinit var webSocketSession: DefaultClientWebSocketSession
 
-    private val _events = MutableSharedFlow<Event<*>>()
+    private val _events = MutableSharedFlow<Event>()
     override val events = _events.asSharedFlow()
 
     private val _state = MutableSharedFlow<DiscordGateway.State>()
@@ -100,16 +98,8 @@ class DiscordGatewayImpl(
 
             when (opCode) {
                 OpCode.DISPATCH -> {
-                    data!!
-                    when (eventName) {
-                        EventName.MESSAGE_CREATE -> {
-                            _events.emit(MessageCreateEvent(json.decodeFromJsonElement(data)))
-                        }
-                        EventName.GUILD_MEMBER_CHUNK -> {
-                            _events.emit(GuildMemberChunkEvent(json.decodeFromJsonElement(data)))
-                        }
-                        else -> {}
-                    }
+                    val decoded = json.decodeFromJsonElement(EventDeserializationStrategy(eventName!!), data!!)
+                    decoded?.let { _events.emit(it) }
                 }
                 OpCode.HEARTBEAT -> {}
                 OpCode.RECONNECT -> {}
@@ -198,7 +188,7 @@ class DiscordGatewayImpl(
     }
 }
 
-inline fun <reified E : Event<*>> DiscordGateway.onEvent(
+inline fun <reified E : Event> DiscordGateway.onEvent(
     noinline filterPredicate: suspend (E) -> Boolean = { true },
     crossinline block: suspend (E) -> Unit
 ) {
