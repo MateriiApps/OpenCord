@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ApiChannel(
     @SerialName("id")
-    val id: String,
+    val id: ApiSnowflake,
 
     @SerialName("name")
     val name: String,
@@ -18,7 +18,7 @@ data class ApiChannel(
     val position: Int = 0,
 
     @SerialName("parent_id")
-    val parentId: Long? = null,
+    val parentId: ApiSnowflake? = null,
 
     @SerialName("nsfw")
     val nsfw: Boolean = false,

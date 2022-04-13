@@ -16,15 +16,15 @@ interface DiscordApiService {
 
     suspend fun getMeGuilds(): List<ApiMeGuild>
 
-    suspend fun getGuild(guildId: Long): ApiGuild
+    suspend fun getGuild(guildId: ULong): ApiGuild
 
-    suspend fun getGuildChannels(guildId: Long): List<ApiChannel>
+    suspend fun getGuildChannels(guildId: ULong): List<ApiChannel>
 
-    suspend fun getChannel(channelId: Long): ApiChannel
+    suspend fun getChannel(channelId: ULong): ApiChannel
 
-    suspend fun getChannelMessages(channelId: Long): List<ApiMessage>
+    suspend fun getChannelMessages(channelId: ULong): List<ApiMessage>
 
-    suspend fun postChannelMessage(channelId: Long, body: MessageBody)
+    suspend fun postChannelMessage(channelId: ULong, body: MessageBody)
 
 }
 
@@ -39,35 +39,35 @@ class DiscordApiServiceImpl(
         }
     }
 
-    override suspend fun getGuild(guildId: Long): ApiGuild {
+    override suspend fun getGuild(guildId: ULong): ApiGuild {
         return withContext(Dispatchers.IO) {
             val url = getGuildUrl(guildId)
             client.get(url).body()
         }
     }
 
-    override suspend fun getChannel(channelId: Long): ApiChannel {
+    override suspend fun getChannel(channelId: ULong): ApiChannel {
         return withContext(Dispatchers.IO) {
             val url = getChannelUrl(channelId)
             client.get(url).body()
         }
     }
 
-    override suspend fun getGuildChannels(guildId: Long): List<ApiChannel> {
+    override suspend fun getGuildChannels(guildId: ULong): List<ApiChannel> {
         return withContext(Dispatchers.IO) {
             val url = getGuildChannelsUrl(guildId)
             client.get(url).body()
         }
     }
 
-    override suspend fun getChannelMessages(channelId: Long): List<ApiMessage> {
+    override suspend fun getChannelMessages(channelId: ULong): List<ApiMessage> {
         return withContext(Dispatchers.IO) {
             val url = getChannelMessagesUrl(channelId)
             client.get(url).body()
         }
     }
 
-    override suspend fun postChannelMessage(channelId: Long, body: MessageBody) {
+    override suspend fun postChannelMessage(channelId: ULong, body: MessageBody) {
         withContext(Dispatchers.IO) {
             val url = getChannelMessagesUrl(channelId)
             client.post(url) {
@@ -81,20 +81,20 @@ class DiscordApiServiceImpl(
 
         fun getMeGuildsUrl(): String = "$BASE/users/@me/guilds"
 
-        fun getGuildUrl(guildId: Long): String {
+        fun getGuildUrl(guildId: ULong): String {
             return "$BASE/guilds/$guildId"
         }
 
-        fun getGuildChannelsUrl(guildId: Long): String {
+        fun getGuildChannelsUrl(guildId: ULong): String {
             val guildUrl = getGuildUrl(guildId)
             return "$guildUrl/channels"
         }
 
-        fun getChannelUrl(channelId: Long): String {
+        fun getChannelUrl(channelId: ULong): String {
             return "$BASE/channels/$channelId"
         }
 
-        fun getChannelMessagesUrl(channelId: Long): String {
+        fun getChannelMessagesUrl(channelId: ULong): String {
             val channelUrl = getChannelUrl(channelId)
             return "$channelUrl/messages"
         }

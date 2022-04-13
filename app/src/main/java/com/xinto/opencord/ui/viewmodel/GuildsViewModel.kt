@@ -28,7 +28,7 @@ class GuildsViewModel(
         private set
 
     val guilds = mutableStateListOf<DomainMeGuild>()
-    var selectedGuildId by mutableStateOf(0L)
+    var selectedGuildId by mutableStateOf(0UL)
         private set
 
     fun load() {
@@ -46,7 +46,7 @@ class GuildsViewModel(
         }
     }
 
-    fun selectGuild(guildId: Long) {
+    fun selectGuild(guildId: ULong) {
         selectedGuildId = guildId
         persistentGuildId = guildId
     }
@@ -54,7 +54,7 @@ class GuildsViewModel(
     init {
         load()
 
-        if (persistentGuildId != 0L) {
+        if (persistentGuildId != 0UL) {
             selectedGuildId = persistentGuildId
         }
     }

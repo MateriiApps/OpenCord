@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ApiAttachment(
     @SerialName("id")
-    val id: Long,
+    val id: ApiSnowflake,
 
     @SerialName("filename")
     val filename: String,

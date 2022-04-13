@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ApiGuildMemberChunk(
     @SerialName("guild_id")
-    val guildId: Long,
+    val guildId: ApiSnowflake,
 
     @SerialName("members")
     val members: List<ApiGuildMember>,

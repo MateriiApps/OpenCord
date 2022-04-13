@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ApiUser(
     @SerialName("id")
-    val id: Long,
+    val id: ApiSnowflake,
 
     @SerialName("username")
     val username: String,

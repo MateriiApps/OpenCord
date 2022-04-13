@@ -2,40 +2,40 @@ package com.xinto.opencord.domain.model
 
 sealed interface DomainChannel : Comparable<DomainChannel> {
 
-    val id: Long
+    val id: ULong
     val name: String
     val position: Int
-    val parentId: Long?
+    val parentId: ULong?
 
     data class TextChannel(
-        override val id: Long,
+        override val id: ULong,
         override val name: String,
         override val position: Int,
-        override val parentId: Long?,
+        override val parentId: ULong?,
         val nsfw: Boolean,
     ) : DomainChannel
 
     data class VoiceChannel(
-        override val id: Long,
+        override val id: ULong,
         override val name: String,
         override val position: Int,
-        override val parentId: Long?,
+        override val parentId: ULong?,
     ) : DomainChannel
 
     data class AnnouncementChannel(
-        override val id: Long,
+        override val id: ULong,
         override val name: String,
         override val position: Int,
-        override val parentId: Long?,
+        override val parentId: ULong?,
         val nsfw: Boolean,
     ) : DomainChannel
 
     data class Category(
-        override val id: Long,
+        override val id: ULong,
         override val name: String,
         override val position: Int,
     ) : DomainChannel {
-        override val parentId: Long? = null
+        override val parentId: ULong? = null
     }
 
     override fun compareTo(other: DomainChannel): Int {

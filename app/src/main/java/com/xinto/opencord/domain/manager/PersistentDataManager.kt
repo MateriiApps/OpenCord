@@ -5,9 +5,9 @@ import com.xinto.opencord.domain.manager.base.BasePreferenceManager
 
 interface PersistentDataManager {
 
-    var persistentGuildId: Long
+    var persistentGuildId: ULong
 
-    var persistentChannelId: Long
+    var persistentChannelId: ULong
 
 }
 
@@ -15,16 +15,16 @@ class PersistentDataManagerImpl(
     persistentPrefs: SharedPreferences
 ) : BasePreferenceManager(persistentPrefs), PersistentDataManager {
 
-    override var persistentGuildId: Long
-        get() = getLong(CURRENT_GUILD_ID_KEY, CURRENT_GUILD_ID_DEFAULT)
+    override var persistentGuildId: ULong
+        get() = getLong(CURRENT_GUILD_ID_KEY, CURRENT_GUILD_ID_DEFAULT).toULong()
         set(value) {
-            putLong(CURRENT_GUILD_ID_KEY, value)
+            putLong(CURRENT_GUILD_ID_KEY, value.toLong())
         }
 
-    override var persistentChannelId: Long
-        get() = getLong(CURRENT_CHANNEL_ID_KEY, CURRENT_CHANNEL_ID_DEFAULT)
+    override var persistentChannelId: ULong
+        get() = getLong(CURRENT_CHANNEL_ID_KEY, CURRENT_CHANNEL_ID_DEFAULT).toULong()
         set(value) {
-            putLong(CURRENT_CHANNEL_ID_KEY, value)
+            putLong(CURRENT_CHANNEL_ID_KEY, value.toLong())
         }
 
     companion object {

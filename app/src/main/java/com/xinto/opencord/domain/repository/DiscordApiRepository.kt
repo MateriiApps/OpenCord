@@ -16,15 +16,15 @@ interface DiscordApiRepository {
 
     suspend fun getMeGuilds(): List<DomainMeGuild>
 
-    suspend fun getGuild(guildId: Long): DomainGuild
+    suspend fun getGuild(guildId: ULong): DomainGuild
 
-    suspend fun getGuildChannels(guildId: Long): List<DomainChannel>
+    suspend fun getGuildChannels(guildId: ULong): List<DomainChannel>
 
-    suspend fun getChannel(channelId: Long): DomainChannel
+    suspend fun getChannel(channelId: ULong): DomainChannel
 
-    suspend fun getChannelMessages(channelId: Long): List<DomainMessage>
+    suspend fun getChannelMessages(channelId: ULong): List<DomainMessage>
 
-    suspend fun postChannelMessage(channelId: Long, body: MessageBody)
+    suspend fun postChannelMessage(channelId: ULong, body: MessageBody)
 
 }
 
@@ -33,17 +33,17 @@ class DiscordApiRepositoryImpl(
     private val service: DiscordApiService
 ) : DiscordApiRepository {
 
-    private val cachedGuildChannels = ListMap<Long, DomainChannel>()
-    private val cachedChannelMessages = ListMap<Long, DomainMessage>()
+    private val cachedGuildChannels = ListMap<ULong, DomainChannel>()
+    private val cachedChannelMessages = ListMap<ULong, DomainMessage>()
 
-    private val cachedGuilds = mutableMapOf<Long, DomainGuild>()
-    private val cachedChannels = mutableMapOf<Long, DomainChannel>()
+    private val cachedGuilds = mutableMapOf<ULong, DomainGuild>()
+    private val cachedChannels = mutableMapOf<ULong, DomainChannel>()
 
     override suspend fun getMeGuilds(): List<DomainMeGuild> {
         return service.getMeGuilds().map { it.toDomain() }
     }
 
-    override suspend fun getGuild(guildId: Long): DomainGuild {
+    override suspend fun getGuild(guildId: ULong): DomainGuild {
         if (cachedGuilds[guildId] == null) {
             cachedGuilds[guildId] = service.getGuild(guildId).toDomain()
         }
@@ -51,7 +51,7 @@ class DiscordApiRepositoryImpl(
         return cachedGuilds[guildId]!!
     }
 
-    override suspend fun getGuildChannels(guildId: Long): List<DomainChannel> {
+    override suspend fun getGuildChannels(guildId: ULong): List<DomainChannel> {
         if (cachedGuildChannels[guildId].isEmpty()) {
             val guildChannels = service.getGuildChannels(guildId).map { it.toDomain() }
             cachedGuildChannels[guildId].addAll(guildChannels)
@@ -59,14 +59,14 @@ class DiscordApiRepositoryImpl(
         return cachedGuildChannels[guildId]
     }
 
-    override suspend fun getChannel(channelId: Long): DomainChannel {
+    override suspend fun getChannel(channelId: ULong): DomainChannel {
         if (cachedChannels[channelId] == null) {
             cachedChannels[channelId] = service.getChannel(channelId).toDomain()
         }
         return cachedChannels[channelId]!!
     }
 
-    override suspend fun getChannelMessages(channelId: Long): List<DomainMessage> {
+    override suspend fun getChannelMessages(channelId: ULong): List<DomainMessage> {
         if (cachedChannelMessages[channelId].isEmpty()) {
             val channelMessages = service.getChannelMessages(channelId).map { it.toDomain() }
             cachedChannelMessages[channelId].addAll(channelMessages)
@@ -74,7 +74,7 @@ class DiscordApiRepositoryImpl(
         return cachedChannelMessages[channelId]
     }
 
-    override suspend fun postChannelMessage(channelId: Long, body: MessageBody) {
+    override suspend fun postChannelMessage(channelId: ULong, body: MessageBody) {
         service.postChannelMessage(channelId, body)
     }
 

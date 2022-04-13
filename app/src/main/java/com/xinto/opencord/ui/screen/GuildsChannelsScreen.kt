@@ -99,8 +99,8 @@ fun GuildsListLoading(
 
 @Composable
 fun GuildsListLoaded(
-    onGuildSelect: (Long) -> Unit,
-    selectedGuildId: Long,
+    onGuildSelect: (ULong) -> Unit,
+    selectedGuildId: ULong,
     guilds: List<DomainMeGuild>,
     modifier: Modifier = Modifier
 ) {
@@ -231,8 +231,8 @@ private fun ChannelsListLoading(
 
 @Composable
 private fun ChannelsListLoaded(
-    onChannelSelect: (Long) -> Unit,
-    selectedChannelId: Long,
+    onChannelSelect: (ULong) -> Unit,
+    selectedChannelId: ULong,
     bannerUrl: String?,
     guildName: String,
     channels: Map<DomainChannel.Category?, List<DomainChannel>>,

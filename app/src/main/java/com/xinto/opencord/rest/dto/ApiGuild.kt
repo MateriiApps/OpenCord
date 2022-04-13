@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ApiGuild(
     @SerialName("id")
-    val id: String,
+    val id: ApiSnowflake,
 
     @SerialName("name")
     val name: String,

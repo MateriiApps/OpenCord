@@ -31,7 +31,7 @@ class MembersViewModel(
             members.addAll(domainMembers)
         }
 
-        if (persistentGuildId != 0L) {
+        if (persistentGuildId != 0UL) {
             gateway.scheduleOnConnection {
                 load()
             }

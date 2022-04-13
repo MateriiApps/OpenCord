@@ -31,7 +31,7 @@ class ChannelsViewModel(
         private set
     var guildBannerUrl by mutableStateOf<String?>(null)
         private set
-    var selectedChannelId by mutableStateOf(0L)
+    var selectedChannelId by mutableStateOf(0UL)
         private set
 
     fun load() {
@@ -52,16 +52,16 @@ class ChannelsViewModel(
         }
     }
 
-    fun selectChannel(channelId: Long) {
+    fun selectChannel(channelId: ULong) {
         selectedChannelId = channelId
         persistentChannelId = channelId
     }
 
     init {
-        if (persistentGuildId != 0L) {
+        if (persistentGuildId != 0UL) {
             load()
         }
-        if (persistentChannelId != 0L) {
+        if (persistentChannelId != 0UL) {
             selectedChannelId = persistentDataManager.persistentChannelId
         }
     }

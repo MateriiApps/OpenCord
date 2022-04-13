@@ -9,6 +9,7 @@ import com.xinto.opencord.gateway.event.EventDeserializationStrategy
 import com.xinto.opencord.gateway.io.IncomingPayload
 import com.xinto.opencord.gateway.io.OpCode
 import com.xinto.opencord.gateway.io.OutgoingPayload
+import com.xinto.opencord.rest.dto.ApiSnowflake
 import com.xinto.opencord.util.Logger
 import io.ktor.client.*
 import io.ktor.client.plugins.websocket.*
@@ -40,7 +41,7 @@ interface DiscordGateway : CoroutineScope {
 
     suspend fun disconnect()
 
-    suspend fun requestGuildMembers(guildId: Long)
+    suspend fun requestGuildMembers(guildId: ULong)
 
 }
 
@@ -171,12 +172,12 @@ class DiscordGatewayImpl(
         )
     }
 
-    override suspend fun requestGuildMembers(guildId: Long) {
+    override suspend fun requestGuildMembers(guildId: ULong) {
         sendSerializedData(
             OutgoingPayload(
                 opCode = OpCode.REQUEST_GUILD_MEMBERS,
                 data = RequestGuildMembers(
-                    guildId = guildId
+                    guildId = ApiSnowflake(guildId)
                 )
             )
         )
