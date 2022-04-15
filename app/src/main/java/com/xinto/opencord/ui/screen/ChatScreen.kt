@@ -1,6 +1,5 @@
 package com.xinto.opencord.ui.screen
 
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -12,7 +11,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -20,10 +18,12 @@ import androidx.compose.ui.unit.dp
 import com.xinto.bdc.BottomSheetDialog
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainMessage
+import com.xinto.opencord.ui.component.rememberOCCoilPainter
 import com.xinto.opencord.ui.viewmodel.ChatViewModel
 import com.xinto.opencord.ui.widget.WidgetChatInput
 import com.xinto.opencord.ui.widget.WidgetChatMessage
 import com.xinto.opencord.util.SimpleAstParser
+import com.xinto.simpleast.render
 import org.koin.androidx.compose.get
 import org.koin.androidx.compose.getViewModel
 
@@ -145,27 +145,24 @@ private fun ChatScreenLoaded(
         ) {
             items(messages) { message ->
                 var showBottomDialog by rememberSaveable { mutableStateOf(false) }
-
+                val avatar = rememberOCCoilPainter(message.author.avatarUrl)
                 WidgetChatMessage(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(MaterialTheme.shapes.medium)
-                        .combinedClickable(
-                            onLongClick = {
-                                showBottomDialog = true
-                            },
-                            onClick = {}
-                        )
-                        .padding(8.dp),
-                    message = message,
-                    parser = parser,
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = {},
+                    onLongClick = { showBottomDialog = true },
+                    avatar = avatar,
+                    author = message.author.username,
+                    message = parser.render(
+                        source = message.content,
+                        initialState = null,
+                        renderContext = null
+                    ).toAnnotatedString(),
+                    attachments = message.attachments
                 )
 
                 if (showBottomDialog) {
                     MessageActionMenu(
-                        onDismissRequest = {
-                            showBottomDialog = false
-                        }
+                        onDismissRequest = { showBottomDialog = false }
                     )
                 }
             }

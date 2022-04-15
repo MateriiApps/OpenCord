@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.InlineTextContent
@@ -17,72 +18,70 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.xinto.opencord.BuildConfig
 import com.xinto.opencord.domain.model.DomainAttachment
-import com.xinto.opencord.domain.model.DomainMessage
 import com.xinto.opencord.ui.component.FilledIconButton
 import com.xinto.opencord.ui.component.OCBasicTextField
 import com.xinto.opencord.ui.component.rememberOCCoilPainter
-import com.xinto.opencord.util.SimpleAstParser
-import com.xinto.simpleast.render
 
 @Composable
 fun WidgetChatMessage(
-    message: DomainMessage,
-    parser: SimpleAstParser,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit,
+    author: String,
+    avatar: Painter,
+    message: AnnotatedString,
+    attachments: List<DomainAttachment>,
     modifier: Modifier = Modifier,
 ) {
-    val userImage = rememberOCCoilPainter(message.author.avatarUrl)
-
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.Top
-    ) {
-        Image(
-            modifier = Modifier
-                .size(40.dp)
-                .clip(CircleShape),
-            painter = userImage,
-            contentDescription = null
-        )
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .heightIn(min = 40.dp),
-            verticalArrangement = Arrangement.SpaceEvenly,
-        ) {
-            ProvideTextStyle(MaterialTheme.typography.titleSmall) {
-                Text(
-                    text = message.author.username,
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                )
-            }
-            if (message.content.isNotEmpty()) {
-                WidgetMessageContent(
-                    text = parser.render(
-                        source = message.content,
-                        initialState = null,
-                        renderContext = null
-                    ).toAnnotatedString()
-                )
-            }
-            WidgetMessageAttachments(
-                modifier = Modifier
-                    .fillMaxWidth(0.95f)
-                    .padding(vertical = 4.dp),
-                attachments = message.attachments
+    Box(
+        modifier = modifier
+            .clip(MaterialTheme.shapes.medium)
+            .combinedClickable(
+                onClick = onClick,
+                onLongClick = onLongClick
             )
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(8.dp)
+                .heightIn(min = 40.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.Top
+        ) {
+            Image(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape),
+                painter = avatar,
+                contentDescription = null
+            )
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(vertical = 2.dp),
+                verticalArrangement = Arrangement.spacedBy(2.dp),
+            ) {
+                ProvideTextStyle(MaterialTheme.typography.labelLarge) {
+                    Text(author)
+                }
+                if (message.isNotEmpty()) {
+                    WidgetMessageContent(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = message
+                    )
+                }
+                WidgetMessageAttachments(
+                    modifier = Modifier.fillMaxWidth(0.95f),
+                    attachments = attachments
+                )
+            }
         }
     }
 }
@@ -135,7 +134,7 @@ private fun WidgetMessageContent(
     text: AnnotatedString,
     modifier: Modifier = Modifier,
 ) {
-    ProvideTextStyle(MaterialTheme.typography.bodyMedium) {
+    ProvideTextStyle(MaterialTheme.typography.bodyMedium.copy(letterSpacing = 0.sp)) {
         Text(
             modifier = modifier,
             text = text,
