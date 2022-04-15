@@ -10,6 +10,7 @@ import kotlinx.serialization.encoding.Encoder
 
 @Serializable(EventName.Serializer::class)
 enum class EventName(val eventName: String) {
+    READY("READY"),
     MESSAGE_CREATE("MESSAGE_CREATE"),
     GUILD_MEMBER_CHUNK("GUILD_MEMBER_CHUNK"),
     UNKNOWN("");
@@ -29,6 +30,7 @@ enum class EventName(val eventName: String) {
 
         private fun fromEventName(eventName: String): EventName {
             return when (eventName) {
+                READY.eventName -> READY
                 MESSAGE_CREATE.eventName -> MESSAGE_CREATE
                 GUILD_MEMBER_CHUNK.eventName -> GUILD_MEMBER_CHUNK
                 else -> UNKNOWN

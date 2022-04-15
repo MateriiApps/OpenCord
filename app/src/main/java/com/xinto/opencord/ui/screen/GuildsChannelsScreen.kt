@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Tag
 import androidx.compose.material.icons.rounded.VolumeUp
@@ -25,6 +26,7 @@ import com.xinto.opencord.domain.model.DomainChannel
 import com.xinto.opencord.domain.model.DomainMeGuild
 import com.xinto.opencord.ui.component.rememberOCCoilPainter
 import com.xinto.opencord.ui.viewmodel.ChannelsViewModel
+import com.xinto.opencord.ui.viewmodel.CurrentUserViewModel
 import com.xinto.opencord.ui.viewmodel.GuildsViewModel
 import com.xinto.opencord.ui.widget.WidgetCategory
 import com.xinto.opencord.ui.widget.WidgetChannelListItem
@@ -35,25 +37,38 @@ import org.koin.androidx.compose.getViewModel
 fun GuildsChannelsScreen(
     onGuildSelect: () -> Unit,
     onChannelSelect: () -> Unit,
+    modifier: Modifier = Modifier,
     guildsViewModel: GuildsViewModel = getViewModel(),
     channelsViewModel: ChannelsViewModel = getViewModel(),
+    currentUserViewModel: CurrentUserViewModel = getViewModel()
 ) {
-    Row(
-        modifier = Modifier.fillMaxSize(),
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
-        GuildsList(
+        Row(
+            modifier = Modifier.weight(1f),
+        ) {
+            GuildsList(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(1f),
+                onGuildSelect = onGuildSelect,
+                viewModel = guildsViewModel
+            )
+            ChannelsList(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(3.5f),
+                onChannelSelect = onChannelSelect,
+                viewModel = channelsViewModel
+            )
+        }
+        CurrentUserItem(
             modifier = Modifier
-                .fillMaxHeight()
-                .weight(1f),
-            onGuildSelect = onGuildSelect,
-            viewModel = guildsViewModel
-        )
-        ChannelsList(
-            modifier = Modifier
-                .fillMaxHeight()
-                .weight(3.5f),
-            onChannelSelect = onChannelSelect,
-            viewModel = channelsViewModel
+                .fillMaxWidth()
+                .padding(start = 6.dp),
+            viewModel = currentUserViewModel
         )
     }
 }
@@ -86,7 +101,107 @@ private fun GuildsList(
 }
 
 @Composable
-fun GuildsListLoading(
+private fun ChannelsList(
+    onChannelSelect: () -> Unit,
+    viewModel: ChannelsViewModel,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        modifier = modifier,
+        shape = MaterialTheme.shapes.large,
+        tonalElevation = 1.dp
+    ) {
+        when (viewModel.state) {
+            is ChannelsViewModel.State.Unselected -> {
+                ChannelsListUnselected(
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+            is ChannelsViewModel.State.Loading -> {
+                ChannelsListLoading(
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+            is ChannelsViewModel.State.Loaded -> {
+                ChannelsListLoaded(
+                    modifier = Modifier.fillMaxSize(),
+                    onChannelSelect = {
+                        viewModel.selectChannel(it)
+                        onChannelSelect()
+                    },
+                    bannerUrl = viewModel.guildBannerUrl,
+                    guildName = viewModel.guildName,
+                    channels = viewModel.channels,
+                    selectedChannelId = viewModel.selectedChannelId
+                )
+            }
+            is ChannelsViewModel.State.Error -> {
+
+            }
+        }
+    }
+}
+
+@Composable
+private fun CurrentUserItem(
+    modifier: Modifier = Modifier,
+    viewModel: CurrentUserViewModel = getViewModel()
+) {
+    val userIcon = rememberOCCoilPainter(viewModel.avatarUrl)
+    Surface(
+        modifier = modifier,
+        onClick = { /*TODO*/ },
+        shape = MaterialTheme.shapes.medium,
+        tonalElevation = 1.dp
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(
+                    start = 12.dp,
+                    top = 12.dp,
+                    bottom = 12.dp,
+                    end = 4.dp
+                )
+                .height(40.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Image(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape),
+                painter = userIcon,
+                contentDescription = null
+            )
+            Column(
+                verticalArrangement = Arrangement.spacedBy(2.dp),
+            ) {
+                ProvideTextStyle(MaterialTheme.typography.titleSmall) {
+                    Text(viewModel.username)
+                }
+                ProvideTextStyle(MaterialTheme.typography.bodySmall) {
+                    Text(viewModel.discriminator)
+                }
+            }
+            Row(
+                modifier = modifier.weight(1f),
+                horizontalArrangement = Arrangement.End
+            ) {
+                IconButton(
+                    onClick = { /*TODO*/ }
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_settings),
+                        contentDescription = null
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun GuildsListLoading(
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -98,7 +213,7 @@ fun GuildsListLoading(
 }
 
 @Composable
-fun GuildsListLoaded(
+private fun GuildsListLoaded(
     onGuildSelect: (ULong) -> Unit,
     selectedGuildId: ULong,
     guilds: List<DomainMeGuild>,
@@ -156,48 +271,6 @@ fun GuildsListLoaded(
                 } else {
                     Text(guild.iconText)
                 }
-            }
-        }
-    }
-}
-
-@Composable
-private fun ChannelsList(
-    onChannelSelect: () -> Unit,
-    viewModel: ChannelsViewModel,
-    modifier: Modifier = Modifier
-) {
-    Surface(
-        modifier = modifier,
-        shape = MaterialTheme.shapes.large,
-        tonalElevation = 1.dp
-    ) {
-        when (viewModel.state) {
-            is ChannelsViewModel.State.Unselected -> {
-                ChannelsListUnselected(
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-            is ChannelsViewModel.State.Loading -> {
-                ChannelsListLoading(
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-            is ChannelsViewModel.State.Loaded -> {
-                ChannelsListLoaded(
-                    modifier = Modifier.fillMaxSize(),
-                    onChannelSelect = {
-                        viewModel.selectChannel(it)
-                        onChannelSelect()
-                    },
-                    bannerUrl = viewModel.guildBannerUrl,
-                    guildName = viewModel.guildName,
-                    channels = viewModel.channels,
-                    selectedChannelId = viewModel.selectedChannelId
-                )
-            }
-            is ChannelsViewModel.State.Error -> {
-
             }
         }
     }

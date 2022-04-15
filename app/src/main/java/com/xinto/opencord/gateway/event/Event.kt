@@ -1,5 +1,6 @@
 package com.xinto.opencord.gateway.event
 
+import com.xinto.opencord.gateway.dto.Ready
 import com.xinto.opencord.gateway.io.EventName
 import com.xinto.opencord.rest.dto.ApiGuildMemberChunk
 import com.xinto.opencord.rest.dto.ApiMessage
@@ -19,6 +20,11 @@ class EventDeserializationStrategy(
 
     override fun deserialize(decoder: Decoder): Event? {
         return when (eventName) {
+            EventName.READY -> {
+                ReadyEvent(
+                    data = decoder.decodeSerializableValue(Ready.serializer())
+                )
+            }
             EventName.MESSAGE_CREATE -> {
                 MessageCreateEvent(
                     data = decoder.decodeSerializableValue(ApiMessage.serializer())

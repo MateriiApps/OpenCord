@@ -81,10 +81,21 @@ val viewModelModule = module {
         )
     }
 
+    fun provideCurrentUserViewModel(
+        gateway: DiscordGateway,
+        repository: DiscordApiRepository
+    ): CurrentUserViewModel {
+        return CurrentUserViewModel(
+            gateway = gateway,
+            repository = repository
+        )
+    }
+
     viewModel { provideMainViewModel(get()) }
     viewModel { provideLoginViewModel(get(), get(), get()) }
     viewModel { provideChatViewModel(get(), get(), get()) }
     viewModel { provideGuildsViewModel(get(), get(), get()) }
     viewModel { provideChannelsViewModel(get(), get(), get()) }
     viewModel { provideMembersViewModel(get(), get(), get()) }
+    viewModel { provideCurrentUserViewModel(get(), get()) }
 }
