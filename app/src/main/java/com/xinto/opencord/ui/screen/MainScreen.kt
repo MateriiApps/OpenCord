@@ -24,11 +24,11 @@ fun MainScreen() {
 
     val coroutineScope = rememberCoroutineScope()
 
+    val currentUserViewModel: CurrentUserViewModel = getViewModel()
     val chatViewModel: ChatViewModel = getViewModel()
     val guildsViewModel: GuildsViewModel = getViewModel()
     val channelsViewModel: ChannelsViewModel = getViewModel()
     val membersViewModel: MembersViewModel = getViewModel()
-    val currentUserViewModel: CurrentUserViewModel = getViewModel()
 
     Surface(modifier = Modifier.fillMaxSize()) {
         OverlappingPanels(
@@ -42,7 +42,8 @@ fun MainScreen() {
                     },
                     onChannelSelect = chatViewModel::load,
                     guildsViewModel = guildsViewModel,
-                    channelsViewModel = channelsViewModel
+                    channelsViewModel = channelsViewModel,
+                    currentUserViewModel = currentUserViewModel
                 )
             },
             panelCenter = {
