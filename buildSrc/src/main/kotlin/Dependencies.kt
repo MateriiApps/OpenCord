@@ -106,12 +106,10 @@ sealed class Dependencies {
         const val version = "0.24.6-alpha"
 
         const val systemUiController = "com.google.accompanist:accompanist-systemuicontroller:$version"
-        const val navigationAnimation = "com.google.accompanist:accompanist-navigation-animation:$version"
 
         override fun invoke(scope: DependencyHandlerScope) {
             scope {
                 implementation(systemUiController)
-                implementation(navigationAnimation)
             }
         }
     }

@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("kotlin-android")
+    id("kotlin-parcelize")
     kotlin("plugin.serialization")
 }
 
@@ -62,6 +63,7 @@ android {
         jvmTarget = "11"
         freeCompilerArgs = freeCompilerArgs +
                 "-Xopt-in=androidx.compose.foundation.ExperimentalFoundationApi" +
+                "-Xopt-in=androidx.compose.animation.ExperimentalAnimationApi" +
                 "-Xopt-in=androidx.compose.material.ExperimentalMaterialApi" +
                 "-Xopt-in=androidx.compose.material3.ExperimentalMaterial3Api"
     }
