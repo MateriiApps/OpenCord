@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.SideEffect
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.xinto.opencord.ui.screen.MainScreen
+import com.xinto.opencord.ui.screen.MainRootScreen
 import com.xinto.opencord.ui.theme.OpenCordTheme
 import com.xinto.opencord.ui.viewmodel.MainViewModel
 import org.koin.android.ext.android.get
@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
                     )
                 }
 
-                MainScreen()
+                MainRootScreen()
             }
         }
     }

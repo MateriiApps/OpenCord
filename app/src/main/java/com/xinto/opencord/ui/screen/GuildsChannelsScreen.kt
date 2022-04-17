@@ -35,6 +35,7 @@ import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun GuildsChannelsScreen(
+    onSettingsClick: () -> Unit,
     onGuildSelect: () -> Unit,
     onChannelSelect: () -> Unit,
     modifier: Modifier = Modifier,
@@ -68,7 +69,8 @@ fun GuildsChannelsScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 6.dp),
-            viewModel = currentUserViewModel
+            viewModel = currentUserViewModel,
+            onSettingsClick = onSettingsClick
         )
     }
 }
@@ -144,6 +146,7 @@ private fun ChannelsList(
 
 @Composable
 private fun CurrentUserItem(
+    onSettingsClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: CurrentUserViewModel = getViewModel()
 ) {
@@ -187,9 +190,7 @@ private fun CurrentUserItem(
                 modifier = modifier.weight(1f),
                 horizontalArrangement = Arrangement.End
             ) {
-                IconButton(
-                    onClick = { /*TODO*/ }
-                ) {
+                IconButton(onClick = onSettingsClick) {
                     Icon(
                         painter = painterResource(R.drawable.ic_settings),
                         contentDescription = null

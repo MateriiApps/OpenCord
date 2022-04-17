@@ -16,4 +16,6 @@
 
     <string name="channel_unselected_message">Please select a guild.</string>
 
+    <string name="settings_title">Settings</string>
+
 </resources>

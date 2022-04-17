@@ -19,7 +19,10 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
 @Composable
-fun MainScreen() {
+fun HomeScreen(
+    onSettingsClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val panelState = rememberOverlappingPanelsState(OverlappingPanelsValue.Closed)
 
     val coroutineScope = rememberCoroutineScope()
@@ -30,7 +33,7 @@ fun MainScreen() {
     val channelsViewModel: ChannelsViewModel = getViewModel()
     val membersViewModel: MembersViewModel = getViewModel()
 
-    Surface(modifier = Modifier.fillMaxSize()) {
+    Surface(modifier = modifier) {
         OverlappingPanels(
             modifier = Modifier.fillMaxSize(),
             panelsState = panelState,
@@ -43,7 +46,8 @@ fun MainScreen() {
                     onChannelSelect = chatViewModel::load,
                     guildsViewModel = guildsViewModel,
                     channelsViewModel = channelsViewModel,
-                    currentUserViewModel = currentUserViewModel
+                    currentUserViewModel = currentUserViewModel,
+                    onSettingsClick = onSettingsClick,
                 )
             },
             panelCenter = {
