@@ -1,11 +1,15 @@
 package com.xinto.opencord.rest.service
 
 import com.xinto.opencord.BuildConfig
+import com.xinto.opencord.gateway.DiscordGateway
+import com.xinto.opencord.gateway.event.MessageCreateEvent
+import com.xinto.opencord.gateway.onEvent
 import com.xinto.opencord.rest.body.MessageBody
 import com.xinto.opencord.rest.dto.ApiChannel
 import com.xinto.opencord.rest.dto.ApiGuild
 import com.xinto.opencord.rest.dto.ApiMeGuild
 import com.xinto.opencord.rest.dto.ApiMessage
+import com.xinto.opencord.util.ListMap
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -29,41 +33,73 @@ interface DiscordApiService {
 }
 
 class DiscordApiServiceImpl(
+    gateway: DiscordGateway,
     private val client: HttpClient
 ) : DiscordApiService {
 
+    private val cachedMeGuilds = mutableListOf<ApiMeGuild>()
+
+    private val cachedGuildById = mutableMapOf<ULong, ApiGuild>()
+    private val cachedChannelById = mutableMapOf<ULong, ApiChannel>()
+
+    private val cachedGuildChannels = ListMap<ULong, ApiChannel>()
+    private val cachedChannelMessages = ListMap<ULong, ApiMessage>()
+
     override suspend fun getMeGuilds(): List<ApiMeGuild> {
         return withContext(Dispatchers.IO) {
-            val url = getMeGuildsUrl()
-            client.get(url).body()
+            if (cachedMeGuilds.isEmpty()) {
+                withContext(Dispatchers.IO) {
+                    val url = getMeGuildsUrl()
+                    val response: List<ApiMeGuild> = client.get(url).body()
+                    cachedMeGuilds.addAll(response)
+                }
+            }
+            cachedMeGuilds
         }
     }
 
     override suspend fun getGuild(guildId: ULong): ApiGuild {
         return withContext(Dispatchers.IO) {
-            val url = getGuildUrl(guildId)
-            client.get(url).body()
-        }
-    }
-
-    override suspend fun getChannel(channelId: ULong): ApiChannel {
-        return withContext(Dispatchers.IO) {
-            val url = getChannelUrl(channelId)
-            client.get(url).body()
+            if (cachedGuildById[guildId] == null) {
+                withContext(Dispatchers.IO) {
+                    val url = getGuildUrl(guildId)
+                    val response: ApiGuild = client.get(url).body()
+                    cachedGuildById[guildId] = response
+                }
+            }
+            cachedGuildById[guildId]!!
         }
     }
 
     override suspend fun getGuildChannels(guildId: ULong): List<ApiChannel> {
         return withContext(Dispatchers.IO) {
-            val url = getGuildChannelsUrl(guildId)
-            client.get(url).body()
+            if (cachedGuildChannels[guildId].isEmpty()) {
+                val url = getGuildChannelsUrl(guildId)
+                val response: List<ApiChannel> = client.get(url).body()
+                cachedGuildChannels[guildId].addAll(response)
+            }
+            cachedGuildChannels[guildId]
+        }
+    }
+
+    override suspend fun getChannel(channelId: ULong): ApiChannel {
+        return withContext(Dispatchers.IO) {
+            if (cachedChannelById[channelId] == null) {
+                val url = getChannelUrl(channelId)
+                cachedChannelById[channelId] = client.get(url).body()
+            }
+            cachedChannelById[channelId]!!
         }
     }
 
     override suspend fun getChannelMessages(channelId: ULong): List<ApiMessage> {
         return withContext(Dispatchers.IO) {
-            val url = getChannelMessagesUrl(channelId)
-            client.get(url).body()
+            if (cachedChannelMessages[channelId].isEmpty()) {
+                val url = getChannelMessagesUrl(channelId)
+                val response: List<ApiMessage> = client.get(url).body()
+                cachedChannelMessages[channelId].addAll(response)
+            }
+            cachedChannelMessages[channelId]
         }
     }
 
@@ -73,6 +109,14 @@ class DiscordApiServiceImpl(
             client.post(url) {
                 setBody(body)
             }
+        }
+    }
+
+    init {
+        gateway.onEvent<MessageCreateEvent> {
+            val data = it.data
+            val channelId = data.channelId.value
+            cachedChannelMessages[channelId].add(data)
         }
     }
 

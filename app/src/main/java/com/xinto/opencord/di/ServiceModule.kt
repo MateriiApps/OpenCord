@@ -1,5 +1,6 @@
 package com.xinto.opencord.di
 
+import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.rest.service.DiscordApiService
 import com.xinto.opencord.rest.service.DiscordApiServiceImpl
 import com.xinto.opencord.rest.service.DiscordAuthService
@@ -19,13 +20,15 @@ val serviceModule = module {
     }
 
     fun provideDiscordApiService(
+        gateway: DiscordGateway,
         client: HttpClient
     ): DiscordApiService {
         return DiscordApiServiceImpl(
+            gateway = gateway,
             client = client
         )
     }
 
     single { provideDiscordAuthService(get(named("auth"))) }
-    single { provideDiscordApiService(get(named("api"))) }
+    single { provideDiscordApiService(get(), get(named("api"))) }
 }
