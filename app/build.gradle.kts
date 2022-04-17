@@ -48,7 +48,7 @@ android {
             applicationIdSuffix = ".fosscord"
             versionNameSuffix = "-fosscord"
 
-            buildConfigField("String", "URL_API", "\"https://api.fosscord.com/v9\"")
+            buildConfigField("String", "URL_API", "\"https://api.fosscord.com/api/v9\"")
             buildConfigField("String", "URL_CDN", "\"https://cdn.fosscord.com\"")
             buildConfigField("String", "URL_GATEWAY", "\"wss://gateway.fosscord.com/?v=9&encoding=json\"")
         }
