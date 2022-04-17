@@ -5,7 +5,7 @@ import kotlinx.parcelize.Parcelize
 
 abstract class BaseNavigationScreen(val route: String) : Parcelable {
     override fun equals(other: Any?): Boolean {
-        return other is LoginScreen && this.route == other.route
+        return other is BaseNavigationScreen && this.route == other.route
     }
 
     override fun hashCode(): Int {
@@ -16,7 +16,7 @@ abstract class BaseNavigationScreen(val route: String) : Parcelable {
 sealed class MainScreen(route: String) : BaseNavigationScreen(route) {
 
     @Parcelize
-    object Home : MainScreen("main")
+    object Home : MainScreen("home")
 
     @Parcelize
     object Settings : MainScreen("settings")
