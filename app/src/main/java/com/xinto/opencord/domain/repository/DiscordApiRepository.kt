@@ -70,6 +70,7 @@ class DiscordApiRepositoryImpl(
         if (cachedChannelMessages[channelId].isEmpty()) {
             val channelMessages = service.getChannelMessages(channelId).map { it.toDomain() }
             cachedChannelMessages[channelId].addAll(channelMessages)
+            cachedChannelMessages[channelId].sortByDescending { it.timestamp }
         }
         return cachedChannelMessages[channelId]
     }
@@ -79,9 +80,10 @@ class DiscordApiRepositoryImpl(
     }
 
     init {
-        gateway.onEvent<MessageCreateEvent> {
-            val domainData = it.data.toDomain()
+        gateway.onEvent<MessageCreateEvent> { event ->
+            val domainData = event.data.toDomain()
             cachedChannelMessages[domainData.channelId].add(domainData)
+            cachedChannelMessages[domainData.channelId].sortByDescending { it.timestamp }
         }
     }
 }

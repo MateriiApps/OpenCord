@@ -76,9 +76,10 @@ class ChatViewModel(
     init {
         gateway.onEvent<MessageCreateEvent>(
             filterPredicate = { it.data.channelId.value == persistentChannelId }
-        ) {
-            val domainData = it.data.toDomain()
-            messages.add(0, domainData)
+        ) { event ->
+            val domainData = event.data.toDomain()
+            messages.add(domainData)
+            messages.sortByDescending { it.timestamp }
         }
 
         if (persistentChannelId != 0UL) {
