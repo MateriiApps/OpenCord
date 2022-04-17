@@ -18,4 +18,8 @@
 
     <string name="settings_title">Settings</string>
 
+    <string name="timestamp_tomorrow">Tomorrow at %1$s</string>
+    <string name="timestamp_today">Today at %1$s</string>
+    <string name="timestamp_yesterday">Yesterday at %1$s</string>
+
 </resources>

@@ -23,6 +23,18 @@ sealed class Dependencies {
         }
     }
 
+    object KotlinXDatetime : Dependencies() {
+        const val version = "0.3.2"
+
+        const val datetime = "org.jetbrains.kotlinx:kotlinx-datetime:$version"
+
+        override fun invoke(scope: DependencyHandlerScope) {
+            scope {
+                implementation(datetime)
+            }
+        }
+    }
+
     object AndroidxCore : Dependencies() {
         const val version = "1.7.0"
 

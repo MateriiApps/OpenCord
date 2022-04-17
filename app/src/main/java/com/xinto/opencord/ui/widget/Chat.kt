@@ -8,12 +8,10 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.InlineTextContent
+import androidx.compose.material.ContentAlpha
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Send
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ProvideTextStyle
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,8 +32,9 @@ import com.xinto.opencord.ui.component.rememberOCCoilPainter
 fun WidgetChatMessage(
     onClick: () -> Unit,
     onLongClick: () -> Unit,
-    author: String,
     avatar: Painter,
+    author: String,
+    timestamp: String,
     message: AnnotatedString,
     attachments: List<DomainAttachment>,
     modifier: Modifier = Modifier,
@@ -68,8 +67,22 @@ fun WidgetChatMessage(
                     .padding(vertical = 2.dp),
                 verticalArrangement = Arrangement.spacedBy(2.dp),
             ) {
-                ProvideTextStyle(MaterialTheme.typography.labelLarge) {
-                    Text(author)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(2.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    val alphaContentColor = LocalContentColor.current.copy(alpha = 0.7f)
+                    ProvideTextStyle(MaterialTheme.typography.labelLarge) {
+                        Text(author)
+                    }
+                    ContentAlpha.medium
+                    ProvideTextStyle(MaterialTheme.typography.labelMedium) {
+                        Text("·", color = alphaContentColor)
+                    }
+                    ProvideTextStyle(MaterialTheme.typography.labelSmall) {
+                        Text(timestamp, color = alphaContentColor)
+                    }
                 }
                 if (message.isNotEmpty()) {
                     WidgetMessageContent(

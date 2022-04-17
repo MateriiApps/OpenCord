@@ -90,6 +90,7 @@ dependencies {
 
     Dependencies.Koin(this)
     Dependencies.Ktor(this)
+    Dependencies.KotlinXDatetime(this)
     Dependencies.HCaptcha(this)
     Dependencies.AndroidxCore(this)
     Dependencies.AndroidxPreferences(this)

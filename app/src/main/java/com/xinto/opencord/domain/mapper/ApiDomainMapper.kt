@@ -126,6 +126,7 @@ fun ApiMessage.toDomain(): DomainMessage {
         content = content,
         channelId = channelId.value,
         author = domainAuthor,
+        timestamp = timestamp,
         attachments = domainAttachments,
         embeds = listOf()
     )

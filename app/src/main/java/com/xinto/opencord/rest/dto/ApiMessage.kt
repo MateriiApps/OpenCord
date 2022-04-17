@@ -1,5 +1,6 @@
 package com.xinto.opencord.rest.dto
 
+import kotlinx.datetime.Instant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -10,6 +11,9 @@ data class ApiMessage(
 
     @SerialName("channel_id")
     val channelId: ApiSnowflake,
+
+    @SerialName("timestamp")
+    val timestamp: Instant,
 
     @SerialName("content")
     val content: String,

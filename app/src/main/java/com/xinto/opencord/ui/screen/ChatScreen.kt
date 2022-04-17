@@ -157,7 +157,8 @@ private fun ChatScreenLoaded(
                         initialState = null,
                         renderContext = null
                     ).toAnnotatedString(),
-                    attachments = message.attachments
+                    attachments = message.attachments,
+                    timestamp = message.formattedTimestamp
                 )
 
                 if (showBottomDialog) {
