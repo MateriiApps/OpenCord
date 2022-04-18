@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Menu
-import androidx.compose.material.icons.rounded.People
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -46,7 +44,7 @@ fun ChatScreen(
                 navigationIcon = {
                     IconButton(onChannelsButtonClick) {
                         Icon(
-                            imageVector = Icons.Rounded.Menu,
+                            painter = painterResource(R.drawable.ic_menu),
                             contentDescription = null
                         )
                     }
@@ -60,7 +58,7 @@ fun ChatScreen(
                     }
                     IconButton(onMembersButtonClick) {
                         Icon(
-                            imageVector = Icons.Rounded.People,
+                            painter = painterResource(R.drawable.ic_people),
                             contentDescription = null
                         )
                     }

@@ -90,8 +90,6 @@ sealed class Dependencies {
         const val foundation = "androidx.compose.foundation:foundation:$version"
         const val material = "androidx.compose.material:material:$version"
         const val material3 = "androidx.compose.material3:material3:1.0.0-alpha09"
-        const val materialIconsCore = "androidx.compose.material:material-icons-core:$version"
-        const val materialIconsExtended = "androidx.compose.material:material-icons-extended:$version"
         const val runtime = "androidx.compose.runtime:runtime:$version"
         const val ui = "androidx.compose.ui:ui:$version"
         const val uiText = "androidx.compose.ui:ui-text:$version"
@@ -107,8 +105,6 @@ sealed class Dependencies {
                 implementation(uiText)
                 implementation(runtime)
                 implementation(material)
-                implementation(materialIconsCore)
-                implementation(materialIconsExtended)
                 implementation(material3)
             }
         }

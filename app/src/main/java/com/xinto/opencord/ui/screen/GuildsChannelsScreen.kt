@@ -6,9 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Tag
-import androidx.compose.material.icons.rounded.VolumeUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -377,7 +374,7 @@ private fun ChannelsListLoaded(
                         WidgetChannelListItem(
                             modifier = Modifier.padding(vertical = 2.dp),
                             title = channel.name,
-                            icon = Icons.Rounded.Tag,
+                            painter = painterResource(R.drawable.ic_tag),
                             selected = selectedChannelId == channel.id,
                             showIndicator = selectedChannelId != channel.id,
                             onClick = {
@@ -389,7 +386,7 @@ private fun ChannelsListLoaded(
                         WidgetChannelListItem(
                             modifier = Modifier.padding(vertical = 2.dp),
                             title = channel.name,
-                            icon = Icons.Rounded.VolumeUp,
+                            painter = painterResource(R.drawable.ic_volume_up),
                             selected = false,
                             showIndicator = false,
                             onClick = {

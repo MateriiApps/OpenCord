@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
@@ -26,7 +27,7 @@ import androidx.compose.ui.unit.dp
 fun WidgetChannelListItem(
     onClick: () -> Unit,
     title: String,
-    icon: ImageVector,
+    painter: Painter,
     selected: Boolean,
     showIndicator: Boolean,
     modifier: Modifier = Modifier,
@@ -66,7 +67,7 @@ fun WidgetChannelListItem(
                 LocalContentColor provides contentColor
             ) {
                 Icon(
-                    imageVector = icon,
+                    painter = painter,
                     contentDescription = "Channel Type"
                 )
                 Text(
