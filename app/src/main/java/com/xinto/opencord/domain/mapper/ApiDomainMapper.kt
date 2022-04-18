@@ -114,7 +114,7 @@ fun ApiMeGuild.toDomain(): DomainMeGuild {
         id = id.value,
         name = name,
         iconUrl = iconUrl,
-        permissions = permissions.toLong()
+        permissions = permissions.toDomain()
     )
 }
 
@@ -143,4 +143,11 @@ fun ApiUser.toDomain(): DomainUser {
         avatarUrl = avatarUrl,
         bot = bot,
     )
+}
+
+fun ApiPermissions.toDomain(): List<DomainPermission> {
+    val permissions = value
+    return DomainPermission.values().filter {
+        (permissions and it.flags) == it.flags
+    }
 }

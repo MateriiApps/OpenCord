@@ -15,5 +15,5 @@ data class ApiMeGuild(
     val icon: String?,
 
     @SerialName("permissions")
-    val permissions: String = "0",
+    val permissions: ApiPermissions = ApiPermissions(0),
 )
