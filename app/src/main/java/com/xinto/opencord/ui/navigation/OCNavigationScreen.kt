@@ -19,6 +19,9 @@ sealed class MainScreen(route: String) : BaseNavigationScreen(route) {
     object Home : MainScreen("home")
 
     @Parcelize
+    object Pins : MainScreen("pins")
+
+    @Parcelize
     object Settings : MainScreen("settings")
 
 }

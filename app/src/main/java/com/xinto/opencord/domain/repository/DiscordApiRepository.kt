@@ -20,6 +20,8 @@ interface DiscordApiRepository {
 
     suspend fun getChannelMessages(channelId: ULong): List<DomainMessage>
 
+    suspend fun getChannelPins(channelId: ULong): List<DomainMessage>
+
     suspend fun postChannelMessage(channelId: ULong, body: MessageBody)
 
 }
@@ -48,6 +50,12 @@ class DiscordApiRepositoryImpl(
         return service.getChannelMessages(channelId)
             .map { it.toDomain() }
             .sortedBy { it.timestamp }
+    }
+
+    override suspend fun getChannelPins(channelId: ULong): List<DomainMessage> {
+        return service.getChannelPins(channelId)
+            .map { it.toDomain() }
+            .sortedByDescending { it.timestamp }
     }
 
     override suspend fun postChannelMessage(channelId: ULong, body: MessageBody) {

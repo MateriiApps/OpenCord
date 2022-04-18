@@ -45,6 +45,17 @@ fun MainRootScreen() {
                     modifier = Modifier.fillMaxSize(),
                     onSettingsClick = {
                         navigator.navigate(MainScreen.Settings)
+                    },
+                    onPinsClick = {
+                        navigator.navigate(MainScreen.Pins)
+                    }
+                )
+            }
+            is MainScreen.Pins -> {
+                ChannelPinsScreen(
+                    modifier = Modifier.fillMaxSize(),
+                    onBackClick = {
+                        navigator.back()
                     }
                 )
             }

@@ -31,6 +31,7 @@ import org.koin.androidx.compose.getViewModel
 fun ChatScreen(
     onChannelsButtonClick: () -> Unit,
     onMembersButtonClick: () -> Unit,
+    onPinsButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
     parser: SimpleAstParser = get(),
     viewModel: ChatViewModel = getViewModel(),
@@ -49,6 +50,12 @@ fun ChatScreen(
                     }
                 },
                 actions = {
+                    IconButton(onClick = onPinsButtonClick) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_push_pin),
+                            contentDescription = null
+                        )
+                    }
                     IconButton(onMembersButtonClick) {
                         Icon(
                             imageVector = Icons.Rounded.People,

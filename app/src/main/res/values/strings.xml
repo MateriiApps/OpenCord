@@ -16,6 +16,9 @@
 
     <string name="channel_unselected_message">Please select a guild.</string>
 
+    <string name="pins_title">Pinned Messages</string>
+    <string name="pins_loading_error">An error occurred while loading pinned messages.</string>
+
     <string name="settings_title">Settings</string>
 
     <string name="timestamp_tomorrow">Tomorrow at %1$s</string>

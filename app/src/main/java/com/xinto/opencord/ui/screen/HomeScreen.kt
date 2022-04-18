@@ -21,6 +21,7 @@ import org.koin.androidx.compose.getViewModel
 @Composable
 fun HomeScreen(
     onSettingsClick: () -> Unit,
+    onPinsClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val panelState = rememberOverlappingPanelsState(OverlappingPanelsValue.Closed)
@@ -32,6 +33,7 @@ fun HomeScreen(
     val guildsViewModel: GuildsViewModel = getViewModel()
     val channelsViewModel: ChannelsViewModel = getViewModel()
     val membersViewModel: MembersViewModel = getViewModel()
+    val channelPinsViewModel: ChannelPinsViewModel = getViewModel()
 
     Surface(modifier = modifier) {
         OverlappingPanels(
@@ -72,6 +74,10 @@ fun HomeScreen(
                             panelState.openEndPanel()
                         }
                     },
+                    onPinsButtonClick = {
+                        channelPinsViewModel.load()
+                        onPinsClick()
+                    }
                 )
             },
             panelEnd = {

@@ -28,6 +28,8 @@ interface DiscordApiService {
 
     suspend fun getChannelMessages(channelId: ULong): List<ApiMessage>
 
+    suspend fun getChannelPins(channelId: ULong): List<ApiMessage>
+
     suspend fun postChannelMessage(channelId: ULong, body: MessageBody)
 
 }
@@ -44,6 +46,7 @@ class DiscordApiServiceImpl(
 
     private val cachedGuildChannels = ListMap<ULong, ApiChannel>()
     private val cachedChannelMessages = ListMap<ULong, ApiMessage>()
+    private val cachedChannelPins = ListMap<ULong, ApiMessage>()
 
     override suspend fun getMeGuilds(): List<ApiMeGuild> {
         return withContext(Dispatchers.IO) {
@@ -99,6 +102,17 @@ class DiscordApiServiceImpl(
         }
     }
 
+    override suspend fun getChannelPins(channelId: ULong): List<ApiMessage> {
+        return withContext(Dispatchers.IO) {
+            if (cachedChannelPins[channelId].isEmpty()) {
+                val url = getChannelPinsUrl(channelId)
+                val response: List<ApiMessage> = client.get(url).body()
+                cachedChannelPins[channelId].addAll(response)
+            }
+            cachedChannelPins[channelId]
+        }
+    }
+
     override suspend fun postChannelMessage(channelId: ULong, body: MessageBody) {
         withContext(Dispatchers.IO) {
             val url = getChannelMessagesUrl(channelId)
@@ -119,7 +133,9 @@ class DiscordApiServiceImpl(
     private companion object {
         const val BASE = BuildConfig.URL_API
 
-        fun getMeGuildsUrl(): String = "$BASE/users/@me/guilds"
+        fun getMeGuildsUrl(): String {
+            return "$BASE/users/@me/guilds"
+        }
 
         fun getGuildUrl(guildId: ULong): String {
             return "$BASE/guilds/$guildId"
@@ -137,6 +153,11 @@ class DiscordApiServiceImpl(
         fun getChannelMessagesUrl(channelId: ULong): String {
             val channelUrl = getChannelUrl(channelId)
             return "$channelUrl/messages"
+        }
+
+        fun getChannelPinsUrl(channelId: ULong): String {
+            val channelUrl = getChannelUrl(channelId)
+            return "$channelUrl/pins"
         }
     }
 

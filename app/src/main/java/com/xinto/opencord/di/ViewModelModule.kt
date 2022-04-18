@@ -91,6 +91,16 @@ val viewModelModule = module {
         )
     }
 
+    fun provideChannelPinsViewModel(
+        persistentDataManager: PersistentDataManager,
+        repository: DiscordApiRepository
+    ): ChannelPinsViewModel {
+        return ChannelPinsViewModel(
+            persistentDataManager = persistentDataManager,
+            repository = repository
+        )
+    }
+
     viewModel { provideMainViewModel(get()) }
     viewModel { provideLoginViewModel(get(), get(), get()) }
     viewModel { provideChatViewModel(get(), get(), get()) }
@@ -98,4 +108,5 @@ val viewModelModule = module {
     viewModel { provideChannelsViewModel(get(), get(), get()) }
     viewModel { provideMembersViewModel(get(), get(), get()) }
     viewModel { provideCurrentUserViewModel(get(), get()) }
+    viewModel { provideChannelPinsViewModel(get(), get()) }
 }
