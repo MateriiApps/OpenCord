@@ -10,6 +10,7 @@
     <string name="login_field_username">Email or Phone Number</string>
     <string name="login_field_password">Password</string>
 
+    <string name="chat_title">#%1$s</string>
     <string name="chat_unselected_message">Please select a channel.</string>
     <string name="chat_input_hint">Message #%1$s</string>
     <string name="chat_loading_error">An error occurred while loading the chat.</string>

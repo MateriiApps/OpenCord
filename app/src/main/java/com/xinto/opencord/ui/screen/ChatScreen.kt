@@ -42,7 +42,7 @@ fun ChatScreen(
         modifier = modifier,
         topBar = {
             SmallTopAppBar(
-                title = { Text(viewModel.channelName) },
+                title = { Text(stringResource(R.string.chat_title, viewModel.channelName)) },
                 navigationIcon = {
                     IconButton(onChannelsButtonClick) {
                         Icon(
