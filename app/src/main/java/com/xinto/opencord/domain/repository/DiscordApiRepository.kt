@@ -49,7 +49,7 @@ class DiscordApiRepositoryImpl(
     override suspend fun getChannelMessages(channelId: ULong): List<DomainMessage> {
         return service.getChannelMessages(channelId)
             .map { it.toDomain() }
-            .sortedBy { it.timestamp }
+            .sortedByDescending { it.timestamp }
     }
 
     override suspend fun getChannelPins(channelId: ULong): List<DomainMessage> {
