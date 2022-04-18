@@ -48,11 +48,9 @@ class DiscordApiServiceImpl(
     override suspend fun getMeGuilds(): List<ApiMeGuild> {
         return withContext(Dispatchers.IO) {
             if (cachedMeGuilds.isEmpty()) {
-                withContext(Dispatchers.IO) {
-                    val url = getMeGuildsUrl()
-                    val response: List<ApiMeGuild> = client.get(url).body()
-                    cachedMeGuilds.addAll(response)
-                }
+                val url = getMeGuildsUrl()
+                val response: List<ApiMeGuild> = client.get(url).body()
+                cachedMeGuilds.addAll(response)
             }
             cachedMeGuilds
         }
@@ -61,11 +59,9 @@ class DiscordApiServiceImpl(
     override suspend fun getGuild(guildId: ULong): ApiGuild {
         return withContext(Dispatchers.IO) {
             if (cachedGuildById[guildId] == null) {
-                withContext(Dispatchers.IO) {
-                    val url = getGuildUrl(guildId)
-                    val response: ApiGuild = client.get(url).body()
-                    cachedGuildById[guildId] = response
-                }
+                val url = getGuildUrl(guildId)
+                val response: ApiGuild = client.get(url).body()
+                cachedGuildById[guildId] = response
             }
             cachedGuildById[guildId]!!
         }
