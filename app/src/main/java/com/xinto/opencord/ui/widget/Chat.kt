@@ -30,8 +30,6 @@ import com.xinto.opencord.ui.component.rememberOCCoilPainter
 
 @Composable
 fun WidgetChatMessage(
-    onClick: () -> Unit,
-    onLongClick: () -> Unit,
     avatar: Painter,
     author: String,
     timestamp: String,
@@ -39,14 +37,7 @@ fun WidgetChatMessage(
     attachments: List<DomainAttachment>,
     modifier: Modifier = Modifier,
 ) {
-    Box(
-        modifier = modifier
-            .clip(MaterialTheme.shapes.medium)
-            .combinedClickable(
-                onClick = onClick,
-                onLongClick = onLongClick
-            )
-    ) {
+    Box(modifier = modifier) {
         Row(
             modifier = Modifier
                 .padding(8.dp)

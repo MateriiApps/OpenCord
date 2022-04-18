@@ -106,8 +106,6 @@ private fun ChannelPinsLoaded(
                 tonalElevation = 1.dp
             ) {
                 WidgetChatMessage(
-                    onClick = {},
-                    onLongClick = {},
                     avatar = rememberOCCoilPainter(message.author.avatarUrl),
                     author = message.author.username,
                     timestamp = message.formattedTimestamp,
