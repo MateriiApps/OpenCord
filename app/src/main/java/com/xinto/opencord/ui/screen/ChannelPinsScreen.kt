@@ -136,7 +136,7 @@ private fun ChannelPinsError(
         ) {
             Icon(
                 modifier = Modifier.size(56.dp),
-                painter = painterResource(R.drawable.ic_error_outline),
+                painter = painterResource(R.drawable.ic_error),
                 contentDescription = null
             )
             Text(

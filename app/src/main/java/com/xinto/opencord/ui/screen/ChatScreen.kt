@@ -4,7 +4,6 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -211,7 +210,7 @@ private fun ChatScreenError(
         ) {
             Icon(
                 modifier = Modifier.size(56.dp),
-                painter = painterResource(R.drawable.ic_error_outline),
+                painter = painterResource(R.drawable.ic_error),
                 contentDescription = null
             )
             Text(
