@@ -1,6 +1,7 @@
 package com.xinto.opencord.domain.model
 
 enum class DomainPermission(val flags: Long) {
+    NONE(0L),
     CREATE_INSTANT_INVITE(1L shl 0),
     KICK_MEMBERS(1L shl 1),
     BAN_MEMBERS(1L shl 2),
