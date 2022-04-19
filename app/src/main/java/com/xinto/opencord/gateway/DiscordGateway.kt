@@ -6,6 +6,7 @@ import com.xinto.opencord.domain.manager.AccountManager
 import com.xinto.opencord.gateway.dto.*
 import com.xinto.opencord.gateway.event.Event
 import com.xinto.opencord.gateway.event.EventDeserializationStrategy
+import com.xinto.opencord.gateway.event.ReadyEvent
 import com.xinto.opencord.gateway.io.IncomingPayload
 import com.xinto.opencord.gateway.io.OpCode
 import com.xinto.opencord.gateway.io.OutgoingPayload
@@ -56,6 +57,7 @@ class DiscordGatewayImpl(
         get() = SupervisorJob() + Dispatchers.Default
 
     private lateinit var webSocketSession: DefaultClientWebSocketSession
+    private var establishConnection = true
 
     private val _events = MutableSharedFlow<Event>()
     override val events = _events.asSharedFlow()
@@ -64,23 +66,48 @@ class DiscordGatewayImpl(
     override val state = _state.asSharedFlow()
 
     private var sequenceNumber: Int = 0
+    private lateinit var sessionId: String
 
     override suspend fun connect() {
         _state.emit(DiscordGateway.State.Started)
-        try {
-            webSocketSession = client.webSocketSession(BuildConfig.URL_GATEWAY)
-            sendIdentification()
-            _state.emit(DiscordGateway.State.Connected)
-            listenToSocket()
-        } catch (e: Exception) {
-            e.printStackTrace()
+
+        while (establishConnection) {
+            try {
+                establishConnection = false
+
+                webSocketSession = client.webSocketSession(BuildConfig.URL_GATEWAY)
+                sendIdentification()
+                _state.emit(DiscordGateway.State.Connected)
+                listenToSocket()
+
+                val reason = withTimeoutOrNull(1500L) {
+                    webSocketSession.closeReason.await()
+                } ?: return
+                val closeCode = CloseCode.fromCode(reason.code.toInt())
+                establishConnection = closeCode.canReconnect
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
+
+        _state.emit(DiscordGateway.State.Stopped)
     }
 
     override suspend fun disconnect() {
         logger.debug("Gateway", "Disconnecting")
         webSocketSession.close()
         _state.emit(DiscordGateway.State.Disconnected)
+    }
+
+    override suspend fun requestGuildMembers(guildId: ULong) {
+        sendSerializedData(
+            OutgoingPayload(
+                opCode = OpCode.REQUEST_GUILD_MEMBERS,
+                data = RequestGuildMembers(
+                    guildId = ApiSnowflake(guildId)
+                )
+            )
+        )
     }
 
     private suspend fun listenToSocket() {
@@ -100,7 +127,12 @@ class DiscordGatewayImpl(
             when (opCode) {
                 OpCode.DISPATCH -> {
                     val decoded = json.decodeFromJsonElement(EventDeserializationStrategy(eventName!!), data!!)
-                    decoded?.let { _events.emit(it) }
+                    decoded?.let {
+                        if (it is ReadyEvent) {
+                            sessionId = it.data.sessionId
+                        }
+                        _events.emit(it)
+                    }
                 }
                 OpCode.HEARTBEAT -> {}
                 OpCode.RECONNECT -> {}
@@ -112,10 +144,14 @@ class DiscordGatewayImpl(
                     }
                 }
                 OpCode.INVALID_SESSION -> {
-                    logger.debug("Gateway", "invalid session")
+                    val canResume = json.decodeFromJsonElement<Boolean>(data!!)
+                    if (canResume) {
+                        sendResume()
+                    }
+                    logger.debug("Gateway", "Invalid Session, canResume: $canResume")
                 }
                 OpCode.HEARTBEAT_ACK -> {
-                    logger.debug("Gateway", "Heartbeat acked!")
+                    logger.debug("Gateway", "Heartbeat Acked!")
                 }
                 else -> {}
             }
@@ -133,52 +169,57 @@ class DiscordGatewayImpl(
     }
 
     private suspend fun sendHeartbeat() {
-        sendSerializedData(
-            OutgoingPayload(
-                opCode = OpCode.HEARTBEAT,
-                data = sequenceNumber
-            )
+        sendPayload(
+            opCode = OpCode.HEARTBEAT,
+            data = sequenceNumber
         )
     }
 
     private suspend fun sendIdentification() {
-        sendSerializedData(
-            OutgoingPayload(
-                opCode = OpCode.IDENTIFY,
-                data = Identification(
-                    token = accountManager.currentAccountToken!!,
-                    capabilities = 95,
-                    largeThreshold = 100,
-                    compress = false,
-                    properties = IdentificationProperties(
-                        browser = "Discord Android",
-                        browserUserAgent = "Discord-Android/${BuildConfig.DISCORD_VERSION_CODE}",
-                        clientBuildNumber = BuildConfig.DISCORD_VERSION_CODE,
-                        clientVersion = "89.8 - Beta",
-                        device = Build.MODEL + ", " + Build.PRODUCT,
-                        os = "Android",
-                        osSdkVersion = Build.VERSION.SDK_INT.toString(),
-                        osVersion = Build.VERSION.RELEASE,
-                        systemLocale = Locale.getDefault().toString().replace("_", "-")
-                    ),
-                    clientState = IdentificationClientState(
-                        guildHashes = emptyMap(),
-                        highestLastMessageId = 0,
-                        readStateVersion = -1,
-                        userGuildSettingsVersion = -1
-                    ),
-                )
+        sendPayload(
+            opCode = OpCode.IDENTIFY,
+            data = Identification(
+                token = accountManager.currentAccountToken!!,
+                capabilities = 95,
+                largeThreshold = 100,
+                compress = false,
+                properties = IdentificationProperties(
+                    browser = "Discord Android",
+                    browserUserAgent = "Discord-Android/${BuildConfig.DISCORD_VERSION_CODE}",
+                    clientBuildNumber = BuildConfig.DISCORD_VERSION_CODE,
+                    clientVersion = "89.8 - Beta",
+                    device = Build.MODEL + ", " + Build.PRODUCT,
+                    os = "Android",
+                    osSdkVersion = Build.VERSION.SDK_INT.toString(),
+                    osVersion = Build.VERSION.RELEASE,
+                    systemLocale = Locale.getDefault().toString().replace("_", "-")
+                ),
+                clientState = IdentificationClientState(
+                    guildHashes = emptyMap(),
+                    highestLastMessageId = 0,
+                    readStateVersion = -1,
+                    userGuildSettingsVersion = -1
+                ),
             )
         )
     }
 
-    override suspend fun requestGuildMembers(guildId: ULong) {
+    private suspend fun sendResume() {
+        sendPayload(
+            opCode = OpCode.RESUME,
+            data = Resume(
+                token = accountManager.currentAccountToken!!,
+                sessionId = sessionId,
+                sequenceNumber = sequenceNumber
+            )
+        )
+    }
+
+    private suspend inline  fun <reified T> sendPayload(opCode: OpCode, data: T?) {
         sendSerializedData(
             OutgoingPayload(
-                opCode = OpCode.REQUEST_GUILD_MEMBERS,
-                data = RequestGuildMembers(
-                    guildId = ApiSnowflake(guildId)
-                )
+                opCode = opCode,
+                data = data
             )
         )
     }
