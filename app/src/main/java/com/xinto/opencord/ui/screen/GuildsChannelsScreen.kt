@@ -369,32 +369,34 @@ private fun ChannelsListLoaded(
                 }
             }
             items(categoryChannels) { channel ->
-                when (channel) {
-                    is DomainChannel.TextChannel -> {
-                        WidgetChannelListItem(
-                            modifier = Modifier.padding(vertical = 2.dp),
-                            title = channel.name,
-                            painter = painterResource(R.drawable.ic_tag),
-                            selected = selectedChannelId == channel.id,
-                            showIndicator = selectedChannelId != channel.id,
-                            onClick = {
-                                onChannelSelect(channel.id)
-                            },
-                        )
-                    }
-                    is DomainChannel.VoiceChannel -> {
-                        WidgetChannelListItem(
-                            modifier = Modifier.padding(vertical = 2.dp),
-                            title = channel.name,
-                            painter = painterResource(R.drawable.ic_volume_up),
-                            selected = false,
-                            showIndicator = false,
-                            onClick = {
+                if (channel.canView) {
+                    when (channel) {
+                        is DomainChannel.TextChannel -> {
+                            WidgetChannelListItem(
+                                modifier = Modifier.padding(vertical = 2.dp),
+                                title = channel.name,
+                                painter = painterResource(R.drawable.ic_tag),
+                                selected = selectedChannelId == channel.id,
+                                showIndicator = selectedChannelId != channel.id,
+                                onClick = {
+                                    onChannelSelect(channel.id)
+                                },
+                            )
+                        }
+                        is DomainChannel.VoiceChannel -> {
+                            WidgetChannelListItem(
+                                modifier = Modifier.padding(vertical = 2.dp),
+                                title = channel.name,
+                                painter = painterResource(R.drawable.ic_volume_up),
+                                selected = false,
+                                showIndicator = false,
+                                onClick = {
 
-                            },
-                        )
+                                },
+                            )
+                        }
+                        else -> Unit
                     }
-                    else -> Unit
                 }
             }
         }
