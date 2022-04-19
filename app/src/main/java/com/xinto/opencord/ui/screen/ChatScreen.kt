@@ -86,7 +86,9 @@ fun ChatScreen(
                     ChatScreenLoaded(
                         modifier = Modifier.fillMaxSize(),
                         parser = parser,
-                        messages = viewModel.messages,
+                        messages = viewModel.messages.values.sortedByDescending {
+                            it.timestamp
+                        },
                         channelName = viewModel.channelName,
                         userMessage = viewModel.userMessage,
                         onUserMessageUpdate = viewModel::updateMessage,

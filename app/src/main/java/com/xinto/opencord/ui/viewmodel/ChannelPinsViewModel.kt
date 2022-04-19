@@ -1,6 +1,7 @@
 package com.xinto.opencord.ui.viewmodel
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
@@ -23,7 +24,7 @@ class ChannelPinsViewModel(
 
     var state by mutableStateOf<State>(State.Loading)
 
-    val pins = mutableListOf<DomainMessage>()
+    val pins = mutableStateMapOf<ULong, DomainMessage>()
 
     fun load() {
         viewModelScope.launch {
@@ -31,7 +32,7 @@ class ChannelPinsViewModel(
                 state = State.Loading
                 val pinnedMessages = repository.getChannelPins(persistentChannelId)
                 pins.clear()
-                pins.addAll(pinnedMessages)
+                pins.putAll(pinnedMessages)
                 state = State.Loaded
             } catch (e: Exception) {
                 e.printStackTrace()

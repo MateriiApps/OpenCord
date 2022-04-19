@@ -62,7 +62,9 @@ fun ChannelPinsScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(paddingValues),
-                    pins = viewModel.pins
+                    pins = viewModel.pins.values.sortedByDescending {
+                        it.timestamp
+                    }
                 )
             }
             is ChannelPinsViewModel.State.Error -> {

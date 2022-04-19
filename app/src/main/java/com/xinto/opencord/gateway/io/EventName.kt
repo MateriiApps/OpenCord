@@ -10,10 +10,18 @@ import kotlinx.serialization.encoding.Encoder
 
 @Serializable(EventName.Serializer::class)
 enum class EventName(val eventName: String) {
+    UNKNOWN(""),
     READY("READY"),
+    GUILD_CREATE("GUILD_CREATE"),
+    GUILD_UPDATE("GUILD_UPDATE"),
+    GUILD_DELETE("GUILD_DELETE"),
+    CHANNEL_CREATE("CHANNEL_CREATE"),
+    CHANNEL_UPDATE("CHANNEL_UPDATE"),
+    CHANNEL_DELETE("CHANNEL_DELETE"),
     MESSAGE_CREATE("MESSAGE_CREATE"),
-    GUILD_MEMBER_CHUNK("GUILD_MEMBER_CHUNK"),
-    UNKNOWN("");
+    MESSAGE_UPDATE("MESSAGE_UPDATE"),
+    MESSAGE_DELETE("MESSAGE_DELETE"),
+    GUILD_MEMBER_CHUNK("GUILD_MEMBER_CHUNK");
 
     companion object Serializer : KSerializer<EventName> {
 
@@ -32,6 +40,14 @@ enum class EventName(val eventName: String) {
             return when (eventName) {
                 READY.eventName -> READY
                 MESSAGE_CREATE.eventName -> MESSAGE_CREATE
+                MESSAGE_UPDATE.eventName -> MESSAGE_UPDATE
+                MESSAGE_DELETE.eventName -> MESSAGE_DELETE
+                GUILD_CREATE.eventName -> GUILD_CREATE
+                GUILD_UPDATE.eventName -> GUILD_UPDATE
+                GUILD_DELETE.eventName -> GUILD_DELETE
+                CHANNEL_CREATE.eventName -> CHANNEL_CREATE
+                CHANNEL_UPDATE.eventName -> CHANNEL_UPDATE
+                CHANNEL_DELETE.eventName -> CHANNEL_DELETE
                 GUILD_MEMBER_CHUNK.eventName -> GUILD_MEMBER_CHUNK
                 else -> UNKNOWN
             }

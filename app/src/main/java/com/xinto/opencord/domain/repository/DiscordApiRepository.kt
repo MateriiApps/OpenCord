@@ -14,13 +14,13 @@ interface DiscordApiRepository {
 
     suspend fun getGuild(guildId: ULong): DomainGuild
 
-    suspend fun getGuildChannels(guildId: ULong): List<DomainChannel>
+    suspend fun getGuildChannels(guildId: ULong): Map<ULong, DomainChannel>
 
     suspend fun getChannel(channelId: ULong): DomainChannel
 
-    suspend fun getChannelMessages(channelId: ULong): List<DomainMessage>
+    suspend fun getChannelMessages(channelId: ULong): Map<ULong, DomainMessage>
 
-    suspend fun getChannelPins(channelId: ULong): List<DomainMessage>
+    suspend fun getChannelPins(channelId: ULong): Map<ULong, DomainMessage>
 
     suspend fun postChannelMessage(channelId: ULong, body: MessageBody)
 
@@ -38,24 +38,29 @@ class DiscordApiRepositoryImpl(
         return service.getGuild(guildId).toDomain()
     }
 
-    override suspend fun getGuildChannels(guildId: ULong): List<DomainChannel> {
-        return service.getGuildChannels(guildId).map { it.toDomain() }
+    override suspend fun getGuildChannels(guildId: ULong): Map<ULong, DomainChannel> {
+        return service.getGuildChannels(guildId)
+            .toList().associate {
+                it.first.value to it.second.toDomain()
+            }
     }
 
     override suspend fun getChannel(channelId: ULong): DomainChannel {
         return service.getChannel(channelId).toDomain()
     }
 
-    override suspend fun getChannelMessages(channelId: ULong): List<DomainMessage> {
+    override suspend fun getChannelMessages(channelId: ULong): Map<ULong, DomainMessage> {
         return service.getChannelMessages(channelId)
-            .map { it.toDomain() }
-            .sortedByDescending { it.timestamp }
+            .toList().associate {
+                it.first.value to it.second.toDomain()
+            }
     }
 
-    override suspend fun getChannelPins(channelId: ULong): List<DomainMessage> {
+    override suspend fun getChannelPins(channelId: ULong): Map<ULong, DomainMessage> {
         return service.getChannelPins(channelId)
-            .map { it.toDomain() }
-            .sortedByDescending { it.timestamp }
+            .toList().associate {
+                it.first.value to it.second.toDomain()
+            }
     }
 
     override suspend fun postChannelMessage(channelId: ULong, body: MessageBody) {

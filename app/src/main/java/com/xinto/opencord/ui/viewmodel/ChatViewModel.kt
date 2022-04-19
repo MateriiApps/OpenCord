@@ -8,6 +8,8 @@ import com.xinto.opencord.domain.model.DomainMessage
 import com.xinto.opencord.domain.repository.DiscordApiRepository
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.event.MessageCreateEvent
+import com.xinto.opencord.gateway.event.MessageDeleteEvent
+import com.xinto.opencord.gateway.event.MessageUpdateEvent
 import com.xinto.opencord.gateway.onEvent
 import com.xinto.opencord.rest.body.MessageBody
 import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
@@ -29,7 +31,7 @@ class ChatViewModel(
     var state by mutableStateOf<State>(State.Unselected)
         private set
 
-    val messages = mutableStateListOf<DomainMessage>()
+    val messages = mutableStateMapOf<ULong, DomainMessage>()
     var channelName by mutableStateOf("")
         private set
     var userMessage by mutableStateOf("")
@@ -44,7 +46,7 @@ class ChatViewModel(
                 val channelMessages = repository.getChannelMessages(persistentChannelId)
                 val channel = repository.getChannel(persistentChannelId)
                 messages.clear()
-                messages.addAll(channelMessages)
+                messages.putAll(channelMessages)
                 channelName = channel.name
                 state = State.Loaded
             } catch (e: Exception) {
@@ -78,8 +80,20 @@ class ChatViewModel(
             filterPredicate = { it.data.channelId.value == persistentChannelId }
         ) { event ->
             val domainData = event.data.toDomain()
-            messages.add(domainData)
-            messages.sortByDescending { it.timestamp }
+            messages[domainData.id] = domainData
+        }
+
+        gateway.onEvent<MessageUpdateEvent>(
+            filterPredicate = { it.data.channelId.value == persistentChannelId }
+        ) { event ->
+            val domainData = event.data.toDomain()
+            messages[domainData.id] = domainData
+        }
+
+        gateway.onEvent<MessageDeleteEvent>(
+            filterPredicate = { it.data.channelId.value == persistentChannelId }
+        ) { event ->
+            messages.remove(event.data.messageId.value)
         }
 
         if (persistentChannelId != 0UL) {

@@ -20,7 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainChannel
-import com.xinto.opencord.domain.model.DomainMeGuild
+import com.xinto.opencord.domain.model.DomainGuild
 import com.xinto.opencord.ui.component.rememberOCCoilPainter
 import com.xinto.opencord.ui.viewmodel.ChannelsViewModel
 import com.xinto.opencord.ui.viewmodel.CurrentUserViewModel
@@ -89,7 +89,7 @@ private fun GuildsList(
                     viewModel.selectGuild(it)
                     onGuildSelect()
                 },
-                guilds = viewModel.guilds,
+                guilds = viewModel.guilds.values.toList(),
                 selectedGuildId = viewModel.selectedGuildId
             )
         }
@@ -214,7 +214,7 @@ private fun GuildsListLoading(
 private fun GuildsListLoaded(
     onGuildSelect: (ULong) -> Unit,
     selectedGuildId: ULong,
-    guilds: List<DomainMeGuild>,
+    guilds: List<DomainGuild>,
     modifier: Modifier = Modifier
 ) {
     val discordIcon = painterResource(R.drawable.ic_discord_logo)
@@ -369,7 +369,7 @@ private fun ChannelsListLoaded(
                 }
             }
             items(categoryChannels) { channel ->
-                if (channel.canView) {
+//                if (channel.canView) {
                     when (channel) {
                         is DomainChannel.TextChannel -> {
                             WidgetChannelListItem(
@@ -397,7 +397,7 @@ private fun ChannelsListLoaded(
                         }
                         else -> Unit
                     }
-                }
+//                }
             }
         }
     }

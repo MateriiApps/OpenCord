@@ -3,13 +3,11 @@ package com.xinto.opencord.rest.service
 import com.xinto.opencord.BuildConfig
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.event.MessageCreateEvent
+import com.xinto.opencord.gateway.event.MessageDeleteEvent
+import com.xinto.opencord.gateway.event.MessageUpdateEvent
 import com.xinto.opencord.gateway.onEvent
 import com.xinto.opencord.rest.body.MessageBody
-import com.xinto.opencord.rest.dto.ApiChannel
-import com.xinto.opencord.rest.dto.ApiGuild
-import com.xinto.opencord.rest.dto.ApiMeGuild
-import com.xinto.opencord.rest.dto.ApiMessage
-import com.xinto.opencord.util.ListMap
+import com.xinto.opencord.rest.dto.*
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -22,13 +20,13 @@ interface DiscordApiService {
 
     suspend fun getGuild(guildId: ULong): ApiGuild
 
-    suspend fun getGuildChannels(guildId: ULong): List<ApiChannel>
+    suspend fun getGuildChannels(guildId: ULong): Map<ApiSnowflake, ApiChannel>
 
     suspend fun getChannel(channelId: ULong): ApiChannel
 
-    suspend fun getChannelMessages(channelId: ULong): List<ApiMessage>
+    suspend fun getChannelMessages(channelId: ULong): Map<ApiSnowflake, ApiMessage>
 
-    suspend fun getChannelPins(channelId: ULong): List<ApiMessage>
+    suspend fun getChannelPins(channelId: ULong): Map<ApiSnowflake, ApiMessage>
 
     suspend fun postChannelMessage(channelId: ULong, body: MessageBody)
 
@@ -44,9 +42,9 @@ class DiscordApiServiceImpl(
     private val cachedGuildById = mutableMapOf<ULong, ApiGuild>()
     private val cachedChannelById = mutableMapOf<ULong, ApiChannel>()
 
-    private val cachedGuildChannels = ListMap<ULong, ApiChannel>()
-    private val cachedChannelMessages = ListMap<ULong, ApiMessage>()
-    private val cachedChannelPins = ListMap<ULong, ApiMessage>()
+    private val cachedGuildChannels = mutableMapOf<ULong, MutableMap<ApiSnowflake, ApiChannel>>()
+    private val cachedChannelMessages = mutableMapOf<ULong, MutableMap<ApiSnowflake, ApiMessage>>()
+    private val cachedChannelPins = mutableMapOf<ULong, MutableMap<ApiSnowflake, ApiMessage>>()
 
     override suspend fun getMeGuilds(): List<ApiMeGuild> {
         return withContext(Dispatchers.IO) {
@@ -70,14 +68,14 @@ class DiscordApiServiceImpl(
         }
     }
 
-    override suspend fun getGuildChannels(guildId: ULong): List<ApiChannel> {
+    override suspend fun getGuildChannels(guildId: ULong): Map<ApiSnowflake, ApiChannel> {
         return withContext(Dispatchers.IO) {
-            if (cachedGuildChannels[guildId].isEmpty()) {
+            if (cachedGuildChannels[guildId] == null) {
                 val url = getGuildChannelsUrl(guildId)
                 val response: List<ApiChannel> = client.get(url).body()
-                cachedGuildChannels[guildId].addAll(response)
+                cachedGuildChannels[guildId] = response.associateBy { it.id }.toMutableMap()
             }
-            cachedGuildChannels[guildId]
+            cachedGuildChannels[guildId]!!
         }
     }
 
@@ -91,25 +89,25 @@ class DiscordApiServiceImpl(
         }
     }
 
-    override suspend fun getChannelMessages(channelId: ULong): List<ApiMessage> {
+    override suspend fun getChannelMessages(channelId: ULong): Map<ApiSnowflake, ApiMessage> {
         return withContext(Dispatchers.IO) {
-            if (cachedChannelMessages[channelId].isEmpty()) {
+            if (cachedChannelMessages[channelId] == null) {
                 val url = getChannelMessagesUrl(channelId)
                 val response: List<ApiMessage> = client.get(url).body()
-                cachedChannelMessages[channelId].addAll(response)
+                cachedChannelMessages[channelId] = response.associateBy { it.id }.toMutableMap()
             }
-            cachedChannelMessages[channelId]
+            cachedChannelMessages[channelId]!!
         }
     }
 
-    override suspend fun getChannelPins(channelId: ULong): List<ApiMessage> {
+    override suspend fun getChannelPins(channelId: ULong): Map<ApiSnowflake, ApiMessage> {
         return withContext(Dispatchers.IO) {
-            if (cachedChannelPins[channelId].isEmpty()) {
+            if (cachedChannelPins[channelId] == null) {
                 val url = getChannelPinsUrl(channelId)
                 val response: List<ApiMessage> = client.get(url).body()
-                cachedChannelPins[channelId].addAll(response)
+                cachedChannelPins[channelId] = response.associateBy { it.id }.toMutableMap()
             }
-            cachedChannelPins[channelId]
+            cachedChannelPins[channelId]!!
         }
     }
 
@@ -126,7 +124,19 @@ class DiscordApiServiceImpl(
         gateway.onEvent<MessageCreateEvent> {
             val data = it.data
             val channelId = data.channelId.value
-            cachedChannelMessages[channelId].add(data)
+            cachedChannelMessages[channelId]?.put(data.id, data)
+        }
+
+        gateway.onEvent<MessageUpdateEvent> {
+            val data = it.data
+            val channelId = data.channelId.value
+            cachedChannelMessages[channelId]?.put(data.id, data)
+        }
+
+        gateway.onEvent<MessageDeleteEvent> {
+            val data = it.data
+            val channelId = data.channelId.value
+            cachedChannelMessages[channelId]?.remove(data.messageId)
         }
     }
 

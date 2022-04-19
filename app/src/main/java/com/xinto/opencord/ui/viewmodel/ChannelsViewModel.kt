@@ -41,7 +41,7 @@ class ChannelsViewModel(
                 val guildChannels = repository.getGuildChannels(persistentGuildId)
                 val guild = repository.getGuild(persistentGuildId)
                 channels.clear()
-                channels.putAll(getSortedChannels(guildChannels))
+                channels.putAll(getSortedChannels(guildChannels.values.toList()))
                 guildName = guild.name
                 guildBannerUrl = guild.bannerUrl
                 state = State.Loaded

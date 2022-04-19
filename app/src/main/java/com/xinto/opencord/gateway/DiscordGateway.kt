@@ -126,6 +126,7 @@ class DiscordGatewayImpl(
 
             when (opCode) {
                 OpCode.DISPATCH -> {
+                    println(eventName)
                     val decoded = json.decodeFromJsonElement(EventDeserializationStrategy(eventName!!), data!!)
                     decoded?.let {
                         if (it is ReadyEvent) {
