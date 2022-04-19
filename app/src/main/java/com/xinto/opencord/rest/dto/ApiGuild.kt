@@ -12,8 +12,11 @@ data class ApiGuild(
     val name: String,
 
     @SerialName("icon")
-    val icon: String? = null,
+    val icon: String?,
 
     @SerialName("banner")
     val banner: String? = null,
+
+    @SerialName("permissions")
+    val permissions: ApiPermissions = ApiPermissions(0)
 )

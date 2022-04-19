@@ -1,40 +1,51 @@
 package com.xinto.opencord.domain.model
 
-sealed interface DomainChannel : Comparable<DomainChannel> {
+sealed class DomainChannel : Comparable<DomainChannel> {
 
-    val id: ULong
-    val name: String
-    val position: Int
-    val parentId: ULong?
+    abstract val id: ULong
+    abstract val name: String
+    abstract val position: Int
+    abstract val parentId: ULong?
+    abstract val permissions: List<DomainPermission>
+
+    val canView
+        get() = permissions.contains(DomainPermission.VIEW_CHANNEL)
+
+    val canSendMessages
+        get() = permissions.contains(DomainPermission.SEND_MESSAGES)
 
     data class TextChannel(
         override val id: ULong,
         override val name: String,
         override val position: Int,
         override val parentId: ULong?,
+        override val permissions: List<DomainPermission>,
         val nsfw: Boolean,
-    ) : DomainChannel
+    ) : DomainChannel()
 
     data class VoiceChannel(
         override val id: ULong,
         override val name: String,
         override val position: Int,
         override val parentId: ULong?,
-    ) : DomainChannel
+        override val permissions: List<DomainPermission>,
+    ) : DomainChannel()
 
     data class AnnouncementChannel(
         override val id: ULong,
         override val name: String,
         override val position: Int,
         override val parentId: ULong?,
+        override val permissions: List<DomainPermission>,
         val nsfw: Boolean,
-    ) : DomainChannel
+    ) : DomainChannel()
 
     data class Category(
         override val id: ULong,
         override val name: String,
         override val position: Int,
-    ) : DomainChannel {
+        override val permissions: List<DomainPermission>,
+    ) : DomainChannel() {
         override val parentId: ULong? = null
     }
 

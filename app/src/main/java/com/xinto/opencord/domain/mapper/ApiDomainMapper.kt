@@ -43,18 +43,21 @@ fun ApiChannel.toDomain(): DomainChannel {
             id = id.value,
             name = name,
             position = position,
-            parentId = parentId?.value
+            parentId = parentId?.value,
+            permissions = permissions.toDomain()
         )
         4 -> DomainChannel.Category(
             id = id.value,
             name = name,
             position = position,
+            permissions = permissions.toDomain()
         )
         5 -> DomainChannel.AnnouncementChannel(
             id = id.value,
             name = name,
             position = position,
             parentId = parentId?.value,
+            permissions = permissions.toDomain(),
             nsfw = nsfw
         )
         else -> DomainChannel.TextChannel(
@@ -62,6 +65,7 @@ fun ApiChannel.toDomain(): DomainChannel {
             name = name,
             position = position,
             parentId = parentId?.value,
+            permissions = permissions.toDomain(),
             nsfw = nsfw
         )
     }
@@ -79,6 +83,7 @@ fun ApiGuild.toDomain(): DomainGuild {
         name = name,
         iconUrl = iconUrl,
         bannerUrl = bannerUrl,
+        permissions = permissions.toDomain()
     )
 }
 
