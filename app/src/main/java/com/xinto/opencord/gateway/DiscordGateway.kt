@@ -117,7 +117,10 @@ class DiscordGatewayImpl(
                 is Frame.Binary -> String(it.readBytes())
                 else -> null
             }
-            jsonString?.let { str -> json.decodeFromString<IncomingPayload>(str) }
+            jsonString?.let { str ->
+                logger.debug("Gateway", str)
+                json.decodeFromString<IncomingPayload>(str)
+            }
         }.filterNotNull().collect { incomingPayload ->
             val (opCode, data, seqNum, eventName) = incomingPayload
 
@@ -126,7 +129,6 @@ class DiscordGatewayImpl(
 
             when (opCode) {
                 OpCode.DISPATCH -> {
-                    println(eventName)
                     val decoded = json.decodeFromJsonElement(EventDeserializationStrategy(eventName!!), data!!)
                     decoded?.let {
                         if (it is ReadyEvent) {
