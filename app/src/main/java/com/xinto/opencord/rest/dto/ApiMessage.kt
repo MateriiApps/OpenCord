@@ -15,6 +15,9 @@ data class ApiMessage(
     @SerialName("timestamp")
     val timestamp: Instant,
 
+    @SerialName("edited_timestamp")
+    val editedTimestamp: Instant?,
+
     @SerialName("content")
     val content: String,
 

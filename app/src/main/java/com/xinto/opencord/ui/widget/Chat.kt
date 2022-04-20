@@ -4,25 +4,26 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.InlineTextContent
-import androidx.compose.material.ContentAlpha
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Send
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.xinto.opencord.BuildConfig
+import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainAttachment
 import com.xinto.opencord.ui.component.FilledIconButton
 import com.xinto.opencord.ui.component.OCBasicTextField
@@ -35,6 +36,7 @@ fun WidgetChatMessage(
     timestamp: String,
     message: AnnotatedString,
     attachments: List<DomainAttachment>,
+    edited: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {
@@ -63,16 +65,29 @@ fun WidgetChatMessage(
                     horizontalArrangement = Arrangement.spacedBy(2.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    val alphaContentColor = LocalContentColor.current.copy(alpha = 0.7f)
                     ProvideTextStyle(MaterialTheme.typography.labelLarge) {
                         Text(author)
                     }
-                    ContentAlpha.medium
-                    ProvideTextStyle(MaterialTheme.typography.labelMedium) {
-                        Text("·", color = alphaContentColor)
-                    }
-                    ProvideTextStyle(MaterialTheme.typography.labelSmall) {
-                        Text(timestamp, color = alphaContentColor)
+                    CompositionLocalProvider(
+                        LocalContentColor provides LocalContentColor.current.copy(alpha = 0.7f)
+                    ) {
+                        ProvideTextStyle(MaterialTheme.typography.labelMedium) {
+                            Text("·")
+                        }
+                        ProvideTextStyle(MaterialTheme.typography.labelSmall) {
+                            Text(timestamp)
+                        }
+                        if (edited) {
+                            ProvideTextStyle(MaterialTheme.typography.labelMedium) {
+                                Text("·")
+                            }
+                            Icon(
+                                modifier = Modifier
+                                    .size(12.dp),
+                                painter = painterResource(R.drawable.ic_edit),
+                                contentDescription = null,
+                            )
+                        }
                     }
                 }
                 if (message.isNotEmpty()) {

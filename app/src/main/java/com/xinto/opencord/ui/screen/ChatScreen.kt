@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.xinto.bdc.BottomSheetDialog
@@ -21,9 +22,7 @@ import com.xinto.opencord.ui.component.rememberOCCoilPainter
 import com.xinto.opencord.ui.viewmodel.ChatViewModel
 import com.xinto.opencord.ui.widget.WidgetChatInput
 import com.xinto.opencord.ui.widget.WidgetChatMessage
-import com.xinto.opencord.util.SimpleAstParser
 import com.xinto.simpleast.render
-import org.koin.androidx.compose.get
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -32,7 +31,6 @@ fun ChatScreen(
     onMembersButtonClick: () -> Unit,
     onPinsButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
-    parser: SimpleAstParser = get(),
     viewModel: ChatViewModel = getViewModel(),
 ) {
     Scaffold(
@@ -84,16 +82,15 @@ fun ChatScreen(
                 }
                 is ChatViewModel.State.Loaded -> {
                     ChatScreenLoaded(
-                        modifier = Modifier.fillMaxSize(),
-                        parser = parser,
                         messages = viewModel.messages.values.sortedByDescending {
                             it.timestamp
                         },
                         channelName = viewModel.channelName,
                         userMessage = viewModel.userMessage,
+                        sendEnabled = viewModel.sendEnabled,
                         onUserMessageUpdate = viewModel::updateMessage,
                         onUserMessageSend = viewModel::sendMessage,
-                        sendEnabled = viewModel.sendEnabled,
+                        modifier = Modifier.fillMaxSize(),
                     )
                 }
                 is ChatViewModel.State.Error -> {
@@ -140,7 +137,6 @@ private fun ChatScreenLoaded(
     sendEnabled: Boolean,
     onUserMessageUpdate: (String) -> Unit,
     onUserMessageSend: () -> Unit,
-    parser: SimpleAstParser,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -166,13 +162,14 @@ private fun ChatScreenLoaded(
                         ),
                     avatar = avatar,
                     author = message.author.username,
-                    message = parser.render(
-                        source = message.content,
-                        initialState = null,
+                    message = render(
+                        builder = AnnotatedString.Builder(),
+                        nodes = message.contentNodes,
                         renderContext = null
                     ).toAnnotatedString(),
                     attachments = message.attachments,
-                    timestamp = message.formattedTimestamp
+                    timestamp = message.formattedTimestamp,
+                    edited = message.isEdited
                 )
 
                 if (showBottomDialog) {

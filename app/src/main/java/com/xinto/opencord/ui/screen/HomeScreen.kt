@@ -60,10 +60,6 @@ fun HomeScreen(
                         RoundedCornerShape(0.dp)
                 )
                 ChatScreen(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(shape),
-                    viewModel = chatViewModel,
                     onChannelsButtonClick = {
                         coroutineScope.launch {
                             panelState.openStartPanel()
@@ -77,7 +73,11 @@ fun HomeScreen(
                     onPinsButtonClick = {
                         channelPinsViewModel.load()
                         onPinsClick()
-                    }
+                    },
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(shape),
+                    viewModel = chatViewModel
                 )
             },
             panelEnd = {

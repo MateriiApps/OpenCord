@@ -133,6 +133,7 @@ fun ApiMessage.toDomain(): DomainMessage {
         channelId = channelId.value,
         author = domainAuthor,
         timestamp = timestamp,
+        editedTimestamp = editedTimestamp,
         attachments = domainAttachments,
         embeds = listOf()
     )

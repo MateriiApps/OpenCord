@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
@@ -19,9 +20,7 @@ import com.xinto.opencord.domain.model.DomainMessage
 import com.xinto.opencord.ui.component.rememberOCCoilPainter
 import com.xinto.opencord.ui.viewmodel.ChannelPinsViewModel
 import com.xinto.opencord.ui.widget.WidgetChatMessage
-import com.xinto.opencord.util.SimpleAstParser
 import com.xinto.simpleast.render
-import org.koin.androidx.compose.get
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -94,7 +93,6 @@ private fun ChannelPinsLoading(
 private fun ChannelPinsLoaded(
     pins: List<DomainMessage>,
     modifier: Modifier = Modifier,
-    parser: SimpleAstParser = get(),
 ) {
     LazyColumn(
         modifier = modifier,
@@ -111,12 +109,13 @@ private fun ChannelPinsLoaded(
                     avatar = rememberOCCoilPainter(message.author.avatarUrl),
                     author = message.author.username,
                     timestamp = message.formattedTimestamp,
-                    message = parser.render(
-                        source = message.content,
-                        initialState = null,
+                    message = render(
+                        builder = AnnotatedString.Builder(),
+                        nodes = message.contentNodes,
                         renderContext = null
                     ).toAnnotatedString(),
-                    attachments = message.attachments
+                    attachments = message.attachments,
+                    edited = message.isEdited
                 )
             }
         }
