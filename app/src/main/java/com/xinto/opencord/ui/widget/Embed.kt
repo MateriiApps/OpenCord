@@ -48,7 +48,7 @@ fun WidgetEmbed(
                     author()
                 }
                 if (title != null) {
-                    ProvideTextStyle(MaterialTheme.typography.titleSmall) {
+                    ProvideTextStyle(MaterialTheme.typography.labelLarge) {
                         Text(title)
                     }
                 }
@@ -98,7 +98,7 @@ fun WidgetEmbedField(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        ProvideTextStyle(MaterialTheme.typography.titleSmall) {
+        ProvideTextStyle(MaterialTheme.typography.labelMedium) {
             Text(name)
         }
         ProvideTextStyle(MaterialTheme.typography.bodySmall) {
