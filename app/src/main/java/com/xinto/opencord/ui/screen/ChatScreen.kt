@@ -168,6 +168,7 @@ private fun ChatScreenLoaded(
                         renderContext = null
                     ).toAnnotatedString(),
                     attachments = message.attachments,
+                    embeds = message.embeds,
                     timestamp = message.formattedTimestamp,
                     edited = message.isEdited
                 )

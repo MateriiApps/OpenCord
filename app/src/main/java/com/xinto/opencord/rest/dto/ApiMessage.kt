@@ -26,4 +26,7 @@ data class ApiMessage(
 
     @SerialName("attachments")
     val attachments: List<ApiAttachment>,
+
+    @SerialName("embeds")
+    val embeds: List<ApiEmbed>
 )

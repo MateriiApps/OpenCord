@@ -115,6 +115,7 @@ private fun ChannelPinsLoaded(
                         renderContext = null
                     ).toAnnotatedString(),
                     attachments = message.attachments,
+                    embeds = message.embeds,
                     edited = message.isEdited
                 )
             }

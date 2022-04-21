@@ -1,5 +1,6 @@
 package com.xinto.opencord.domain.mapper
 
+import androidx.compose.ui.graphics.Color
 import com.xinto.opencord.domain.model.*
 import com.xinto.opencord.rest.dto.*
 import com.xinto.opencord.rest.service.DiscordCdnServiceImpl
@@ -127,6 +128,7 @@ fun ApiMeGuild.toDomain(): DomainMeGuild {
 fun ApiMessage.toDomain(): DomainMessage {
     val domainAuthor = author.toDomain()
     val domainAttachments = attachments.map { it.toDomain() }
+    val domainEmbeds = embeds.map { it.toDomain() }
     return DomainMessage(
         id = id.value,
         content = content,
@@ -135,7 +137,7 @@ fun ApiMessage.toDomain(): DomainMessage {
         timestamp = timestamp,
         editedTimestamp = editedTimestamp,
         attachments = domainAttachments,
-        embeds = listOf()
+        embeds = domainEmbeds
     )
 }
 
@@ -157,4 +159,33 @@ fun ApiPermissions.toDomain(): List<DomainPermission> {
     return DomainPermission.values().filter {
         (permissions and it.flags) == it.flags
     }
+}
+
+fun ApiEmbed.toDomain(): DomainEmbed {
+    val domainFields = fields?.map { it.toDomain() }
+    val domainColor = color?.let {
+        Color(red = it.red, green = it.green, blue = it.blue)
+    }
+    val domainAuthor = author?.toDomain()
+    return DomainEmbed(
+        title = title,
+        description = description,
+        url = url,
+        color = domainColor,
+        author = domainAuthor,
+        fields = domainFields
+    )
+}
+
+fun ApiEmbedAuthor.toDomain(): DomainEmbedAuthor {
+    return DomainEmbedAuthor(
+        name = name
+    )
+}
+
+fun ApiEmbedField.toDomain(): DomainEmbedField {
+    return DomainEmbedField(
+        name = name,
+        value = value,
+    )
 }

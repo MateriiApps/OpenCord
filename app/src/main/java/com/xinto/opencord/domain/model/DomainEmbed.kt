@@ -1,28 +1,32 @@
 package com.xinto.opencord.domain.model
 
+import androidx.compose.ui.graphics.Color
+
 data class DomainEmbed(
     val title: String?,
     val description: String?,
     val url: String?,
-    val color: Int?,
-) {
+    val color: Color?,
+    val author: DomainEmbedAuthor?,
+    val fields: List<DomainEmbedField>?
+)
 
-    data class Thumbnail(
-        val url: String,
-        val proxyUrl: String,
-        val height: Int?,
-        val width: Int?
-    )
+data class DomainEmbedAuthor(
+    val name: String,
+)
 
-    data class Footer(
-        val text: String
-    )
+data class DomainEmbedThumbnail(
+    val url: String,
+    val proxyUrl: String,
+    val height: Int?,
+    val width: Int?
+)
 
-    data class Field(
-        val name: String,
-        val value: String,
-    )
+data class DomainEmbedFooter(
+    val text: String
+)
 
-    companion object
-
-}
+data class DomainEmbedField(
+    val name: String,
+    val value: String,
+)

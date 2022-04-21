@@ -25,9 +25,11 @@ import androidx.compose.ui.unit.sp
 import com.xinto.opencord.BuildConfig
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainAttachment
+import com.xinto.opencord.domain.model.DomainEmbed
 import com.xinto.opencord.ui.component.FilledIconButton
 import com.xinto.opencord.ui.component.OCBasicTextField
 import com.xinto.opencord.ui.component.rememberOCCoilPainter
+import com.xinto.opencord.util.letComposable
 
 @Composable
 fun WidgetChatMessage(
@@ -36,6 +38,7 @@ fun WidgetChatMessage(
     timestamp: String,
     message: AnnotatedString,
     attachments: List<DomainAttachment>,
+    embeds: List<DomainEmbed>,
     edited: Boolean,
     modifier: Modifier = Modifier,
 ) {
@@ -99,6 +102,10 @@ fun WidgetChatMessage(
                 WidgetMessageAttachments(
                     modifier = Modifier.fillMaxWidth(0.95f),
                     attachments = attachments
+                )
+                WidgetMessageEmbeds(
+                    modifier = Modifier.fillMaxWidth(0.9f),
+                    embeds = embeds
                 )
             }
         }
@@ -208,6 +215,38 @@ private fun WidgetMessageAttachments(
                 else -> { /* TODO */
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun WidgetMessageEmbeds(
+    embeds: List<DomainEmbed>,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        for (embed in embeds) {
+            WidgetEmbed(
+                title = embed.title,
+                description = embed.description,
+                color = embed.color,
+                fields = embed.fields?.letComposable { fields ->
+                    for (field in fields) {
+                        WidgetEmbedField(
+                            name = field.name,
+                            value = field.value
+                        )
+                    }
+                },
+                author = embed.author?.letComposable { author ->
+                    WidgetEmbedAuthor(
+                        name = author.name
+                    )
+                }
+            )
         }
     }
 }
