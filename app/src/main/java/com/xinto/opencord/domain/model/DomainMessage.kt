@@ -22,3 +22,20 @@ data class DomainMessage(
     val isEdited = editedTimestamp != null
     val contentNodes = parser.parse(content, null)
 }
+
+data class DomainMessagePartial(
+    val id: ULong,
+    val channelId: ULong,
+    val timestamp: Instant?,
+    val editedTimestamp: Instant?,
+    val content: String?,
+    val author: DomainUser?,
+    val attachments: List<DomainAttachment>?,
+    val embeds: List<DomainEmbed>?
+): KoinComponent {
+    private val parser: SimpleAstParser = get()
+
+    val formattedTimestamp = timestamp?.let { Timestamp.getFormattedTimestamp(it) }
+    val isEdited = editedTimestamp != null
+    val contentNodes = content?.let { parser.parse(it, null) }
+}

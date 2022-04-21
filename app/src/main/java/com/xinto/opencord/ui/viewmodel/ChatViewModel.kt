@@ -4,6 +4,7 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.viewModelScope
 import com.xinto.opencord.domain.manager.PersistentDataManager
 import com.xinto.opencord.domain.mapper.toDomain
+import com.xinto.opencord.domain.merger.mergeWith
 import com.xinto.opencord.domain.model.DomainMessage
 import com.xinto.opencord.domain.repository.DiscordApiRepository
 import com.xinto.opencord.gateway.DiscordGateway
@@ -86,8 +87,11 @@ class ChatViewModel(
         gateway.onEvent<MessageUpdateEvent>(
             filterPredicate = { it.data.channelId.value == persistentChannelId }
         ) { event ->
-            val domainData = event.data.toDomain()
-            messages[domainData.id] = domainData
+            val domainPartialData = event.data.toDomain()
+            val mergedData = messages[domainPartialData.id]?.mergeWith(domainPartialData)
+            if (mergedData != null) {
+                messages[domainPartialData.id] = mergedData
+            }
         }
 
         gateway.onEvent<MessageDeleteEvent>(

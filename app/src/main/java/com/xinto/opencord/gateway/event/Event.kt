@@ -3,10 +3,7 @@ package com.xinto.opencord.gateway.event
 import com.xinto.opencord.gateway.dto.MessageDeleteData
 import com.xinto.opencord.gateway.dto.Ready
 import com.xinto.opencord.gateway.io.EventName
-import com.xinto.opencord.rest.dto.ApiChannel
-import com.xinto.opencord.rest.dto.ApiGuild
-import com.xinto.opencord.rest.dto.ApiGuildMemberChunk
-import com.xinto.opencord.rest.dto.ApiMessage
+import com.xinto.opencord.rest.dto.*
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
@@ -68,7 +65,7 @@ class EventDeserializationStrategy(
             }
             EventName.MESSAGE_UPDATE -> {
                 MessageUpdateEvent(
-                    data = decoder.decodeSerializableValue(ApiMessage.serializer())
+                    data = decoder.decodeSerializableValue(ApiMessagePartial.serializer())
                 )
             }
             EventName.MESSAGE_DELETE -> {

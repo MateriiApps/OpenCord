@@ -141,6 +141,22 @@ fun ApiMessage.toDomain(): DomainMessage {
     )
 }
 
+fun ApiMessagePartial.toDomain(): DomainMessagePartial {
+    val domainAuthor = author?.toDomain()
+    val domainAttachments = attachments?.map { it.toDomain() }
+    val domainEmbeds = embeds?.map { it.toDomain() }
+    return DomainMessagePartial(
+        id = id.value,
+        content = content,
+        channelId = channelId.value,
+        author = domainAuthor,
+        timestamp = timestamp,
+        editedTimestamp = editedTimestamp,
+        attachments = domainAttachments,
+        embeds = domainEmbeds
+    )
+}
+
 fun ApiUser.toDomain(): DomainUser {
     val avatarUrl = avatar?.let { avatar ->
         DiscordCdnServiceImpl.getUserAvatarUrl(id.toString(), avatar)
