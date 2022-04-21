@@ -33,7 +33,7 @@ fun WidgetMediaPicture(
         modifier = modifier,
         painter = picture,
         contentDescription = null,
-        contentScale = ContentScale.FillWidth
+        contentScale = ContentScale.Fit
     )
 }
 

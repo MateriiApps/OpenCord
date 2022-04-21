@@ -99,14 +99,20 @@ fun WidgetChatMessage(
                         text = message
                     )
                 }
-                WidgetMessageAttachments(
-                    modifier = Modifier.fillMaxWidth(0.95f),
-                    attachments = attachments
-                )
-                WidgetMessageEmbeds(
-                    modifier = Modifier.fillMaxWidth(0.9f),
-                    embeds = embeds
-                )
+                if (attachments.isNotEmpty()) {
+                    WidgetMessageAttachments(
+                        modifier = Modifier
+                            .fillMaxWidth(0.9f)
+                            .padding(vertical = 2.dp),
+                        attachments = attachments
+                    )
+                }
+                if (embeds.isNotEmpty()) {
+                    WidgetMessageEmbeds(
+                        modifier = Modifier.fillMaxWidth(0.9f),
+                        embeds = embeds
+                    )
+                }
             }
         }
     }
@@ -197,8 +203,8 @@ private fun WidgetMessageAttachments(
                 is DomainAttachment.Picture -> {
                     WidgetMediaPicture(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(MaterialTheme.shapes.medium),
+                            .clip(MaterialTheme.shapes.medium)
+                            .heightIn(max = 350.dp),
                         imageUrl = attachment.url,
                         imageWidth = attachment.width,
                         imageHeight = attachment.height
