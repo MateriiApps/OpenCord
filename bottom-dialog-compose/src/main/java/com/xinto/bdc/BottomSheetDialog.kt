@@ -24,7 +24,8 @@ import androidx.compose.ui.util.fastMap
 import androidx.compose.ui.util.fastMaxBy
 import androidx.lifecycle.ViewTreeLifecycleOwner
 import androidx.lifecycle.ViewTreeViewModelStoreOwner
-import androidx.savedstate.ViewTreeSavedStateRegistryOwner
+import androidx.savedstate.findViewTreeSavedStateRegistryOwner
+import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.util.*
 
@@ -123,9 +124,8 @@ private class BottomSheetDialogWrapper(
             bottomDialogLayout,
             ViewTreeViewModelStoreOwner.get(composeView)
         )
-        ViewTreeSavedStateRegistryOwner.set(
-            bottomDialogLayout,
-            ViewTreeSavedStateRegistryOwner.get(composeView)
+        bottomDialogLayout.setViewTreeSavedStateRegistryOwner(
+            composeView.findViewTreeSavedStateRegistryOwner()
         )
 
         setOnDismissListener {
