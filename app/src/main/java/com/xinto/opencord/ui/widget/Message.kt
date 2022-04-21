@@ -1,14 +1,9 @@
 package com.xinto.opencord.ui.widget
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.InlineTextContent
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Send
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -26,8 +21,6 @@ import com.xinto.opencord.BuildConfig
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainAttachment
 import com.xinto.opencord.domain.model.DomainEmbed
-import com.xinto.opencord.ui.component.FilledIconButton
-import com.xinto.opencord.ui.component.OCBasicTextField
 import com.xinto.opencord.ui.component.rememberOCCoilPainter
 import com.xinto.opencord.util.letComposable
 
@@ -59,9 +52,8 @@ fun WidgetChatMessage(
             )
             Column(
                 modifier = Modifier
-                    .weight(1f)
-                    .padding(vertical = 2.dp),
-                verticalArrangement = Arrangement.spacedBy(2.dp),
+                    .weight(1f),
+                verticalArrangement = Arrangement.SpaceEvenly,
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -103,13 +95,15 @@ fun WidgetChatMessage(
                     WidgetMessageAttachments(
                         modifier = Modifier
                             .fillMaxWidth(0.9f)
-                            .padding(vertical = 2.dp),
+                            .padding(vertical = 4.dp),
                         attachments = attachments
                     )
                 }
                 if (embeds.isNotEmpty()) {
                     WidgetMessageEmbeds(
-                        modifier = Modifier.fillMaxWidth(0.9f),
+                        modifier = Modifier
+                            .fillMaxWidth(0.9f)
+                            .padding(vertical = 4.dp),
                         embeds = embeds
                     )
                 }
@@ -118,55 +112,13 @@ fun WidgetChatMessage(
     }
 }
 
-@Composable
-fun WidgetChatInput(
-    value: String,
-    onValueChange: (value: String) -> Unit,
-    sendEnabled: Boolean,
-    onSendClick: () -> Unit,
-    hint: @Composable () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .heightIn(min = 48.dp)
-            .imePadding(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        OCBasicTextField(
-            modifier = Modifier.weight(1f),
-            value = value,
-            onValueChange = onValueChange,
-            hint = hint,
-            maxLines = 4,
-        )
-        AnimatedVisibility(
-            modifier = Modifier.size(48.dp),
-            visible = value.isNotBlank(),
-            enter = slideInHorizontally { it },
-            exit = slideOutHorizontally { it },
-        ) {
-            FilledIconButton(
-                onClick = onSendClick,
-                enabled = sendEnabled
-            ) {
-                Icon(
-                    imageVector = Icons.Rounded.Send,
-                    contentDescription = null
-                )
-            }
-        }
-    }
-}
 
 @Composable
 private fun WidgetMessageContent(
     text: AnnotatedString,
     modifier: Modifier = Modifier,
 ) {
-    ProvideTextStyle(MaterialTheme.typography.bodyMedium.copy(letterSpacing = 0.sp)) {
+    ProvideTextStyle(MaterialTheme.typography.bodyMedium) {
         Text(
             modifier = modifier,
             text = text,
