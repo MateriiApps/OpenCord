@@ -35,7 +35,7 @@ fun WidgetEmbed(
             Box(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .width(5.dp)
+                    .width(4.dp)
                     .background(stripeColor)
             )
             Column(
