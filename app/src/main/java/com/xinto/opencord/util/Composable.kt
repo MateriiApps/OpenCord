@@ -2,9 +2,9 @@ package com.xinto.opencord.util
 
 import androidx.compose.runtime.Composable
 
-inline fun <reified T> T.letComposable(
-    crossinline block: @Composable (T) -> Unit
-): @Composable () -> Unit {
+fun <T, R> T.letComposable(
+    block: @Composable (T) -> R
+): @Composable () -> R {
     return let {
         @Composable {
             block(it)
