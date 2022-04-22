@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,9 +26,7 @@ import com.xinto.opencord.ui.component.rememberOCCoilPainter
 import com.xinto.opencord.ui.viewmodel.ChannelsViewModel
 import com.xinto.opencord.ui.viewmodel.CurrentUserViewModel
 import com.xinto.opencord.ui.viewmodel.GuildsViewModel
-import com.xinto.opencord.ui.widget.WidgetCategory
-import com.xinto.opencord.ui.widget.WidgetChannelListItem
-import com.xinto.opencord.ui.widget.WidgetGuildListItem
+import com.xinto.opencord.ui.widget.*
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -105,37 +104,38 @@ private fun ChannelsList(
     viewModel: ChannelsViewModel,
     modifier: Modifier = Modifier
 ) {
-    Surface(
-        modifier = modifier,
-        shape = MaterialTheme.shapes.large,
-        tonalElevation = 1.dp
-    ) {
-        when (viewModel.state) {
-            is ChannelsViewModel.State.Unselected -> {
-                ChannelsListUnselected(
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-            is ChannelsViewModel.State.Loading -> {
-                ChannelsListLoading(
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-            is ChannelsViewModel.State.Loaded -> {
-                ChannelsListLoaded(
-                    modifier = Modifier.fillMaxSize(),
-                    onChannelSelect = {
-                        viewModel.selectChannel(it)
-                        onChannelSelect()
-                    },
-                    bannerUrl = viewModel.guildBannerUrl,
-                    guildName = viewModel.guildName,
-                    channels = viewModel.channels,
-                    selectedChannelId = viewModel.selectedChannelId
-                )
-            }
-            is ChannelsViewModel.State.Error -> {
+    CompositionLocalProvider(LocalAbsoluteTonalElevation provides 1.dp) {
+        Surface(
+            modifier = modifier,
+            shape = MaterialTheme.shapes.large,
+        ) {
+            when (viewModel.state) {
+                is ChannelsViewModel.State.Unselected -> {
+                    ChannelsListUnselected(
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+                is ChannelsViewModel.State.Loading -> {
+                    ChannelsListLoading(
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+                is ChannelsViewModel.State.Loaded -> {
+                    ChannelsListLoaded(
+                        modifier = Modifier.fillMaxSize(),
+                        onChannelSelect = {
+                            viewModel.selectChannel(it)
+                            onChannelSelect()
+                        },
+                        bannerUrl = viewModel.guildBannerUrl,
+                        guildName = viewModel.guildName,
+                        channels = viewModel.channels,
+                        selectedChannelId = viewModel.selectedChannelId
+                    )
+                }
+                is ChannelsViewModel.State.Error -> {
 
+                }
             }
         }
     }
@@ -260,14 +260,13 @@ private fun GuildsListLoaded(
                 }
             ) {
                 if (guild.iconUrl != null) {
-                    val imagePainter = rememberOCCoilPainter(guild.iconUrl)
-                    Image(
-                        modifier = Modifier.size(48.dp),
-                        painter = imagePainter,
-                        contentDescription = "Guild Icon"
+                    WidgetGuildContentImage(
+                        url = guild.iconUrl
                     )
                 } else {
-                    Text(guild.iconText)
+                    WidgetGuildContentVector {
+                        Text(guild.iconText)
+                    }
                 }
             }
         }

@@ -1,26 +1,20 @@
 package com.xinto.opencord.ui.widget
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -33,12 +27,7 @@ fun WidgetChannelListItem(
     modifier: Modifier = Modifier,
 ) {
     val indicatorFraction by animateFloatAsState(if (selected) 0.7f else 0.15f)
-    val backgroundColor by animateColorAsState(
-        if (selected) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent
-    )
-    val contentColor by animateColorAsState(
-        if (selected) MaterialTheme.colorScheme.onSecondaryContainer else LocalContentColor.current
-    )
+    val tonalElevation by animateDpAsState(if (selected) 5.dp else 0.dp)
     Box(
         modifier = modifier.height(36.dp),
     ) {
@@ -52,19 +41,18 @@ fun WidgetChannelListItem(
                 modifier = Modifier.fillMaxHeight(indicatorFraction)
             )
         }
-        Row(
+        Surface(
             modifier = Modifier
-                .padding(horizontal = 8.dp)
-                .clip(MaterialTheme.shapes.medium)
-                .background(backgroundColor)
-                .clickable(onClick = onClick)
-                .padding(6.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp),
+            shape = MaterialTheme.shapes.medium,
+            onClick = onClick,
+            tonalElevation = tonalElevation
         ) {
-            CompositionLocalProvider(
-                LocalContentColor provides contentColor
+            Row(
+                modifier = Modifier.padding(6.dp),
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
                     painter = painter,
