@@ -201,6 +201,8 @@ private fun ChatScreenLoaded(
                             when (attachment) {
                                 is DomainAttachment.Picture -> {
                                     WidgetAttachmentPicture(
+                                        modifier = Modifier
+                                            .heightIn(max = 350.dp),
                                         url = attachment.proxyUrl,
                                         width = attachment.width,
                                         height = attachment.height

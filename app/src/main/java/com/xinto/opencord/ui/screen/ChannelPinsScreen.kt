@@ -152,6 +152,8 @@ private fun ChannelPinsLoaded(
                             when (attachment) {
                                 is DomainAttachment.Picture -> {
                                     WidgetAttachmentPicture(
+                                        modifier = Modifier
+                                            .heightIn(max = 250.dp),
                                         url = attachment.proxyUrl,
                                         width = attachment.width,
                                         height = attachment.height
