@@ -6,6 +6,5 @@ data class DomainMeGuild(
     val iconUrl: String?,
     val permissions: List<DomainPermission>,
 ) {
-    val iconText
-        get() = name.split("""\s+""".toRegex()).map { it[0] }.joinToString()
+    val iconText = name.split("""\s+""".toRegex()).map { it[0] }.joinToString()
 }

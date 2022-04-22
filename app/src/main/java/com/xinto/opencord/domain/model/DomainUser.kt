@@ -7,10 +7,6 @@ data class DomainUser(
     val avatarUrl: String,
     val bot: Boolean = false,
 ) {
-
-    val formattedDiscriminator
-        get() = "#$discriminator"
-
-    val tag
-        get() = "$username$formattedDiscriminator"
+    val formattedDiscriminator = "#$discriminator"
+    val tag = "$username$formattedDiscriminator"
 }

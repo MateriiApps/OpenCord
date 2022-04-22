@@ -32,10 +32,4 @@ data class DomainMessagePartial(
     val author: DomainUser?,
     val attachments: List<DomainAttachment>?,
     val embeds: List<DomainEmbed>?
-): KoinComponent {
-    private val parser: SimpleAstParser = get()
-
-    val formattedTimestamp = timestamp?.let { Timestamp.getFormattedTimestamp(it) }
-    val isEdited = editedTimestamp != null
-    val contentNodes = content?.let { parser.parse(it, null) }
-}
+)
