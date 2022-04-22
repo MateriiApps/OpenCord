@@ -2,10 +2,12 @@ package com.xinto.opencord.ui.widget
 
 import android.view.ViewGroup
 import androidx.compose.foundation.Image
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
@@ -16,30 +18,29 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.xinto.opencord.ui.component.rememberOCCoilPainter
 
 @Composable
-fun WidgetMediaPicture(
-    imageUrl: String,
-    imageWidth: Int,
-    imageHeight: Int,
+fun WidgetAttachmentPicture(
+    url: String,
+    width: Int,
+    height: Int,
     modifier: Modifier = Modifier,
 ) {
-    val picture = rememberOCCoilPainter(imageUrl) {
+    val painter = rememberOCCoilPainter(url) {
         size(
-            width = imageWidth,
-            height = imageHeight
+            width = width,
+            height = height
         )
     }
-
     Image(
-        modifier = modifier,
-        painter = picture,
+        modifier = modifier.clip(MaterialTheme.shapes.medium),
+        painter = painter,
         contentDescription = null,
         contentScale = ContentScale.Fit
     )
 }
 
 @Composable
-fun WidgetMediaVideo(
-    videoUrl: String,
+fun WidgetAttachmentVideo(
+    url: String,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -48,7 +49,7 @@ fun WidgetMediaVideo(
         val exo = ExoPlayer.Builder(context)
             .build()
 
-        exo.addMediaItem(MediaItem.fromUri(videoUrl))
+        exo.addMediaItem(MediaItem.fromUri(url))
 
         return@remember exo
     }

@@ -17,11 +17,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.xinto.bdc.BottomSheetDialog
 import com.xinto.opencord.R
+import com.xinto.opencord.domain.model.DomainAttachment
 import com.xinto.opencord.domain.model.DomainMessage
-import com.xinto.opencord.ui.component.rememberOCCoilPainter
 import com.xinto.opencord.ui.viewmodel.ChatViewModel
-import com.xinto.opencord.ui.widget.WidgetChatInput
-import com.xinto.opencord.ui.widget.WidgetChatMessage
+import com.xinto.opencord.ui.widget.*
+import com.xinto.opencord.util.letComposable
 import com.xinto.simpleast.render
 import org.koin.androidx.compose.getViewModel
 
@@ -149,28 +149,67 @@ private fun ChatScreenLoaded(
         ) {
             items(messages) { message ->
                 var showBottomDialog by rememberSaveable { mutableStateOf(false) }
-                val avatar = rememberOCCoilPainter(message.author.avatarUrl)
                 WidgetChatMessage(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(MaterialTheme.shapes.medium)
                         .combinedClickable(
                             onClick = {},
-                            onLongClick = {
-                                showBottomDialog = true
-                            }
+                            onLongClick = { showBottomDialog = true }
                         ),
-                    avatar = avatar,
-                    author = message.author.username,
-                    message = render(
-                        builder = AnnotatedString.Builder(),
-                        nodes = message.contentNodes,
-                        renderContext = null
-                    ).toAnnotatedString(),
-                    attachments = message.attachments,
-                    embeds = message.embeds,
-                    timestamp = message.formattedTimestamp,
-                    edited = message.isEdited
+                    avatar = {
+                        WidgetMessageAvatar(url = message.author.avatarUrl)
+                    },
+                    author = {
+                        WidgetMessageAuthor(
+                            author = message.author.username,
+                            timestamp = message.formattedTimestamp,
+                            edited = message.isEdited
+                        )
+                    },
+                    content = message.contentNodes.ifEmpty { null }?.letComposable { nodes ->
+                        WidgetMessageContent(
+                            text = render(
+                                builder = AnnotatedString.Builder(),
+                                nodes = nodes,
+                                renderContext = null
+                            ).toAnnotatedString()
+                        )
+                    },
+                    embeds = message.embeds.ifEmpty { null }?.letComposable { embeds ->
+                        for (embed in embeds) {
+                            WidgetEmbed(
+                                title = embed.title,
+                                description = embed.description,
+                                color = embed.color,
+                                author = embed.author?.letComposable {
+                                    WidgetEmbedAuthor(name = it.name)
+                                },
+                                fields = embed.fields?.letComposable {
+                                    for (field in it) {
+                                        WidgetEmbedField(
+                                            name = field.name,
+                                            value = field.value
+                                        )
+                                    }
+                                }
+                            )
+                        }
+                    },
+                    attachments = message.attachments.ifEmpty { null }?.letComposable { attachments ->
+                        for (attachment in attachments) {
+                            when (attachment) {
+                                is DomainAttachment.Picture -> {
+                                    WidgetAttachmentPicture(
+                                        url = attachment.proxyUrl,
+                                        width = attachment.width,
+                                        height = attachment.height
+                                    )
+                                }
+                                else -> {}
+                            }
+                        }
+                    }
                 )
 
                 if (showBottomDialog) {

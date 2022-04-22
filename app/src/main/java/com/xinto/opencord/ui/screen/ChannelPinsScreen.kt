@@ -16,10 +16,11 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
+import com.xinto.opencord.domain.model.DomainAttachment
 import com.xinto.opencord.domain.model.DomainMessage
-import com.xinto.opencord.ui.component.rememberOCCoilPainter
 import com.xinto.opencord.ui.viewmodel.ChannelPinsViewModel
-import com.xinto.opencord.ui.widget.WidgetChatMessage
+import com.xinto.opencord.ui.widget.*
+import com.xinto.opencord.util.letComposable
 import com.xinto.simpleast.render
 import org.koin.androidx.compose.getViewModel
 
@@ -106,17 +107,60 @@ private fun ChannelPinsLoaded(
                 tonalElevation = 1.dp
             ) {
                 WidgetChatMessage(
-                    avatar = rememberOCCoilPainter(message.author.avatarUrl),
-                    author = message.author.username,
-                    timestamp = message.formattedTimestamp,
-                    message = render(
-                        builder = AnnotatedString.Builder(),
-                        nodes = message.contentNodes,
-                        renderContext = null
-                    ).toAnnotatedString(),
-                    attachments = message.attachments,
-                    embeds = message.embeds,
-                    edited = message.isEdited
+                    modifier = Modifier.fillMaxWidth(),
+                    avatar = {
+                        WidgetMessageAvatar(url = message.author.avatarUrl)
+                    },
+                    author = {
+                        WidgetMessageAuthor(
+                            author = message.author.username,
+                            timestamp = message.formattedTimestamp,
+                            edited = message.isEdited
+                        )
+                    },
+                    content = message.contentNodes.ifEmpty { null }?.letComposable { nodes ->
+                        WidgetMessageContent(
+                            text = render(
+                                builder = AnnotatedString.Builder(),
+                                nodes = nodes,
+                                renderContext = null
+                            ).toAnnotatedString()
+                        )
+                    },
+                    embeds = message.embeds.ifEmpty { null }?.letComposable { embeds ->
+                        for (embed in embeds) {
+                            WidgetEmbed(
+                                title = embed.title,
+                                description = embed.description,
+                                color = embed.color,
+                                author = embed.author?.letComposable {
+                                    WidgetEmbedAuthor(name = it.name)
+                                },
+                                fields = embed.fields?.letComposable {
+                                    for (field in it) {
+                                        WidgetEmbedField(
+                                            name = field.name,
+                                            value = field.value
+                                        )
+                                    }
+                                }
+                            )
+                        }
+                    },
+                    attachments = message.attachments.ifEmpty { null }?.letComposable { attachments ->
+                        for (attachment in attachments) {
+                            when (attachment) {
+                                is DomainAttachment.Picture -> {
+                                    WidgetAttachmentPicture(
+                                        url = attachment.proxyUrl,
+                                        width = attachment.width,
+                                        height = attachment.height
+                                    )
+                                }
+                                else -> {}
+                            }
+                        }
+                    }
                 )
             }
         }
