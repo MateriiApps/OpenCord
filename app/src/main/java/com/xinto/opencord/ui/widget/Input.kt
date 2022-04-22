@@ -4,11 +4,12 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Send
-import androidx.compose.material3.FilledIconButton
-import androidx.compose.material3.Icon
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -26,23 +27,40 @@ fun WidgetChatInput(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .heightIn(min = 48.dp)
-            .imePadding(),
+            .heightIn(min = 48.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         OCBasicTextField(
             modifier = Modifier.weight(1f),
             value = value,
             onValueChange = onValueChange,
-            hint = hint,
             maxLines = 4,
+            decorationBox = { innerTextField ->
+                CompositionLocalProvider(LocalAbsoluteTonalElevation provides 0.dp) {
+                    Surface(
+                        modifier = Modifier.weight(1f),
+                        shape = MaterialTheme.shapes.medium,
+                    ) {
+                        Box(modifier = Modifier.padding(12.dp)) {
+                            innerTextField()
+                            CompositionLocalProvider(
+                                LocalContentAlpha provides ContentAlpha.medium,
+                                LocalTextStyle provides MaterialTheme.typography.bodyMedium
+                            ) {
+                                if (value.isEmpty()) {
+                                    hint()
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         )
         AnimatedVisibility(
-            modifier = Modifier.size(48.dp),
-            visible = value.isNotBlank(),
-            enter = slideInHorizontally { it },
-            exit = slideOutHorizontally { it },
+            visible = value.isNotEmpty(),
+            enter = slideInHorizontally { it * 2 },
+            exit = slideOutHorizontally { it * 2 },
         ) {
             FilledIconButton(
                 onClick = onSendClick,

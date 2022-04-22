@@ -1,28 +1,24 @@
 package com.xinto.opencord.ui.component
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.LocalContentAlpha
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.contentColorFor
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.unit.dp
 
 @Composable
 fun OCBasicTextField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    hint: @Composable () -> Unit = {},
     containerColor: Color = MaterialTheme.colorScheme.surface,
     contentColor: Color = contentColorFor(containerColor),
     enabled: Boolean = true,
@@ -32,9 +28,11 @@ fun OCBasicTextField(
     singleLine: Boolean = false,
     maxLines: Int = Int.MAX_VALUE,
     visualTransformation: VisualTransformation = VisualTransformation.None,
+    onTextLayout: (TextLayoutResult) -> Unit = {},
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    decorationBox: @Composable (innerTextField: @Composable () -> Unit) -> Unit =
+        @Composable { innerTextField -> innerTextField() }
 ) {
-    var shapePercent by remember { mutableStateOf(50) }
     BasicTextField(
         modifier = modifier,
         value = value,
@@ -49,36 +47,9 @@ fun OCBasicTextField(
         singleLine = singleLine,
         maxLines = maxLines,
         visualTransformation = visualTransformation,
-        onTextLayout = {
-            shapePercent = when (it.lineCount) {
-                0 -> 50
-                1 -> 50
-                2 -> 40
-                3 -> 30
-                else -> 25
-            }
-        },
+        onTextLayout = onTextLayout,
         interactionSource = interactionSource,
         cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
-        decorationBox = { innerTextField ->
-            CompositionLocalProvider(LocalAbsoluteTonalElevation provides 0.dp) {
-                Surface(
-                    shape = RoundedCornerShape(shapePercent),
-                    color = containerColor
-                ) {
-                    Box(modifier = Modifier.padding(12.dp)) {
-                        innerTextField()
-                        CompositionLocalProvider(
-                            LocalContentAlpha provides ContentAlpha.medium,
-                            LocalTextStyle provides MaterialTheme.typography.bodyMedium
-                        ) {
-                            if (value.isBlank()) {
-                                hint()
-                            }
-                        }
-                    }
-                }
-            }
-        },
+        decorationBox = decorationBox
     )
 }
