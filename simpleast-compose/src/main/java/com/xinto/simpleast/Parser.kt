@@ -1,14 +1,19 @@
 package com.xinto.simpleast
 
 import java.util.*
+import kotlin.collections.ArrayList
+
+public inline fun <RC, T : Node<RC>, S> createParser(
+    rules: Parser<RC, T, S>.RuleScope.() -> Unit,
+): Parser<RC, T, S> {
+    return Parser<RC, T, S>().apply {
+        RuleScope().apply(rules)
+    }
+}
 
 public class Parser<RC, T : Node<RC>, S> {
 
     private val rules = ArrayList<Rule<RC, out T, S>>()
-
-    public inline fun rules(block: RuleScope.() -> Unit) {
-        RuleScope().apply(block)
-    }
 
     public fun parse(
         source: CharSequence,
@@ -43,22 +48,16 @@ public class Parser<RC, T : Node<RC>, S> {
 
             val (rule, matcher) = rules
                 .firstNotNullOfOrNull { rule ->
-                    val matcher = rule.match(inspectionSource, lastCapture, builder.state)
-                    if (matcher == null) {
-                        null
-                    } else {
+                    rule.match(inspectionSource, lastCapture, builder.state)?.let { matcher ->
                         rule to matcher
                     }
-                }
-                ?: throw ParseException("failed to find rule to match source", source)
+                } ?: throw ParseException("failed to find rule to match source", source)
 
             val matcherSourceEnd = matcher.end() + offset
             val newBuilder = rule.parse(matcher, this, builder.state)
 
             val parent = builder.root
-            parent.children {
-                child(newBuilder.root)
-            }
+            parent.addChild(newBuilder.root)
 
             if (matcherSourceEnd != builder.endIndex) {
                 remainingParses.push(
@@ -88,7 +87,8 @@ public class Parser<RC, T : Node<RC>, S> {
         }
 
         @Suppress("UNCHECKED_CAST")
-        return topLevelRootNode.nodeChildren.toMutableList() as MutableList<T>
+        val children =  topLevelRootNode.nodeChildren?.toMutableList() as? MutableList<T>
+        return children ?: ArrayList()
     }
 
     public inner class RuleScope {

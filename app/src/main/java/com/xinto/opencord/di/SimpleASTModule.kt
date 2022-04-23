@@ -1,14 +1,15 @@
 package com.xinto.opencord.di
 
 import com.xinto.opencord.ast.rule.*
-import com.xinto.opencord.util.SimpleAstParser
+import com.xinto.simpleast.Node
+import com.xinto.simpleast.Parser
+import com.xinto.simpleast.createParser
 import org.koin.dsl.module
 
 val simpleAstModule = module {
 
-    fun provideSimpleAst(): SimpleAstParser {
-        val parser = SimpleAstParser()
-        parser.rules {
+    fun provideSimpleAst(): Parser<Any?, Node<Any?>, Any?> {
+        return createParser {
             rule(createEscapeRule())
             rule(createSpoilerRule())
             rule(createBoldTextRule())
@@ -20,7 +21,6 @@ val simpleAstModule = module {
             rule(createChannelMentionRule())
             rule(createOtherRule())
         }
-        return parser
     }
 
     single { provideSimpleAst() }

@@ -34,7 +34,9 @@ android {
 
     kotlinOptions {
         jvmTarget = "11"
-        freeCompilerArgs = freeCompilerArgs + "-Xexplicit-api=strict"
+        freeCompilerArgs = freeCompilerArgs+
+                "-Xexplicit-api=strict" +
+                "-Xcontext-receivers"
     }
 }
 

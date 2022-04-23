@@ -15,12 +15,13 @@ public fun <RC, S> Parser<RC, Node<RC>, S>.render(
 }
 
 public fun <RC> render(
-    builder: AnnotatedString.Builder,
+    builder: AnnotatedString.Builder = AnnotatedString.Builder(),
     nodes: Collection<Node<RC>>,
     renderContext: RC,
 ): AnnotatedString.Builder {
-    for (node in nodes) {
-        node.render(builder, renderContext)
+    return builder.apply {
+        for (node in nodes) {
+            node.render(renderContext)
+        }
     }
-    return builder
 }

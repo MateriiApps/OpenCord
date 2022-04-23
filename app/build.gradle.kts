@@ -65,7 +65,8 @@ android {
                 "-Xopt-in=androidx.compose.foundation.ExperimentalFoundationApi" +
                 "-Xopt-in=androidx.compose.animation.ExperimentalAnimationApi" +
                 "-Xopt-in=androidx.compose.material.ExperimentalMaterialApi" +
-                "-Xopt-in=androidx.compose.material3.ExperimentalMaterial3Api"
+                "-Xopt-in=androidx.compose.material3.ExperimentalMaterial3Api" +
+                "-Xcontext-receivers"
     }
 
     buildFeatures {

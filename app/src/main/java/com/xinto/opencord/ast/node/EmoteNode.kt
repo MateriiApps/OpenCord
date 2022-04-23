@@ -8,11 +8,9 @@ class EmoteNode<RC>(
     val emoteId: String
 ) : Node<RC>() {
 
-    override fun render(
-        builder: AnnotatedString.Builder,
-        renderContext: RC
-    ) {
-        builder.appendInlineContent("emote", emoteId)
+    context(AnnotatedString.Builder)
+    override fun render(renderContext: RC) {
+        appendInlineContent("emote", emoteId)
     }
 
 }
