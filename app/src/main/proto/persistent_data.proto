@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package com.xinto.opencord.proto;
+option java_multiple_files = true;
+
+message PersistentData {
+  fixed64 selectedGuildId = 1;
+  map<fixed64, fixed64> selectedChannels = 2;
+}

@@ -190,6 +190,18 @@ sealed class Dependencies {
         }
     }
 
+    object Datastore : Dependencies() {
+        const val datastore = "androidx.datastore:datastore:1.0.0"
+        const val kotlinProtobuf = "com.google.protobuf:protobuf-kotlin:3.19.4"
+
+        override fun invoke(scope: DependencyHandlerScope) {
+            scope {
+                implementation(datastore)
+                implementation(kotlinProtobuf)
+            }
+        }
+    }
+
     //TODO migrate to context receivers after upgrading to kotlin 1.6.20
     abstract operator fun invoke(scope: DependencyHandlerScope)
 

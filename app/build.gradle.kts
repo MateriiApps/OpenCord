@@ -1,7 +1,10 @@
+import com.google.protobuf.gradle.*
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
     id("kotlin-parcelize")
+    id("com.google.protobuf")
     kotlin("plugin.serialization")
 }
 
@@ -82,6 +85,35 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    sourceSets {
+        named("main") {
+            // proto {} refuses to import
+            (this as ExtensionAware)
+                .extensions
+                .getByName("proto")
+                .let { it as SourceDirectorySet }
+                .apply { srcDir("src/main/proto") }
+        }
+    }
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.19.2"
+    }
+
+    plugins {
+        id("javalite") {
+            artifact = "com.google.protobuf:protoc-gen-javalite:3.0.0"
+        }
+    }
+
+    generateProtoTasks.all().forEach {
+        it.builtins {
+            id("kotlin")
+        }
+    }
 }
 
 dependencies {
@@ -100,4 +132,5 @@ dependencies {
     Dependencies.Accompanist(this)
     Dependencies.Coil(this)
     Dependencies.ExoPlayer(this)
+    Dependencies.Datastore(this)
 }
