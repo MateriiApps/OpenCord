@@ -10,7 +10,6 @@ buildscript {
         val kotlinVersion = "1.6.20"
         classpath(kotlin("gradle-plugin", version = kotlinVersion))
         classpath(kotlin("serialization", version = kotlinVersion))
-        classpath("com.google.protobuf:protobuf-gradle-plugin:0.8.18")
     }
 }
 

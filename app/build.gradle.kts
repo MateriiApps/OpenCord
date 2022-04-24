@@ -4,7 +4,7 @@ plugins {
     id("com.android.application")
     id("kotlin-android")
     id("kotlin-parcelize")
-    id("com.google.protobuf")
+    id("com.google.protobuf") version "0.8.18"
     kotlin("plugin.serialization")
 }
 
@@ -85,33 +85,18 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-
-    sourceSets {
-        named("main") {
-            // proto {} refuses to import
-            (this as ExtensionAware)
-                .extensions
-                .getByName("proto")
-                .let { it as SourceDirectorySet }
-                .apply { srcDir("src/main/proto") }
-        }
-    }
 }
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:3.19.2"
+        artifact = Dependencies.Protobuf.protoc
     }
 
-    plugins {
-        id("javalite") {
-            artifact = "com.google.protobuf:protoc-gen-javalite:3.0.0"
-        }
-    }
-
-    generateProtoTasks.all().forEach {
-        it.builtins {
-            id("kotlin")
+    generateProtoTasks.all().configureEach {
+        builtins {
+            id("java") {
+                option("lite")
+            }
         }
     }
 }
@@ -126,11 +111,12 @@ dependencies {
     Dependencies.KotlinXDatetime(this)
     Dependencies.HCaptcha(this)
     Dependencies.AndroidxCore(this)
+    Dependencies.AndroidXDatastore(this)
     Dependencies.AndroidxPreferences(this)
     Dependencies.Material(this)
     Dependencies.Compose(this)
     Dependencies.Accompanist(this)
     Dependencies.Coil(this)
     Dependencies.ExoPlayer(this)
-    Dependencies.Datastore(this)
+    Dependencies.Protobuf(this)
 }

@@ -51,6 +51,18 @@ sealed class Dependencies {
         }
     }
 
+    object AndroidXDatastore : Dependencies() {
+        const val version = "1.0.0"
+
+        const val datastore = "androidx.datastore:datastore:1.0.0"
+
+        override fun invoke(scope: DependencyHandlerScope) {
+            scope {
+                implementation(datastore)
+            }
+        }
+    }
+
     object AndroidxPreferences : Dependencies() {
         const val version = "1.2.0"
 
@@ -190,14 +202,15 @@ sealed class Dependencies {
         }
     }
 
-    object Datastore : Dependencies() {
-        const val datastore = "androidx.datastore:datastore:1.0.0"
-        const val kotlinProtobuf = "com.google.protobuf:protobuf-kotlin:3.19.4"
+    object Protobuf : Dependencies() {
+        const val version = "3.20.1"
+
+        const val protobuf = "com.google.protobuf:protobuf-javalite:$version"
+        const val protoc = "com.google.protobuf:protoc:$version"
 
         override fun invoke(scope: DependencyHandlerScope) {
             scope {
-                implementation(datastore)
-                implementation(kotlinProtobuf)
+                implementation(protobuf)
             }
         }
     }
