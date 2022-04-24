@@ -24,27 +24,21 @@ fun <RC, S> createEmoteRule(): Rule<RC, Node<RC>, S> =
 
 fun <RC, S> createUserMentionRule(): Rule<RC, Node<RC>, S> =
     createRule(PATTERN_USER_MENTION) { matcher, _, state ->
-        val startIndex: Int
-        val endIndex: Int
-
-        val userId: String?
-
-        val matchEveryone = matcher.group(2)
-        if (matchEveryone != null) {
-            userId = matchEveryone
-            startIndex = matcher.start(2)
-            endIndex = matcher.end(2)
-        } else {
-            userId = matcher.group(1)
-            startIndex = matcher.start(1)
-            endIndex = matcher.end(1)
-        }
-
         ParseSpec.createNonTerminal(
-            node = UserMentionNode(userId),
+            node = UserMentionNode(matcher.group(1)),
             state = state,
-            startIndex = startIndex,
-            endIndex = endIndex
+            startIndex = matcher.start(1),
+            endIndex = matcher.end(1)
+        )
+    }
+
+fun <RC, S> createEveryoneMentionRule(): Rule<RC, Node<RC>, S> =
+    createRule(PATTERN_EVERYONE_MENTION) { matcher, _, state ->
+        ParseSpec.createNonTerminal(
+            node = UserMentionNode(null),
+            state = state,
+            startIndex = matcher.start(1),
+            endIndex = matcher.end(1)
         )
     }
 
@@ -57,7 +51,7 @@ fun <RC, S> createChannelMentionRule(): Rule<RC, Node<RC>, S> =
     }
 
 fun <RC, S> createEscapeRule(): Rule<RC, Node<RC>, S> =
-    createRule(PATTERN_CHANNEL_MENTION) { matcher, _, state ->
+    createRule(PATTERN_ESCAPE) { matcher, _, state ->
         ParseSpec.createTerminal(
             node = TextNode(matcher.group(1)!!),
             state = state

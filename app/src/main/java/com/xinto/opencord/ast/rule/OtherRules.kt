@@ -2,22 +2,12 @@ package com.xinto.opencord.ast.rule
 
 import com.xinto.opencord.ast.node.TextNode
 import com.xinto.opencord.ast.util.PATTERN_OTHER
-import com.xinto.simpleast.Node
-import com.xinto.simpleast.ParseSpec
-import com.xinto.simpleast.Parser
-import com.xinto.simpleast.Rule
-import java.util.regex.Matcher
+import com.xinto.simpleast.*
 
-fun <RC, S> createOtherRule() =
-    object : Rule<RC, Node<RC>, S>(PATTERN_OTHER) {
-
-        override fun parse(
-            matcher: Matcher,
-            parser: Parser<RC, in Node<RC>, S>,
-            state: S,
-        ) = ParseSpec.createTerminal(
-            node = TextNode<RC>(matcher.group()),
+fun <RC, S> createOtherRule(): Rule<RC, Node<RC>, S> =
+    createRule(PATTERN_OTHER) { matcher, _, state ->
+        ParseSpec.createTerminal(
+            node = TextNode(matcher.group()),
             state = state,
         )
-
     }

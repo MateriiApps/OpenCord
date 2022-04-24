@@ -14,10 +14,12 @@ val simpleAstModule = module {
             rule(createSpoilerRule())
             rule(createBoldTextRule())
             rule(createUnderlineTextRule())
-            rule(createItalicTextRule())
+            rule(createItalicAsteriskTextRule())
+            rule(createItalicUnderscoreTextRule())
             rule(createStrikeThroughRule())
             rule(createEmoteRule())
             rule(createUserMentionRule())
+            rule(createEveryoneMentionRule())
             rule(createChannelMentionRule())
             rule(createOtherRule())
         }
