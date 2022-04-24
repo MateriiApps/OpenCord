@@ -22,7 +22,10 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromJsonElement
+import java.io.ByteArrayOutputStream
 import java.util.*
+import java.util.zip.Inflater
+import java.util.zip.InflaterOutputStream
 import kotlin.coroutines.CoroutineContext
 
 interface DiscordGateway : CoroutineScope {
@@ -57,6 +60,7 @@ class DiscordGatewayImpl(
         get() = SupervisorJob() + Dispatchers.Default
 
     private lateinit var webSocketSession: DefaultClientWebSocketSession
+    private lateinit var zlibInflater: Inflater
     private var establishConnection = true
 
     private val _events = MutableSharedFlow<Event>()
@@ -75,6 +79,7 @@ class DiscordGatewayImpl(
             try {
                 establishConnection = false
 
+                zlibInflater = Inflater()
                 webSocketSession = client.webSocketSession(BuildConfig.URL_GATEWAY)
                 sendIdentification()
                 _state.emit(DiscordGateway.State.Connected)
@@ -111,10 +116,15 @@ class DiscordGatewayImpl(
     }
 
     private suspend fun listenToSocket() {
-        webSocketSession.incoming.receiveAsFlow().buffer(Channel.UNLIMITED).map {
-            val jsonString = when (it) {
-                is Frame.Text -> it.readText()
-                is Frame.Binary -> String(it.readBytes())
+        webSocketSession.incoming.receiveAsFlow().buffer(Channel.UNLIMITED).map { frame ->
+            val jsonString = when (frame) {
+                is Frame.Text -> frame.readText()
+                is Frame.Binary -> {
+                    val deflatedStream = ByteArrayOutputStream()
+                    InflaterOutputStream(deflatedStream, zlibInflater)
+                        .use { it.write(frame.data) }
+                    deflatedStream.use { String(it.toByteArray()) }
+                }
                 else -> null
             }
             jsonString?.let { str ->
