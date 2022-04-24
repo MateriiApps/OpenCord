@@ -3,6 +3,7 @@ package com.xinto.opencord.domain.model
 sealed class DomainChannel : Comparable<DomainChannel> {
 
     abstract val id: ULong
+    abstract val guildId: ULong?
     abstract val name: String
     abstract val position: Int
     abstract val parentId: ULong?
@@ -16,6 +17,7 @@ sealed class DomainChannel : Comparable<DomainChannel> {
 
     data class TextChannel(
         override val id: ULong,
+        override val guildId: ULong?,
         override val name: String,
         override val position: Int,
         override val parentId: ULong?,
@@ -25,6 +27,7 @@ sealed class DomainChannel : Comparable<DomainChannel> {
 
     data class VoiceChannel(
         override val id: ULong,
+        override val guildId: ULong?,
         override val name: String,
         override val position: Int,
         override val parentId: ULong?,
@@ -33,6 +36,7 @@ sealed class DomainChannel : Comparable<DomainChannel> {
 
     data class AnnouncementChannel(
         override val id: ULong,
+        override val guildId: ULong?,
         override val name: String,
         override val position: Int,
         override val parentId: ULong?,
@@ -42,6 +46,7 @@ sealed class DomainChannel : Comparable<DomainChannel> {
 
     data class Category(
         override val id: ULong,
+        override val guildId: ULong?,
         override val name: String,
         override val position: Int,
         override val permissions: List<DomainPermission>,

@@ -27,6 +27,7 @@ import com.xinto.opencord.ui.viewmodel.ChannelsViewModel
 import com.xinto.opencord.ui.viewmodel.CurrentUserViewModel
 import com.xinto.opencord.ui.viewmodel.GuildsViewModel
 import com.xinto.opencord.ui.widget.*
+import com.xinto.opencord.util.getSortedChannels
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -129,7 +130,7 @@ private fun ChannelsList(
                         },
                         bannerUrl = viewModel.guildBannerUrl,
                         guildName = viewModel.guildName,
-                        channels = viewModel.channels,
+                        channels = viewModel.channels.values.toList(),
                         selectedChannelId = viewModel.selectedChannelId
                     )
                 }
@@ -305,7 +306,7 @@ private fun ChannelsListLoaded(
     selectedChannelId: ULong,
     bannerUrl: String?,
     guildName: String,
-    channels: Map<DomainChannel.Category?, List<DomainChannel>>,
+    channels: List<DomainChannel>,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -354,7 +355,7 @@ private fun ChannelsListLoaded(
                 }
             }
         }
-        for ((category, categoryChannels) in channels) {
+        for ((category, categoryChannels) in getSortedChannels(channels)) {
             if (category != null) {
                 item {
                     WidgetCategory(

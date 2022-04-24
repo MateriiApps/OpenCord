@@ -8,6 +8,9 @@ data class ApiChannel(
     @SerialName("id")
     val id: ApiSnowflake,
 
+    @SerialName("guild_id")
+    val guildId: ApiSnowflake? = null,
+
     @SerialName("name")
     val name: String,
 

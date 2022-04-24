@@ -3,11 +3,15 @@ package com.xinto.opencord.ui.viewmodel
 import androidx.compose.runtime.*
 import androidx.lifecycle.viewModelScope
 import com.xinto.opencord.domain.manager.PersistentDataManager
+import com.xinto.opencord.domain.mapper.toDomain
 import com.xinto.opencord.domain.model.DomainChannel
 import com.xinto.opencord.domain.repository.DiscordApiRepository
 import com.xinto.opencord.gateway.DiscordGateway
+import com.xinto.opencord.gateway.event.ChannelCreateEvent
+import com.xinto.opencord.gateway.event.ChannelDeleteEvent
+import com.xinto.opencord.gateway.event.ChannelUpdateEvent
+import com.xinto.opencord.gateway.onEvent
 import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
-import com.xinto.opencord.util.getSortedChannels
 import kotlinx.coroutines.launch
 
 class ChannelsViewModel(
@@ -26,7 +30,7 @@ class ChannelsViewModel(
     var state by mutableStateOf<State>(State.Unselected)
         private set
 
-    val channels = mutableStateMapOf<DomainChannel.Category?, List<DomainChannel>>()
+    val channels = mutableStateMapOf<ULong, DomainChannel>()
     var guildName by mutableStateOf("")
         private set
     var guildBannerUrl by mutableStateOf<String?>(null)
@@ -41,7 +45,7 @@ class ChannelsViewModel(
                 val guildChannels = repository.getGuildChannels(persistentGuildId)
                 val guild = repository.getGuild(persistentGuildId)
                 channels.clear()
-                channels.putAll(getSortedChannels(guildChannels.values.toList()))
+                channels.putAll(guildChannels)
                 guildName = guild.name
                 guildBannerUrl = guild.bannerUrl
                 state = State.Loaded
@@ -63,6 +67,24 @@ class ChannelsViewModel(
         }
         if (persistentChannelId != 0UL) {
             selectedChannelId = persistentDataManager.persistentChannelId
+        }
+        gateway.onEvent<ChannelCreateEvent>(
+            filterPredicate = { it.data.guildId?.value == persistentGuildId }
+        ) {
+            val domainData = it.data.toDomain()
+            channels[domainData.id] = domainData
+        }
+        gateway.onEvent<ChannelUpdateEvent>(
+            filterPredicate = { it.data.guildId?.value == persistentGuildId }
+        ) {
+            val domainData = it.data.toDomain()
+            channels[domainData.id] = domainData
+        }
+        gateway.onEvent<ChannelDeleteEvent>(
+            filterPredicate = { it.data.guildId?.value == persistentGuildId }
+        ) {
+            val domainData = it.data.toDomain()
+            channels.remove(domainData.id)
         }
     }
 

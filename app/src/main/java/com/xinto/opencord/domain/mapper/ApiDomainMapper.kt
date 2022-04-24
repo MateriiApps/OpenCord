@@ -43,6 +43,7 @@ fun ApiChannel.toDomain(): DomainChannel {
     return when (type) {
         2 -> DomainChannel.VoiceChannel(
             id = id.value,
+            guildId = guildId?.value,
             name = name,
             position = position,
             parentId = parentId?.value,
@@ -50,12 +51,14 @@ fun ApiChannel.toDomain(): DomainChannel {
         )
         4 -> DomainChannel.Category(
             id = id.value,
+            guildId = guildId?.value,
             name = name,
             position = position,
             permissions = permissions
         )
         5 -> DomainChannel.AnnouncementChannel(
             id = id.value,
+            guildId = guildId?.value,
             name = name,
             position = position,
             parentId = parentId?.value,
@@ -64,6 +67,7 @@ fun ApiChannel.toDomain(): DomainChannel {
         )
         else -> DomainChannel.TextChannel(
             id = id.value,
+            guildId = guildId?.value,
             name = name,
             position = position,
             parentId = parentId?.value,
