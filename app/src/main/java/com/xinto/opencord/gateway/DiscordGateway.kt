@@ -195,7 +195,7 @@ class DiscordGatewayImpl(
                 token = accountManager.currentAccountToken!!,
                 capabilities = 95,
                 largeThreshold = 100,
-                compress = false,
+                compress = true,
                 properties = IdentificationProperties(
                     browser = "Discord Android",
                     browserUserAgent = "Discord-Android/${BuildConfig.DISCORD_VERSION_CODE}",
