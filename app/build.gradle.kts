@@ -39,7 +39,7 @@ android {
 
             buildConfigField("String", "URL_API", "\"https://discord.com/api/v9\"")
             buildConfigField("String", "URL_CDN", "\"https://cdn.discordapp.com\"")
-            buildConfigField("String", "URL_GATEWAY", "\"wss://gateway.discord.gg/?v=9&encoding=json\"")
+            buildConfigField("String", "URL_GATEWAY", "\"wss://gateway.discord.gg/?v=9&encoding=json&compress=zlib-stream\"")
         }
 
         create("fosscord") {
@@ -50,7 +50,7 @@ android {
 
             buildConfigField("String", "URL_API", "\"https://api.fosscord.com/api/v9\"")
             buildConfigField("String", "URL_CDN", "\"https://cdn.fosscord.com\"")
-            buildConfigField("String", "URL_GATEWAY", "\"wss://gateway.fosscord.com/?v=9&encoding=json\"")
+            buildConfigField("String", "URL_GATEWAY", "\"wss://gateway.fosscord.com/?v=9&encoding=json&compress=zlib-stream\"")
         }
     }
 
