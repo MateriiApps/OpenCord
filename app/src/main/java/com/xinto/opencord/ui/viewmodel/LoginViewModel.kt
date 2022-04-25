@@ -59,7 +59,7 @@ class LoginViewModel(
                 when (response) {
                     is DomainLogin.Login -> {
                         activityManager.startMainActivity()
-                        accountManager.currentAccountToken = response.token
+                        accountManager.setCurrentToken(response.token)
                     }
                     is DomainLogin.Captcha -> {
                         captchaSiteKey = response.captchaSiteKey

@@ -10,6 +10,7 @@ import io.ktor.client.plugins.websocket.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -57,7 +58,7 @@ val httpModule = module {
         return HttpClient(CIO) {
             defaultRequest {
                 header(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-                header(HttpHeaders.Authorization, accountManager.currentAccountToken)
+                header(HttpHeaders.Authorization, runBlocking { accountManager.getCurrentToken() })
                 header(HttpHeaders.UserAgent, userAgent)
             }
             install(HttpRequestRetry) {

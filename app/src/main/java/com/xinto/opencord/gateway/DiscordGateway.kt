@@ -192,7 +192,7 @@ class DiscordGatewayImpl(
         sendPayload(
             opCode = OpCode.IDENTIFY,
             data = Identification(
-                token = accountManager.currentAccountToken!!,
+                token = accountManager.getCurrentToken()!!,
                 capabilities = 95,
                 largeThreshold = 100,
                 compress = true,
@@ -221,7 +221,7 @@ class DiscordGatewayImpl(
         sendPayload(
             opCode = OpCode.RESUME,
             data = Resume(
-                token = accountManager.currentAccountToken!!,
+                token = accountManager.getCurrentToken()!!,
                 sessionId = sessionId,
                 sequenceNumber = sequenceNumber
             )

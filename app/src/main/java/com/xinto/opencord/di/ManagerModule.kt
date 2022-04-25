@@ -7,12 +7,8 @@ import org.koin.dsl.module
 
 val managerModule = module {
 
-    fun provideAccountManager(
-        context: Context
-    ): AccountManager {
-        return AccountManagerImpl(
-            authPrefs = context.getSharedPreferences("auth", Context.MODE_PRIVATE)
-        )
+    fun provideAccountManager(context: Context): AccountManager {
+        return AccountManagerImpl(context)
     }
 
     fun provideActivityManager(
