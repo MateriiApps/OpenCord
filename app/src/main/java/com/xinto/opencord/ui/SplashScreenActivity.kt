@@ -6,7 +6,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.xinto.opencord.domain.manager.AccountManager
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 @SuppressLint("CustomSplashScreen")
@@ -17,12 +19,15 @@ class SplashScreenActivity : ComponentActivity() {
         installSplashScreen()
         super.onCreate(savedInstanceState)
 
-        if (runBlocking { accountManager.isLoggedIn() })
-            startActivity(Intent(this, MainActivity::class.java))
-        else {
-            startActivity(Intent(this, LoginActivity::class.java))
-        }
+        CoroutineScope(Dispatchers.IO).launch {
+            val targetActivity = if (accountManager.isLoggedIn())
+                MainActivity::class.java
+            else {
+                LoginActivity::class.java
+            }
 
-        finish()
+            startActivity(Intent(this@SplashScreenActivity, targetActivity))
+            finish()
+        }
     }
 }

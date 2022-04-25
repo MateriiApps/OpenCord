@@ -1,7 +1,6 @@
 package com.xinto.opencord.domain.manager
 
 import android.content.Context
-import android.util.Log
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.Serializer
 import androidx.datastore.dataStoreFile
