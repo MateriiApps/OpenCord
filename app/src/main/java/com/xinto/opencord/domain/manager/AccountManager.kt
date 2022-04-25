@@ -11,7 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.first
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import org.koin.core.component.get
 import java.io.InputStream
 import java.io.OutputStream
 
@@ -51,8 +51,11 @@ class AccountManagerImpl(val context: Context) : AccountManager {
             return try {
                 AccountsProto.parseFrom(input)
             } catch (t: Throwable) {
-                val logger by inject<Logger>()
-                logger.error("AccountsConfig", "Failed to parse account datastore!", t)
+                get<Logger>().error(
+                    "AccountsConfig",
+                    "Failed to parse datastore",
+                    t
+                )
 
                 AccountsProto.getDefaultInstance()
             }

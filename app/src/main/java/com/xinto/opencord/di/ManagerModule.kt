@@ -11,20 +11,12 @@ val managerModule = module {
         return AccountManagerImpl(context)
     }
 
-    fun provideActivityManager(
-        context: Context
-    ): ActivityManager {
-        return ActivityManagerImpl(
-            context = context
-        )
+    fun provideActivityManager(context: Context): ActivityManager {
+        return ActivityManagerImpl(context)
     }
 
-    fun providePersistentDataManager(
-        context: Context
-    ): PersistentDataManager {
-        return PersistentDataManagerImpl(
-            persistentPrefs = context.getSharedPreferences("persistent_data", Context.MODE_PRIVATE)
-        )
+    fun providePersistentDataManager(context: Context): PersistentDataManager {
+        return PersistentDataManagerImpl(context)
     }
 
     single { provideAccountManager(androidContext()) }
