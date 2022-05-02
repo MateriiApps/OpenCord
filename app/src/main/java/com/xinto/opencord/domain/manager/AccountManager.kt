@@ -2,18 +2,12 @@ package com.xinto.opencord.domain.manager
 
 import android.content.Context
 import androidx.datastore.core.DataStoreFactory
-import androidx.datastore.core.Serializer
 import androidx.datastore.dataStoreFile
-import com.xinto.opencord.proto.AccountsProto
-import com.xinto.opencord.util.Logger
+import com.xinto.opencord.proto.serializer.AccountsSerializer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.first
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
-import java.io.InputStream
-import java.io.OutputStream
 
 interface AccountManager {
     suspend fun getCurrentToken(): String?
@@ -23,9 +17,13 @@ interface AccountManager {
         getCurrentToken()?.isNotEmpty() ?: false
 }
 
-class AccountManagerImpl(val context: Context) : AccountManager {
+class AccountManagerImpl(
+    private val context: Context,
+    private val accountsSerializer: AccountsSerializer,
+) : AccountManager {
+
     private val datastore = DataStoreFactory.create(
-        serializer = AccountsProtoSerializer,
+        serializer = accountsSerializer,
         produceFile = { context.dataStoreFile("accounts.pb") },
         corruptionHandler = null,
         migrations = emptyList(),
@@ -41,27 +39,5 @@ class AccountManagerImpl(val context: Context) : AccountManager {
                 .setCurrentToken(token)
                 .build()
         }
-    }
-
-    private object AccountsProtoSerializer : Serializer<AccountsProto>, KoinComponent {
-        override val defaultValue: AccountsProto =
-            AccountsProto.getDefaultInstance()
-
-        override suspend fun readFrom(input: InputStream): AccountsProto {
-            return try {
-                AccountsProto.parseFrom(input)
-            } catch (t: Throwable) {
-                get<Logger>().error(
-                    "AccountsConfig",
-                    "Failed to parse datastore",
-                    t
-                )
-
-                AccountsProto.getDefaultInstance()
-            }
-        }
-
-        override suspend fun writeTo(t: AccountsProto, output: OutputStream) =
-            t.writeTo(output)
     }
 }

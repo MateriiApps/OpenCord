@@ -2,18 +2,12 @@ package com.xinto.opencord.domain.manager
 
 import android.content.Context
 import androidx.datastore.core.DataStoreFactory
-import androidx.datastore.core.Serializer
 import androidx.datastore.dataStoreFile
-import com.xinto.opencord.proto.PersistentDataProto
-import com.xinto.opencord.util.Logger
+import com.xinto.opencord.proto.serializer.PersistentDataSerializer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.first
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
-import java.io.InputStream
-import java.io.OutputStream
 
 interface PersistentDataManager {
     suspend fun getSelectedGuildId(): ULong
@@ -23,9 +17,13 @@ interface PersistentDataManager {
     suspend fun setSelectedChannelId(guildId: ULong, channelId: ULong)
 }
 
-class PersistentDataManagerImpl(val context: Context) : PersistentDataManager {
+class PersistentDataManagerImpl(
+    private val context: Context,
+    private val persistentDataSerializer: PersistentDataSerializer
+) : PersistentDataManager {
+
     private val datastore = DataStoreFactory.create(
-        serializer = PersistentDataSerializer,
+        serializer = persistentDataSerializer,
         produceFile = { context.dataStoreFile("persistent.pb") },
         corruptionHandler = null,
         migrations = emptyList(),
@@ -55,27 +53,5 @@ class PersistentDataManagerImpl(val context: Context) : PersistentDataManager {
                 .putSelectedChannels(guildId.toLong(), channelId.toLong())
                 .build()
         }
-    }
-
-    private object PersistentDataSerializer : Serializer<PersistentDataProto>, KoinComponent {
-        override val defaultValue: PersistentDataProto =
-            PersistentDataProto.getDefaultInstance()
-
-        override suspend fun readFrom(input: InputStream): PersistentDataProto {
-            return try {
-                PersistentDataProto.parseFrom(input)
-            } catch (t: Throwable) {
-                get<Logger>().error(
-                    "PersistentData",
-                    "Failed to parse datastore",
-                    t
-                )
-
-                PersistentDataProto.getDefaultInstance()
-            }
-        }
-
-        override suspend fun writeTo(t: PersistentDataProto, output: OutputStream) =
-            t.writeTo(output)
     }
 }
