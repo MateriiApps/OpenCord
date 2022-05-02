@@ -7,16 +7,20 @@ abstract class BasePersistenceViewModel(
     private val persistentDataManager: PersistentDataManager
 ) : ViewModel() {
 
-    protected var persistentGuildId
-        get() = persistentDataManager.persistentGuildId
-        set(value) {
-            persistentDataManager.persistentGuildId = value
-        }
+    protected suspend fun getPersistentGuildId(): ULong {
+        return persistentDataManager.getSelectedGuildId()
+    }
 
-    protected var persistentChannelId
-        get() = persistentDataManager.persistentChannelId
-        set(value) {
-            persistentDataManager.persistentChannelId = value
-        }
+    protected suspend fun setPersistentGuildId(id: ULong) {
+        persistentDataManager.setSelectedGuildId(id)
+    }
+
+    protected suspend fun getPersistentChannelId(): ULong {
+        return persistentDataManager.getSelectedChannelId(getPersistentGuildId())
+    }
+
+    protected suspend fun setPersistentChannelId(id: ULong) {
+        persistentDataManager.setSelectedChannelId(getPersistentGuildId(), id)
+    }
 
 }

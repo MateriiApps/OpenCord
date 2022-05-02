@@ -42,8 +42,9 @@ class ChannelsViewModel(
         viewModelScope.launch {
             try {
                 state = State.Loading
-                val guildChannels = repository.getGuildChannels(persistentGuildId)
-                val guild = repository.getGuild(persistentGuildId)
+                val guildId = getPersistentGuildId()
+                val guildChannels = repository.getGuildChannels(guildId)
+                val guild = repository.getGuild(guildId)
                 channels.clear()
                 channels.putAll(guildChannels)
                 guildName = guild.name
@@ -57,34 +58,40 @@ class ChannelsViewModel(
     }
 
     fun selectChannel(channelId: ULong) {
-        selectedChannelId = channelId
-        persistentChannelId = channelId
+        viewModelScope.launch {
+            selectedChannelId = channelId
+            setPersistentChannelId(channelId)
+        }
     }
 
     init {
-        if (persistentGuildId != 0UL) {
-            load()
-        }
-        if (persistentChannelId != 0UL) {
-            selectedChannelId = persistentDataManager.persistentChannelId
-        }
         gateway.onEvent<ChannelCreateEvent>(
-            filterPredicate = { it.data.guildId?.value == persistentGuildId }
+            filterPredicate = { it.data.guildId?.value == getPersistentGuildId() }
         ) {
             val domainData = it.data.toDomain()
             channels[domainData.id] = domainData
         }
         gateway.onEvent<ChannelUpdateEvent>(
-            filterPredicate = { it.data.guildId?.value == persistentGuildId }
+            filterPredicate = { it.data.guildId?.value == getPersistentGuildId() }
         ) {
             val domainData = it.data.toDomain()
             channels[domainData.id] = domainData
         }
         gateway.onEvent<ChannelDeleteEvent>(
-            filterPredicate = { it.data.guildId?.value == persistentGuildId }
+            filterPredicate = { it.data.guildId?.value == getPersistentGuildId() }
         ) {
             val domainData = it.data.toDomain()
             channels.remove(domainData.id)
+        }
+        viewModelScope.launch {
+            if (getPersistentGuildId() != 0UL) {
+                load()
+            }
+
+            val persistentChannelId = getPersistentChannelId()
+            if (persistentChannelId != 0UL) {
+                selectedChannelId = persistentChannelId
+            }
         }
     }
 

@@ -44,8 +44,9 @@ class ChatViewModel(
         viewModelScope.launch {
             try {
                 state = State.Loading
-                val channelMessages = repository.getChannelMessages(persistentChannelId)
-                val channel = repository.getChannel(persistentChannelId)
+                val channelId = getPersistentChannelId()
+                val channelMessages = repository.getChannelMessages(channelId)
+                val channel = repository.getChannel(channelId)
                 messages.clear()
                 messages.putAll(channelMessages)
                 channelName = channel.name
@@ -63,7 +64,7 @@ class ChatViewModel(
             val message = userMessage
             userMessage = ""
             repository.postChannelMessage(
-                channelId = persistentChannelId,
+                channelId = getPersistentChannelId(),
                 MessageBody(
                     content = message
                 )
@@ -78,14 +79,13 @@ class ChatViewModel(
 
     init {
         gateway.onEvent<MessageCreateEvent>(
-            filterPredicate = { it.data.channelId.value == persistentChannelId }
+            filterPredicate = { it.data.channelId.value == getPersistentChannelId() }
         ) { event ->
             val domainData = event.data.toDomain()
             messages[domainData.id] = domainData
         }
-
         gateway.onEvent<MessageUpdateEvent>(
-            filterPredicate = { it.data.channelId.value == persistentChannelId }
+            filterPredicate = { it.data.channelId.value == getPersistentChannelId() }
         ) { event ->
             val domainPartialData = event.data.toDomain()
             val mergedData = messages[domainPartialData.id]?.mergeWith(domainPartialData)
@@ -93,15 +93,16 @@ class ChatViewModel(
                 messages[domainPartialData.id] = mergedData
             }
         }
-
         gateway.onEvent<MessageDeleteEvent>(
-            filterPredicate = { it.data.channelId.value == persistentChannelId }
+            filterPredicate = { it.data.channelId.value == getPersistentChannelId() }
         ) { event ->
             messages.remove(event.data.messageId.value)
         }
 
-        if (persistentChannelId != 0UL) {
-            load()
+        viewModelScope.launch {
+            if (getPersistentChannelId() != 0UL) {
+                load()
+            }
         }
     }
 

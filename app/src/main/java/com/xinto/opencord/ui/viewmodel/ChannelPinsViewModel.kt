@@ -30,7 +30,7 @@ class ChannelPinsViewModel(
         viewModelScope.launch {
             try {
                 state = State.Loading
-                val pinnedMessages = repository.getChannelPins(persistentChannelId)
+                val pinnedMessages = repository.getChannelPins(getPersistentChannelId())
                 pins.clear()
                 pins.putAll(pinnedMessages)
                 state = State.Loaded
