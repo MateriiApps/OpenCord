@@ -30,7 +30,7 @@ fun WidgetCategory(
     onClick: () -> Unit,
 ) {
     val iconRotation = animateFloatAsState(
-        targetValue = if (collapsed) 0f else 90f,
+        targetValue = if (collapsed) -90f else 0f,
         animationSpec = spring(
             dampingRatio = Spring.DampingRatioMediumBouncy,
             stiffness = Spring.StiffnessLow
@@ -53,10 +53,10 @@ fun WidgetCategory(
                 LocalTextStyle provides MaterialTheme.typography.labelMedium
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_collapsed_category),
+                    painter = painterResource(R.drawable.ic_keyboard_arrow_down),
                     contentDescription = "Collapse category",
                     modifier = Modifier
-                        .size(16.dp)
+                        .size(18.dp)
                         .rotate(iconRotation.value)
                 )
                 Text(title.uppercase(Locale.getDefault()))
