@@ -366,8 +366,11 @@ private fun ChannelsListLoaded(
 
             if (category != null) item {
                 WidgetCategory(
+                    modifier = Modifier.padding(
+                        top = 12.dp,
+                        bottom = 4.dp
+                    ),
                     title = category.name,
-                    modifier = Modifier.padding(4.dp),
                     collapsed = collapsed,
                     onClick = {
                         onCategoryClick(category.id)
