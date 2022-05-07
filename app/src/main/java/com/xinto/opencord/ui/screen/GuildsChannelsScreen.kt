@@ -16,6 +16,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -372,19 +373,21 @@ private fun ChannelsListLoaded(
                         3 to true -> R.drawable.ic_guild_badge_premium_tier_3_banner
                         else -> null
                     }
-                    if (boostIcon != null) Icon(
-                        painter = painterResource(id = boostIcon),
-                        contentDescription = "Server boost level icon",
-                        modifier = Modifier.size(18.dp),
-                        tint = Color.Unspecified,
-                    )
+                    if (boostIcon != null) {
+                        Icon(
+                            painter = painterResource(id = boostIcon),
+                            contentDescription = "Server boost level icon",
+                            modifier = Modifier.size(20.dp),
+                            tint = Color.Unspecified,
+                        )
+                    }
                     Text(
-                        guildName,
+                        text = guildName,
                         fontWeight = FontWeight.SemiBold,
                         style = MaterialTheme.typography.titleLarge.copy(
                             shadow = Shadow(
                                 color = Color.Black,
-                                offset = Offset(0f, 6f),
+                                offset = Offset(0f, 5f),
                                 blurRadius = 3f,
                             )
                         ),
