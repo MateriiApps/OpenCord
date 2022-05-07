@@ -16,6 +16,9 @@ data class ApiLogin(
 
     @SerialName("captcha_sitekey")
     val captchaSiteKey: String? = null,
+
+    @SerialName("ticket")
+    val ticket: String? = null,
 )
 
 @Serializable

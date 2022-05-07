@@ -2,6 +2,7 @@ package com.xinto.opencord.rest.service
 
 import com.xinto.opencord.BuildConfig
 import com.xinto.opencord.rest.body.LoginBody
+import com.xinto.opencord.rest.body.TwoFactorBody
 import com.xinto.opencord.rest.dto.ApiLogin
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -12,6 +13,8 @@ import kotlinx.coroutines.withContext
 interface DiscordAuthService {
 
     suspend fun login(body: LoginBody): ApiLogin
+
+    suspend fun verifyTwoFactor(body: TwoFactorBody): ApiLogin
 
 }
 
@@ -28,11 +31,24 @@ class DiscordAuthServiceImpl(
         }
     }
 
+    override suspend fun verifyTwoFactor(body: TwoFactorBody): ApiLogin {
+        val url = getTwoFactorUrl()
+        return withContext(Dispatchers.IO) {
+            client.post(url) {
+                setBody(body)
+            }.body()
+        }
+    }
+
     private companion object {
         const val BASE = BuildConfig.URL_API
 
         fun getLoginUrl(): String {
             return "$BASE/auth/login"
+        }
+
+        fun getTwoFactorUrl(): String {
+            return "$BASE/auth/mfa/totp"
         }
     }
 
