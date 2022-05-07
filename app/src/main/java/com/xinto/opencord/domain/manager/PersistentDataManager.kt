@@ -7,6 +7,8 @@ interface PersistentDataManager {
     var persistentGuildId: ULong
     var persistentChannelId: ULong
     var collapsedCategories: List<ULong>
+    fun addCollapsedCategory(id: ULong)
+    fun removeCollapsedCategory(id: ULong)
 }
 
 class PersistentDataManagerImpl(
@@ -25,15 +27,22 @@ class PersistentDataManagerImpl(
         }
 
     override var collapsedCategories: List<ULong>
-        get() = getString(COLLAPSED_CATEGORIES_ID_KEY, "")!!
-            .split(',')
+        get() = getStringSet(COLLAPSED_CATEGORIES_ID_KEY, emptySet())!!
             .mapNotNull { it.toULongOrNull() }
         set(value) {
-            putString(
+            putStringSet(
                 COLLAPSED_CATEGORIES_ID_KEY,
-                value.joinToString(",") { it.toString() }
+                value.map { it.toString() }.toSet()
             )
         }
+
+    override fun addCollapsedCategory(id: ULong) {
+        collapsedCategories = collapsedCategories + id
+    }
+
+    override fun removeCollapsedCategory(id: ULong) {
+        collapsedCategories = collapsedCategories - id
+    }
 
     companion object {
         const val CURRENT_GUILD_ID_KEY = "current_guild_id"
