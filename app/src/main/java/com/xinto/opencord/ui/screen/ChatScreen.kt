@@ -164,7 +164,10 @@ private fun ChatScreenLoaded(
                         WidgetMessageAuthor(
                             author = message.author.username,
                             timestamp = message.formattedTimestamp,
-                            edited = message.isEdited
+                            edited = message.isEdited,
+                            onAuthorClick = {
+                                onUserMessageUpdate("$userMessage${message.author.formattedMention} ")
+                            },
                         )
                     },
                     content = message.contentNodes.ifEmpty { null }?.letComposable { nodes ->
