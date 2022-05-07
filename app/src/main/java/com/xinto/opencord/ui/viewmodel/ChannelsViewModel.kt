@@ -38,6 +38,9 @@ class ChannelsViewModel(
     var selectedChannelId by mutableStateOf(0UL)
         private set
 
+    var collapsedCategories = mutableStateListOf<ULong>()
+        private set
+
     fun load() {
         viewModelScope.launch {
             try {
@@ -61,6 +64,13 @@ class ChannelsViewModel(
         persistentChannelId = channelId
     }
 
+    fun toggleCategory(categoryId: ULong) {
+        if (!collapsedCategories.remove(categoryId))
+            collapsedCategories.add(categoryId)
+
+        persistentCollapsedCategories = collapsedCategories
+    }
+
     init {
         if (persistentGuildId != 0UL) {
             load()
@@ -68,6 +78,7 @@ class ChannelsViewModel(
         if (persistentChannelId != 0UL) {
             selectedChannelId = persistentDataManager.persistentChannelId
         }
+        collapsedCategories.addAll(persistentDataManager.collapsedCategories)
         gateway.onEvent<ChannelCreateEvent>(
             filterPredicate = { it.data.guildId?.value == persistentGuildId }
         ) {

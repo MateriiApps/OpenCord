@@ -4,17 +4,14 @@ import android.content.SharedPreferences
 import com.xinto.opencord.domain.manager.base.BasePreferenceManager
 
 interface PersistentDataManager {
-
     var persistentGuildId: ULong
-
     var persistentChannelId: ULong
-
+    var collapsedCategories: List<ULong>
 }
 
 class PersistentDataManagerImpl(
     persistentPrefs: SharedPreferences
 ) : BasePreferenceManager(persistentPrefs), PersistentDataManager {
-
     override var persistentGuildId: ULong
         get() = getLong(CURRENT_GUILD_ID_KEY, CURRENT_GUILD_ID_DEFAULT).toULong()
         set(value) {
@@ -27,11 +24,24 @@ class PersistentDataManagerImpl(
             putLong(CURRENT_CHANNEL_ID_KEY, value.toLong())
         }
 
+    override var collapsedCategories: List<ULong>
+        get() = getString(COLLAPSED_CATEGORIES_ID_KEY, "")!!
+            .split(',')
+            .mapNotNull { it.toULongOrNull() }
+        set(value) {
+            putString(
+                COLLAPSED_CATEGORIES_ID_KEY,
+                value.joinToString(",") { it.toString() }
+            )
+        }
+
     companion object {
         const val CURRENT_GUILD_ID_KEY = "current_guild_id"
         const val CURRENT_GUILD_ID_DEFAULT = 0L
 
         const val CURRENT_CHANNEL_ID_KEY = "current_channel_id"
         const val CURRENT_CHANNEL_ID_DEFAULT = 0L
+
+        const val COLLAPSED_CATEGORIES_ID_KEY = "collapsed_categories"
     }
 }

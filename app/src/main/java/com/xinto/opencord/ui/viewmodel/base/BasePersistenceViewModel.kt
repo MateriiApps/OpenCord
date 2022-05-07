@@ -19,4 +19,21 @@ abstract class BasePersistenceViewModel(
             persistentDataManager.persistentChannelId = value
         }
 
+    // TODO: once everything's in a DB, this could be transformed into Map<guild, List<collapsedCategories>>
+    protected var persistentCollapsedCategories
+        get() = persistentDataManager.collapsedCategories
+        set(value) {
+            persistentDataManager.collapsedCategories = value
+        }
+
+    protected fun setCategoryCollapsed(categoryId: ULong, collapsed: Boolean) {
+        val categories = persistentDataManager.collapsedCategories.toMutableList()
+
+        if (!collapsed)
+            categories.remove(categoryId)
+        else if (!categories.contains(categoryId))
+            categories.add(categoryId)
+
+        persistentDataManager.collapsedCategories = categories
+    }
 }
