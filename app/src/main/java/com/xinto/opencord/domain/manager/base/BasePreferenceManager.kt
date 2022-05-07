@@ -23,6 +23,10 @@ abstract class BasePreferenceManager(
         return prefs.getInt(key, defaultValue)
     }
 
+    protected fun getStringSet(key: String, defaultValue: Set<String>): Set<String>? {
+        return prefs.getStringSet(key, defaultValue)
+    }
+
     protected fun putString(key: String, value: String?) {
         return prefs.edit { putString(key, value) }
     }
@@ -37,6 +41,10 @@ abstract class BasePreferenceManager(
 
     protected fun putInt(key: String, value: Int) {
         return prefs.edit { putInt(key, value) }
+    }
+
+    protected fun putStringSet(key: String, value: Set<String>) {
+        prefs.edit { putStringSet(key, value) }
     }
 
 }

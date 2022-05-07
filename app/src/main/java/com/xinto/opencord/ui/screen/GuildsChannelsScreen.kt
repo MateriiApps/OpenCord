@@ -128,9 +128,13 @@ private fun ChannelsList(
                             viewModel.selectChannel(it)
                             onChannelSelect()
                         },
+                        onCategoryClick = {
+                            viewModel.toggleCategory(it)
+                        },
                         bannerUrl = viewModel.guildBannerUrl,
                         guildName = viewModel.guildName,
                         channels = viewModel.channels.values.toList(),
+                        collapsedCategories = viewModel.collapsedCategories,
                         selectedChannelId = viewModel.selectedChannelId
                     )
                 }
@@ -303,10 +307,12 @@ private fun ChannelsListLoading(
 @Composable
 private fun ChannelsListLoaded(
     onChannelSelect: (ULong) -> Unit,
+    onCategoryClick: (ULong) -> Unit,
     selectedChannelId: ULong,
     bannerUrl: String?,
     guildName: String,
     channels: List<DomainChannel>,
+    collapsedCategories: List<ULong>,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -356,24 +362,29 @@ private fun ChannelsListLoaded(
             }
         }
         for ((category, categoryChannels) in getSortedChannels(channels)) {
-            if (category != null) {
-                item {
-                    WidgetCategory(
-                        modifier = Modifier.padding(
-                            start = 6.dp,
-                            top = 12.dp,
-                            bottom = 4.dp
-                        ),
-                        title = category.name
-                    )
-                }
+            val collapsed = collapsedCategories.contains(category?.id)
+
+            if (category != null) item {
+                WidgetCategory(
+                    modifier = Modifier.padding(
+                        top = 12.dp,
+                        bottom = 4.dp
+                    ),
+                    title = category.name,
+                    collapsed = collapsed,
+                    onClick = {
+                        onCategoryClick(category.id)
+                    },
+                )
             }
+
             items(categoryChannels) { channel ->
 //                if (channel.canView) {
+                if (!(channel.id != selectedChannelId && collapsed)) {
                     when (channel) {
                         is DomainChannel.TextChannel -> {
                             WidgetChannelListItem(
-                                modifier = Modifier.padding(vertical = 2.dp),
+                                modifier = Modifier.padding(bottom = 2.dp),
                                 title = channel.name,
                                 painter = painterResource(R.drawable.ic_tag),
                                 selected = selectedChannelId == channel.id,
@@ -385,19 +396,17 @@ private fun ChannelsListLoaded(
                         }
                         is DomainChannel.VoiceChannel -> {
                             WidgetChannelListItem(
-                                modifier = Modifier.padding(vertical = 2.dp),
+                                modifier = Modifier.padding(bottom = 2.dp),
                                 title = channel.name,
                                 painter = painterResource(R.drawable.ic_volume_up),
                                 selected = false,
                                 showIndicator = false,
-                                onClick = {
-
-                                },
+                                onClick = { /*TODO*/ },
                             )
                         }
                         else -> Unit
                     }
-//                }
+                }
             }
         }
     }
