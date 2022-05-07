@@ -13,4 +13,6 @@ sealed interface DomainLogin {
 
     data class TwoFactorAuth(val ticket: String) : DomainLogin
 
+    object Error : DomainLogin
+
 }

@@ -107,7 +107,7 @@ fun LoginScreen(
     if (viewModel.showCaptcha) {
         HCaptcha
             .getClient(context)
-            .verifyWithHCaptcha(viewModel.captchaSiteKey!!)
+            .verifyWithHCaptcha(viewModel.captchaSiteKey)
             .addOnSuccessListener {
                 viewModel.login(it.tokenResult)
             }

@@ -19,27 +19,31 @@ class LoginViewModel(
     private val accountManager: AccountManager,
 ) : ViewModel() {
 
-    var captchaSiteKey: String? = null
+    lateinit var captchaSiteKey: String
         private set
-    private var mfaTicket: String? = null
+
+    private lateinit var mfaTicket: String
 
     var isLoading by mutableStateOf(false)
         private set
-    var showCaptcha by mutableStateOf(false)
-        private set
-    var showMFA by mutableStateOf(false)
-        private set
-    var usernameError by mutableStateOf(false)
-        private set
-    var passwordError by mutableStateOf(false)
-        private set
-    var mfaError by mutableStateOf(false)
-        private set
+
     var username by mutableStateOf("")
         private set
     var password by mutableStateOf("")
         private set
     var mfaCode by mutableStateOf("")
+        private set
+
+    var showCaptcha by mutableStateOf(false)
+        private set
+    var showMFA by mutableStateOf(false)
+        private set
+
+    var usernameError by mutableStateOf(false)
+        private set
+    var passwordError by mutableStateOf(false)
+        private set
+    var mfaError by mutableStateOf(false)
         private set
 
     fun login(captchaToken: String? = null) {
@@ -78,6 +82,10 @@ class LoginViewModel(
                         captchaSiteKey = response.captchaSiteKey
                         showCaptcha = true
                     }
+                    is DomainLogin.Error -> {
+                        usernameError = true
+                        passwordError = true
+                    }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -92,14 +100,15 @@ class LoginViewModel(
                 return@launch
             }
 
-            if (mfaTicket == null) {
-                mfaError = true
-                return@launch
-            }
-
             try {
                 showMFA = false
-                when (val response = repository.verifyTwoFactor(TwoFactorBody(code, mfaTicket!!))) {
+                val response = repository.verifyTwoFactor(
+                    TwoFactorBody(
+                        code = code,
+                        ticket = mfaTicket
+                    )
+                )
+                when (response) {
                     is DomainLogin.Login -> {
                         activityManager.startMainActivity()
                         accountManager.currentAccountToken = response.token
@@ -107,6 +116,10 @@ class LoginViewModel(
                     is DomainLogin.Captcha -> {
                         captchaSiteKey = response.captchaSiteKey
                         showCaptcha = true
+                    }
+                    is DomainLogin.Error -> {
+                        mfaCode = ""
+                        mfaError = true
                     }
                     else -> {}
                 }
