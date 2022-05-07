@@ -9,5 +9,5 @@ data class TwoFactorBody(
     val code: String,
 
     @SerialName("ticket")
-    val password: String,
+    val ticket: String,
 )
