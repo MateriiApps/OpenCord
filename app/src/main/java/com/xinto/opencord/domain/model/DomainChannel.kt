@@ -1,7 +1,6 @@
 package com.xinto.opencord.domain.model
 
-sealed class DomainChannel : Comparable<DomainChannel> {
-
+sealed class DomainChannel : Comparable<DomainChannel>, Mentionable {
     abstract val id: ULong
     abstract val guildId: ULong?
     abstract val name: String
@@ -14,6 +13,9 @@ sealed class DomainChannel : Comparable<DomainChannel> {
 
     val canSendMessages
         get() = permissions.contains(DomainPermission.SEND_MESSAGES)
+
+    override val formattedMention
+        get() = "<#$id>"
 
     data class TextChannel(
         override val id: ULong,
