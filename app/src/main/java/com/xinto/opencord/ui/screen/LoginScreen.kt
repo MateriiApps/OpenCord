@@ -1,7 +1,6 @@
 package com.xinto.opencord.ui.screen
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.LocalContentAlpha
@@ -17,9 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.hcaptcha.sdk.HCaptcha
 import com.xinto.opencord.R
 import com.xinto.opencord.ui.viewmodel.LoginViewModel
@@ -117,34 +114,28 @@ fun LoginScreen(
     }
 
     if (viewModel.showMFA) {
-        AlertDialog(title = {Column {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    textAlign = TextAlign.Center,
-                    fontSize = 22.sp,
-                    text = "2FA Required"
-                )
-            }
-        }}, text = {Column {
-            OutlinedTextField(value = viewModel.mfaCode, label = {
-                Text(
-                    text = "Two factor code",
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
+        AlertDialog(
+            title = { Text(stringResource(R.string.login_mfa_title)) },
+            text = {
+                OutlinedTextField(
+                    modifier = Modifier.padding(8.dp),
+                    value = viewModel.mfaCode,
+                    onValueChange = viewModel::updateMFACode,
+                    label = { Text(stringResource(R.string.login_mfa_code)) },
+                    singleLine = true,
+                    isError = viewModel.mfaError,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number
+                    )
                 )
             },
-                onValueChange = viewModel::updateMFACode, modifier = Modifier.padding(8.dp),
-                shape = RoundedCornerShape(16.dp), singleLine = true, isError = viewModel.mfaError
-            )
-        }}, onDismissRequest = { /*TODO*/ }, confirmButton = {Button(
-            onClick = {
-                viewModel.verifyTwoFactor(viewModel.mfaCode)
+            onDismissRequest = {},
+            confirmButton = {
+                Button(onClick = { viewModel.verifyTwoFactor(viewModel.mfaCode) }) {
+                    Text(stringResource(R.string.login_mfa_confirm))
+                }
             }
-        ) {
-            Text("Confirm")
-        }})
+        )
     }
 }
 
