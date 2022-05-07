@@ -12,8 +12,11 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -132,6 +135,7 @@ private fun ChannelsList(
                             viewModel.toggleCategory(it)
                         },
                         bannerUrl = viewModel.guildBannerUrl,
+                        boostLevel = viewModel.guildBoostLevel,
                         guildName = viewModel.guildName,
                         channels = viewModel.channels.values.toList(),
                         collapsedCategories = viewModel.collapsedCategories,
@@ -310,6 +314,7 @@ private fun ChannelsListLoaded(
     onCategoryClick: (ULong) -> Unit,
     selectedChannelId: ULong,
     bannerUrl: String?,
+    boostLevel: Int,
     guildName: String,
     channels: List<DomainChannel>,
     collapsedCategories: List<ULong>,
@@ -350,13 +355,42 @@ private fun ChannelsListLoaded(
                             )
                     )
                 }
-                ProvideTextStyle(MaterialTheme.typography.titleLarge) {
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.TopStart)
+                        .padding(14.dp)
+                ) {
+                    val boostIcon = when (boostLevel to (bannerUrl != null)) {
+                        1 to false -> R.drawable.ic_guild_badge_premium_tier_1
+                        1 to true -> R.drawable.ic_guild_badge_premium_tier_1_banner
+                        2 to false -> R.drawable.ic_guild_badge_premium_tier_2
+                        2 to true -> R.drawable.ic_guild_badge_premium_tier_2_banner
+                        3 to false -> R.drawable.ic_guild_badge_premium_tier_3
+                        3 to true -> R.drawable.ic_guild_badge_premium_tier_3_banner
+                        else -> null
+                    }
+                    if (boostIcon != null) {
+                        Icon(
+                            painter = painterResource(id = boostIcon),
+                            contentDescription = "Server boost level icon",
+                            modifier = Modifier.size(20.dp),
+                            tint = Color.Unspecified,
+                        )
+                    }
                     Text(
-                        modifier = Modifier
-                            .align(Alignment.TopStart)
-                            .padding(12.dp),
                         text = guildName,
                         fontWeight = FontWeight.SemiBold,
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            shadow = Shadow(
+                                color = Color.Black,
+                                offset = Offset(0f, 5f),
+                                blurRadius = 3f,
+                            )
+                        ),
                     )
                 }
             }

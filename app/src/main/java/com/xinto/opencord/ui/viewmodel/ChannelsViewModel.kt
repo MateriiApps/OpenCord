@@ -35,6 +35,8 @@ class ChannelsViewModel(
         private set
     var guildBannerUrl by mutableStateOf<String?>(null)
         private set
+    var guildBoostLevel by mutableStateOf(0)
+
     var selectedChannelId by mutableStateOf(0UL)
         private set
     val collapsedCategories = mutableStateListOf<ULong>()
@@ -49,6 +51,7 @@ class ChannelsViewModel(
                 channels.putAll(guildChannels)
                 guildName = guild.name
                 guildBannerUrl = guild.bannerUrl
+                guildBoostLevel = guild.premiumTier
                 state = State.Loaded
             } catch (e: Exception) {
                 state = State.Error
@@ -100,5 +103,4 @@ class ChannelsViewModel(
             channels.remove(domainData.id)
         }
     }
-
 }

@@ -89,7 +89,9 @@ fun ApiGuild.toDomain(): DomainGuild {
         name = name,
         iconUrl = iconUrl,
         bannerUrl = bannerUrl,
-        permissions = permissions.toDomain()
+        permissions = permissions.toDomain(),
+        premiumTier = premiumTier,
+        premiumSubscriptionCount = premiumSubscriptionCount ?: 0,
     )
 }
 
