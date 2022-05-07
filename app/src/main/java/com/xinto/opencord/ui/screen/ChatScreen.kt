@@ -166,7 +166,7 @@ private fun ChatScreenLoaded(
                             timestamp = message.formattedTimestamp,
                             edited = message.isEdited,
                             onAuthorClick = {
-                                onUserMessageUpdate(userMessage + message.author.formattedMention)
+                                onUserMessageUpdate("$userMessage${message.author.formattedMention} ")
                             },
                         )
                     },
