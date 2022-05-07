@@ -2,13 +2,13 @@ package com.xinto.opencord.ui.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -16,12 +16,12 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.xinto.bdc.BottomSheetDialog
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainChannel
 import com.xinto.opencord.domain.model.DomainGuild
@@ -157,9 +157,11 @@ private fun CurrentUserItem(
     viewModel: CurrentUserViewModel = getViewModel()
 ) {
     val userIcon = rememberOCCoilPainter(viewModel.avatarUrl)
+    var showStatusSheet by remember { mutableStateOf(false) }
+
     Surface(
         modifier = modifier,
-        onClick = { /*TODO*/ },
+        onClick = { showStatusSheet = true },
         shape = MaterialTheme.shapes.medium,
         tonalElevation = 1.dp
     ) {
@@ -201,6 +203,78 @@ private fun CurrentUserItem(
                         painter = painterResource(R.drawable.ic_settings),
                         contentDescription = null
                     )
+                }
+            }
+        }
+    }
+
+    if (showStatusSheet) StatusSheet(
+        onClose = { showStatusSheet = false }
+    )
+}
+
+@Composable
+private fun StatusSheet(
+    onClose: () -> Unit
+) {
+    BottomSheetDialog(onDismissRequest = onClose) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(20.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(IntrinsicSize.Min)
+                .background(MaterialTheme.colorScheme.background)
+                .padding(horizontal = 20.dp, vertical = 38.dp),
+        ) {
+            ProvideTextStyle(MaterialTheme.typography.labelLarge) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(
+                        12.dp,
+                        Alignment.CenterHorizontally
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 4.dp),
+                ) {
+                    val statuses = arrayOf(
+                        R.drawable.ic_status_online,
+                        R.drawable.ic_status_idle,
+                        R.drawable.ic_status_dnd,
+                        R.drawable.ic_status_invisible,
+                    )
+                    for (status in statuses) Icon(
+                        painter = painterResource(status),
+                        contentDescription = null,
+                        tint = Color.Unspecified,
+                        modifier = Modifier
+                            .size(35.dp)
+                            .clickable { /*TODO*/ },
+                    )
+                }
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier.clickable { /*TODO*/ }
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_set_custom_status),
+                        contentDescription = null,
+                        tint = Color.Unspecified,
+                        modifier = Modifier.size(25.dp),
+                    )
+                    Text("Set a custom status")
+                }
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier.clickable { /*TODO*/ }
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_account_switch),
+                        contentDescription = null,
+                        modifier = Modifier.size(25.dp),
+                    )
+                    Text("Switch Accounts")
                 }
             }
         }
