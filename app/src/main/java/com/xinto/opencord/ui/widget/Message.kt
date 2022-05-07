@@ -1,6 +1,7 @@
 package com.xinto.opencord.ui.widget
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.InlineTextContent
@@ -94,6 +95,7 @@ fun WidgetMessageAuthor(
     timestamp: String,
     edited: Boolean,
     modifier: Modifier = Modifier,
+    onAuthorClick: (() -> Unit)? = null,
 ) {
     Row(
         modifier = modifier,
@@ -101,7 +103,12 @@ fun WidgetMessageAuthor(
         verticalAlignment = Alignment.CenterVertically
     ) {
         ProvideTextStyle(MaterialTheme.typography.labelLarge) {
-            Text(author)
+            Text(
+                author,
+                modifier = Modifier.clickable {
+                    onAuthorClick?.invoke()
+                }
+            )
         }
         CompositionLocalProvider(
             LocalContentColor provides LocalContentColor.current.copy(alpha = 0.7f)

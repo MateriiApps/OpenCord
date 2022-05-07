@@ -6,7 +6,13 @@ data class DomainUser(
     val discriminator: String,
     val avatarUrl: String,
     val bot: Boolean = false,
-) {
-    val formattedDiscriminator = "#$discriminator"
-    val tag = "$username$formattedDiscriminator"
+) : Mentionable {
+    val tag: String
+        get() = "$username$formattedDiscriminator"
+
+    val formattedDiscriminator: String
+        get() = "#$discriminator"
+
+    override val formattedMention: String
+        get() = "<@$id>"
 }
