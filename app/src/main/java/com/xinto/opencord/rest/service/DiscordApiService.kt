@@ -7,6 +7,7 @@ import com.xinto.opencord.gateway.event.MessageCreateEvent
 import com.xinto.opencord.gateway.event.MessageDeleteEvent
 import com.xinto.opencord.gateway.event.MessageUpdateEvent
 import com.xinto.opencord.gateway.onEvent
+import com.xinto.opencord.rest.body.CurrentUserSettingsBody
 import com.xinto.opencord.rest.body.MessageBody
 import com.xinto.opencord.rest.dto.*
 import io.ktor.client.*
@@ -16,28 +17,24 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 interface DiscordApiService {
-
     suspend fun getMeGuilds(): List<ApiMeGuild>
-
     suspend fun getGuild(guildId: ULong): ApiGuild
-
     suspend fun getGuildChannels(guildId: ULong): Map<ApiSnowflake, ApiChannel>
 
     suspend fun getChannel(channelId: ULong): ApiChannel
-
     suspend fun getChannelMessages(channelId: ULong): Map<ApiSnowflake, ApiMessage>
-
     suspend fun getChannelPins(channelId: ULong): Map<ApiSnowflake, ApiMessage>
 
     suspend fun postChannelMessage(channelId: ULong, body: MessageBody)
 
+    suspend fun getUserSettings(): CurrentUserSettingsBody
+    suspend fun setUserSettings(settings: CurrentUserSettingsBody): CurrentUserSettingsBody
 }
 
 class DiscordApiServiceImpl(
     gateway: DiscordGateway,
     private val client: HttpClient
 ) : DiscordApiService {
-
     private val cachedMeGuilds = mutableListOf<ApiMeGuild>()
 
     private val cachedGuildById = mutableMapOf<ULong, ApiGuild>()
@@ -121,6 +118,21 @@ class DiscordApiServiceImpl(
         }
     }
 
+    override suspend fun getUserSettings(): CurrentUserSettingsBody {
+        return withContext(Dispatchers.IO) {
+            client.post(getCurrentUserSettingsUrl()).body()
+        }
+    }
+
+    // TODO: accept a partial
+    override suspend fun setUserSettings(settings: CurrentUserSettingsBody): CurrentUserSettingsBody {
+        return withContext(Dispatchers.IO) {
+            client.patch(getCurrentUserSettingsUrl()) {
+                setBody(settings)
+            }.body()
+        }
+    }
+
     init {
         gateway.onEvent<MessageCreateEvent> {
             val data = it.data
@@ -176,6 +188,9 @@ class DiscordApiServiceImpl(
             val channelUrl = getChannelUrl(channelId)
             return "$channelUrl/pins"
         }
-    }
 
+        fun getCurrentUserSettingsUrl(): String {
+            return "$BASE/users/@me/settings"
+        }
+    }
 }
