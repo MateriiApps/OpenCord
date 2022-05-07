@@ -11,4 +11,6 @@ sealed interface DomainLogin {
 
     data class Captcha(val captchaSiteKey: String) : DomainLogin
 
+    data class TwoFactorAuth(val ticket: String) : DomainLogin
+
 }

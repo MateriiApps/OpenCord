@@ -8,6 +8,10 @@ fun ApiLogin.toDomain(): DomainLogin {
         DomainLogin.Captcha(
             captchaSiteKey = captchaSiteKey
         )
+    } else if (ticket != null) {
+        DomainLogin.TwoFactorAuth(
+            ticket = ticket
+        )
     } else {
         DomainLogin.Login(
             token = token!!,

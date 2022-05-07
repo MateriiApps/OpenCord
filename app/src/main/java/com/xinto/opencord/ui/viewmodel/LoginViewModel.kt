@@ -10,6 +10,7 @@ import com.xinto.opencord.domain.manager.ActivityManager
 import com.xinto.opencord.domain.model.DomainLogin
 import com.xinto.opencord.domain.repository.DiscordAuthRepository
 import com.xinto.opencord.rest.body.LoginBody
+import com.xinto.opencord.rest.body.TwoFactorBody
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
@@ -20,18 +21,25 @@ class LoginViewModel(
 
     var captchaSiteKey: String? = null
         private set
+    private var mfaTicket: String? = null
 
     var isLoading by mutableStateOf(false)
         private set
     var showCaptcha by mutableStateOf(false)
         private set
+    var showMFA by mutableStateOf(false)
+        private set
     var usernameError by mutableStateOf(false)
         private set
     var passwordError by mutableStateOf(false)
         private set
+    var mfaError by mutableStateOf(false)
+        private set
     var username by mutableStateOf("")
         private set
     var password by mutableStateOf("")
+        private set
+    var mfaCode by mutableStateOf("")
         private set
 
     fun login(captchaToken: String? = null) {
@@ -56,7 +64,42 @@ class LoginViewModel(
                         captchaKey = captchaToken
                     )
                 )
+
                 when (response) {
+                    is DomainLogin.Login -> {
+                        activityManager.startMainActivity()
+                        accountManager.currentAccountToken = response.token
+                    }
+                    is DomainLogin.TwoFactorAuth -> {
+                        mfaTicket = response.ticket
+                        showMFA = true
+                    }
+                    is DomainLogin.Captcha -> {
+                        captchaSiteKey = response.captchaSiteKey
+                        showCaptcha = true
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun verifyTwoFactor(code: String) {
+        viewModelScope.launch {
+            if (code.isEmpty()) {
+                mfaError = true
+                return@launch
+            }
+
+            if (mfaTicket == null) {
+                mfaError = true
+                return@launch
+            }
+
+            try {
+                showMFA = false
+                when (val response = repository.verifyTwoFactor(TwoFactorBody(code, mfaTicket!!))) {
                     is DomainLogin.Login -> {
                         activityManager.startMainActivity()
                         accountManager.currentAccountToken = response.token
@@ -65,6 +108,7 @@ class LoginViewModel(
                         captchaSiteKey = response.captchaSiteKey
                         showCaptcha = true
                     }
+                    else -> {}
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -80,5 +124,9 @@ class LoginViewModel(
     fun updatePassword(newPassword: String) {
         password = newPassword
         passwordError = false
+    }
+
+    fun updateMFACode(newMFACode: String) {
+        mfaCode = newMFACode
     }
 }
