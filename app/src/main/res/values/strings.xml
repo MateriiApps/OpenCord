@@ -12,6 +12,7 @@
     <string name="login_mfa_title">2FA Required!</string>
     <string name="login_mfa_code">Code</string>
     <string name="login_mfa_confirm">Confirm</string>
+    <string name="login_mfa_cancel">Cancel</string>
 
     <string name="chat_title">#%1$s</string>
     <string name="chat_unselected_message">Please select a channel.</string>

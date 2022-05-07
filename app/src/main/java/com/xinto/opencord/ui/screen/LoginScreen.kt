@@ -113,14 +113,14 @@ fun LoginScreen(
             }
     }
 
-    if (viewModel.showMFA) {
+    if (viewModel.showMfa) {
         AlertDialog(
             title = { Text(stringResource(R.string.login_mfa_title)) },
             text = {
                 OutlinedTextField(
                     modifier = Modifier.padding(8.dp),
                     value = viewModel.mfaCode,
-                    onValueChange = viewModel::updateMFACode,
+                    onValueChange = viewModel::updateMfaCode,
                     label = { Text(stringResource(R.string.login_mfa_code)) },
                     singleLine = true,
                     isError = viewModel.mfaError,
@@ -129,10 +129,15 @@ fun LoginScreen(
                     )
                 )
             },
-            onDismissRequest = {},
+            onDismissRequest = viewModel::dismissMfa,
             confirmButton = {
                 Button(onClick = { viewModel.verifyTwoFactor(viewModel.mfaCode) }) {
                     Text(stringResource(R.string.login_mfa_confirm))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = viewModel::dismissMfa) {
+                    Text(stringResource(R.string.login_mfa_cancel))
                 }
             }
         )

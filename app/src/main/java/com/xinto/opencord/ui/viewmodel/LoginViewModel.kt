@@ -21,8 +21,8 @@ class LoginViewModel(
 
     lateinit var captchaSiteKey: String
         private set
-
-    private lateinit var mfaTicket: String
+    lateinit var mfaTicket: String
+        private set
 
     var isLoading by mutableStateOf(false)
         private set
@@ -36,7 +36,7 @@ class LoginViewModel(
 
     var showCaptcha by mutableStateOf(false)
         private set
-    var showMFA by mutableStateOf(false)
+    var showMfa by mutableStateOf(false)
         private set
 
     var usernameError by mutableStateOf(false)
@@ -76,7 +76,7 @@ class LoginViewModel(
                     }
                     is DomainLogin.TwoFactorAuth -> {
                         mfaTicket = response.ticket
-                        showMFA = true
+                        showMfa = true
                     }
                     is DomainLogin.Captcha -> {
                         captchaSiteKey = response.captchaSiteKey
@@ -101,7 +101,7 @@ class LoginViewModel(
             }
 
             try {
-                showMFA = false
+                showMfa = false
                 val response = repository.verifyTwoFactor(
                     TwoFactorBody(
                         code = code,
@@ -118,7 +118,6 @@ class LoginViewModel(
                         showCaptcha = true
                     }
                     is DomainLogin.Error -> {
-                        mfaCode = ""
                         mfaError = true
                     }
                     else -> {}
@@ -139,7 +138,12 @@ class LoginViewModel(
         passwordError = false
     }
 
-    fun updateMFACode(newMFACode: String) {
-        mfaCode = newMFACode
+    fun updateMfaCode(newMFACode: String) {
+        mfaCode = newMFACode.filter { it.isDigit() }
+    }
+
+    fun dismissMfa() {
+        mfaCode = ""
+        showMfa = false
     }
 }
