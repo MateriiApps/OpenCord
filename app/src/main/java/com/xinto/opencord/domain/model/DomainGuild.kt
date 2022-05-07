@@ -6,6 +6,15 @@ data class DomainGuild(
     val iconUrl: String?,
     val bannerUrl: String?,
     val permissions: List<DomainPermission>,
+    val premiumTier: Int,
+    val premiumSubscriptionCount: Int,
 ) {
-    val iconText = name.split("""\s+""".toRegex()).map { it[0] }.joinToString()
+    val iconText = name
+        .split(ICON_TEXT_REGEX)
+        .map { it[0] }
+        .joinToString()
+
+    companion object {
+        val ICON_TEXT_REGEX = """\s+""".toRegex()
+    }
 }

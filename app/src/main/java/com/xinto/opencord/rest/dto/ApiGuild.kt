@@ -18,5 +18,11 @@ data class ApiGuild(
     val banner: String? = null,
 
     @SerialName("permissions")
-    val permissions: ApiPermissions = ApiPermissions(0)
+    val permissions: ApiPermissions = ApiPermissions(0),
+
+    @SerialName("premium_tier")
+    val premiumTier: Int,
+
+    @SerialName("premium_subscription_count")
+    val premiumSubscriptionCount: Int? = null
 )
