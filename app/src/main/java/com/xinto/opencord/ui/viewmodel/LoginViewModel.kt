@@ -139,7 +139,7 @@ class LoginViewModel(
     }
 
     fun updateMfaCode(newMFACode: String) {
-        mfaCode = newMFACode.filter { it.isDigit() }
+        mfaCode = newMFACode
     }
 
     fun dismissMfa() {
