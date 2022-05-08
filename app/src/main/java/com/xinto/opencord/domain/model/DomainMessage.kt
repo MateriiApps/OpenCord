@@ -7,20 +7,37 @@ import kotlinx.datetime.Instant
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
+sealed class DomainMessage {
+    abstract val id: ULong
+    abstract val channelId: ULong
+    abstract val timestamp: Instant
+    abstract val content: String
+    abstract val author: DomainUser
+
+    val formattedTimestamp by lazy { Timestamp.getFormattedTimestamp(timestamp) }
+}
+
 @Partial
-data class DomainMessage(
-    val id: ULong,
-    val channelId: ULong,
-    val timestamp: Instant,
+data class DomainMessageRegular(
+    override val id: ULong,
+    override val channelId: ULong,
+    override val timestamp: Instant,
+    override val content: String,
+    override val author: DomainUser,
     val editedTimestamp: Instant?,
-    val content: String,
-    val author: DomainUser,
     val attachments: List<DomainAttachment>,
     val embeds: List<DomainEmbed>
-): KoinComponent {
+): DomainMessage(), KoinComponent {
     private val parser: SimpleAstParser = get()
 
-    val formattedTimestamp = Timestamp.getFormattedTimestamp(timestamp)
     val isEdited = editedTimestamp != null
     val contentNodes = parser.parse(content, null)
 }
+
+data class DomainMessageMemberJoin(
+    override val id: ULong,
+    override val channelId: ULong,
+    override val timestamp: Instant,
+    override val content: String,
+    override val author: DomainUser
+): DomainMessage()

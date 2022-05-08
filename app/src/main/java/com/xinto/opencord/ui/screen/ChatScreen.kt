@@ -19,6 +19,7 @@ import com.xinto.bdc.BottomSheetDialog
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainAttachment
 import com.xinto.opencord.domain.model.DomainMessage
+import com.xinto.opencord.domain.model.DomainMessageRegular
 import com.xinto.opencord.ui.viewmodel.ChatViewModel
 import com.xinto.opencord.ui.widget.*
 import com.xinto.opencord.util.letComposable
@@ -149,74 +150,78 @@ private fun ChatScreenLoaded(
         ) {
             items(messages) { message ->
                 var showBottomDialog by rememberSaveable { mutableStateOf(false) }
-                WidgetChatMessage(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(MaterialTheme.shapes.medium)
-                        .combinedClickable(
-                            onClick = {},
-                            onLongClick = { showBottomDialog = true }
-                        ),
-                    avatar = {
-                        WidgetMessageAvatar(url = message.author.avatarUrl)
-                    },
-                    author = {
-                        WidgetMessageAuthor(
-                            author = message.author.username,
-                            timestamp = message.formattedTimestamp,
-                            edited = message.isEdited,
-                            onAuthorClick = {
-                                onUserMessageUpdate("$userMessage${message.author.formattedMention} ")
+                when (message) {
+                    is DomainMessageRegular -> {
+                        WidgetChatMessage(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(MaterialTheme.shapes.medium)
+                                .combinedClickable(
+                                    onClick = {},
+                                    onLongClick = { showBottomDialog = true }
+                                ),
+                            avatar = {
+                                WidgetMessageAvatar(url = message.author.avatarUrl)
                             },
-                        )
-                    },
-                    content = message.contentNodes.ifEmpty { null }?.letComposable { nodes ->
-                        WidgetMessageContent(
-                            text = render(
-                                builder = AnnotatedString.Builder(),
-                                nodes = nodes,
-                                renderContext = null
-                            ).toAnnotatedString()
-                        )
-                    },
-                    embeds = message.embeds.ifEmpty { null }?.letComposable { embeds ->
-                        for (embed in embeds) {
-                            WidgetEmbed(
-                                title = embed.title,
-                                description = embed.description,
-                                color = embed.color,
-                                author = embed.author?.letComposable {
-                                    WidgetEmbedAuthor(name = it.name)
-                                },
-                                fields = embed.fields?.letComposable {
-                                    for (field in it) {
-                                        WidgetEmbedField(
-                                            name = field.name,
-                                            value = field.value
-                                        )
-                                    }
-                                }
-                            )
-                        }
-                    },
-                    attachments = message.attachments.ifEmpty { null }?.letComposable { attachments ->
-                        for (attachment in attachments) {
-                            when (attachment) {
-                                is DomainAttachment.Picture -> {
-                                    WidgetAttachmentPicture(
-                                        modifier = Modifier
-                                            .heightIn(max = 350.dp),
-                                        url = attachment.proxyUrl,
-                                        width = attachment.width,
-                                        height = attachment.height
+                            author = {
+                                WidgetMessageAuthor(
+                                    author = message.author.username,
+                                    timestamp = message.formattedTimestamp,
+                                    edited = message.isEdited,
+                                    onAuthorClick = {
+                                        onUserMessageUpdate("$userMessage${message.author.formattedMention} ")
+                                    },
+                                )
+                            },
+                            content = message.contentNodes.ifEmpty { null }?.letComposable { nodes ->
+                                WidgetMessageContent(
+                                    text = render(
+                                        builder = AnnotatedString.Builder(),
+                                        nodes = nodes,
+                                        renderContext = null
+                                    ).toAnnotatedString()
+                                )
+                            },
+                            embeds = message.embeds.ifEmpty { null }?.letComposable { embeds ->
+                                for (embed in embeds) {
+                                    WidgetEmbed(
+                                        title = embed.title,
+                                        description = embed.description,
+                                        color = embed.color,
+                                        author = embed.author?.letComposable {
+                                            WidgetEmbedAuthor(name = it.name)
+                                        },
+                                        fields = embed.fields?.letComposable {
+                                            for (field in it) {
+                                                WidgetEmbedField(
+                                                    name = field.name,
+                                                    value = field.value
+                                                )
+                                            }
+                                        }
                                     )
                                 }
-                                else -> {}
+                            },
+                            attachments = message.attachments.ifEmpty { null }?.letComposable { attachments ->
+                                for (attachment in attachments) {
+                                    when (attachment) {
+                                        is DomainAttachment.Picture -> {
+                                            WidgetAttachmentPicture(
+                                                modifier = Modifier
+                                                    .heightIn(max = 350.dp),
+                                                url = attachment.proxyUrl,
+                                                width = attachment.width,
+                                                height = attachment.height
+                                            )
+                                        }
+                                        else -> {}
+                                    }
+                                }
                             }
-                        }
+                        )
                     }
-                )
-
+                    else -> {/* ignore */}
+                }
                 if (showBottomDialog) {
                     MessageActionMenu(
                         onDismissRequest = { showBottomDialog = false }

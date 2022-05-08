@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainAttachment
 import com.xinto.opencord.domain.model.DomainMessage
+import com.xinto.opencord.domain.model.DomainMessageRegular
 import com.xinto.opencord.ui.viewmodel.ChannelPinsViewModel
 import com.xinto.opencord.ui.widget.*
 import com.xinto.opencord.util.letComposable
@@ -101,69 +102,74 @@ private fun ChannelPinsLoaded(
         contentPadding = PaddingValues(8.dp)
     ) {
         items(pins) { message ->
-            Surface(
-                modifier = Modifier.fillParentMaxWidth(),
-                shape = MaterialTheme.shapes.medium,
-                tonalElevation = 1.dp
-            ) {
-                WidgetChatMessage(
-                    modifier = Modifier.fillMaxWidth(),
-                    avatar = {
-                        WidgetMessageAvatar(url = message.author.avatarUrl)
-                    },
-                    author = {
-                        WidgetMessageAuthor(
-                            author = message.author.username,
-                            timestamp = message.formattedTimestamp,
-                            edited = message.isEdited
-                        )
-                    },
-                    content = message.contentNodes.ifEmpty { null }?.letComposable { nodes ->
-                        WidgetMessageContent(
-                            text = render(
-                                builder = AnnotatedString.Builder(),
-                                nodes = nodes,
-                                renderContext = null
-                            ).toAnnotatedString()
-                        )
-                    },
-                    embeds = message.embeds.ifEmpty { null }?.letComposable { embeds ->
-                        for (embed in embeds) {
-                            WidgetEmbed(
-                                title = embed.title,
-                                description = embed.description,
-                                color = embed.color,
-                                author = embed.author?.letComposable {
-                                    WidgetEmbedAuthor(name = it.name)
-                                },
-                                fields = embed.fields?.letComposable {
-                                    for (field in it) {
-                                        WidgetEmbedField(
-                                            name = field.name,
-                                            value = field.value
-                                        )
-                                    }
-                                }
-                            )
-                        }
-                    },
-                    attachments = message.attachments.ifEmpty { null }?.letComposable { attachments ->
-                        for (attachment in attachments) {
-                            when (attachment) {
-                                is DomainAttachment.Picture -> {
-                                    WidgetAttachmentPicture(
-                                        modifier = Modifier
-                                            .heightIn(max = 250.dp),
-                                        url = attachment.proxyUrl,
-                                        width = attachment.width,
-                                        height = attachment.height
+            when (message) {
+                is DomainMessageRegular -> {
+                    Surface(
+                        modifier = Modifier.fillParentMaxWidth(),
+                        shape = MaterialTheme.shapes.medium,
+                        tonalElevation = 1.dp
+                    ) {
+                        WidgetChatMessage(
+                            modifier = Modifier.fillMaxWidth(),
+                            avatar = {
+                                WidgetMessageAvatar(url = message.author.avatarUrl)
+                            },
+                            author = {
+                                WidgetMessageAuthor(
+                                    author = message.author.username,
+                                    timestamp = message.formattedTimestamp,
+                                    edited = message.isEdited
+                                )
+                            },
+                            content = message.contentNodes.ifEmpty { null }?.letComposable { nodes ->
+                                WidgetMessageContent(
+                                    text = render(
+                                        builder = AnnotatedString.Builder(),
+                                        nodes = nodes,
+                                        renderContext = null
+                                    ).toAnnotatedString()
+                                )
+                            },
+                            embeds = message.embeds.ifEmpty { null }?.letComposable { embeds ->
+                                for (embed in embeds) {
+                                    WidgetEmbed(
+                                        title = embed.title,
+                                        description = embed.description,
+                                        color = embed.color,
+                                        author = embed.author?.letComposable {
+                                            WidgetEmbedAuthor(name = it.name)
+                                        },
+                                        fields = embed.fields?.letComposable {
+                                            for (field in it) {
+                                                WidgetEmbedField(
+                                                    name = field.name,
+                                                    value = field.value
+                                                )
+                                            }
+                                        }
                                     )
                                 }
-                                else -> {}
+                            },
+                            attachments = message.attachments.ifEmpty { null }?.letComposable { attachments ->
+                                for (attachment in attachments) {
+                                    when (attachment) {
+                                        is DomainAttachment.Picture -> {
+                                            WidgetAttachmentPicture(
+                                                modifier = Modifier
+                                                    .heightIn(max = 250.dp),
+                                                url = attachment.proxyUrl,
+                                                width = attachment.width,
+                                                height = attachment.height
+                                            )
+                                        }
+                                        else -> {}
+                                    }
+                                }
                             }
-                        }
+                        )
                     }
-                )
+                }
+                else -> {/* ignore */}
             }
         }
     }

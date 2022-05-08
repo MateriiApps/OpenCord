@@ -133,25 +133,38 @@ fun ApiMeGuild.toDomain(): DomainMeGuild {
 
 fun ApiMessage.toDomain(): DomainMessage {
     val domainAuthor = author.toDomain()
-    val domainAttachments = attachments.map { it.toDomain() }
-    val domainEmbeds = embeds.map { it.toDomain() }
-    return DomainMessage(
-        id = id.value,
-        content = content,
-        channelId = channelId.value,
-        author = domainAuthor,
-        timestamp = timestamp,
-        editedTimestamp = editedTimestamp,
-        attachments = domainAttachments,
-        embeds = domainEmbeds
-    )
+    return when (type) {
+        ApiMessageType.Default -> {
+            val domainAttachments = attachments.map { it.toDomain() }
+            val domainEmbeds = embeds.map { it.toDomain() }
+            DomainMessageRegular(
+                id = id.value,
+                channelId = channelId.value,
+                content = content,
+                author = domainAuthor,
+                timestamp = timestamp,
+                editedTimestamp = editedTimestamp,
+                attachments = domainAttachments,
+                embeds = domainEmbeds
+            )
+        }
+        ApiMessageType.GuildMemberJoin -> {
+            DomainMessageMemberJoin(
+                id = id.value,
+                content = content,
+                channelId = channelId.value,
+                timestamp = timestamp,
+                author = domainAuthor
+            )
+        }
+    }
 }
 
-fun ApiMessagePartial.toDomain(): DomainMessagePartial {
+fun ApiMessagePartial.toDomain(): DomainMessageRegularPartial {
     val domainAuthor = author?.toDomain()
     val domainAttachments = attachments?.map { it.toDomain() }
     val domainEmbeds = embeds?.map { it.toDomain() }
-    return DomainMessagePartial(
+    return DomainMessageRegularPartial(
         id = id?.value,
         content = content,
         channelId = channelId?.value,
