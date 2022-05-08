@@ -183,15 +183,14 @@ private fun CurrentUserItem(
                     painter = userIcon,
                     contentDescription = null
                 )
+                if (viewModel.status != null) {
+                    val statusIcon = when (viewModel.status!!) {
+                        ApiStatus.ONLINE -> R.drawable.ic_status_online
+                        ApiStatus.INVISIBLE -> R.drawable.ic_status_invisible
+                        ApiStatus.IDLE -> R.drawable.ic_status_idle
+                        ApiStatus.DND -> R.drawable.ic_status_idle
+                    }
 
-                val statusIcon = when (viewModel.status) {
-                    ApiStatus.ONLINE -> R.drawable.ic_status_online
-                    ApiStatus.INVISIBLE -> R.drawable.ic_status_invisible
-                    ApiStatus.IDLE -> R.drawable.ic_status_idle
-                    ApiStatus.DND -> R.drawable.ic_status_idle
-                    else -> null
-                }
-                if (statusIcon != null) {
                     Surface(
                         shape = CircleShape,
                         modifier = Modifier.align(Alignment.BottomEnd)
