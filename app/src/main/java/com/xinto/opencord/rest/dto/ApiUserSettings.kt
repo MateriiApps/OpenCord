@@ -112,7 +112,7 @@ data class ApiUserSettings(
     val guildFolders: List<ApiGuildFolder>,
 
     @SerialName("custom_status")
-    val customStatus: String?,
+    val customStatus: ApiCustomStatus?,
 )
 
 @Serializable
@@ -140,6 +140,21 @@ data class ApiGuildFolder(
 
 //    @SerialName("color")
 //    val color: Any? = null,
+)
+
+@Serializable
+data class ApiCustomStatus(
+    @SerialName("text")
+    val text: String,
+
+    @SerialName("expires_at")
+    val expiresAt: String, // timestamp
+
+//    @SerialName("emoji_id")
+//    val emojiId: Any?,
+
+    @SerialName("emoji_name")
+    val emojiName: String?
 )
 
 @Serializable(ApiThemeSetting.Serializer::class)

@@ -34,9 +34,7 @@ class CurrentUserViewModel(
     var discriminator by mutableStateOf("")
         private set
 
-    var status by mutableStateOf<ApiStatus?>(null)
-        private set
-    var customStatus by mutableStateOf<String?>(null)
+    var userStatus by mutableStateOf<ApiStatus?>(null)
         private set
 
     init {
@@ -50,8 +48,7 @@ class CurrentUserViewModel(
         viewModelScope.launch {
             try {
                 val settings = repository.getUserSettings()
-                status = settings.status
-                customStatus = settings.customStatus
+                userStatus = settings.status
                 state = State.Loaded
             } catch (e: Throwable) {
                 e.printStackTrace()
