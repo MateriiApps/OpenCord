@@ -158,61 +158,61 @@ data class ApiCustomStatus(
 )
 
 @Serializable(ApiThemeSetting.Serializer::class)
-enum class ApiThemeSetting {
-    DARK,
-    LIGHT;
+enum class ApiThemeSetting(val value: String) {
+    Dark("dark"),
+    Light("light");
 
     companion object Serializer : KSerializer<ApiThemeSetting> {
         override val descriptor: SerialDescriptor
             get() = PrimitiveSerialDescriptor("ThemeSetting", PrimitiveKind.STRING)
 
         override fun deserialize(decoder: Decoder): ApiThemeSetting {
-            return when (val theme = decoder.decodeString()) {
-                "dark" -> DARK
-                "light" -> LIGHT
-                else -> throw IllegalStateException("Unknown theme setting $theme")
-            }
+            val theme = decoder.decodeString()
+            return fromValue(theme) ?: throw IllegalStateException("Unknown theme setting $theme")
         }
 
         override fun serialize(encoder: Encoder, value: ApiThemeSetting) {
-            val serialized = when (value) {
-                DARK -> "dark"
-                LIGHT -> "light"
+            encoder.encodeString(value.value)
+        }
+
+        private fun fromValue(value: String): ApiThemeSetting? {
+            return when (value) {
+                Dark.value -> Dark
+                Light.value -> Light
+                else -> null
             }
-            encoder.encodeString(serialized)
         }
     }
 }
 
 @Serializable(ApiStatus.Serializer::class)
-enum class ApiStatus {
-    ONLINE,
-    IDLE,
-    DND,
-    INVISIBLE;
+enum class ApiStatus(val value: String) {
+    Online("online"),
+    Idle("idle"),
+    Dnd("dnd"),
+    Invisible("invisible");
 
     companion object Serializer : KSerializer<ApiStatus> {
         override val descriptor: SerialDescriptor
             get() = PrimitiveSerialDescriptor("ApiStatus", PrimitiveKind.STRING)
 
         override fun deserialize(decoder: Decoder): ApiStatus {
-            return when (val status = decoder.decodeString()) {
-                "online" -> ONLINE
-                "idle" -> IDLE
-                "dnd" -> DND
-                "invisible" -> INVISIBLE
-                else -> throw IllegalStateException("Unknown status $status")
-            }
+            val status = decoder.decodeString()
+            return fromValue(status) ?: throw IllegalStateException("Unknown status $status")
         }
 
         override fun serialize(encoder: Encoder, value: ApiStatus) {
-            val serialized = when (value) {
-                ONLINE -> "online"
-                IDLE -> "idle"
-                DND -> "dnd"
-                INVISIBLE -> "invisible"
+            encoder.encodeString(value.value)
+        }
+
+        private fun fromValue(value: String): ApiStatus? {
+            return when (value) {
+                Online.value -> Online
+                Idle.value -> Idle
+                Dnd.value -> Dnd
+                Invisible.value -> Invisible
+                else -> null
             }
-            encoder.encodeString(serialized)
         }
     }
 }

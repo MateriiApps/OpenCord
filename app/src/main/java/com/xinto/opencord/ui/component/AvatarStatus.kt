@@ -32,10 +32,10 @@ fun AvatarStatus(avatarUrl: String, userStatus: ApiStatus?) {
 
         if (userStatus != null) {
             val statusIcon = when (userStatus) {
-                ApiStatus.ONLINE -> R.drawable.ic_status_online
-                ApiStatus.INVISIBLE -> R.drawable.ic_status_invisible
-                ApiStatus.IDLE -> R.drawable.ic_status_idle
-                ApiStatus.DND -> R.drawable.ic_status_dnd
+                ApiStatus.Online -> R.drawable.ic_status_online
+                ApiStatus.Invisible -> R.drawable.ic_status_invisible
+                ApiStatus.Idle -> R.drawable.ic_status_idle
+                ApiStatus.Dnd -> R.drawable.ic_status_dnd
             }
 
             Surface(
