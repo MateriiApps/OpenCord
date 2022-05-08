@@ -125,7 +125,8 @@ fun LoginScreen(
                     singleLine = true,
                     isError = viewModel.mfaError,
                     keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number
+                        capitalization = KeyboardCapitalization.None,
+                        autoCorrect = false
                     )
                 )
             },

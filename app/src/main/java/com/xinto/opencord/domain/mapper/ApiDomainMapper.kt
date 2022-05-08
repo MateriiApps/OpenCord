@@ -152,9 +152,9 @@ fun ApiMessagePartial.toDomain(): DomainMessagePartial {
     val domainAttachments = attachments?.map { it.toDomain() }
     val domainEmbeds = embeds?.map { it.toDomain() }
     return DomainMessagePartial(
-        id = id.value,
+        id = id?.value,
         content = content,
-        channelId = channelId.value,
+        channelId = channelId?.value,
         author = domainAuthor,
         timestamp = timestamp,
         editedTimestamp = editedTimestamp,
