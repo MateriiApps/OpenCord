@@ -5,7 +5,8 @@ import com.xinto.opencord.domain.model.DomainChannel
 import com.xinto.opencord.domain.model.DomainGuild
 import com.xinto.opencord.domain.model.DomainMeGuild
 import com.xinto.opencord.domain.model.DomainMessage
-import com.xinto.opencord.rest.body.CurrentUserSettingsBody
+import com.xinto.opencord.rest.body.ApiCurrentUserSettings
+import com.xinto.opencord.rest.body.ApiCurrentUserSettingsPartial
 import com.xinto.opencord.rest.body.MessageBody
 import com.xinto.opencord.rest.service.DiscordApiService
 
@@ -20,8 +21,8 @@ interface DiscordApiRepository {
 
     suspend fun postChannelMessage(channelId: ULong, body: MessageBody)
 
-    suspend fun getUserSettings(): CurrentUserSettingsBody
-    suspend fun setUserSettings(settings: CurrentUserSettingsBody): CurrentUserSettingsBody
+    suspend fun getUserSettings(): ApiCurrentUserSettings
+    suspend fun setUserSettings(settings: ApiCurrentUserSettingsPartial): ApiCurrentUserSettings
 }
 
 class DiscordApiRepositoryImpl(
@@ -65,11 +66,11 @@ class DiscordApiRepositoryImpl(
         service.postChannelMessage(channelId, body)
     }
 
-    override suspend fun getUserSettings(): CurrentUserSettingsBody {
+    override suspend fun getUserSettings(): ApiCurrentUserSettings {
         return service.getUserSettings()
     }
 
-    override suspend fun setUserSettings(settings: CurrentUserSettingsBody): CurrentUserSettingsBody {
+    override suspend fun setUserSettings(settings: ApiCurrentUserSettingsPartial): ApiCurrentUserSettings {
         return service.setUserSettings(settings)
     }
 }

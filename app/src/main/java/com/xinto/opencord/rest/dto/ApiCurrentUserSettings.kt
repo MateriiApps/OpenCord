@@ -1,6 +1,7 @@
 package com.xinto.opencord.rest.body
 
 import com.xinto.opencord.rest.dto.ApiSnowflake
+import com.xinto.partialgen.Partial
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -11,8 +12,9 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 // TODO: check what the commented out parts are
+@Partial
 @Serializable
-data class CurrentUserSettingsBody(
+data class ApiCurrentUserSettings(
     @SerialName("locale")
     val locale: String,
 
@@ -53,8 +55,8 @@ data class CurrentUserSettingsBody(
     val convertEmoticons: Boolean,
 
     // This appears to be edited through the protobuf settings, so not sure what role this plays here
-    @SerialName("explicit_content_filter")
-    val explicitContentFilter: Int, // enum
+//    @SerialName("explicit_content_filter")
+//    val explicitContentFilter: Int,
 
     @SerialName("disable_games_tab")
     val disableGamesTab: Boolean,
@@ -95,8 +97,8 @@ data class CurrentUserSettingsBody(
     @SerialName("animate_stickers")
     val animateStickers: Boolean,
 
-    @SerialName("friend_discovery_flags")
-    val friendDiscoveryFlags: Int, // TODO: enum here
+//    @SerialName("friend_discovery_flags")
+//    val friendDiscoveryFlags: Int,
 
     @SerialName("view_nsfw_guilds")
     val viewNsfwGuilds: Boolean,
@@ -105,17 +107,17 @@ data class CurrentUserSettingsBody(
     val passwordless: Boolean,
 
     @SerialName("friend_source_flags")
-    val friendSourceFlags: FriendSources,
+    val friendSourceFlags: ApiFriendSources,
 
     @SerialName("guild_folders")
-    val guildFolders: List<GuildFolder>,
+    val guildFolders: List<ApiGuildFolder>,
 
     @SerialName("custom_status")
     val customStatus: String?,
 )
 
 @Serializable
-data class FriendSources(
+data class ApiFriendSources(
     @SerialName("all")
     val all: Boolean? = null,
 
@@ -127,7 +129,7 @@ data class FriendSources(
 )
 
 @Serializable
-data class GuildFolder(
+data class ApiGuildFolder(
     @SerialName("guild_ids")
     val guildIds: List<ApiSnowflake>,
 
