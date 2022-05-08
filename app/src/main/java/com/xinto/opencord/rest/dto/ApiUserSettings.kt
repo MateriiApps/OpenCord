@@ -1,6 +1,5 @@
-package com.xinto.opencord.rest.body
+package com.xinto.opencord.rest.dto
 
-import com.xinto.opencord.rest.dto.ApiSnowflake
 import com.xinto.partialgen.Partial
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
@@ -14,7 +13,7 @@ import kotlinx.serialization.encoding.Encoder
 // TODO: check what the commented out parts are
 @Partial
 @Serializable
-data class ApiCurrentUserSettings(
+data class ApiUserSettings(
     @SerialName("locale")
     val locale: String,
 
@@ -95,7 +94,7 @@ data class ApiCurrentUserSettings(
     val nativePhoneIntegrationEnabled: Boolean,
 
     @SerialName("animate_stickers")
-    val animateStickers: Boolean,
+    val animateStickers: Int, // int??
 
 //    @SerialName("friend_discovery_flags")
 //    val friendDiscoveryFlags: Int,

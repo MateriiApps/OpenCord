@@ -5,9 +5,9 @@ import com.xinto.opencord.domain.model.DomainChannel
 import com.xinto.opencord.domain.model.DomainGuild
 import com.xinto.opencord.domain.model.DomainMeGuild
 import com.xinto.opencord.domain.model.DomainMessage
-import com.xinto.opencord.rest.body.ApiCurrentUserSettings
-import com.xinto.opencord.rest.body.ApiCurrentUserSettingsPartial
 import com.xinto.opencord.rest.body.MessageBody
+import com.xinto.opencord.rest.dto.ApiUserSettings
+import com.xinto.opencord.rest.dto.ApiUserSettingsPartial
 import com.xinto.opencord.rest.service.DiscordApiService
 
 interface DiscordApiRepository {
@@ -21,13 +21,14 @@ interface DiscordApiRepository {
 
     suspend fun postChannelMessage(channelId: ULong, body: MessageBody)
 
-    suspend fun getUserSettings(): ApiCurrentUserSettings
-    suspend fun setUserSettings(settings: ApiCurrentUserSettingsPartial): ApiCurrentUserSettings
+    suspend fun getUserSettings(force: Boolean = false): ApiUserSettings
+    suspend fun setUserSettings(settings: ApiUserSettingsPartial): ApiUserSettings
 }
 
 class DiscordApiRepositoryImpl(
     private val service: DiscordApiService
 ) : DiscordApiRepository {
+    private var cachedUserSettings: ApiUserSettings? = null
 
     override suspend fun getMeGuilds(): List<DomainMeGuild> {
         return service.getMeGuilds().map { it.toDomain() }
@@ -66,11 +67,17 @@ class DiscordApiRepositoryImpl(
         service.postChannelMessage(channelId, body)
     }
 
-    override suspend fun getUserSettings(): ApiCurrentUserSettings {
-        return service.getUserSettings()
+    override suspend fun getUserSettings(force: Boolean): ApiUserSettings {
+        return if (cachedUserSettings != null && !force)
+            cachedUserSettings!!
+        else {
+            service.getUserSettings()
+                .also { cachedUserSettings = it }
+        }
     }
 
-    override suspend fun setUserSettings(settings: ApiCurrentUserSettingsPartial): ApiCurrentUserSettings {
+    override suspend fun setUserSettings(settings: ApiUserSettingsPartial): ApiUserSettings {
         return service.setUserSettings(settings)
+            .also { cachedUserSettings = it }
     }
 }

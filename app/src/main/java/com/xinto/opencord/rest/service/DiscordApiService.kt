@@ -6,8 +6,6 @@ import com.xinto.opencord.gateway.event.MessageCreateEvent
 import com.xinto.opencord.gateway.event.MessageDeleteEvent
 import com.xinto.opencord.gateway.event.MessageUpdateEvent
 import com.xinto.opencord.gateway.onEvent
-import com.xinto.opencord.rest.body.ApiCurrentUserSettings
-import com.xinto.opencord.rest.body.ApiCurrentUserSettingsPartial
 import com.xinto.opencord.rest.body.MessageBody
 import com.xinto.opencord.rest.dto.*
 import io.ktor.client.*
@@ -27,8 +25,8 @@ interface DiscordApiService {
 
     suspend fun postChannelMessage(channelId: ULong, body: MessageBody)
 
-    suspend fun getUserSettings(): ApiCurrentUserSettings
-    suspend fun setUserSettings(settings: ApiCurrentUserSettingsPartial): ApiCurrentUserSettings
+    suspend fun getUserSettings(): ApiUserSettings
+    suspend fun setUserSettings(settings: ApiUserSettingsPartial): ApiUserSettings
 }
 
 class DiscordApiServiceImpl(
@@ -118,16 +116,15 @@ class DiscordApiServiceImpl(
         }
     }
 
-    override suspend fun getUserSettings(): ApiCurrentUserSettings {
+    override suspend fun getUserSettings(): ApiUserSettings {
         return withContext(Dispatchers.IO) {
-            client.post(getCurrentUserSettingsUrl()).body()
+            client.get(getUserSettingsUrl()).body()
         }
     }
 
-    // TODO: accept a partial
-    override suspend fun setUserSettings(settings: ApiCurrentUserSettingsPartial): ApiCurrentUserSettings {
+    override suspend fun setUserSettings(settings: ApiUserSettingsPartial): ApiUserSettings {
         return withContext(Dispatchers.IO) {
-            client.patch(getCurrentUserSettingsUrl()) {
+            client.patch(getUserSettingsUrl()) {
                 setBody(settings)
             }.body()
         }
@@ -189,7 +186,7 @@ class DiscordApiServiceImpl(
             return "$channelUrl/pins"
         }
 
-        fun getCurrentUserSettingsUrl(): String {
+        fun getUserSettingsUrl(): String {
             return "$BASE/users/@me/settings"
         }
     }
