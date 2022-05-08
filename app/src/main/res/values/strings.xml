@@ -10,7 +10,7 @@
     <string name="login_field_username">Email or Phone Number</string>
     <string name="login_field_password">Password</string>
     <string name="login_mfa_title">2FA Required!</string>
-    <string name="login_mfa_code">Code</string>
+    <string name="login_mfa_code">2FA or Backup Code</string>
     <string name="login_mfa_confirm">Confirm</string>
     <string name="login_mfa_cancel">Cancel</string>
 

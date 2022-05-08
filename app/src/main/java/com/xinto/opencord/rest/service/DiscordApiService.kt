@@ -1,7 +1,6 @@
 package com.xinto.opencord.rest.service
 
 import com.xinto.opencord.BuildConfig
-import com.xinto.opencord.domain.merger.mergeWith
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.event.MessageCreateEvent
 import com.xinto.opencord.gateway.event.MessageDeleteEvent
@@ -131,12 +130,12 @@ class DiscordApiServiceImpl(
         gateway.onEvent<MessageUpdateEvent> {
             val partialData = it.data
             val id = partialData.id
-            val channelId = partialData.channelId.value
+            val channelId = partialData.channelId!!.value
             val mergedData = cachedChannelMessages[channelId]?.get(id).let { message ->
-                message?.mergeWith(partialData)
+                message?.merge(partialData)
             }
             if (mergedData != null) {
-                cachedChannelMessages[channelId]?.put(partialData.id, mergedData)
+                cachedChannelMessages[channelId]?.put(partialData.id!!, mergedData)
             }
         }
 

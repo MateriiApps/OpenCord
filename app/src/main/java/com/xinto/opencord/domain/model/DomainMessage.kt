@@ -2,10 +2,12 @@ package com.xinto.opencord.domain.model
 
 import com.xinto.opencord.util.SimpleAstParser
 import com.xinto.opencord.util.Timestamp
+import com.xinto.partialgen.Partial
 import kotlinx.datetime.Instant
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
+@Partial
 data class DomainMessage(
     val id: ULong,
     val channelId: ULong,
@@ -22,14 +24,3 @@ data class DomainMessage(
     val isEdited = editedTimestamp != null
     val contentNodes = parser.parse(content, null)
 }
-
-data class DomainMessagePartial(
-    val id: ULong,
-    val channelId: ULong,
-    val timestamp: Instant?,
-    val editedTimestamp: Instant?,
-    val content: String?,
-    val author: DomainUser?,
-    val attachments: List<DomainAttachment>?,
-    val embeds: List<DomainEmbed>?
-)

@@ -3,6 +3,7 @@ plugins {
     id("kotlin-android")
     id("kotlin-parcelize")
     kotlin("plugin.serialization")
+    id("com.google.devtools.ksp") version "1.6.20-1.0.5"
 }
 
 android {
@@ -82,12 +83,26 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    sourceSets {
+        applicationVariants.all {
+            getByName(name) {
+                kotlin.srcDir("build/generated/ksp/$name/kotlin")
+            }
+        }
+    }
+
+    kotlin {
+
+    }
 }
 
 dependencies {
     implementation(project(":bottom-dialog-compose"))
     implementation(project(":overlapping-panels-compose"))
     implementation(project(":simpleast-compose"))
+    implementation(project(":partialgen"))
+    ksp(project(":partialgen"))
 
     Dependencies.Koin(this)
     Dependencies.Ktor(this)
