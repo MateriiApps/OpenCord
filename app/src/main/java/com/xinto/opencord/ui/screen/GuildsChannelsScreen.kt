@@ -25,6 +25,7 @@ import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainChannel
 import com.xinto.opencord.domain.model.DomainGuild
 import com.xinto.opencord.rest.dto.ApiStatus
+import com.xinto.opencord.ui.component.AvatarStatus
 import com.xinto.opencord.ui.component.rememberOCCoilPainter
 import com.xinto.opencord.ui.viewmodel.ChannelsViewModel
 import com.xinto.opencord.ui.viewmodel.CurrentUserViewModel
@@ -156,7 +157,6 @@ private fun CurrentUserItem(
     modifier: Modifier = Modifier,
     viewModel: CurrentUserViewModel = getViewModel()
 ) {
-    val userIcon = rememberOCCoilPainter(viewModel.avatarUrl)
     Surface(
         modifier = modifier,
         onClick = { /*TODO*/ },
@@ -175,37 +175,7 @@ private fun CurrentUserItem(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Box {
-                Image(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(CircleShape),
-                    painter = userIcon,
-                    contentDescription = null
-                )
-                if (viewModel.userStatus != null) {
-                    val statusIcon = when (viewModel.userStatus!!) {
-                        ApiStatus.ONLINE -> R.drawable.ic_status_online
-                        ApiStatus.INVISIBLE -> R.drawable.ic_status_invisible
-                        ApiStatus.IDLE -> R.drawable.ic_status_idle
-                        ApiStatus.DND -> R.drawable.ic_status_dnd
-                    }
-
-                    Surface(
-                        shape = CircleShape,
-                        modifier = Modifier.align(Alignment.BottomEnd)
-                    ) {
-                        Icon(
-                            painter = painterResource(statusIcon),
-                            contentDescription = null,
-                            tint = Color.Unspecified,
-                            modifier = Modifier
-                                .size(16.dp)
-                                .padding(3.dp)
-                        )
-                    }
-                }
-            }
+            AvatarStatus(viewModel.avatarUrl, viewModel.userStatus)
             Column(
                 verticalArrangement = Arrangement.spacedBy(2.dp),
             ) {
