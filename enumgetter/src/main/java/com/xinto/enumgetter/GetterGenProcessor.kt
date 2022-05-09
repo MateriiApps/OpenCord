@@ -6,6 +6,8 @@ import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.symbol.*
 import com.google.devtools.ksp.validate
+import com.xinto.ksputil.*
+import java.io.OutputStream
 
 class GetterGenProcessor(val codeGenerator: CodeGenerator) : SymbolProcessor {
 
@@ -30,17 +32,31 @@ class GetterGenProcessor(val codeGenerator: CodeGenerator) : SymbolProcessor {
                 ?: return
             val enumFields = classDeclaration.declarations
                 .filter { it is KSClassDeclaration && it.classKind == ClassKind.ENUM_ENTRY }
-                .map { it.qualifiedName?.asString() ?: "<ERROR>" }
-
+                .map { Pair(it.simpleName.getShortName(), it.resolveImport()) }
+            
             val packageName = classDeclaration.packageName.asString()
+            val classShortName = classDeclaration.qualifiedName?.getShortName() ?: "<ERROR>"
             val classQualifiedName = classDeclaration.qualifiedName?.asString() ?: "<ERROR>"
 
+            val imports = mutableListOf(classQualifiedName)
+            
             val transformedConstructorParams = constructorParams.map { parameter ->
                 val name = parameter.name?.asString() ?: "<ERROR>"
-                val type = parameter.type.sourceType() ?: "<ERROR>"
+                val type = parameter.type.sourceType().let { (type, import) ->
+                    imports.addAll(import.filterNotNull())
+
+                    type
+                }
 
                 Pair(name, type)
             }
+            val transformedEnumFields = enumFields.map { (type, import) ->
+                if (import != null) {
+                    imports.add(import)
+                }
+                
+                type
+            }.toList()
 
             codeGenerator.createNewFile(
                 dependencies = Dependencies(
@@ -48,71 +64,71 @@ class GetterGenProcessor(val codeGenerator: CodeGenerator) : SymbolProcessor {
                     classDeclaration.containingFile!!
                 ),
                 packageName = packageName,
-                fileName = classQualifiedName
+                fileName = classShortName + "EnumGetter"
             ).use { file ->
-                val functionParams = transformedConstructorParams
-                    .joinToString { (name, type) ->
-                        "$name: $type"
-                    }
+                file.writePackage(packageName)
 
-                var functionName = "fromValue"
-                if (transformedConstructorParams.size > 1)
-                    functionName += "s"
+                file.writeImports(imports)
 
-                file.writeTextSpaced("package")
-                file.writeTextDoubleNewline(packageName)
+                file.writeWarning(
+                    thing = "enum getter",
+                    target = classShortName
+                )
 
-                file.writeTextSpaced("fun")
-                file.writeText(classQualifiedName)
-                file.writeText(".Companion.")
-                file.writeText(functionName)
-                file.writeText("(")
-                file.writeText(functionParams)
-                file.writeTextSpaced("):")
-                file.writeText(classQualifiedName)
-                file.writeTextNewline("? {")
-                file.withIndent {
-                    writeTextNewline("return when {")
-                }
-                enumFields.forEach { enumField ->
-                    file.withIndent(2) {
-                        val condition = transformedConstructorParams
-                            .joinToString(separator = " && ") { (paramName, _) ->
-                                "$enumField.$paramName == $paramName"
-                            }
-
-                        writeTextSpaced(condition)
-                        writeTextSpaced("->")
-                        writeTextNewline(enumField)
-                    }
-                }
-                file.withIndent(2) {
-                    writeText("else -> null")
-                }
-                file.withIndent {
-                    writeTextNewline("}")
-                }
-                file.writeText("}")
+                file.writeGetterFunction(
+                    className = classShortName,
+                    constructorParams = transformedConstructorParams,
+                    enumFields = transformedEnumFields
+                )
             }
         }
+        
+        private fun OutputStream.writeGetterFunction(
+            className: String,
+            constructorParams: List<Pair<String, String>>,
+            enumFields: List<String>,
+        ) {
+            var functionName = "fromValue"
+            if (constructorParams.size > 1)
+                functionName += "s"
 
-        private fun KSTypeReference.sourceType(): String? {
-            val resolvedType = resolve()
-            val typeName = resolvedType.declaration.qualifiedName
-            val typeArguments = element?.typeArguments ?: emptyList()
-            return typeName?.let {
-                buildString {
-                    append(it.asString())
-                    if (typeArguments.isNotEmpty()) {
-                        append(typeArguments.joinToString(prefix = "<", postfix = ">") {
-                            val typeArg = it.type?.resolve()?.declaration
-                            typeArg?.qualifiedName?.asString() ?: "<ERROR>"
-                        })
-                    }
+            val functionParams = constructorParams
+                .joinToString { (name, type) ->
+                    "$name: $type"
+                }
+
+            appendTextSpaced("fun")
+            appendText(className)
+            appendText(".Companion.")
+            appendText(functionName)
+            appendText("(")
+            appendText(functionParams)
+            appendTextSpaced("):")
+            appendText(className)
+            appendTextNewline("? {")
+            withIndent {
+                appendTextNewline("return when {")
+            }
+            enumFields.forEach { enumField ->
+                withIndent(2) {
+                    val condition = constructorParams
+                        .joinToString(separator = " && ") { (paramName, _) ->
+                            "$enumField.$paramName == $paramName"
+                        }
+
+                    appendTextSpaced(condition)
+                    appendTextSpaced("->")
+                    appendTextNewline(enumField)
                 }
             }
+            withIndent(2) {
+                appendTextNewline("else -> null")
+            }
+            withIndent {
+                appendTextNewline("}")
+            }
+            appendText("}")
         }
-
     }
 
     companion object {
