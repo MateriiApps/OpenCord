@@ -223,34 +223,38 @@ private fun StatusSheet(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.background)
-                .padding(horizontal = 20.dp, vertical = 38.dp),
+                .padding(horizontal = 28.dp, vertical = 35.dp),
         ) {
-            ProvideTextStyle(MaterialTheme.typography.labelLarge) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(
-                        12.dp,
-                        Alignment.CenterHorizontally
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 4.dp),
-                ) {
-                    val statuses = arrayOf(
-                        R.drawable.ic_status_online,
-                        R.drawable.ic_status_idle,
-                        R.drawable.ic_status_dnd,
-                        R.drawable.ic_status_invisible,
-                    )
-                    for (status in statuses) Icon(
+            // Status selector icons
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(
+                    16.dp,
+                    Alignment.CenterHorizontally
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 12.dp),
+            ) {
+                val statuses = arrayOf(
+                    R.drawable.ic_status_online,
+                    R.drawable.ic_status_idle,
+                    R.drawable.ic_status_dnd,
+                    R.drawable.ic_status_invisible,
+                )
+                for (status in statuses) {
+                    Icon(
                         painter = painterResource(status),
                         contentDescription = null,
                         tint = Color.Unspecified,
                         modifier = Modifier
-                            .size(35.dp)
+                            .size(40.dp)
                             .clickable { /*TODO*/ },
                     )
                 }
+            }
 
+            ProvideTextStyle(MaterialTheme.typography.labelLarge) {
+                // Custom status button
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier.clickable { /*TODO*/ }
@@ -264,6 +268,7 @@ private fun StatusSheet(
                     Text("Set a custom status")
                 }
 
+                // Account switcher button
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier.clickable { /*TODO*/ }
