@@ -7,7 +7,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,12 +24,14 @@ import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainChannel
 import com.xinto.opencord.domain.model.DomainGuild
+import com.xinto.opencord.ui.component.OCBadgeBox
 import com.xinto.opencord.ui.component.rememberOCCoilPainter
 import com.xinto.opencord.ui.viewmodel.ChannelsViewModel
 import com.xinto.opencord.ui.viewmodel.CurrentUserViewModel
 import com.xinto.opencord.ui.viewmodel.GuildsViewModel
 import com.xinto.opencord.ui.widget.*
 import com.xinto.opencord.util.getSortedChannels
+import com.xinto.opencord.util.letComposable
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -154,12 +157,9 @@ private fun CurrentUserItem(
     modifier: Modifier = Modifier,
     viewModel: CurrentUserViewModel = getViewModel()
 ) {
-    val userIcon = rememberOCCoilPainter(viewModel.avatarUrl)
-    var showStatusSheet by remember { mutableStateOf(false) }
-
     Surface(
         modifier = modifier,
-        onClick = { showStatusSheet = true },
+        onClick = { /*TODO*/ },
         shape = MaterialTheme.shapes.medium,
         tonalElevation = 1.dp
     ) {
@@ -175,21 +175,46 @@ private fun CurrentUserItem(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Image(
-                modifier = Modifier
-                    .size(40.dp)
-                    .clip(CircleShape),
-                painter = userIcon,
-                contentDescription = null
-            )
+            val userIcon = rememberOCCoilPainter(viewModel.avatarUrl)
+            OCBadgeBox(
+                badge = viewModel.userStatus?.letComposable { userStatus ->
+                    WidgetStatusIcon(
+                        modifier = Modifier.size(10.dp),
+                        userStatus = userStatus
+                    )
+                }
+            ) {
+                Image(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape),
+                    painter = userIcon,
+                    contentDescription = null
+                )
+            }
             Column(
                 verticalArrangement = Arrangement.spacedBy(2.dp),
             ) {
-                ProvideTextStyle(MaterialTheme.typography.titleSmall) {
-                    Text(viewModel.username)
+                val customStatus = viewModel.userCustomStatus
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    ProvideTextStyle(MaterialTheme.typography.titleSmall) {
+                        Text(viewModel.username)
+                    }
+                    if (customStatus != null) {
+                        ProvideTextStyle(MaterialTheme.typography.bodySmall) {
+                            Text(viewModel.discriminator)
+                        }
+                    }
                 }
                 ProvideTextStyle(MaterialTheme.typography.bodySmall) {
-                    Text(viewModel.discriminator)
+                    if (customStatus != null) {
+                        Text(customStatus)
+                    } else {
+                        Text(viewModel.discriminator)
+                    }
                 }
             }
             Row(
@@ -205,10 +230,6 @@ private fun CurrentUserItem(
             }
         }
     }
-
-    if (showStatusSheet) CurrentUserStatusSheet(
-        onClose = { showStatusSheet = false }
-    )
 }
 
 @Composable

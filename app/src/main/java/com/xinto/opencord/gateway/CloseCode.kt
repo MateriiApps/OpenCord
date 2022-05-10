@@ -1,5 +1,8 @@
 package com.xinto.opencord.gateway
 
+import com.xinto.enumgetter.GetterGen
+
+@GetterGen
 enum class CloseCode(val code: Int) {
     Unknown(-1),
     UnknownError(4000),
@@ -12,36 +15,22 @@ enum class CloseCode(val code: Int) {
     RateLimited(4008),
     SessionTimedOut(4009);
 
-    val canReconnect: Boolean
-        get() {
-            return when (this) {
-                Unknown -> false
-                UnknownError -> true
-                UnknownOpCode -> true
-                DecodeError -> true
-                NotAuthorized -> true
-                AuthenticationFailed -> false
-                AlreadyAuthenticated -> true
-                InvalidSequenceNumber -> true
-                RateLimited -> true
-                SessionTimedOut -> true
-            }
-        }
+    companion object
+}
 
-    companion object {
-        fun fromCode(code: Int): CloseCode {
-            return when (code) {
-                UnknownError.code -> UnknownError
-                UnknownOpCode.code -> UnknownOpCode
-                DecodeError.code -> DecodeError
-                NotAuthorized.code -> NotAuthorized
-                AuthenticationFailed.code -> AuthenticationFailed
-                AlreadyAuthenticated.code -> AlreadyAuthenticated
-                InvalidSequenceNumber.code -> InvalidSequenceNumber
-                RateLimited.code -> RateLimited
-                SessionTimedOut.code -> SessionTimedOut
-                else -> Unknown
-            }
+val CloseCode?.canReconnect: Boolean
+    get() {
+        return when (this) {
+            CloseCode.Unknown -> false
+            CloseCode.UnknownError -> true
+            CloseCode.UnknownOpCode -> true
+            CloseCode.DecodeError -> true
+            CloseCode.NotAuthorized -> true
+            CloseCode.AuthenticationFailed -> false
+            CloseCode.AlreadyAuthenticated -> true
+            CloseCode.InvalidSequenceNumber -> true
+            CloseCode.RateLimited -> true
+            CloseCode.SessionTimedOut -> true
+            else -> false
         }
     }
-}

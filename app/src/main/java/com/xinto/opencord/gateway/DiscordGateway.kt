@@ -88,7 +88,7 @@ class DiscordGatewayImpl(
                 val reason = withTimeoutOrNull(1500L) {
                     webSocketSession.closeReason.await()
                 } ?: return
-                val closeCode = CloseCode.fromCode(reason.code.toInt())
+                val closeCode = CloseCode.fromValue(reason.code.toInt())
                 establishConnection = closeCode.canReconnect
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -107,7 +107,7 @@ class DiscordGatewayImpl(
     override suspend fun requestGuildMembers(guildId: ULong) {
         sendSerializedData(
             OutgoingPayload(
-                opCode = OpCode.REQUEST_GUILD_MEMBERS,
+                opCode = OpCode.RequestGuildMembers,
                 data = RequestGuildMembers(
                     guildId = ApiSnowflake(guildId)
                 )
@@ -129,7 +129,12 @@ class DiscordGatewayImpl(
             }
             jsonString?.let { str ->
                 logger.debug("Gateway", str)
-                json.decodeFromString<IncomingPayload>(str)
+                try {
+                    json.decodeFromString<IncomingPayload>(str)
+                } catch (e: Exception) {
+//                    e.printStackTrace()
+                    null
+                }
             }
         }.filterNotNull().collect { incomingPayload ->
             val (opCode, data, seqNum, eventName) = incomingPayload
@@ -138,32 +143,36 @@ class DiscordGatewayImpl(
                 sequenceNumber = seqNum
 
             when (opCode) {
-                OpCode.DISPATCH -> {
-                    val decoded = json.decodeFromJsonElement(EventDeserializationStrategy(eventName!!), data!!)
-                    decoded?.let {
-                        if (it is ReadyEvent) {
-                            sessionId = it.data.sessionId
-                        }
-                        _events.emit(it)
+                OpCode.Dispatch -> {
+                    try {
+                        json.decodeFromJsonElement(EventDeserializationStrategy(eventName!!), data!!)
+                            .let { decodedEvent ->
+                                if (decodedEvent is ReadyEvent) {
+                                    sessionId = decodedEvent.data.sessionId
+                                }
+                                _events.emit(decodedEvent)
+                            }
+                    } catch (e: Exception) {
+//                        e.printStackTrace()
                     }
                 }
-                OpCode.HEARTBEAT -> {}
-                OpCode.RECONNECT -> {}
-                OpCode.HELLO -> {
+                OpCode.Heartbeat -> {}
+                OpCode.Reconnect -> {}
+                OpCode.Hello -> {
                     launch {
                         val interval =
                             json.decodeFromJsonElement<Heartbeat>(data!!).heartbeatInterval
                         runHeartbeat(interval, initial = true)
                     }
                 }
-                OpCode.INVALID_SESSION -> {
+                OpCode.InvalidSession -> {
                     val canResume = json.decodeFromJsonElement<Boolean>(data!!)
                     if (canResume) {
                         sendResume()
                     }
                     logger.debug("Gateway", "Invalid Session, canResume: $canResume")
                 }
-                OpCode.HEARTBEAT_ACK -> {
+                OpCode.HeartbeatAck -> {
                     logger.debug("Gateway", "Heartbeat Acked!")
                 }
                 else -> {}
@@ -183,14 +192,14 @@ class DiscordGatewayImpl(
 
     private suspend fun sendHeartbeat() {
         sendPayload(
-            opCode = OpCode.HEARTBEAT,
+            opCode = OpCode.Heartbeat,
             data = sequenceNumber
         )
     }
 
     private suspend fun sendIdentification() {
         sendPayload(
-            opCode = OpCode.IDENTIFY,
+            opCode = OpCode.Identify,
             data = Identification(
                 token = accountManager.currentAccountToken!!,
                 capabilities = 95,
@@ -219,7 +228,7 @@ class DiscordGatewayImpl(
 
     private suspend fun sendResume() {
         sendPayload(
-            opCode = OpCode.RESUME,
+            opCode = OpCode.Resume,
             data = Resume(
                 token = accountManager.currentAccountToken!!,
                 sessionId = sessionId,
