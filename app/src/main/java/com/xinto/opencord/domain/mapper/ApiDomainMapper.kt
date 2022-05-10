@@ -226,6 +226,41 @@ fun ApiEmbedField.toDomain(): DomainEmbedField {
     )
 }
 
+fun ApiUserSettingsPartial.toDomain(): DomainUserSettingsPartial {
+    return DomainUserSettingsPartial(
+        locale = locale,
+        showCurrentGame = showCurrentGame,
+        inlineAttachmentMedia = inlineAttachmentMedia,
+        inlineEmbedMedia = inlineEmbedMedia,
+        gifAutoPlay = gifAutoPlay,
+        renderEmbeds = renderEmbeds,
+        renderReactions = renderReactions,
+        animateEmoji = animateEmoji,
+        enableTTSCommand = enableTTSCommand,
+        messageDisplayCompact = messageDisplayCompact,
+        convertEmoticons = convertEmoticons,
+        disableGamesTab = disableGamesTab,
+        theme = theme?.let { DomainThemeSetting.fromValue(it) },
+        developerMode = developerMode,
+        guildPositions = guildPositions?.map { it.value },
+        detectPlatformAccounts = detectPlatformAccounts,
+        status = status?.let { DomainUserStatus.fromValue(it) },
+        afkTimeout = afkTimeout,
+        timezoneOffset = timezoneOffset,
+        streamNotificationsEnabled = streamNotificationsEnabled,
+        allowAccessibilityDetection = allowAccessibilityDetection,
+        contactSyncEnabled = contactSyncEnabled,
+        nativePhoneIntegrationEnabled = nativePhoneIntegrationEnabled,
+        animateStickers = animateStickers,
+        friendDiscoveryFlags = friendDiscoveryFlags,
+        viewNsfwGuilds = viewNsfwGuilds,
+        passwordless = passwordless,
+        friendSourceFlags = friendSourceFlags?.toDomain(),
+        guildFolders = guildFolders?.map { it.toDomain() },
+        customStatus = customStatus?.toDomain(),
+    )
+}
+
 fun ApiUserSettings.toDomain(): DomainUserSettings {
     val domainTheme = DomainThemeSetting.fromValue(theme) ?: throw IllegalArgumentException("Invalid theme $theme")
     val domainStatus = DomainUserStatus.fromValue(status) ?: throw IllegalArgumentException("Invalid status $status")
