@@ -18,7 +18,7 @@ import com.xinto.opencord.R
 import com.xinto.opencord.ui.viewmodel.CurrentUserViewModel
 
 @Composable
-fun CurrentUserStatusSheet(
+fun CurrentUserSheet(
     viewModel: CurrentUserViewModel,
     onClose: () -> Unit
 ) {

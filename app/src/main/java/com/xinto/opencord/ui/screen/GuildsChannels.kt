@@ -232,7 +232,7 @@ private fun CurrentUserItem(
         }
     }
 
-    if (showStatusSheet) CurrentUserStatusSheet(
+    if (showStatusSheet) CurrentUserSheet(
         viewModel = viewModel,
         onClose = { showStatusSheet = false },
     )
