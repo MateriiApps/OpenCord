@@ -129,7 +129,12 @@ class DiscordGatewayImpl(
             }
             jsonString?.let { str ->
                 logger.debug("Gateway", str)
-                json.decodeFromString<IncomingPayload>(str)
+                try {
+                    json.decodeFromString<IncomingPayload>(str)
+                } catch (e: Exception) {
+//                    e.printStackTrace()
+                    null
+                }
             }
         }.filterNotNull().collect { incomingPayload ->
             val (opCode, data, seqNum, eventName) = incomingPayload
@@ -139,12 +144,16 @@ class DiscordGatewayImpl(
 
             when (opCode) {
                 OpCode.Dispatch -> {
-                    val decoded = json.decodeFromJsonElement(EventDeserializationStrategy(eventName!!), data!!)
-                    decoded?.let {
-                        if (it is ReadyEvent) {
-                            sessionId = it.data.sessionId
-                        }
-                        _events.emit(it)
+                    try {
+                        json.decodeFromJsonElement(EventDeserializationStrategy(eventName!!), data!!)
+                            .let { decodedEvent ->
+                                if (decodedEvent is ReadyEvent) {
+                                    sessionId = decodedEvent.data.sessionId
+                                }
+                                _events.emit(decodedEvent)
+                            }
+                    } catch (e: Exception) {
+//                        e.printStackTrace()
                     }
                 }
                 OpCode.Heartbeat -> {}

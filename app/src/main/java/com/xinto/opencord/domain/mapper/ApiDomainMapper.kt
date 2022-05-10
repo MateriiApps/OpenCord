@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 import com.xinto.opencord.domain.model.*
 import com.xinto.opencord.rest.dto.*
 import com.xinto.opencord.rest.service.DiscordCdnServiceImpl
+import kotlinx.datetime.Instant
 
 fun ApiAttachment.toDomain(): DomainAttachment {
     return if (contentType.isNotEmpty()) {
@@ -222,5 +223,102 @@ fun ApiEmbedField.toDomain(): DomainEmbedField {
     return DomainEmbedField(
         name = name,
         value = value,
+    )
+}
+
+fun ApiUserSettingsPartial.toDomain(): DomainUserSettingsPartial {
+    return DomainUserSettingsPartial(
+        locale = locale,
+        showCurrentGame = showCurrentGame,
+        inlineAttachmentMedia = inlineAttachmentMedia,
+        inlineEmbedMedia = inlineEmbedMedia,
+        gifAutoPlay = gifAutoPlay,
+        renderEmbeds = renderEmbeds,
+        renderReactions = renderReactions,
+        animateEmoji = animateEmoji,
+        enableTTSCommand = enableTTSCommand,
+        messageDisplayCompact = messageDisplayCompact,
+        convertEmoticons = convertEmoticons,
+        disableGamesTab = disableGamesTab,
+        theme = theme?.let { DomainThemeSetting.fromValue(it) },
+        developerMode = developerMode,
+        guildPositions = guildPositions?.map { it.value },
+        detectPlatformAccounts = detectPlatformAccounts,
+        status = status?.let { DomainUserStatus.fromValue(it) },
+        afkTimeout = afkTimeout,
+        timezoneOffset = timezoneOffset,
+        streamNotificationsEnabled = streamNotificationsEnabled,
+        allowAccessibilityDetection = allowAccessibilityDetection,
+        contactSyncEnabled = contactSyncEnabled,
+        nativePhoneIntegrationEnabled = nativePhoneIntegrationEnabled,
+        animateStickers = animateStickers,
+        friendDiscoveryFlags = friendDiscoveryFlags,
+        viewNsfwGuilds = viewNsfwGuilds,
+        passwordless = passwordless,
+        friendSourceFlags = friendSourceFlags?.toDomain(),
+        guildFolders = guildFolders?.map { it.toDomain() },
+        customStatus = customStatus?.toDomain(),
+    )
+}
+
+fun ApiUserSettings.toDomain(): DomainUserSettings {
+    val domainTheme = DomainThemeSetting.fromValue(theme) ?: throw IllegalArgumentException("Invalid theme $theme")
+    val domainStatus = DomainUserStatus.fromValue(status) ?: throw IllegalArgumentException("Invalid status $status")
+    return DomainUserSettings(
+        locale = locale,
+        showCurrentGame = showCurrentGame,
+        inlineAttachmentMedia = inlineAttachmentMedia,
+        inlineEmbedMedia = inlineEmbedMedia,
+        gifAutoPlay = gifAutoPlay,
+        renderEmbeds = renderEmbeds,
+        renderReactions = renderReactions,
+        animateEmoji = animateEmoji,
+        enableTTSCommand = enableTTSCommand,
+        messageDisplayCompact = messageDisplayCompact,
+        convertEmoticons = convertEmoticons,
+        disableGamesTab = disableGamesTab,
+        theme = domainTheme,
+        developerMode = developerMode,
+        guildPositions = guildPositions.map { it.value },
+        detectPlatformAccounts = detectPlatformAccounts,
+        status = domainStatus,
+        afkTimeout = afkTimeout,
+        timezoneOffset = timezoneOffset,
+        streamNotificationsEnabled = streamNotificationsEnabled,
+        allowAccessibilityDetection = allowAccessibilityDetection,
+        contactSyncEnabled = contactSyncEnabled,
+        nativePhoneIntegrationEnabled = nativePhoneIntegrationEnabled,
+        animateStickers = animateStickers,
+        friendDiscoveryFlags = friendDiscoveryFlags,
+        viewNsfwGuilds = viewNsfwGuilds,
+        passwordless = passwordless,
+        friendSourceFlags = friendSourceFlags.toDomain(),
+        guildFolders = guildFolders.map { it.toDomain() },
+        customStatus = customStatus?.toDomain(),
+    )
+}
+
+fun ApiFriendSources.toDomain(): DomainFriendSources {
+    return DomainFriendSources(
+        all = (all ?: false) && mutualFriends == null && mutualGuilds == null,
+        mutualFriends = mutualFriends ?: false,
+        mutualGuilds = mutualGuilds ?: false,
+    )
+}
+
+fun ApiGuildFolder.toDomain(): DomainGuildFolder {
+    return DomainGuildFolder(
+        id = id?.value,
+        guildIds = guildIds.map { it.value },
+        name = name,
+    )
+}
+
+fun ApiCustomStatus.toDomain(): DomainCustomStatus {
+    return DomainCustomStatus(
+        text = text,
+        expiresAt = Instant.DISTANT_FUTURE,
+        emojiId = emojiId?.value,
+        emojiName = emojiName,
     )
 }

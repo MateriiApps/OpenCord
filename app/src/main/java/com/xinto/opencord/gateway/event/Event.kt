@@ -13,67 +13,72 @@ interface Event
 
 class EventDeserializationStrategy(
     private val eventName: EventName
-) : DeserializationStrategy<Event?> {
+) : DeserializationStrategy<Event> {
 
     override val descriptor: SerialDescriptor
         get() = JsonElement.serializer().descriptor
 
-    override fun deserialize(decoder: Decoder): Event? {
+    override fun deserialize(decoder: Decoder): Event {
         return when (eventName) {
-            EventName.READY -> {
+            EventName.Ready -> {
                 ReadyEvent(
                     data = decoder.decodeSerializableValue(Ready.serializer())
                 )
             }
-            EventName.GUILD_MEMBER_CHUNK -> {
+            EventName.GuildMemberChunk -> {
                 GuildMemberChunkEvent(
                     data = decoder.decodeSerializableValue(ApiGuildMemberChunk.serializer())
                 )
             }
-            EventName.GUILD_CREATE -> {
+            EventName.GuildCreate -> {
                 GuildCreateEvent(
                     data = decoder.decodeSerializableValue(ApiGuild.serializer())
                 )
             }
-            EventName.GUILD_UPDATE -> {
+            EventName.GuildUpdate -> {
                 GuildUpdateEvent(
                     data = decoder.decodeSerializableValue(ApiGuild.serializer())
                 )
             }
-            EventName.GUILD_DELETE -> {
-                null //TODO
+            EventName.GuildDelete -> {
+                TODO()
             }
-            EventName.CHANNEL_CREATE -> {
+            EventName.ChannelCreate -> {
                 ChannelCreateEvent(
                     data = decoder.decodeSerializableValue(ApiChannel.serializer())
                 )
             }
-            EventName.CHANNEL_UPDATE -> {
+            EventName.ChannelUpdate -> {
                 ChannelUpdateEvent(
                     data = decoder.decodeSerializableValue(ApiChannel.serializer())
                 )
             }
-            EventName.CHANNEL_DELETE -> {
+            EventName.ChannelDelete -> {
                 ChannelDeleteEvent(
                     data = decoder.decodeSerializableValue(ApiChannel.serializer())
                 )
             }
-            EventName.MESSAGE_CREATE -> {
+            EventName.MessageCreate -> {
                 MessageCreateEvent(
                     data = decoder.decodeSerializableValue(ApiMessage.serializer())
                 )
             }
-            EventName.MESSAGE_UPDATE -> {
+            EventName.MessageUpdate -> {
                 MessageUpdateEvent(
                     data = decoder.decodeSerializableValue(ApiMessagePartial.serializer())
                 )
             }
-            EventName.MESSAGE_DELETE -> {
+            EventName.MessageDelete -> {
                 MessageDeleteEvent(
                     data = decoder.decodeSerializableValue(MessageDeleteData.serializer())
                 )
             }
-            EventName.UNKNOWN -> null
+            EventName.UserSettingsUpdate -> {
+                UserSettingsUpdateEvent(
+                    data = decoder.decodeSerializableValue(ApiUserSettingsPartial.serializer())
+                )
+            }
+            else -> throw IllegalArgumentException("Unknown event $eventName")
         }
     }
 }

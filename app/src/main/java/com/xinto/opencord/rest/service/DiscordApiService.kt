@@ -15,28 +15,24 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 interface DiscordApiService {
-
     suspend fun getMeGuilds(): List<ApiMeGuild>
-
     suspend fun getGuild(guildId: ULong): ApiGuild
-
     suspend fun getGuildChannels(guildId: ULong): Map<ApiSnowflake, ApiChannel>
 
     suspend fun getChannel(channelId: ULong): ApiChannel
-
     suspend fun getChannelMessages(channelId: ULong): Map<ApiSnowflake, ApiMessage>
-
     suspend fun getChannelPins(channelId: ULong): Map<ApiSnowflake, ApiMessage>
 
     suspend fun postChannelMessage(channelId: ULong, body: MessageBody)
 
+    suspend fun getUserSettings(): ApiUserSettings
+    suspend fun updateUserSettings(settings: ApiUserSettingsPartial): ApiUserSettings
 }
 
 class DiscordApiServiceImpl(
     gateway: DiscordGateway,
     private val client: HttpClient
 ) : DiscordApiService {
-
     private val cachedMeGuilds = mutableListOf<ApiMeGuild>()
 
     private val cachedGuildById = mutableMapOf<ULong, ApiGuild>()
@@ -45,6 +41,8 @@ class DiscordApiServiceImpl(
     private val cachedGuildChannels = mutableMapOf<ULong, MutableMap<ApiSnowflake, ApiChannel>>()
     private val cachedChannelMessages = mutableMapOf<ULong, MutableMap<ApiSnowflake, ApiMessage>>()
     private val cachedChannelPins = mutableMapOf<ULong, MutableMap<ApiSnowflake, ApiMessage>>()
+
+    private var cachedUserSettings: ApiUserSettings? = null
 
     override suspend fun getMeGuilds(): List<ApiMeGuild> {
         return withContext(Dispatchers.IO) {
@@ -120,6 +118,25 @@ class DiscordApiServiceImpl(
         }
     }
 
+    override suspend fun getUserSettings(): ApiUserSettings {
+        return withContext(Dispatchers.IO) {
+            if (cachedUserSettings == null) {
+                cachedUserSettings = client.get(getUserSettingsUrl()).body()
+            }
+            cachedUserSettings!!
+        }
+    }
+
+    override suspend fun updateUserSettings(settings: ApiUserSettingsPartial): ApiUserSettings {
+        return withContext(Dispatchers.IO) {
+            client.patch(getUserSettingsUrl()) {
+                setBody(settings)
+            }.body<ApiUserSettings>().also {
+                cachedUserSettings = it
+            }
+        }
+    }
+
     init {
         gateway.onEvent<MessageCreateEvent> {
             val data = it.data
@@ -175,6 +192,9 @@ class DiscordApiServiceImpl(
             val channelUrl = getChannelUrl(channelId)
             return "$channelUrl/pins"
         }
-    }
 
+        fun getUserSettingsUrl(): String {
+            return "$BASE/users/@me/settings"
+        }
+    }
 }

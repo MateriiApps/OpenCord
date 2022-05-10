@@ -16,7 +16,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -25,12 +24,14 @@ import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainChannel
 import com.xinto.opencord.domain.model.DomainGuild
+import com.xinto.opencord.ui.component.OCBadgeBox
 import com.xinto.opencord.ui.component.rememberOCCoilPainter
 import com.xinto.opencord.ui.viewmodel.ChannelsViewModel
 import com.xinto.opencord.ui.viewmodel.CurrentUserViewModel
 import com.xinto.opencord.ui.viewmodel.GuildsViewModel
 import com.xinto.opencord.ui.widget.*
 import com.xinto.opencord.util.getSortedChannels
+import com.xinto.opencord.util.letComposable
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -156,7 +157,6 @@ private fun CurrentUserItem(
     modifier: Modifier = Modifier,
     viewModel: CurrentUserViewModel = getViewModel()
 ) {
-    val userIcon = rememberOCCoilPainter(viewModel.avatarUrl)
     Surface(
         modifier = modifier,
         onClick = { /*TODO*/ },
@@ -175,21 +175,46 @@ private fun CurrentUserItem(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Image(
-                modifier = Modifier
-                    .size(40.dp)
-                    .clip(CircleShape),
-                painter = userIcon,
-                contentDescription = null
-            )
+            val userIcon = rememberOCCoilPainter(viewModel.avatarUrl)
+            OCBadgeBox(
+                badge = viewModel.userStatus?.letComposable { userStatus ->
+                    WidgetStatusIcon(
+                        modifier = Modifier.size(10.dp),
+                        userStatus = userStatus
+                    )
+                }
+            ) {
+                Image(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape),
+                    painter = userIcon,
+                    contentDescription = null
+                )
+            }
             Column(
                 verticalArrangement = Arrangement.spacedBy(2.dp),
             ) {
-                ProvideTextStyle(MaterialTheme.typography.titleSmall) {
-                    Text(viewModel.username)
+                val customStatus = viewModel.userCustomStatus
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    ProvideTextStyle(MaterialTheme.typography.titleSmall) {
+                        Text(viewModel.username)
+                    }
+                    if (customStatus != null) {
+                        ProvideTextStyle(MaterialTheme.typography.bodySmall) {
+                            Text(viewModel.discriminator)
+                        }
+                    }
                 }
                 ProvideTextStyle(MaterialTheme.typography.bodySmall) {
-                    Text(viewModel.discriminator)
+                    if (customStatus != null) {
+                        Text(customStatus)
+                    } else {
+                        Text(viewModel.discriminator)
+                    }
                 }
             }
             Row(
