@@ -178,11 +178,26 @@ private fun CurrentUserItem(
             Column(
                 verticalArrangement = Arrangement.spacedBy(2.dp),
             ) {
-                ProvideTextStyle(MaterialTheme.typography.titleSmall) {
-                    Text(viewModel.username)
+                val customStatus = viewModel.userCustomStatus
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    ProvideTextStyle(MaterialTheme.typography.titleSmall) {
+                        Text(viewModel.username)
+                    }
+                    if (customStatus != null) {
+                        ProvideTextStyle(MaterialTheme.typography.bodySmall) {
+                            Text(viewModel.discriminator)
+                        }
+                    }
                 }
                 ProvideTextStyle(MaterialTheme.typography.bodySmall) {
-                    Text(viewModel.discriminator)
+                    if (customStatus != null) {
+                        Text(customStatus)
+                    } else {
+                        Text(viewModel.discriminator)
+                    }
                 }
             }
             Row(

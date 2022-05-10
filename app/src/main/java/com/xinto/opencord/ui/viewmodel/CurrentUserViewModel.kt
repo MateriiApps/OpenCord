@@ -36,6 +36,8 @@ class CurrentUserViewModel(
 
     var userStatus by mutableStateOf<DomainUserStatus?>(null)
         private set
+    var userCustomStatus by mutableStateOf<String?>(null)
+        private set
 
     init {
         gateway.onEvent<ReadyEvent> {
@@ -49,6 +51,7 @@ class CurrentUserViewModel(
             try {
                 val settings = repository.getUserSettings()
                 userStatus = settings.status
+                userCustomStatus = settings.customStatus?.text
                 state = State.Loaded
             } catch (e: Throwable) {
                 e.printStackTrace()
