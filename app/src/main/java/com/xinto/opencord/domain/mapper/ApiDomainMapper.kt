@@ -227,6 +227,8 @@ fun ApiEmbedField.toDomain(): DomainEmbedField {
 }
 
 fun ApiUserSettings.toDomain(): DomainUserSettings {
+    val domainTheme = DomainThemeSetting.fromValue(theme) ?: throw IllegalArgumentException("Invalid theme $theme")
+    val domainStatus = DomainUserStatus.fromValue(status) ?: throw IllegalArgumentException("Invalid status $status")
     return DomainUserSettings(
         locale = locale,
         showCurrentGame = showCurrentGame,
@@ -240,11 +242,11 @@ fun ApiUserSettings.toDomain(): DomainUserSettings {
         messageDisplayCompact = messageDisplayCompact,
         convertEmoticons = convertEmoticons,
         disableGamesTab = disableGamesTab,
-        theme = DomainThemeSetting.fromValue(theme),
+        theme = domainTheme,
         developerMode = developerMode,
         guildPositions = guildPositions.map { it.value },
         detectPlatformAccounts = detectPlatformAccounts,
-        status = DomainUserStatus.fromValue(status),
+        status = domainStatus,
         afkTimeout = afkTimeout,
         timezoneOffset = timezoneOffset,
         streamNotificationsEnabled = streamNotificationsEnabled,

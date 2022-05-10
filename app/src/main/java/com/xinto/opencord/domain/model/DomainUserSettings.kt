@@ -1,5 +1,6 @@
 package com.xinto.opencord.domain.model
 
+import com.xinto.enumgetter.GetterGen
 import com.xinto.partialgen.Partial
 import kotlinx.datetime.Instant
 
@@ -61,36 +62,20 @@ data class DomainCustomStatus(
     val emojiName: String?
 )
 
+@GetterGen
 enum class DomainThemeSetting(val value: String) {
     Dark("dark"),
     Light("light");
 
-    companion object {
-        fun fromValue(value: String): DomainThemeSetting {
-            return when (value) {
-                Dark.value -> Dark
-                Light.value -> Light
-                else -> throw IllegalStateException("Unknown DomainThemeSetting $value")
-            }
-        }
-    }
+    companion object
 }
 
+@GetterGen
 enum class DomainUserStatus(val value: String) {
     Online("online"),
     Idle("idle"),
     Dnd("dnd"),
     Invisible("invisible");
 
-    companion object {
-        fun fromValue(value: String): DomainUserStatus {
-            return when (value) {
-                Online.value -> Online
-                Idle.value -> Idle
-                Dnd.value -> Dnd
-                Invisible.value -> Invisible
-                else -> throw IllegalStateException("Unknown DomainUserStatus $value")
-            }
-        }
-    }
+    companion object
 }
