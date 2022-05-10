@@ -1,14 +1,8 @@
 package com.xinto.opencord.rest.dto
 
 import com.xinto.partialgen.Partial
-import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.PrimitiveKind
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
 
 // TODO: check what the commented out parts are
 @Partial
@@ -23,8 +17,8 @@ data class ApiUserSettings(
 //    @SerialName("restricted_guilds")
 //    val restrictedGuilds: List<ApiSnowflake>
 
-    @SerialName("default_guilds_restricted")
-    val defaultGuildsRestricted: Boolean,
+//    @SerialName("default_guilds_restricted")
+//    val defaultGuildsRestricted: Boolean,
 
     @SerialName("inline_attachment_media")
     val inlineAttachmentMedia: Boolean,
@@ -61,19 +55,19 @@ data class ApiUserSettings(
     val disableGamesTab: Boolean,
 
     @SerialName("theme")
-    val theme: ApiThemeSetting,
+    val theme: String,
 
     @SerialName("developer_mode")
     val developerMode: Boolean,
 
     @SerialName("guild_positions")
-    val guildPositions: List<ULong>,
+    val guildPositions: List<ApiSnowflake>,
 
     @SerialName("detect_platform_accounts")
     val detectPlatformAccounts: Boolean,
 
     @SerialName("status")
-    val status: ApiStatus,
+    val status: String,
 
     @SerialName("afk_timeout")
     val afkTimeout: Int,
@@ -94,10 +88,10 @@ data class ApiUserSettings(
     val nativePhoneIntegrationEnabled: Boolean,
 
     @SerialName("animate_stickers")
-    val animateStickers: Int, // int??
+    val animateStickers: Int,
 
-//    @SerialName("friend_discovery_flags")
-//    val friendDiscoveryFlags: Int,
+    @SerialName("friend_discovery_flags")
+    val friendDiscoveryFlags: Int,
 
     @SerialName("view_nsfw_guilds")
     val viewNsfwGuilds: Boolean,
@@ -132,11 +126,11 @@ data class ApiGuildFolder(
     @SerialName("guild_ids")
     val guildIds: List<ApiSnowflake>,
 
-//    @SerialName("id")
-//    val id: ApiSnowflake? = null,
+    @SerialName("id")
+    val id: ApiSnowflake? = null,
 
-//    @SerialName("name")
-//    val name: String? = null,
+    @SerialName("name")
+    val name: String? = null,
 
 //    @SerialName("color")
 //    val color: Any? = null,
@@ -150,69 +144,9 @@ data class ApiCustomStatus(
     @SerialName("expires_at")
     val expiresAt: String, // timestamp
 
-//    @SerialName("emoji_id")
-//    val emojiId: Any?,
+    @SerialName("emoji_id")
+    val emojiId: ApiSnowflake?,
 
     @SerialName("emoji_name")
     val emojiName: String?
 )
-
-@Serializable(ApiThemeSetting.Serializer::class)
-enum class ApiThemeSetting(val value: String) {
-    Dark("dark"),
-    Light("light");
-
-    companion object Serializer : KSerializer<ApiThemeSetting> {
-        override val descriptor: SerialDescriptor
-            get() = PrimitiveSerialDescriptor("ThemeSetting", PrimitiveKind.STRING)
-
-        override fun deserialize(decoder: Decoder): ApiThemeSetting {
-            val theme = decoder.decodeString()
-            return fromValue(theme) ?: throw IllegalStateException("Unknown theme setting $theme")
-        }
-
-        override fun serialize(encoder: Encoder, value: ApiThemeSetting) {
-            encoder.encodeString(value.value)
-        }
-
-        private fun fromValue(value: String): ApiThemeSetting? {
-            return when (value) {
-                Dark.value -> Dark
-                Light.value -> Light
-                else -> null
-            }
-        }
-    }
-}
-
-@Serializable(ApiStatus.Serializer::class)
-enum class ApiStatus(val value: String) {
-    Online("online"),
-    Idle("idle"),
-    Dnd("dnd"),
-    Invisible("invisible");
-
-    companion object Serializer : KSerializer<ApiStatus> {
-        override val descriptor: SerialDescriptor
-            get() = PrimitiveSerialDescriptor("ApiStatus", PrimitiveKind.STRING)
-
-        override fun deserialize(decoder: Decoder): ApiStatus {
-            val status = decoder.decodeString()
-            return fromValue(status) ?: throw IllegalStateException("Unknown status $status")
-        }
-
-        override fun serialize(encoder: Encoder, value: ApiStatus) {
-            encoder.encodeString(value.value)
-        }
-
-        private fun fromValue(value: String): ApiStatus? {
-            return when (value) {
-                Online.value -> Online
-                Idle.value -> Idle
-                Dnd.value -> Dnd
-                Invisible.value -> Invisible
-                else -> null
-            }
-        }
-    }
-}

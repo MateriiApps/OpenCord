@@ -1,13 +1,9 @@
 package com.xinto.opencord.domain.repository
 
+import com.xinto.opencord.domain.mapper.toApi
 import com.xinto.opencord.domain.mapper.toDomain
-import com.xinto.opencord.domain.model.DomainChannel
-import com.xinto.opencord.domain.model.DomainGuild
-import com.xinto.opencord.domain.model.DomainMeGuild
-import com.xinto.opencord.domain.model.DomainMessage
+import com.xinto.opencord.domain.model.*
 import com.xinto.opencord.rest.body.MessageBody
-import com.xinto.opencord.rest.dto.ApiUserSettings
-import com.xinto.opencord.rest.dto.ApiUserSettingsPartial
 import com.xinto.opencord.rest.service.DiscordApiService
 
 interface DiscordApiRepository {
@@ -21,14 +17,14 @@ interface DiscordApiRepository {
 
     suspend fun postChannelMessage(channelId: ULong, body: MessageBody)
 
-    suspend fun getUserSettings(force: Boolean = false): ApiUserSettings
-    suspend fun setUserSettings(settings: ApiUserSettingsPartial): ApiUserSettings
+    suspend fun getUserSettings(force: Boolean = false): DomainUserSettings
+    suspend fun setUserSettings(settings: DomainUserSettingsPartial): DomainUserSettings
 }
 
 class DiscordApiRepositoryImpl(
     private val service: DiscordApiService
 ) : DiscordApiRepository {
-    private var cachedUserSettings: ApiUserSettings? = null
+    private var cachedUserSettings: DomainUserSettings? = null
 
     override suspend fun getMeGuilds(): List<DomainMeGuild> {
         return service.getMeGuilds().map { it.toDomain() }
@@ -67,17 +63,17 @@ class DiscordApiRepositoryImpl(
         service.postChannelMessage(channelId, body)
     }
 
-    override suspend fun getUserSettings(force: Boolean): ApiUserSettings {
+    override suspend fun getUserSettings(force: Boolean): DomainUserSettings {
         return if (cachedUserSettings != null && !force)
             cachedUserSettings!!
         else {
-            service.getUserSettings()
+            service.getUserSettings().toDomain()
                 .also { cachedUserSettings = it }
         }
     }
 
-    override suspend fun setUserSettings(settings: ApiUserSettingsPartial): ApiUserSettings {
-        return service.setUserSettings(settings)
+    override suspend fun setUserSettings(settings: DomainUserSettingsPartial): DomainUserSettings {
+        return service.setUserSettings(settings.toApi()).toDomain()
             .also { cachedUserSettings = it }
     }
 }

@@ -15,10 +15,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
-import com.xinto.opencord.rest.dto.ApiStatus
+import com.xinto.opencord.domain.model.DomainUserStatus
 
 @Composable
-fun AvatarStatus(avatarUrl: String, userStatus: ApiStatus?) {
+fun AvatarStatus(avatarUrl: String, userStatus: DomainUserStatus?) {
     val userIcon = rememberOCCoilPainter(avatarUrl)
 
     Box {
@@ -32,10 +32,10 @@ fun AvatarStatus(avatarUrl: String, userStatus: ApiStatus?) {
 
         if (userStatus != null) {
             val statusIcon = when (userStatus) {
-                ApiStatus.Online -> R.drawable.ic_status_online
-                ApiStatus.Invisible -> R.drawable.ic_status_invisible
-                ApiStatus.Idle -> R.drawable.ic_status_idle
-                ApiStatus.Dnd -> R.drawable.ic_status_dnd
+                DomainUserStatus.Online -> R.drawable.ic_status_online
+                DomainUserStatus.Invisible -> R.drawable.ic_status_invisible
+                DomainUserStatus.Idle -> R.drawable.ic_status_idle
+                DomainUserStatus.Dnd -> R.drawable.ic_status_dnd
             }
 
             Surface(

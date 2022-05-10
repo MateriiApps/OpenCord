@@ -6,11 +6,11 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xinto.opencord.domain.mapper.toDomain
+import com.xinto.opencord.domain.model.DomainUserStatus
 import com.xinto.opencord.domain.repository.DiscordApiRepository
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.event.ReadyEvent
 import com.xinto.opencord.gateway.onEvent
-import com.xinto.opencord.rest.dto.ApiStatus
 import kotlinx.coroutines.launch
 
 class CurrentUserViewModel(
@@ -34,7 +34,7 @@ class CurrentUserViewModel(
     var discriminator by mutableStateOf("")
         private set
 
-    var userStatus by mutableStateOf<ApiStatus?>(null)
+    var userStatus by mutableStateOf<DomainUserStatus?>(null)
         private set
 
     init {

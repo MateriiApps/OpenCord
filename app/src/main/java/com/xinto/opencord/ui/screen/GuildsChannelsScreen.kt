@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainChannel
 import com.xinto.opencord.domain.model.DomainGuild
-import com.xinto.opencord.rest.dto.ApiStatus
 import com.xinto.opencord.ui.component.AvatarStatus
 import com.xinto.opencord.ui.component.rememberOCCoilPainter
 import com.xinto.opencord.ui.viewmodel.ChannelsViewModel
