@@ -233,6 +233,7 @@ private fun CurrentUserItem(
     }
 
     if (showStatusSheet) CurrentUserStatusSheet(
+        viewModel = viewModel,
         onClose = { showStatusSheet = false },
     )
 }

@@ -15,9 +15,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.xinto.bdc.BottomSheetDialog
 import com.xinto.opencord.R
+import com.xinto.opencord.ui.viewmodel.CurrentUserViewModel
 
 @Composable
 fun CurrentUserStatusSheet(
+    viewModel: CurrentUserViewModel,
     onClose: () -> Unit
 ) {
     BottomSheetDialog(onDismissRequest = onClose) {
@@ -51,7 +53,10 @@ fun CurrentUserStatusSheet(
                         tint = Color.Unspecified,
                         modifier = Modifier
                             .size(40.dp)
-                            .clickable { /*TODO*/ },
+                            .clickable {
+                                viewModel.setStatus(status)
+                                onClose()
+                            },
                     )
                 }
             }

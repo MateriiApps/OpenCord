@@ -1,12 +1,15 @@
 package com.xinto.opencord.ui.viewmodel
 
+import androidx.annotation.DrawableRes
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.xinto.opencord.R
 import com.xinto.opencord.domain.mapper.toDomain
 import com.xinto.opencord.domain.model.DomainUserSettings
+import com.xinto.opencord.domain.model.DomainUserSettingsPartial
 import com.xinto.opencord.domain.model.DomainUserStatus
 import com.xinto.opencord.domain.model.merge
 import com.xinto.opencord.domain.repository.DiscordApiRepository
@@ -18,7 +21,7 @@ import kotlinx.coroutines.launch
 
 class CurrentUserViewModel(
     gateway: DiscordGateway,
-    repository: DiscordApiRepository
+    private val repository: DiscordApiRepository
 ) : ViewModel() {
 
     sealed interface State {
@@ -43,6 +46,21 @@ class CurrentUserViewModel(
         private set
 
     private var userSettings: DomainUserSettings? = null
+
+    fun setStatus(@DrawableRes icon: Int) {
+        viewModelScope.launch {
+            val status = when (icon) {
+                R.drawable.ic_status_online -> DomainUserStatus.Online
+                R.drawable.ic_status_idle -> DomainUserStatus.Idle
+                R.drawable.ic_status_dnd -> DomainUserStatus.Dnd
+                R.drawable.ic_status_invisible -> DomainUserStatus.Invisible
+                else -> throw IllegalStateException("Unknown status icon!")
+            }
+
+            val settings = DomainUserSettingsPartial(status = status)
+            repository.updateUserSettings(settings)
+        }
+    }
 
     init {
         gateway.onEvent<ReadyEvent> {
