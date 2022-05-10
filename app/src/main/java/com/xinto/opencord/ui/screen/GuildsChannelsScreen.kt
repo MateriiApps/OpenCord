@@ -24,13 +24,14 @@ import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainChannel
 import com.xinto.opencord.domain.model.DomainGuild
-import com.xinto.opencord.ui.component.AvatarStatus
+import com.xinto.opencord.ui.component.OCBadgeBox
 import com.xinto.opencord.ui.component.rememberOCCoilPainter
 import com.xinto.opencord.ui.viewmodel.ChannelsViewModel
 import com.xinto.opencord.ui.viewmodel.CurrentUserViewModel
 import com.xinto.opencord.ui.viewmodel.GuildsViewModel
 import com.xinto.opencord.ui.widget.*
 import com.xinto.opencord.util.getSortedChannels
+import com.xinto.opencord.util.letComposable
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -174,7 +175,23 @@ private fun CurrentUserItem(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            AvatarStatus(viewModel.avatarUrl, viewModel.userStatus)
+            val userIcon = rememberOCCoilPainter(viewModel.avatarUrl)
+            OCBadgeBox(
+                badge = viewModel.userStatus?.letComposable { userStatus ->
+                    WidgetStatusIcon(
+                        modifier = Modifier.size(10.dp),
+                        userStatus = userStatus
+                    )
+                }
+            ) {
+                Image(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape),
+                    painter = userIcon,
+                    contentDescription = null
+                )
+            }
             Column(
                 verticalArrangement = Arrangement.spacedBy(2.dp),
             ) {
