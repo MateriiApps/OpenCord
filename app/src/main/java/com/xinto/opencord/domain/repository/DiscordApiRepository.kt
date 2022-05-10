@@ -17,14 +17,13 @@ interface DiscordApiRepository {
 
     suspend fun postChannelMessage(channelId: ULong, body: MessageBody)
 
-    suspend fun getUserSettings(force: Boolean = false): DomainUserSettings
-    suspend fun setUserSettings(settings: DomainUserSettingsPartial): DomainUserSettings
+    suspend fun getUserSettings(): DomainUserSettings
+    suspend fun updateUserSettings(settings: DomainUserSettingsPartial): DomainUserSettings
 }
 
 class DiscordApiRepositoryImpl(
     private val service: DiscordApiService
 ) : DiscordApiRepository {
-    private var cachedUserSettings: DomainUserSettings? = null
 
     override suspend fun getMeGuilds(): List<DomainMeGuild> {
         return service.getMeGuilds().map { it.toDomain() }
@@ -63,17 +62,11 @@ class DiscordApiRepositoryImpl(
         service.postChannelMessage(channelId, body)
     }
 
-    override suspend fun getUserSettings(force: Boolean): DomainUserSettings {
-        return if (cachedUserSettings != null && !force)
-            cachedUserSettings!!
-        else {
-            service.getUserSettings().toDomain()
-                .also { cachedUserSettings = it }
-        }
+    override suspend fun getUserSettings(): DomainUserSettings {
+        return service.getUserSettings().toDomain()
     }
 
-    override suspend fun setUserSettings(settings: DomainUserSettingsPartial): DomainUserSettings {
-        return service.setUserSettings(settings.toApi()).toDomain()
-            .also { cachedUserSettings = it }
+    override suspend fun updateUserSettings(settings: DomainUserSettingsPartial): DomainUserSettings {
+        return service.updateUserSettings(settings.toApi()).toDomain()
     }
 }

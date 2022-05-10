@@ -26,7 +26,7 @@ interface DiscordApiService {
     suspend fun postChannelMessage(channelId: ULong, body: MessageBody)
 
     suspend fun getUserSettings(): ApiUserSettings
-    suspend fun setUserSettings(settings: ApiUserSettingsPartial): ApiUserSettings
+    suspend fun updateUserSettings(settings: ApiUserSettingsPartial): ApiUserSettings
 }
 
 class DiscordApiServiceImpl(
@@ -41,6 +41,8 @@ class DiscordApiServiceImpl(
     private val cachedGuildChannels = mutableMapOf<ULong, MutableMap<ApiSnowflake, ApiChannel>>()
     private val cachedChannelMessages = mutableMapOf<ULong, MutableMap<ApiSnowflake, ApiMessage>>()
     private val cachedChannelPins = mutableMapOf<ULong, MutableMap<ApiSnowflake, ApiMessage>>()
+
+    private var cachedUserSettings: ApiUserSettings? = null
 
     override suspend fun getMeGuilds(): List<ApiMeGuild> {
         return withContext(Dispatchers.IO) {
@@ -118,15 +120,20 @@ class DiscordApiServiceImpl(
 
     override suspend fun getUserSettings(): ApiUserSettings {
         return withContext(Dispatchers.IO) {
-            client.get(getUserSettingsUrl()).body()
+            if (cachedUserSettings == null) {
+                cachedUserSettings = client.get(getUserSettingsUrl()).body()
+            }
+            cachedUserSettings!!
         }
     }
 
-    override suspend fun setUserSettings(settings: ApiUserSettingsPartial): ApiUserSettings {
+    override suspend fun updateUserSettings(settings: ApiUserSettingsPartial): ApiUserSettings {
         return withContext(Dispatchers.IO) {
             client.patch(getUserSettingsUrl()) {
                 setBody(settings)
-            }.body()
+            }.body<ApiUserSettings>().also {
+                cachedUserSettings = it
+            }
         }
     }
 
