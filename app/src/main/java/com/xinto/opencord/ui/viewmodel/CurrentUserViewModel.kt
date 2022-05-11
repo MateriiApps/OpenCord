@@ -8,15 +8,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.mapper.toDomain
-import com.xinto.opencord.domain.model.DomainUserSettings
-import com.xinto.opencord.domain.model.DomainUserSettingsPartial
-import com.xinto.opencord.domain.model.DomainUserStatus
-import com.xinto.opencord.domain.model.merge
+import com.xinto.opencord.domain.model.*
 import com.xinto.opencord.domain.repository.DiscordApiRepository
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.event.ReadyEvent
 import com.xinto.opencord.gateway.event.UserSettingsUpdateEvent
 import com.xinto.opencord.gateway.onEvent
+import com.xinto.partialgen.PartialValue
 import kotlinx.coroutines.launch
 
 class CurrentUserViewModel(
@@ -42,7 +40,7 @@ class CurrentUserViewModel(
 
     var userStatus by mutableStateOf<DomainUserStatus?>(null)
         private set
-    var userCustomStatus by mutableStateOf<String?>(null)
+    var userCustomStatus by mutableStateOf<DomainCustomStatus?>(null)
         private set
 
     private var userSettings: DomainUserSettings? = null
@@ -57,9 +55,20 @@ class CurrentUserViewModel(
                 else -> throw IllegalStateException("Unknown status icon!")
             }
 
-            val settings = DomainUserSettingsPartial(status = status)
+            val settings = DomainUserSettingsPartial(status = PartialValue.Value(status))
             repository.updateUserSettings(settings)
         }
+        // TODO: send a presence update
+    }
+
+    fun setCustomStatus(status: DomainCustomStatus?) {
+        viewModelScope.launch {
+            val settings = DomainUserSettingsPartial(
+                customStatus = PartialValue.toPartial(status)
+            )
+            repository.updateUserSettings(settings)
+        }
+        // TODO: send a presence update
     }
 
     init {
@@ -72,9 +81,8 @@ class CurrentUserViewModel(
         gateway.onEvent<UserSettingsUpdateEvent> {
             val mergedData = userSettings?.merge(it.data.toDomain())
                 .also { mergedData -> userSettings = mergedData }
-            //TODO fix unsetting values bug by fixing the merger
             userStatus = mergedData?.status
-            userCustomStatus = mergedData?.customStatus?.text
+            userCustomStatus = mergedData?.customStatus
             println(mergedData?.customStatus?.text)
         }
 
@@ -85,7 +93,7 @@ class CurrentUserViewModel(
                         userSettings = it
                     }
                 userStatus = settings.status
-                userCustomStatus = settings.customStatus?.text
+                userCustomStatus = settings.customStatus
                 state = State.Loaded
             } catch (e: Throwable) {
                 e.printStackTrace()

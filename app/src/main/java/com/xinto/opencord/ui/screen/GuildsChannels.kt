@@ -212,7 +212,7 @@ private fun CurrentUserItem(
                 }
                 ProvideTextStyle(MaterialTheme.typography.bodySmall) {
                     if (customStatus != null) {
-                        Text(customStatus)
+                        Text(customStatus.text)
                     } else {
                         Text(viewModel.discriminator)
                     }

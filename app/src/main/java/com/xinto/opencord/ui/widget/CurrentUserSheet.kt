@@ -62,7 +62,23 @@ fun CurrentUserSheet(
             }
 
             ProvideTextStyle(MaterialTheme.typography.labelLarge) {
-                // Custom status button
+                // Custom status
+                if (viewModel.userCustomStatus != null) {
+                    val status = viewModel.userCustomStatus!!
+                    Box(modifier = Modifier.fillMaxWidth()) {
+                        Text(status.text)
+                        Icon(
+                            painter = painterResource(R.drawable.ic_cancel),
+                            contentDescription = "Clear status",
+                            modifier = Modifier
+                                .align(Alignment.CenterEnd)
+                                .clickable {
+                                    viewModel.setCustomStatus(null)
+                                    onClose()
+                                }
+                        )
+                    }
+                }
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier.clickable { /*TODO*/ }

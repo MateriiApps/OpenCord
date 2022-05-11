@@ -9,12 +9,12 @@ import kotlinx.serialization.encoding.Encoder
 @Serializable(PartialValue.Serializer::class)
 sealed class PartialValue<out T> {
 
-    class Value<T>(val value: T): PartialValue<T>()
+    class Value<T>(val value: T) : PartialValue<T>()
     class Missing<out T> : PartialValue<T>()
 
     internal class Serializer<T>(
         private val valueSerializer: KSerializer<T>
-    ): KSerializer<PartialValue<T?>> {
+    ) : KSerializer<PartialValue<T?>> {
 
         override val descriptor: SerialDescriptor
             get() = valueSerializer.descriptor
@@ -38,6 +38,14 @@ sealed class PartialValue<out T> {
             }
 
             return Value(value)
+        }
+    }
+
+    companion object {
+        fun <T> toPartial(value: T?): PartialValue<T> {
+            return value
+                ?.let { Value(value) }
+                ?: Missing()
         }
     }
 }
