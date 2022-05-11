@@ -8,6 +8,7 @@ import com.xinto.opencord.gateway.event.MessageUpdateEvent
 import com.xinto.opencord.gateway.onEvent
 import com.xinto.opencord.rest.body.MessageBody
 import com.xinto.opencord.rest.dto.*
+import com.xinto.partialgen.getOrNull
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -146,13 +147,13 @@ class DiscordApiServiceImpl(
 
         gateway.onEvent<MessageUpdateEvent> {
             val partialData = it.data
-            val id = partialData.id
-            val channelId = partialData.channelId!!.value
+            val id = partialData.id.getOrNull()!!
+            val channelId = partialData.channelId.getOrNull()!!.value
             val mergedData = cachedChannelMessages[channelId]?.get(id).let { message ->
                 message?.merge(partialData)
             }
             if (mergedData != null) {
-                cachedChannelMessages[channelId]?.put(partialData.id!!, mergedData)
+                cachedChannelMessages[channelId]?.put(id, mergedData)
             }
         }
 

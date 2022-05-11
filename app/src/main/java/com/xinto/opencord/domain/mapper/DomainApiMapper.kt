@@ -5,8 +5,19 @@ import com.xinto.opencord.domain.model.DomainFriendSources
 import com.xinto.opencord.domain.model.DomainGuildFolder
 import com.xinto.opencord.domain.model.DomainUserSettingsPartial
 import com.xinto.opencord.rest.dto.*
+import com.xinto.partialgen.mapToPartial
 
 fun DomainUserSettingsPartial.toApi(): ApiUserSettingsPartial {
+    val apiPartialTheme = theme.mapToPartial { it.value }
+    val apiPartialGuildPositions = guildPositions.mapToPartial { guildPositions ->
+        guildPositions.map { ApiSnowflake(it) }
+    }
+    val apiPartialStatus = status.mapToPartial { it.value }
+    val apiPartialFriendSourceFlags = friendSourceFlags.mapToPartial { it.toApi() }
+    val apiPartialGuildFolders = guildFolders.mapToPartial { guildFolders ->
+        guildFolders.map { it.toApi() }
+    }
+    val apiPartialCustomStatus = customStatus.mapToPartial { it?.toApi() }
     return ApiUserSettingsPartial(
         locale = locale,
         showCurrentGame = showCurrentGame,
@@ -20,11 +31,11 @@ fun DomainUserSettingsPartial.toApi(): ApiUserSettingsPartial {
         messageDisplayCompact = messageDisplayCompact,
         convertEmoticons = convertEmoticons,
         disableGamesTab = disableGamesTab,
-        theme = theme?.value,
+        theme = apiPartialTheme,
         developerMode = developerMode,
-        guildPositions = guildPositions?.map { ApiSnowflake(it) },
+        guildPositions = apiPartialGuildPositions,
         detectPlatformAccounts = detectPlatformAccounts,
-        status = status?.value,
+        status = apiPartialStatus,
         afkTimeout = afkTimeout,
         timezoneOffset = timezoneOffset,
         streamNotificationsEnabled = streamNotificationsEnabled,
@@ -35,9 +46,9 @@ fun DomainUserSettingsPartial.toApi(): ApiUserSettingsPartial {
         friendDiscoveryFlags = friendDiscoveryFlags,
         viewNsfwGuilds = viewNsfwGuilds,
         passwordless = passwordless,
-        friendSourceFlags = friendSourceFlags?.toApi(),
-        guildFolders = guildFolders?.map { it.toApi() },
-        customStatus = customStatus?.toApi(),
+        friendSourceFlags = apiPartialFriendSourceFlags,
+        guildFolders = apiPartialGuildFolders,
+        customStatus = apiPartialCustomStatus,
     )
 }
 
