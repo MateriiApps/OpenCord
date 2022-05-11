@@ -15,6 +15,7 @@ import com.xinto.opencord.gateway.event.MessageUpdateEvent
 import com.xinto.opencord.gateway.onEvent
 import com.xinto.opencord.rest.body.MessageBody
 import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
+import com.xinto.partialgen.getOrNull
 import kotlinx.coroutines.launch
 
 class ChatViewModel(
@@ -86,16 +87,17 @@ class ChatViewModel(
         }
 
         gateway.onEvent<MessageUpdateEvent>(
-            filterPredicate = { it.data.channelId!!.value == persistentChannelId }
+            filterPredicate = { it.data.channelId.getOrNull()!!.value == persistentChannelId }
         ) { event ->
             val domainPartialData = event.data.toDomain()
-            val mergedData = messages[domainPartialData.id]?.let {
+            val id = domainPartialData.id.getOrNull()!!
+            val mergedData = messages[id]?.let {
                 if (it is DomainMessageRegular) {
                     it.merge(domainPartialData)
                 } else null
             }
             if (mergedData != null) {
-                messages[domainPartialData.id!!] = mergedData
+                messages[id] = mergedData
             }
         }
 

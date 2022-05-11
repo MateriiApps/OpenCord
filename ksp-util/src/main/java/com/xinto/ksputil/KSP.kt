@@ -12,6 +12,7 @@ typealias Import = String
  * @return A [Pair] consisting of the [Type] and its [Import]s.
  */
 fun KSTypeReference.sourceType(): Pair<Type, List<Import?>> {
+    val resolvedType = resolve()
     val declaration = resolve().declaration
     val typeName = declaration.qualifiedName
     val typeArguments = element?.typeArguments ?: emptyList()
@@ -22,15 +23,19 @@ fun KSTypeReference.sourceType(): Pair<Type, List<Import?>> {
         buildString {
 
             imports.add(declaration.resolveImport())
-            append(declaration.simpleName.getShortName())
+            append(declaration.simpleName.getShortName().let {
+                if (resolvedType.isMarkedNullable)"$it?" else it
+            })
 
             if (typeArguments.isNotEmpty()) {
-                append(typeArguments.joinToString(prefix = "<", postfix = ">") {
-                    it.type?.resolve()?.declaration?.let { declaration ->
+                append(typeArguments.joinToString(prefix = "<", postfix = ">") { argument ->
+                    val resolvedArgumentType = argument.type?.resolve()
+                    resolvedArgumentType?.declaration?.let { declaration ->
                         imports.add(declaration.resolveImport())
-
-                        declaration.simpleName.getShortName()
-                    } ?: "<ERROR>"
+                        declaration.simpleName.getShortName().let {
+                            if (resolvedArgumentType.isMarkedNullable)"$it?" else it
+                        }
+                    }?: "<ERROR>"
                 })
             }
         }

@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 import com.xinto.opencord.domain.model.*
 import com.xinto.opencord.rest.dto.*
 import com.xinto.opencord.rest.service.DiscordCdnServiceImpl
+import com.xinto.partialgen.mapToPartial
 import kotlinx.datetime.Instant
 
 fun ApiAttachment.toDomain(): DomainAttachment {
@@ -162,13 +163,17 @@ fun ApiMessage.toDomain(): DomainMessage {
 }
 
 fun ApiMessagePartial.toDomain(): DomainMessageRegularPartial {
-    val domainAuthor = author?.toDomain()
-    val domainAttachments = attachments?.map { it.toDomain() }
-    val domainEmbeds = embeds?.map { it.toDomain() }
+    val domainAuthor = author.mapToPartial { it.toDomain() }
+    val domainAttachments = attachments.mapToPartial { attachments ->
+        attachments.map { it.toDomain() }
+    }
+    val domainEmbeds = embeds.mapToPartial { embeds ->
+        embeds.map { it.toDomain() }
+    }
     return DomainMessageRegularPartial(
-        id = id?.value,
+        id = id.mapToPartial { it.value },
         content = content,
-        channelId = channelId?.value,
+        channelId = channelId.mapToPartial { it.value },
         author = domainAuthor,
         timestamp = timestamp,
         editedTimestamp = editedTimestamp,
@@ -227,6 +232,16 @@ fun ApiEmbedField.toDomain(): DomainEmbedField {
 }
 
 fun ApiUserSettingsPartial.toDomain(): DomainUserSettingsPartial {
+    val domainPartialTheme = theme.mapToPartial { DomainThemeSetting.fromValue(it)!! }
+    val domainPartialGuildPositions = guildPositions.mapToPartial { guildPositions ->
+        guildPositions.map { it.value }
+    }
+    val domainPartialStatus = status.mapToPartial { DomainUserStatus.fromValue(it)!! }
+    val domainPartialFriendSourceFlags = friendSourceFlags.mapToPartial { it.toDomain() }
+    val domainPartialGuildFolders = guildFolders.mapToPartial { guildFolders ->
+        guildFolders.map { it.toDomain() }
+    }
+    val domainPartialCustomStatus = customStatus.mapToPartial { it?.toDomain() }
     return DomainUserSettingsPartial(
         locale = locale,
         showCurrentGame = showCurrentGame,
@@ -240,11 +255,11 @@ fun ApiUserSettingsPartial.toDomain(): DomainUserSettingsPartial {
         messageDisplayCompact = messageDisplayCompact,
         convertEmoticons = convertEmoticons,
         disableGamesTab = disableGamesTab,
-        theme = theme?.let { DomainThemeSetting.fromValue(it) },
+        theme = domainPartialTheme,
         developerMode = developerMode,
-        guildPositions = guildPositions?.map { it.value },
+        guildPositions = domainPartialGuildPositions,
         detectPlatformAccounts = detectPlatformAccounts,
-        status = status?.let { DomainUserStatus.fromValue(it) },
+        status = domainPartialStatus,
         afkTimeout = afkTimeout,
         timezoneOffset = timezoneOffset,
         streamNotificationsEnabled = streamNotificationsEnabled,
@@ -255,9 +270,9 @@ fun ApiUserSettingsPartial.toDomain(): DomainUserSettingsPartial {
         friendDiscoveryFlags = friendDiscoveryFlags,
         viewNsfwGuilds = viewNsfwGuilds,
         passwordless = passwordless,
-        friendSourceFlags = friendSourceFlags?.toDomain(),
-        guildFolders = guildFolders?.map { it.toDomain() },
-        customStatus = customStatus?.toDomain(),
+        friendSourceFlags = domainPartialFriendSourceFlags,
+        guildFolders = domainPartialGuildFolders,
+        customStatus = domainPartialCustomStatus,
     )
 }
 

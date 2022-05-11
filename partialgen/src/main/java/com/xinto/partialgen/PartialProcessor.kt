@@ -37,7 +37,11 @@ class PartialProcessor(val codeGenerator: CodeGenerator) : SymbolProcessor {
 
             val partialClassShortName = classDeclaration.simpleName.asString() + "Partial"
 
-            val imports = mutableListOf(classQualifiedName)
+            val imports = mutableListOf(
+                classQualifiedName,
+                "com.xinto.partialgen.PartialValue",
+                "com.xinto.partialgen.getOrElse",
+            )
             val classAnnotations = classDeclaration.annotations
                 .mapNotNull { annotation ->
                     annotation.sourceAnnotation().let { (type, import) ->
@@ -125,9 +129,11 @@ class PartialProcessor(val codeGenerator: CodeGenerator) : SymbolProcessor {
                 withIndent {
                     appendTextSpaced("val")
                     appendText(name)
-                    appendTextSpaced(":")
+                    appendText(": PartialValue<")
                     appendText(type)
-                    appendTextDoubleNewline("? = null,")
+                    appendText("> = PartialValue.Missing<")
+                    appendText(type)
+                    appendTextNewline(">(),")
                 }
             }
             appendTextDoubleNewline(")")
@@ -155,9 +161,10 @@ class PartialProcessor(val codeGenerator: CodeGenerator) : SymbolProcessor {
                         appendTextSpaced(name)
                         appendTextSpaced("=")
                         appendText("partial.")
-                        appendTextSpaced(name)
-                        appendTextSpaced("?:")
                         appendText(name)
+                        appendTextSpaced(".getOrElse {")
+                        appendTextSpaced(name)
+                        appendText("}")
                         appendTextNewline(",")
                     }
                 }
