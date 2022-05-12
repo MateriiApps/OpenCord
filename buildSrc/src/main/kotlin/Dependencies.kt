@@ -4,7 +4,7 @@ import org.gradle.kotlin.dsl.DependencyHandlerScope
 sealed class Dependencies {
 
     object Ktor : Dependencies() {
-        const val version = "2.0.0"
+        const val version = "2.0.1"
 
         const val ktorClientCore = "io.ktor:ktor-client-core:$version"
         const val ktorClientCio = "io.ktor:ktor-client-cio:$version"
@@ -23,14 +23,17 @@ sealed class Dependencies {
         }
     }
 
-    object KotlinXDatetime : Dependencies() {
-        const val version = "0.3.2"
+    object KotlinX : Dependencies() {
+        const val datetimeVersion = "0.3.3"
+        const val serializationVersion = "1.3.2"
 
-        const val datetime = "org.jetbrains.kotlinx:kotlinx-datetime:$version"
+        const val datetime = "org.jetbrains.kotlinx:kotlinx-datetime:$datetimeVersion"
+        const val serialization = "org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationVersion"
 
         override fun invoke(scope: DependencyHandlerScope) {
             scope {
                 implementation(datetime)
+                implementation(serialization)
             }
         }
     }
@@ -82,14 +85,14 @@ sealed class Dependencies {
     }
 
     object Compose : Dependencies() {
-        const val version = "1.2.0-alpha08"
+        const val version = "1.2.0-beta01"
 
         const val activity = "androidx.activity:activity-compose:1.4.0"
         const val animation = "androidx.compose.animation:animation:$version"
         const val compiler = "androidx.compose.compiler:compiler:$version"
         const val foundation = "androidx.compose.foundation:foundation:$version"
         const val material = "androidx.compose.material:material:$version"
-        const val material3 = "androidx.compose.material3:material3:1.0.0-alpha10"
+        const val material3 = "androidx.compose.material3:material3:1.0.0-alpha11"
         const val runtime = "androidx.compose.runtime:runtime:$version"
         const val ui = "androidx.compose.ui:ui:$version"
         const val uiText = "androidx.compose.ui:ui-text:$version"
@@ -186,6 +189,18 @@ sealed class Dependencies {
         override fun invoke(scope: DependencyHandlerScope) {
             scope {
                 implementation(hCaptchaSdk)
+            }
+        }
+    }
+
+    object KSP : Dependencies() {
+        const val version = "1.6.21-1.0.5"
+
+        const val ksp = "com.google.devtools.ksp:symbol-processing-api:1.6.20-1.0.5"
+
+        override fun invoke(scope: DependencyHandlerScope) {
+            scope {
+                implementation(ksp)
             }
         }
     }
