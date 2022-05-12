@@ -245,7 +245,7 @@ class DiscordApiServiceImpl(
             emote: String
         ): String {
             val channelMessagesUrl = getChannelMessagesUrl(channelId)
-            return "$channelMessagesUrl/$channelId/$messageId/$emote/@me"
+            return "$channelMessagesUrl/$messageId/reactions/$emote/@me"
         }
     }
 }
