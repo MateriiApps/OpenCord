@@ -1,7 +1,6 @@
 package com.xinto.opencord.ui.widget
 
 import android.view.ViewGroup
-import androidx.compose.foundation.Image
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -11,11 +10,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
+import coil.size.Size
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import com.google.android.exoplayer2.ui.PlayerView
-import com.xinto.opencord.ui.component.rememberOCCoilPainter
+import com.xinto.opencord.ui.component.OCAsyncImage
 
 @Composable
 fun WidgetAttachmentPicture(
@@ -24,16 +24,10 @@ fun WidgetAttachmentPicture(
     height: Int,
     modifier: Modifier = Modifier,
 ) {
-    val painter = rememberOCCoilPainter(url) {
-        size(
-            width = width,
-            height = height
-        )
-    }
-    Image(
+    OCAsyncImage(
+        url = url,
+        size = Size(width, height),
         modifier = modifier.clip(MaterialTheme.shapes.medium),
-        painter = painter,
-        contentDescription = null,
         contentScale = ContentScale.Fit
     )
 }

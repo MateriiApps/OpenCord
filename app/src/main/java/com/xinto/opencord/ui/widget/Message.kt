@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.xinto.opencord.BuildConfig
 import com.xinto.opencord.R
-import com.xinto.opencord.ui.component.rememberOCCoilPainter
+import com.xinto.opencord.ui.component.OCAsyncImage
 
 @Composable
 fun WidgetChatMessage(
@@ -82,13 +82,11 @@ fun WidgetMessageAvatar(
     url: String,
     modifier: Modifier = Modifier,
 ) {
-    val painter = rememberOCCoilPainter(url)
-    Image(
+    OCAsyncImage(
         modifier = modifier
             .size(40.dp)
             .clip(CircleShape),
-        painter = painter,
-        contentDescription = null
+        url = url,
     )
 }
 
@@ -155,10 +153,8 @@ fun WidgetMessageContent(
                         placeholderVerticalAlign = PlaceholderVerticalAlign.Center
                     )
                 ) { emoteId ->
-                    val image = rememberOCCoilPainter("${BuildConfig.URL_CDN}/emojis/$emoteId")
-                    Image(
-                        painter = image,
-                        contentDescription = "Emote"
+                    OCAsyncImage(
+                        url = "${BuildConfig.URL_CDN}/emojis/$emoteId",
                     )
                 }
             )

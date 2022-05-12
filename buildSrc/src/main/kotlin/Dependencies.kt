@@ -138,7 +138,7 @@ sealed class Dependencies {
     }
 
     object Coil : Dependencies() {
-        const val version = "1.4.0"
+        const val version = "2.0.0"
 
         const val coilBase = "io.coil-kt:coil:$version"
         const val coilCompose = "io.coil-kt:coil-compose:$version"

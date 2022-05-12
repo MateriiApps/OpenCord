@@ -1,6 +1,5 @@
 package com.xinto.opencord.ui.screen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,8 +23,8 @@ import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainChannel
 import com.xinto.opencord.domain.model.DomainGuild
+import com.xinto.opencord.ui.component.OCAsyncImage
 import com.xinto.opencord.ui.component.OCBadgeBox
-import com.xinto.opencord.ui.component.rememberOCCoilPainter
 import com.xinto.opencord.ui.viewmodel.ChannelsViewModel
 import com.xinto.opencord.ui.viewmodel.CurrentUserViewModel
 import com.xinto.opencord.ui.viewmodel.GuildsViewModel
@@ -175,7 +174,6 @@ private fun CurrentUserItem(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            val userIcon = rememberOCCoilPainter(viewModel.avatarUrl)
             OCBadgeBox(
                 badge = viewModel.userStatus?.letComposable { userStatus ->
                     WidgetStatusIcon(
@@ -184,12 +182,11 @@ private fun CurrentUserItem(
                     )
                 }
             ) {
-                Image(
+                OCAsyncImage(
                     modifier = Modifier
                         .size(40.dp)
                         .clip(CircleShape),
-                    painter = userIcon,
-                    contentDescription = null
+                    url = viewModel.avatarUrl
                 )
             }
             Column(
@@ -355,15 +352,13 @@ private fun ChannelsListLoaded(
                     .height(IntrinsicSize.Min)
             ) {
                 if (bannerUrl != null) {
-                    val painter = rememberOCCoilPainter(bannerUrl)
-                    Image(
+                    OCAsyncImage(
                         modifier = Modifier
                             .fillParentMaxWidth()
                             .clip(MaterialTheme.shapes.large)
                             .height(150.dp),
-                        painter = painter,
+                        url = bannerUrl,
                         contentScale = ContentScale.Crop,
-                        contentDescription = "Guild Banner"
                     )
                     Box(
                         modifier = Modifier
