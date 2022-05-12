@@ -1,6 +1,8 @@
 package com.xinto.opencord.gateway.event
 
 import com.xinto.opencord.gateway.dto.MessageDeleteData
+import com.xinto.opencord.gateway.dto.MessageReactionAddData
+import com.xinto.opencord.gateway.dto.MessageReactionRemoveData
 import com.xinto.opencord.gateway.dto.Ready
 import com.xinto.opencord.gateway.io.EventName
 import com.xinto.opencord.rest.dto.*
@@ -71,6 +73,16 @@ class EventDeserializationStrategy(
             EventName.MessageDelete -> {
                 MessageDeleteEvent(
                     data = decoder.decodeSerializableValue(MessageDeleteData.serializer())
+                )
+            }
+            EventName.MessageReactionAdd -> {
+                MessageReactionAddEvent(
+                    data = decoder.decodeSerializableValue(MessageReactionAddData.serializer())
+                )
+            }
+            EventName.MessageReactionRemove -> {
+                MessageReactionRemoveEvent(
+                    data = decoder.decodeSerializableValue(MessageReactionRemoveData.serializer())
                 )
             }
             EventName.UserSettingsUpdate -> {
