@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 import com.xinto.opencord.domain.model.*
 import com.xinto.opencord.rest.dto.*
 import com.xinto.opencord.rest.service.DiscordCdnServiceImpl
+import com.xinto.partialgen.getOrNull
 import com.xinto.partialgen.mapToPartial
 import kotlinx.datetime.Instant
 
@@ -139,6 +140,7 @@ fun ApiMessage.toDomain(): DomainMessage {
         ApiMessageType.Default -> {
             val domainAttachments = attachments.map { it.toDomain() }
             val domainEmbeds = embeds.map { it.toDomain() }
+            val domainReactions = reactions.map { it.toDomain() }
             DomainMessageRegular(
                 id = id.value,
                 channelId = channelId.value,
@@ -147,7 +149,8 @@ fun ApiMessage.toDomain(): DomainMessage {
                 timestamp = timestamp,
                 editedTimestamp = editedTimestamp,
                 attachments = domainAttachments,
-                embeds = domainEmbeds
+                embeds = domainEmbeds,
+                reactions = domainReactions,
             )
         }
         ApiMessageType.GuildMemberJoin -> {
@@ -228,6 +231,25 @@ fun ApiEmbedField.toDomain(): DomainEmbedField {
     return DomainEmbedField(
         name = name,
         value = value,
+    )
+}
+
+fun ApiReaction.toDomain(): DomainReaction {
+    val domainEmoji = emoji.toDomain()
+    return DomainReaction(
+        count = count,
+        meReacted = meReacted,
+        emoji = domainEmoji
+    )
+}
+
+fun ApiEmojiPartial.toDomain(): DomainEmoji {
+    val domainId = id.getOrNull()?.value
+    val emoteUrl = DiscordCdnServiceImpl.getEmojiIconUrl(domainId.toString())
+    return DomainEmoji(
+        name = name.getOrNull(),
+        id = domainId,
+        url = emoteUrl
     )
 }
 

@@ -39,6 +39,9 @@ data class ApiMessage(
     @SerialName("embeds")
     val embeds: List<ApiEmbed>,
 
+    @SerialName("reactions")
+    val reactions: List<ApiReaction> = emptyList(),
+
     @SerialName("type")
     val type: ApiMessageType
 )

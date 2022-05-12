@@ -5,6 +5,7 @@ import com.xinto.opencord.domain.mapper.toDomain
 import com.xinto.opencord.domain.model.*
 import com.xinto.opencord.rest.body.MessageBody
 import com.xinto.opencord.rest.service.DiscordApiService
+import io.ktor.http.*
 
 interface DiscordApiRepository {
     suspend fun getMeGuilds(): List<DomainMeGuild>
@@ -19,6 +20,19 @@ interface DiscordApiRepository {
 
     suspend fun getUserSettings(): DomainUserSettings
     suspend fun updateUserSettings(settings: DomainUserSettingsPartial): DomainUserSettings
+
+    suspend fun addMeMessageReaction(
+        channelId: ULong,
+        messageId: ULong,
+        emojiName: String? = null,
+        emojiId: ULong? = null
+    )
+    suspend fun removeMeMessageReaction(
+        channelId: ULong,
+        messageId: ULong,
+        emojiName: String? = null,
+        emojiId: ULong? = null
+    )
 }
 
 class DiscordApiRepositoryImpl(
@@ -68,5 +82,41 @@ class DiscordApiRepositoryImpl(
 
     override suspend fun updateUserSettings(settings: DomainUserSettingsPartial): DomainUserSettings {
         return service.updateUserSettings(settings.toApi()).toDomain()
+    }
+
+    override suspend fun addMeMessageReaction(
+        channelId: ULong,
+        messageId: ULong,
+        emojiName: String?,
+        emojiId: ULong?
+    ) {
+        val encodedEmote = getEncodedEmote(emojiName, emojiId)
+        service.createMeMessageReaction(
+            channelId = channelId,
+            messageId = messageId,
+            encodedEmote = encodedEmote
+        )
+    }
+
+    override suspend fun removeMeMessageReaction(
+        channelId: ULong,
+        messageId: ULong,
+        emojiName: String?,
+        emojiId: ULong?
+    ) {
+        val encodedEmote = getEncodedEmote(emojiName, emojiId)
+        service.removeMeMessageReaction(
+            channelId = channelId,
+            messageId = messageId,
+            encodedEmote = encodedEmote
+        )
+    }
+
+    private fun getEncodedEmote(emojiName: String?, emojiId: ULong?): String {
+        return if (emojiId != null) {
+            "$emojiName:$emojiId"
+        } else {
+            emojiName
+        }!!.encodeURLParameter()
     }
 }

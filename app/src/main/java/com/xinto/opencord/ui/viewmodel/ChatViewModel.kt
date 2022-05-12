@@ -78,6 +78,31 @@ class ChatViewModel(
         userMessage = message
     }
 
+    fun toggleMeReaction(
+        messageId: ULong,
+        meReacted: Boolean,
+        emojiName: String?,
+        emojiId: ULong?
+    ) {
+        viewModelScope.launch {
+            if (meReacted) {
+                repository.removeMeMessageReaction(
+                    channelId = persistentChannelId,
+                    messageId = messageId,
+                    emojiName = emojiName,
+                    emojiId = emojiId
+                )
+            } else {
+                repository.addMeMessageReaction(
+                    channelId = persistentChannelId,
+                    messageId = messageId,
+                    emojiName = emojiName,
+                    emojiId = emojiId
+                )
+            }
+        }
+    }
+
     init {
         gateway.onEvent<MessageCreateEvent>(
             filterPredicate = { it.data.channelId.value == persistentChannelId }

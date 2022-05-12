@@ -26,7 +26,8 @@ data class DomainMessageRegular(
     override val author: DomainUser,
     val editedTimestamp: Instant?,
     val attachments: List<DomainAttachment>,
-    val embeds: List<DomainEmbed>
+    val embeds: List<DomainEmbed>,
+    val reactions: List<DomainReaction>
 ): DomainMessage(), KoinComponent {
     private val parser: SimpleAstParser = get()
 

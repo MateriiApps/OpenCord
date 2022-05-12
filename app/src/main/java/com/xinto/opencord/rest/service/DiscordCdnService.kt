@@ -24,6 +24,10 @@ class DiscordCdnServiceImpl : DiscordCdnService {
         fun getGuildBannerUrl(guildId: String, iconHash: String): String {
             return "$BASE/banners/$guildId/$iconHash"
         }
+
+        fun getEmojiIconUrl(emojiId: String): String {
+            return "$BASE/emojis/$emojiId"
+        }
     }
 
 }

@@ -1,6 +1,5 @@
 package com.xinto.opencord.ui.widget
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -14,14 +13,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.xinto.opencord.BuildConfig
+import com.google.accompanist.flowlayout.FlowRow
 import com.xinto.opencord.R
+import com.xinto.opencord.rest.service.DiscordCdnServiceImpl
 import com.xinto.opencord.ui.component.OCAsyncImage
 
 @Composable
@@ -32,6 +31,7 @@ fun WidgetChatMessage(
     content: (@Composable () -> Unit)? = null,
     attachments: (@Composable () -> Unit)? = null,
     embeds: (@Composable () -> Unit)? = null,
+    reactions: (@Composable () -> Unit)? = null,
 ) {
     Box(modifier = modifier) {
         Row(
@@ -70,6 +70,14 @@ fun WidgetChatMessage(
                         verticalArrangement = Arrangement.spacedBy(2.dp)
                     ) {
                         embeds()
+                    }
+                }
+                if (reactions != null) {
+                    FlowRow(
+                        mainAxisSpacing = 4.dp,
+                        crossAxisSpacing = 2.dp
+                    ) {
+                        reactions()
                     }
                 }
             }
@@ -154,10 +162,30 @@ fun WidgetMessageContent(
                     )
                 ) { emoteId ->
                     OCAsyncImage(
-                        url = "${BuildConfig.URL_CDN}/emojis/$emoteId",
+                        url = DiscordCdnServiceImpl.getEmojiIconUrl(emoteId),
                     )
                 }
             )
         )
     }
+}
+
+@Composable
+fun WidgetMessageReaction(
+    onClick: () -> Unit,
+    count: Int,
+    meReacted: Boolean,
+    modifier: Modifier = Modifier,
+    emote: @Composable () -> Unit,
+) {
+    FilterChip(
+        selected = meReacted,
+        modifier = modifier,
+        onClick = onClick,
+        label = {
+            Text(count.toString())
+        },
+        leadingIcon = emote,
+        selectedIcon = emote
+    )
 }

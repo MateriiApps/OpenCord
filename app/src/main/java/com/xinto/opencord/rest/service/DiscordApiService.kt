@@ -28,6 +28,17 @@ interface DiscordApiService {
 
     suspend fun getUserSettings(): ApiUserSettings
     suspend fun updateUserSettings(settings: ApiUserSettingsPartial): ApiUserSettings
+
+    suspend fun createMeMessageReaction(
+        channelId: ULong,
+        messageId: ULong,
+        encodedEmote: String
+    )
+    suspend fun removeMeMessageReaction(
+        channelId: ULong,
+        messageId: ULong,
+        encodedEmote: String
+    )
 }
 
 class DiscordApiServiceImpl(
@@ -138,6 +149,36 @@ class DiscordApiServiceImpl(
         }
     }
 
+    override suspend fun createMeMessageReaction(
+        channelId: ULong,
+        messageId: ULong,
+        encodedEmote: String
+    ) {
+        withContext(Dispatchers.IO) {
+            val url = getMeMessageReactionsUrl(
+                channelId = channelId,
+                messageId = messageId,
+                emote = encodedEmote
+            )
+            client.put(url)
+        }
+    }
+
+    override suspend fun removeMeMessageReaction(
+        channelId: ULong,
+        messageId: ULong,
+        encodedEmote: String
+    ) {
+        withContext(Dispatchers.IO) {
+            val url = getMeMessageReactionsUrl(
+                channelId = channelId,
+                messageId = messageId,
+                emote = encodedEmote
+            )
+            client.delete(url)
+        }
+    }
+
     init {
         gateway.onEvent<MessageCreateEvent> {
             val data = it.data
@@ -196,6 +237,15 @@ class DiscordApiServiceImpl(
 
         fun getUserSettingsUrl(): String {
             return "$BASE/users/@me/settings"
+        }
+
+        fun getMeMessageReactionsUrl(
+            channelId: ULong,
+            messageId: ULong,
+            emote: String
+        ): String {
+            val channelMessagesUrl = getChannelMessagesUrl(channelId)
+            return "$channelId/$messageId/$emote/@me"
         }
     }
 }
