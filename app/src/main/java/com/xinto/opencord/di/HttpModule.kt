@@ -31,6 +31,7 @@ val httpModule = module {
             defaultRequest {
                 header(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                 header(HttpHeaders.UserAgent, userAgent)
+                port = 443
             }
             install(HttpRequestRetry) {
                 maxRetries = 5
@@ -59,6 +60,7 @@ val httpModule = module {
                 header(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                 header(HttpHeaders.Authorization, accountManager.currentAccountToken)
                 header(HttpHeaders.UserAgent, userAgent)
+                port = 443
             }
             install(HttpRequestRetry) {
                 maxRetries = 5
