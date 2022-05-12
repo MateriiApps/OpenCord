@@ -4,7 +4,9 @@ import org.gradle.kotlin.dsl.DependencyHandlerScope
 sealed class Dependencies {
 
     object Ktor : Dependencies() {
-        const val version = "2.0.1"
+        //Don't update to 2.0.1
+        //https://youtrack.jetbrains.com/issue/KTOR-4306
+        const val version = "2.0.0"
 
         const val ktorClientCore = "io.ktor:ktor-client-core:$version"
         const val ktorClientCio = "io.ktor:ktor-client-cio:$version"
