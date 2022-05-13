@@ -386,8 +386,8 @@ fun ApiActivityEmoji.toDomain(): DomainActivityEmoji {
 
 fun ApiActivityTimestamp.toDomain(): DomainActivityTimestamp {
     return DomainActivityTimestamp(
-        start = start,
-        end = end,
+        start = start?.let { Instant.fromEpochMilliseconds(it.toLong()) },
+        end = end?.let { Instant.fromEpochMilliseconds(it.toLong()) },
     )
 }
 

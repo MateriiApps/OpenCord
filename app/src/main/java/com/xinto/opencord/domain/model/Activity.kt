@@ -1,6 +1,7 @@
 package com.xinto.opencord.domain.model
 
 import com.xinto.enumgetter.GetterGen
+import kotlinx.datetime.Instant
 
 @GetterGen
 enum class ActivityType(val value: Int) {
@@ -37,7 +38,7 @@ interface DomainActivity {
 data class DomainActivityGame(
     override val name: String,
     override val createdAt: Long,
-    val id: String,
+    val id: String?,
     val state: String,
     val details: String,
     val applicationId: ULong,
@@ -85,10 +86,9 @@ data class DomainActivityEmoji(
     val animated: Boolean?,
 )
 
-// TODO: instant serializers
 data class DomainActivityTimestamp(
-    val start: Int?,
-    val end: Int?,
+    val start: Instant?,
+    val end: Instant?,
 )
 
 data class DomainActivityParty(

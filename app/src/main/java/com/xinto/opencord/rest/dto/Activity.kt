@@ -63,8 +63,8 @@ data class ApiActivityEmoji(
 
 @Serializable
 data class ApiActivityTimestamp(
-    val start: Int?,
-    val end: Int?,
+    val start: String? = null,
+    val end: String? = null,
 )
 
 @Serializable
