@@ -25,5 +25,4 @@ data class SessionData(
 data class ClientInfo(
     val client: String,
     val os: String,
-    val version: Int,
 )

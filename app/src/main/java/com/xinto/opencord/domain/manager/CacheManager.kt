@@ -4,26 +4,27 @@ import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.dto.SessionData
 import com.xinto.opencord.gateway.event.SessionsReplaceEvent
 import com.xinto.opencord.gateway.onEvent
+import com.xinto.opencord.rest.dto.ApiActivity
 
 interface CacheManager {
     fun getSessions(): List<SessionData>
     fun getCurrentSession(): SessionData
-    fun getGlobalSession(): SessionData
+    fun getActivities(): List<ApiActivity>
 }
 
 class CacheManagerImpl(
     val gateway: DiscordGateway,
 ) : CacheManager {
     private var _sessions: List<SessionData>? = null
-    private var _allSession: SessionData? = null
+    private var _activities: List<ApiActivity>? = null
 
     override fun getSessions(): List<SessionData> {
         return _sessions
             ?: throw IllegalStateException("No session data from gateway!")
     }
 
-    override fun getGlobalSession(): SessionData {
-        return _allSession
+    override fun getActivities(): List<ApiActivity> {
+        return _activities
             ?: throw IllegalStateException("No session data from gateway!")
     }
 
@@ -35,8 +36,8 @@ class CacheManagerImpl(
 
     init {
         gateway.onEvent<SessionsReplaceEvent> { e ->
-            _allSession = e.data.find { it.sessionId == "all" }
             _sessions = e.data.filter { it.sessionId != "all" }
+            _activities = _sessions!!.flatMap { it.activities }
         }
     }
 }
