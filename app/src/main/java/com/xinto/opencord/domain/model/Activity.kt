@@ -2,7 +2,6 @@ package com.xinto.opencord.domain.model
 
 import com.xinto.enumgetter.GetterGen
 
-// TODO: make models for the other types of activities
 @GetterGen
 enum class ActivityType(val value: Int) {
     Game(0),
@@ -10,7 +9,8 @@ enum class ActivityType(val value: Int) {
     Listening(2),
     Watching(3),
     Custom(4),
-    Competing(5);
+    Competing(5),
+    Unknown(-1);
 
     companion object
 }
@@ -34,7 +34,7 @@ interface DomainActivity {
 //    val flags: Int?
 }
 
-    data class DomainActivityGame(
+data class DomainActivityGame(
     override val name: String,
     override val createdAt: Long,
     val id: String,
@@ -68,6 +68,14 @@ data class DomainActivityCustom(
     val emoji: DomainActivityEmoji?,
 ) : DomainActivity {
     override val type = ActivityType.Custom
+}
+
+// TODO: remove this once all activity types are implemented
+data class DomainActivityUnknown(
+    override val name: String,
+    override val createdAt: Long,
+) : DomainActivity {
+    override val type = ActivityType.Unknown
 }
 
 // TODO: use a partial emoji instead

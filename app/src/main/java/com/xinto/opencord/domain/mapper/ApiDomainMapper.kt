@@ -369,10 +369,10 @@ fun ApiActivity.toDomain(): DomainActivity {
             state = state!!,
             emoji = emoji?.toDomain()
         )
-        ActivityType.Listening -> TODO("Unfinished activity type!")
-        ActivityType.Watching -> TODO("Unfinished activity type!")
-        ActivityType.Competing -> TODO("Unfinished activity type!")
-        null -> throw IllegalArgumentException("Unknown activity type ${this.type}!")
+        else -> DomainActivityUnknown(
+            name = name,
+            createdAt = createdAt ?: 0,
+        )
     }
 }
 
