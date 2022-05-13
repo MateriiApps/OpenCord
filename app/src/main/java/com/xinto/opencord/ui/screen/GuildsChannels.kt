@@ -180,6 +180,7 @@ private fun CurrentUserItem(
                 badge = viewModel.userStatus?.letComposable { userStatus ->
                     WidgetStatusIcon(
                         modifier = Modifier.size(10.dp),
+                        isStreaming = viewModel.isStreaming,
                         userStatus = userStatus
                     )
                 }
