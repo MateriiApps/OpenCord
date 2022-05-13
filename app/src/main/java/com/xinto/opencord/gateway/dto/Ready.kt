@@ -14,5 +14,8 @@ data class Ready(
     val sessionId: String,
 
     @SerialName("guilds")
-    val guilds: List<ApiGuild>
+    val guilds: List<ApiGuild>,
+
+    @SerialName("sessions")
+    val sessions: List<SessionData>,
 )

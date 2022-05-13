@@ -277,8 +277,10 @@ fun ApiUserSettingsPartial.toDomain(): DomainUserSettingsPartial {
 }
 
 fun ApiUserSettings.toDomain(): DomainUserSettings {
-    val domainTheme = DomainThemeSetting.fromValue(theme) ?: throw IllegalArgumentException("Invalid theme $theme")
-    val domainStatus = DomainUserStatus.fromValue(status) ?: throw IllegalArgumentException("Invalid status $status")
+    val domainTheme = DomainThemeSetting.fromValue(theme)
+        ?: throw IllegalArgumentException("Invalid theme $theme")
+    val domainStatus = DomainUserStatus.fromValue(status)
+        ?: throw IllegalArgumentException("Invalid status $status")
     return DomainUserSettings(
         locale = locale,
         showCurrentGame = showCurrentGame,
@@ -335,5 +337,88 @@ fun ApiCustomStatus.toDomain(): DomainCustomStatus {
         expiresAt = Instant.DISTANT_FUTURE,
         emojiId = emojiId?.value,
         emojiName = emojiName,
+    )
+}
+
+fun ApiActivity.toDomain(): DomainActivity {
+    return when (ActivityType.fromValue(this.type)) {
+        ActivityType.Game -> DomainActivityGame(
+            name = name,
+            createdAt = createdAt ?: 0,
+            id = id!!,
+            state = state!!,
+            details = details!!,
+            applicationId = applicationId!!.value,
+            party = party?.toDomain(),
+            assets = assets?.toDomain(),
+            secrets = secrets?.toDomain(),
+            timestamps = timestamps?.toDomain(),
+        )
+        ActivityType.Streaming -> DomainActivityStreaming(
+            name = name,
+            createdAt = createdAt ?: 0,
+            id = id!!,
+            url = url!!,
+            state = state!!,
+            details = details!!,
+            assets = assets!!.toDomain()
+        )
+        ActivityType.Custom -> DomainActivityCustom(
+            name = name,
+            createdAt = createdAt ?: 0,
+            state = state!!,
+            emoji = emoji?.toDomain()
+        )
+        ActivityType.Listening -> TODO("Unfinished activity type!")
+        ActivityType.Watching -> TODO("Unfinished activity type!")
+        ActivityType.Competing -> TODO("Unfinished activity type!")
+        null -> throw IllegalArgumentException("Unknown activity type ${this.type}!")
+    }
+}
+
+fun ApiActivityEmoji.toDomain(): DomainActivityEmoji {
+    return DomainActivityEmoji(
+        name = name,
+        id = id?.value,
+        animated = animated,
+    )
+}
+
+fun ApiActivityTimestamp.toDomain(): DomainActivityTimestamp {
+    return DomainActivityTimestamp(
+        start = start,
+        end = end,
+    )
+}
+
+fun ApiActivityParty.toDomain(): DomainActivityParty {
+    return DomainActivityParty(
+        id = id,
+        currentSize = size?.get(0),
+        maxSize = size?.get(1),
+    )
+}
+
+fun ApiActivityAssets.toDomain(): DomainActivityAssets {
+    return DomainActivityAssets(
+        largeImage = largeImage,
+        largeText = largeText,
+        smallImage = smallImage,
+        smallText = smallText,
+    )
+}
+
+fun ApiActivitySecrets.toDomain(): DomainActivitySecrets {
+    return DomainActivitySecrets(
+        join = join,
+        spectate = spectate,
+        match = match,
+    )
+}
+
+fun ApiActivityButton.toDomain(): DomainActivityButton {
+    return DomainActivityButton(
+        label = label,
+        url = url,
     )
 }

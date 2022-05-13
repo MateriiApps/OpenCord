@@ -49,11 +49,14 @@ data class ApiActivity(
 
     @SerialName("buttons")
     val buttons: List<ApiActivityButton>? = null,
+
+    @SerialName("id")
+    val id: String? = null,
 )
 
 @Serializable
 data class ApiActivityEmoji(
-    val name: String,
+    val name: String? = null,
     val id: ApiSnowflake? = null,
     val animated: Boolean? = null,
 )
@@ -67,7 +70,6 @@ data class ApiActivityTimestamp(
 @Serializable
 data class ApiActivityParty(
     val id: String? = null,
-    /** array of two integers (current_size, max_size) */
     val size: List<Int>? = null,
 )
 
