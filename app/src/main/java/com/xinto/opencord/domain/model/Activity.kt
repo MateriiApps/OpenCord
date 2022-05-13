@@ -110,7 +110,7 @@ data class DomainActivitySecrets(
     val match: String?,
 )
 
-data class DomainActivityButton(
-    val label: String,
-    val url: String,
-)
+//data class DomainActivityButton(
+//    val label: String,
+//    val url: String,
+//)

@@ -416,9 +416,9 @@ fun ApiActivitySecrets.toDomain(): DomainActivitySecrets {
     )
 }
 
-fun ApiActivityButton.toDomain(): DomainActivityButton {
-    return DomainActivityButton(
-        label = label,
-        url = url,
-    )
-}
+//fun ApiActivityButton.toDomain(): DomainActivityButton {
+//    return DomainActivityButton(
+//        label = label,
+//        url = url,
+//    )
+//}

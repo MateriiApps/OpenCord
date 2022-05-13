@@ -47,8 +47,9 @@ data class ApiActivity(
     @SerialName("flags")
     val flags: Int? = null,
 
-    @SerialName("buttons")
-    val buttons: List<ApiActivityButton>? = null,
+    // TODO: verify whether its List<String name> or List<ApiActivityButton> since I've seen both
+//    @SerialName("buttons")
+//    val buttons: List<ApiActivityButton>? = null,
 
     @SerialName("id")
     val id: String? = null,
@@ -95,8 +96,8 @@ data class ApiActivitySecrets(
     val match: String? = null,
 )
 
-@Serializable
-data class ApiActivityButton(
-    val label: String,
-    val url: String,
-)
+//@Serializable
+//data class ApiActivityButton(
+//    val label: String,
+//    val url: String,
+//)
