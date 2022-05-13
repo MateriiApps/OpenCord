@@ -2,6 +2,7 @@ package com.xinto.opencord.gateway.event
 
 import com.xinto.opencord.gateway.dto.MessageDeleteData
 import com.xinto.opencord.gateway.dto.Ready
+import com.xinto.opencord.gateway.dto.ReplaceSessionsData
 import com.xinto.opencord.gateway.io.EventName
 import com.xinto.opencord.rest.dto.*
 import kotlinx.serialization.DeserializationStrategy
@@ -71,6 +72,11 @@ class EventDeserializationStrategy(
             EventName.MessageDelete -> {
                 MessageDeleteEvent(
                     data = decoder.decodeSerializableValue(MessageDeleteData.serializer())
+                )
+            }
+            EventName.SessionsReplace -> {
+                SessionsReplaceEvent(
+                    data = decoder.decodeSerializableValue()
                 )
             }
             EventName.UserSettingsUpdate -> {
