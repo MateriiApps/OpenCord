@@ -45,6 +45,8 @@ interface DiscordGateway : CoroutineScope {
 
     suspend fun disconnect()
 
+    fun getSessionId(): String
+
     suspend fun requestGuildMembers(guildId: ULong)
 
 }
@@ -113,6 +115,10 @@ class DiscordGatewayImpl(
                 )
             )
         )
+    }
+
+    override fun getSessionId(): String {
+        return sessionId
     }
 
     private suspend fun listenToSocket() {
@@ -237,7 +243,7 @@ class DiscordGatewayImpl(
         )
     }
 
-    private suspend inline  fun <reified T> sendPayload(opCode: OpCode, data: T?) {
+    private suspend inline fun <reified T> sendPayload(opCode: OpCode, data: T?) {
         sendSerializedData(
             OutgoingPayload(
                 opCode = opCode,
