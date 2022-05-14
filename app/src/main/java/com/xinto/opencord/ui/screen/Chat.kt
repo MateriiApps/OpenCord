@@ -148,11 +148,15 @@ private fun ChatScreenLoaded(
     // TODO: scroll to target message if jumping
     val listState = rememberLazyListState()
 
-    // TODO: toggleable auto scroll by scrolling up
+    var oldSize by remember { mutableStateOf(0) }
     LaunchedEffect(messages.size) {
-        if (listState.firstVisibleItemIndex <= 1) {
+        if (messages.size - oldSize - listState.firstVisibleItemIndex > -2 && !listState.isScrollInProgress) {
             listState.animateScrollToItem(0)
+        } else if (messages.size > oldSize) {
+            // TODO: Show "new messages" bar + scroll down btn
         }
+
+        oldSize = messages.size
     }
 
     Column(
