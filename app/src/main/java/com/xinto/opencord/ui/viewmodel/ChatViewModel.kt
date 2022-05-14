@@ -78,6 +78,10 @@ class ChatViewModel(
         userMessage = message
     }
 
+    fun getSortedMessages(): List<DomainMessage> {
+        return messages.values.sortedByDescending { it.id }
+    }
+
     init {
         gateway.onEvent<MessageCreateEvent>(
             filterPredicate = { it.data.channelId.value == persistentChannelId }

@@ -26,16 +26,19 @@ android {
     }
 
     buildTypes {
-        getByName("release") {
+        release {
             isMinifyEnabled = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 
     productFlavors {
         create("discord") {
             dimension = "api"
-            
+
             isDefault = true
 
             buildConfigField("String", "URL_API", "\"https://discord.com/api/v9\"")
@@ -101,7 +104,7 @@ dependencies {
     implementation(project(":bottom-dialog-compose"))
     implementation(project(":overlapping-panels-compose"))
     implementation(project(":simpleast-compose"))
-    
+
     implementation(project(":partialgen"))
     ksp(project(":partialgen"))
 

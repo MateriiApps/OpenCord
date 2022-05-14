@@ -4,6 +4,7 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -34,6 +35,12 @@ fun ChatScreen(
     modifier: Modifier = Modifier,
     viewModel: ChatViewModel = getViewModel(),
 ) {
+    val sortedMessages by remember(viewModel.messages) {
+        derivedStateOf {
+            viewModel.getSortedMessages()
+        }
+    }
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -83,9 +90,7 @@ fun ChatScreen(
                 }
                 is ChatViewModel.State.Loaded -> {
                     ChatScreenLoaded(
-                        messages = viewModel.messages.values.sortedByDescending {
-                            it.timestamp
-                        },
+                        messages = sortedMessages,
                         channelName = viewModel.channelName,
                         userMessage = viewModel.userMessage,
                         sendEnabled = viewModel.sendEnabled,
@@ -140,15 +145,26 @@ private fun ChatScreenLoaded(
     onUserMessageSend: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    // TODO: scroll to target message if jumping
+    val listState = rememberLazyListState()
+
+    // TODO: toggleable auto scroll by scrolling up
+    LaunchedEffect(messages.size) {
+        if (listState.firstVisibleItemIndex <= 1) {
+            listState.animateScrollToItem(0)
+        }
+    }
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         LazyColumn(
+            state = listState,
             modifier = Modifier.weight(1f),
             reverseLayout = true,
         ) {
-            items(messages) { message ->
+            items(messages, key = { it.id.toLong() }) { message ->
                 var showBottomDialog by rememberSaveable { mutableStateOf(false) }
                 when (message) {
                     is DomainMessageRegular -> {
