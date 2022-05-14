@@ -8,10 +8,10 @@ import kotlinx.coroutines.launch
 /**
  * Constructs a function that executes [destinationFunction] only once per [skipMs].
  */
-fun throttle(
+inline fun throttle(
     skipMs: Long,
     coroutineScope: CoroutineScope,
-    destinationFunction: suspend () -> Unit
+    crossinline destinationFunction: suspend () -> Unit
 ): () -> Unit {
     var throttleJob: Job? = null
     return {

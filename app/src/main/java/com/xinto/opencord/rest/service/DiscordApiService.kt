@@ -208,7 +208,8 @@ class DiscordApiServiceImpl(
         }
 
         fun getTypingUrl(channelId: ULong): String {
-            return "$BASE/channels/$channelId/typing"
+            val channelUrl = getChannelUrl(channelId)
+            return "$channelUrl/typing"
         }
     }
 }
