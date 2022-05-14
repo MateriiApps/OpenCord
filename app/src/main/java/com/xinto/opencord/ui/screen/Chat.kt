@@ -37,8 +37,7 @@ fun ChatScreen(
 ) {
     val sortedMessages by remember(viewModel.messages) {
         derivedStateOf {
-            viewModel.messages.values
-                .sortedByDescending { it.id }
+            viewModel.getSortedMessages()
         }
     }
 
@@ -151,7 +150,9 @@ private fun ChatScreenLoaded(
 
     // TODO: toggleable auto scroll by scrolling up
     LaunchedEffect(messages.size) {
-        listState.animateScrollToItem(0)
+        if (listState.firstVisibleItemIndex <= 1) {
+            listState.animateScrollToItem(0)
+        }
     }
 
     Column(

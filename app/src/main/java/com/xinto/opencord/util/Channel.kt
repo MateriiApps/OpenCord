@@ -6,7 +6,7 @@ import com.xinto.opencord.domain.model.DomainChannel
  * @return Category with a list of channels inside it.
  * Sort order: Rules, Announcements, Text Channels, Stages, Voice channels
  */
-fun getSortedChannels(channels: List<DomainChannel>): Map<DomainChannel.Category?, List<DomainChannel>> {
+fun getSortedChannels(channels: Collection<DomainChannel>): Map<DomainChannel.Category?, List<DomainChannel>> {
     val categories = channels.filterIsInstance<DomainChannel.Category>().sortedBy { it.position }
     val nonCategories = channels.filter { it !is DomainChannel.Category }
         .sortedWith(compareBy({ it }, { it.position }))
