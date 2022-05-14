@@ -17,9 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.xinto.bdc.BottomSheetDialog
 import com.xinto.opencord.R
-import com.xinto.opencord.domain.model.DomainAttachment
-import com.xinto.opencord.domain.model.DomainMessage
-import com.xinto.opencord.domain.model.DomainMessageRegular
+import com.xinto.opencord.domain.model.*
 import com.xinto.opencord.ui.component.OCAsyncImage
 import com.xinto.opencord.ui.viewmodel.ChatViewModel
 import com.xinto.opencord.ui.widget.*
@@ -93,12 +91,12 @@ fun ChatScreen(
                         onUserMessageUpdate = viewModel::updateMessage,
                         onUserMessageSend = viewModel::sendMessage,
                         modifier = Modifier.fillMaxSize(),
-                        onMessageReact = { messageId, meReacted, emojiName, emojiId ->
+                        onMessageReact = { messageId, domainReaction ->
                             viewModel.toggleMeReaction(
-                                meReacted = meReacted,
+                                meReacted = domainReaction.meReacted,
                                 messageId = messageId,
-                                emojiName = emojiName,
-                                emojiId = emojiId
+                                emojiName = domainReaction.emoji.name,
+                                emojiId = (domainReaction.emoji as? DomainEmojiCustom)?.id
                             )
                         }
                     )
@@ -147,12 +145,7 @@ private fun ChatScreenLoaded(
     sendEnabled: Boolean,
     onUserMessageUpdate: (String) -> Unit,
     onUserMessageSend: () -> Unit,
-    onMessageReact: (
-        messageId: ULong,
-        meReacted: Boolean,
-        emojiName: String?,
-        emojiId: ULong?
-    ) -> Unit,
+    onMessageReact: (messageId: ULong, reaction: DomainReaction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -237,20 +230,18 @@ private fun ChatScreenLoaded(
                                 for (reaction in reactions) {
                                     WidgetMessageReaction(
                                         onClick = {
-                                            onMessageReact(
-                                                message.id,
-                                                reaction.meReacted,
-                                                reaction.emoji.name,
-                                                reaction.emoji.id
-                                            )
+                                            onMessageReact(message.id, reaction)
                                         },
                                         count = reaction.count,
                                         meReacted = reaction.meReacted,
                                     ) {
-                                        if (reaction.emoji.name != null) {
-                                            Text(text = reaction.emoji.name)
-                                        } else {
-                                            OCAsyncImage(url = reaction.emoji.url)
+                                        when (reaction.emoji) {
+                                            is DomainEmojiUnicode -> {
+                                                Text(text = reaction.emoji.name)
+                                            }
+                                            is DomainEmojiCustom -> {
+                                                OCAsyncImage(url = reaction.emoji.url)
+                                            }
                                         }
                                     }
                                 }

@@ -245,12 +245,19 @@ fun ApiReaction.toDomain(): DomainReaction {
 
 fun ApiEmojiPartial.toDomain(): DomainEmoji {
     val domainId = id.getOrNull()?.value
-    val emoteUrl = DiscordCdnServiceImpl.getEmojiIconUrl(domainId.toString())
-    return DomainEmoji(
-        name = name.getOrNull(),
-        id = domainId,
-        url = emoteUrl
-    )
+    val domainName = name.getOrNull()
+    return if (domainId != null) {
+        val emoteUrl = DiscordCdnServiceImpl.getEmojiIconUrl(domainId.toString())
+        DomainEmojiCustom(
+            id = domainId,
+            url = emoteUrl,
+            name = domainName
+        )
+    } else {
+        DomainEmojiUnicode(
+            name = domainName!!
+        )
+    }
 }
 
 fun ApiUserSettingsPartial.toDomain(): DomainUserSettingsPartial {

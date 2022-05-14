@@ -1,7 +1,15 @@
 package com.xinto.opencord.domain.model
 
-data class DomainEmoji(
-    val id: ULong?,
-    val name: String?,
-    val url: String?,
-)
+sealed interface DomainEmoji {
+    val name: String?
+}
+
+data class DomainEmojiCustom(
+    override val name: String?,
+    val id: ULong,
+    val url: String
+): DomainEmoji
+
+data class DomainEmojiUnicode(
+    override val name: String,
+): DomainEmoji
