@@ -22,7 +22,9 @@ import com.xinto.opencord.domain.model.DomainMessage
 import com.xinto.opencord.domain.model.DomainMessageRegular
 import com.xinto.opencord.ui.viewmodel.ChatViewModel
 import com.xinto.opencord.ui.widget.*
-import com.xinto.opencord.util.letComposable
+import com.xinto.opencord.util.ifComposable
+import com.xinto.opencord.util.ifNotEmptyComposable
+import com.xinto.opencord.util.ifNotNullComposable
 import com.xinto.simpleast.render
 import org.koin.androidx.compose.getViewModel
 
@@ -175,7 +177,7 @@ private fun ChatScreenLoaded(
                                     onClick = {},
                                     onLongClick = { showBottomDialog = true }
                                 ),
-                            reply = message.isReply.let { if (it) it else null }?.letComposable { _ ->
+                            reply = message.isReply.ifComposable {
                                 val referencedMessage = message.referencedMessage
                                 if (referencedMessage != null) {
                                     WidgetMessageReply(
@@ -211,7 +213,7 @@ private fun ChatScreenLoaded(
                                     },
                                 )
                             },
-                            content = message.contentNodes.ifEmpty { null }?.letComposable { nodes ->
+                            content = message.contentNodes.ifNotEmptyComposable { nodes ->
                                 WidgetMessageContent(
                                     text = render(
                                         nodes = nodes,
@@ -219,16 +221,16 @@ private fun ChatScreenLoaded(
                                     ).toAnnotatedString()
                                 )
                             },
-                            embeds = message.embeds.ifEmpty { null }?.letComposable { embeds ->
+                            embeds = message.embeds.ifNotEmptyComposable { embeds ->
                                 for (embed in embeds) {
                                     WidgetEmbed(
                                         title = embed.title,
                                         description = embed.description,
                                         color = embed.color,
-                                        author = embed.author?.letComposable {
+                                        author = embed.author.ifNotNullComposable {
                                             WidgetEmbedAuthor(name = it.name)
                                         },
-                                        fields = embed.fields?.letComposable {
+                                        fields = embed.fields.ifNotNullComposable {
                                             for (field in it) {
                                                 WidgetEmbedField(
                                                     name = field.name,
@@ -239,7 +241,7 @@ private fun ChatScreenLoaded(
                                     )
                                 }
                             },
-                            attachments = message.attachments.ifEmpty { null }?.letComposable { attachments ->
+                            attachments = message.attachments.ifNotEmptyComposable { attachments ->
                                 for (attachment in attachments) {
                                     when (attachment) {
                                         is DomainAttachment.Picture -> {

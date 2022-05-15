@@ -28,7 +28,7 @@ import com.xinto.opencord.ui.viewmodel.ChannelsViewModel
 import com.xinto.opencord.ui.viewmodel.CurrentUserViewModel
 import com.xinto.opencord.ui.viewmodel.GuildsViewModel
 import com.xinto.opencord.ui.widget.*
-import com.xinto.opencord.util.letComposable
+import com.xinto.opencord.util.ifNotNullComposable
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -178,7 +178,7 @@ private fun CurrentUserItem(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             OCBadgeBox(
-                badge = viewModel.userStatus?.letComposable { userStatus ->
+                badge = viewModel.userStatus.ifNotNullComposable { userStatus ->
                     WidgetStatusIcon(
                         modifier = Modifier.size(10.dp),
                         userStatus = userStatus
