@@ -22,7 +22,8 @@ android {
             useSupportLibrary = true
         }
 
-        buildConfigField("int", "DISCORD_VERSION_CODE", "89108")
+        buildConfigField("int", "DISCORD_VERSION_CODE", "124012")
+        buildConfigField("String", "DISCORD_VERSION_NAME", "\"124.12 - Stable\"")
     }
 
     buildTypes {
