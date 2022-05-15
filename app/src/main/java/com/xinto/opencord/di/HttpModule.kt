@@ -57,8 +57,11 @@ val httpModule = module {
                 header(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                 header(HttpHeaders.UserAgent, userAgent)
                 header(HttpHeaders.AcceptLanguage, "en-US")
-                header(HttpHeaders.XSuperProperties, json.encodeToString(superProperties).encodeBase64())
                 header(HttpHeaders.XDiscordLocale, "en-US")
+                header(
+                    HttpHeaders.XSuperProperties,
+                    json.encodeToString(superProperties).encodeBase64()
+                )
             }
             install(HttpRequestRetry) {
                 maxRetries = 5
@@ -88,8 +91,11 @@ val httpModule = module {
                 header(HttpHeaders.Authorization, accountManager.currentAccountToken)
                 header(HttpHeaders.UserAgent, userAgent)
                 header(HttpHeaders.AcceptLanguage, "en-US")
-                header(HttpHeaders.XSuperProperties, json.encodeToString(superProperties).encodeBase64())
                 header(HttpHeaders.XDiscordLocale, "en-US")
+                header(
+                    HttpHeaders.XSuperProperties,
+                    json.encodeToString(superProperties).encodeBase64()
+                )
             }
             install(HttpRequestRetry) {
                 maxRetries = 5
