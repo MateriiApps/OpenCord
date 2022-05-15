@@ -1,14 +1,12 @@
 package com.xinto.opencord.ui.screen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,14 +22,13 @@ import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainChannel
 import com.xinto.opencord.domain.model.DomainGuild
+import com.xinto.opencord.ui.component.OCAsyncImage
 import com.xinto.opencord.ui.component.OCBadgeBox
-import com.xinto.opencord.ui.component.rememberOCCoilPainter
 import com.xinto.opencord.ui.viewmodel.ChannelsViewModel
 import com.xinto.opencord.ui.viewmodel.CurrentUserViewModel
 import com.xinto.opencord.ui.viewmodel.GuildsViewModel
 import com.xinto.opencord.ui.widget.*
-import com.xinto.opencord.util.getSortedChannels
-import com.xinto.opencord.util.letComposable
+import com.xinto.opencord.util.ifNotNullComposable
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -109,6 +106,11 @@ private fun ChannelsList(
     viewModel: ChannelsViewModel,
     modifier: Modifier = Modifier
 ) {
+    val sortedChannels by remember(viewModel.channels) {
+        derivedStateOf {
+            viewModel.getSortedChannels()
+        }
+    }
     CompositionLocalProvider(LocalAbsoluteTonalElevation provides 1.dp) {
         Surface(
             modifier = modifier,
@@ -138,7 +140,7 @@ private fun ChannelsList(
                         bannerUrl = viewModel.guildBannerUrl,
                         boostLevel = viewModel.guildBoostLevel,
                         guildName = viewModel.guildName,
-                        channels = viewModel.channels.values.toList(),
+                        channels = sortedChannels,
                         collapsedCategories = viewModel.collapsedCategories,
                         selectedChannelId = viewModel.selectedChannelId
                     )
@@ -175,21 +177,19 @@ private fun CurrentUserItem(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            val userIcon = rememberOCCoilPainter(viewModel.avatarUrl)
             OCBadgeBox(
-                badge = viewModel.userStatus?.letComposable { userStatus ->
+                badge = viewModel.userStatus.ifNotNullComposable { userStatus ->
                     WidgetStatusIcon(
                         modifier = Modifier.size(10.dp),
                         userStatus = userStatus
                     )
                 }
             ) {
-                Image(
+                OCAsyncImage(
                     modifier = Modifier
                         .size(40.dp)
                         .clip(CircleShape),
-                    painter = userIcon,
-                    contentDescription = null
+                    url = viewModel.avatarUrl
                 )
             }
             Column(
@@ -341,7 +341,7 @@ private fun ChannelsListLoaded(
     bannerUrl: String?,
     boostLevel: Int,
     guildName: String,
-    channels: List<DomainChannel>,
+    channels: Map<DomainChannel.Category?, List<DomainChannel>>,
     collapsedCategories: List<ULong>,
     modifier: Modifier = Modifier
 ) {
@@ -355,15 +355,13 @@ private fun ChannelsListLoaded(
                     .height(IntrinsicSize.Min)
             ) {
                 if (bannerUrl != null) {
-                    val painter = rememberOCCoilPainter(bannerUrl)
-                    Image(
+                    OCAsyncImage(
                         modifier = Modifier
                             .fillParentMaxWidth()
                             .clip(MaterialTheme.shapes.large)
                             .height(150.dp),
-                        painter = painter,
+                        url = bannerUrl,
                         contentScale = ContentScale.Crop,
-                        contentDescription = "Guild Banner"
                     )
                     Box(
                         modifier = Modifier
@@ -420,7 +418,7 @@ private fun ChannelsListLoaded(
                 }
             }
         }
-        for ((category, categoryChannels) in getSortedChannels(channels)) {
+        for ((category, categoryChannels) in channels) {
             val collapsed = collapsedCategories.contains(category?.id)
 
             if (category != null) item {

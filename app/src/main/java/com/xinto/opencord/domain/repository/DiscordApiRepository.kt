@@ -19,6 +19,8 @@ interface DiscordApiRepository {
 
     suspend fun getUserSettings(): DomainUserSettings
     suspend fun updateUserSettings(settings: DomainUserSettingsPartial): DomainUserSettings
+
+    suspend fun startTyping(channelId: ULong)
 }
 
 class DiscordApiRepositoryImpl(
@@ -68,5 +70,9 @@ class DiscordApiRepositoryImpl(
 
     override suspend fun updateUserSettings(settings: DomainUserSettingsPartial): DomainUserSettings {
         return service.updateUserSettings(settings.toApi()).toDomain()
+    }
+
+    override suspend fun startTyping(channelId: ULong) {
+        service.startTyping(channelId)
     }
 }

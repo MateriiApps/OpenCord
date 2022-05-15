@@ -21,7 +21,9 @@ import com.xinto.opencord.domain.model.DomainMessage
 import com.xinto.opencord.domain.model.DomainMessageRegular
 import com.xinto.opencord.ui.viewmodel.ChannelPinsViewModel
 import com.xinto.opencord.ui.widget.*
-import com.xinto.opencord.util.letComposable
+import com.xinto.opencord.util.ifComposable
+import com.xinto.opencord.util.ifNotEmptyComposable
+import com.xinto.opencord.util.ifNotNullComposable
 import com.xinto.simpleast.render
 import org.koin.androidx.compose.getViewModel
 
@@ -111,6 +113,31 @@ private fun ChannelPinsLoaded(
                     ) {
                         WidgetChatMessage(
                             modifier = Modifier.fillMaxWidth(),
+                            reply = message.isReply.ifComposable {
+                                val referencedMessage = message.referencedMessage
+                                if (referencedMessage != null) {
+                                    WidgetMessageReply(
+                                        avatar = {
+                                            WidgetMessageAvatar(url = referencedMessage.author.avatarUrl)
+                                        },
+                                        author = {
+                                            WidgetMessageReplyAuthor(author = referencedMessage.author.username)
+                                        },
+                                        content = {
+                                            WidgetMessageReplyContent(
+                                                text = render(
+                                                    nodes = referencedMessage.contentNodes,
+                                                    renderContext = null
+                                                ).toAnnotatedString()
+                                            )
+                                        }
+                                    )
+                                } else {
+                                    ProvideTextStyle(MaterialTheme.typography.bodySmall) {
+                                        Text(stringResource(R.string.message_reply_unknown))
+                                    }
+                                }
+                            },
                             avatar = {
                                 WidgetMessageAvatar(url = message.author.avatarUrl)
                             },
@@ -121,7 +148,7 @@ private fun ChannelPinsLoaded(
                                     edited = message.isEdited
                                 )
                             },
-                            content = message.contentNodes.ifEmpty { null }?.letComposable { nodes ->
+                            content = message.contentNodes.ifNotEmptyComposable { nodes ->
                                 WidgetMessageContent(
                                     text = render(
                                         builder = AnnotatedString.Builder(),
@@ -130,16 +157,16 @@ private fun ChannelPinsLoaded(
                                     ).toAnnotatedString()
                                 )
                             },
-                            embeds = message.embeds.ifEmpty { null }?.letComposable { embeds ->
+                            embeds = message.embeds.ifNotEmptyComposable { embeds ->
                                 for (embed in embeds) {
                                     WidgetEmbed(
                                         title = embed.title,
                                         description = embed.description,
                                         color = embed.color,
-                                        author = embed.author?.letComposable {
+                                        author = embed.author.ifNotNullComposable {
                                             WidgetEmbedAuthor(name = it.name)
                                         },
-                                        fields = embed.fields?.letComposable {
+                                        fields = embed.fields.ifNotNullComposable {
                                             for (field in it) {
                                                 WidgetEmbedField(
                                                     name = field.name,
@@ -150,7 +177,7 @@ private fun ChannelPinsLoaded(
                                     )
                                 }
                             },
-                            attachments = message.attachments.ifEmpty { null }?.letComposable { attachments ->
+                            attachments = message.attachments.ifNotEmptyComposable { attachments ->
                                 for (attachment in attachments) {
                                     when (attachment) {
                                         is DomainAttachment.Picture -> {
