@@ -21,6 +21,7 @@ import com.xinto.opencord.domain.model.DomainMessage
 import com.xinto.opencord.domain.model.DomainMessageRegular
 import com.xinto.opencord.ui.viewmodel.ChannelPinsViewModel
 import com.xinto.opencord.ui.widget.*
+import com.xinto.opencord.util.ifComposable
 import com.xinto.opencord.util.ifNotEmptyComposable
 import com.xinto.opencord.util.ifNotNullComposable
 import com.xinto.simpleast.render
@@ -112,6 +113,29 @@ private fun ChannelPinsLoaded(
                     ) {
                         WidgetChatMessage(
                             modifier = Modifier.fillMaxWidth(),
+                            reply = message.isReply.ifComposable {
+                                val referencedMessage = message.referencedMessage
+                                if (referencedMessage != null) {
+                                    WidgetMessageReply(
+                                        avatar = {
+                                            WidgetMessageAvatar(url = referencedMessage.author.avatarUrl)
+                                        },
+                                        author = {
+                                            WidgetMessageReplyAuthor(author = referencedMessage.author.username)
+                                        },
+                                        content = {
+                                            WidgetMessageReplyContent(
+                                                text = render(
+                                                    nodes = referencedMessage.contentNodes,
+                                                    renderContext = null
+                                                ).toAnnotatedString()
+                                            )
+                                        }
+                                    )
+                                } else {
+                                    Text("Unknown message")
+                                }
+                            },
                             avatar = {
                                 WidgetMessageAvatar(url = message.author.avatarUrl)
                             },
