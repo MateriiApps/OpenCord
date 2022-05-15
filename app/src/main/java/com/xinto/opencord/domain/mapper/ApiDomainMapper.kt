@@ -136,9 +136,10 @@ fun ApiMeGuild.toDomain(): DomainMeGuild {
 fun ApiMessage.toDomain(): DomainMessage {
     val domainAuthor = author.toDomain()
     return when (type) {
-        ApiMessageType.Default -> {
+        ApiMessageType.Default, ApiMessageType.Reply -> {
             val domainAttachments = attachments.map { it.toDomain() }
             val domainEmbeds = embeds.map { it.toDomain() }
+            val domainReferencedMessage = referencedMessage?.toDomain()
             DomainMessageRegular(
                 id = id.value,
                 channelId = channelId.value,
@@ -147,7 +148,9 @@ fun ApiMessage.toDomain(): DomainMessage {
                 timestamp = timestamp,
                 editedTimestamp = editedTimestamp,
                 attachments = domainAttachments,
-                embeds = domainEmbeds
+                embeds = domainEmbeds,
+                isReply = type == ApiMessageType.Reply,
+                referencedMessage = domainReferencedMessage as? DomainMessageRegular
             )
         }
         ApiMessageType.GuildMemberJoin -> {

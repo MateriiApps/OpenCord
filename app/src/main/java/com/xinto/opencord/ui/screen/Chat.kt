@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.xinto.bdc.BottomSheetDialog
@@ -23,7 +22,9 @@ import com.xinto.opencord.domain.model.DomainMessage
 import com.xinto.opencord.domain.model.DomainMessageRegular
 import com.xinto.opencord.ui.viewmodel.ChatViewModel
 import com.xinto.opencord.ui.widget.*
-import com.xinto.opencord.util.letComposable
+import com.xinto.opencord.util.ifComposable
+import com.xinto.opencord.util.ifNotEmptyComposable
+import com.xinto.opencord.util.ifNotNullComposable
 import com.xinto.simpleast.render
 import org.koin.androidx.compose.getViewModel
 
@@ -176,6 +177,31 @@ private fun ChatScreenLoaded(
                                     onClick = {},
                                     onLongClick = { showBottomDialog = true }
                                 ),
+                            reply = message.isReply.ifComposable {
+                                val referencedMessage = message.referencedMessage
+                                if (referencedMessage != null) {
+                                    WidgetMessageReply(
+                                        avatar = {
+                                            WidgetMessageAvatar(url = referencedMessage.author.avatarUrl)
+                                        },
+                                        author = {
+                                            WidgetMessageReplyAuthor(author = referencedMessage.author.username)
+                                        },
+                                        content = {
+                                            WidgetMessageReplyContent(
+                                                text = render(
+                                                    nodes = referencedMessage.contentNodes,
+                                                    renderContext = null
+                                                ).toAnnotatedString()
+                                            )
+                                        }
+                                    )
+                                } else {
+                                    ProvideTextStyle(MaterialTheme.typography.bodySmall) {
+                                        Text(stringResource(R.string.message_reply_unknown))
+                                    }
+                                }
+                            },
                             avatar = {
                                 WidgetMessageAvatar(url = message.author.avatarUrl)
                             },
@@ -189,25 +215,24 @@ private fun ChatScreenLoaded(
                                     },
                                 )
                             },
-                            content = message.contentNodes.ifEmpty { null }?.letComposable { nodes ->
+                            content = message.contentNodes.ifNotEmptyComposable { nodes ->
                                 WidgetMessageContent(
                                     text = render(
-                                        builder = AnnotatedString.Builder(),
                                         nodes = nodes,
                                         renderContext = null
                                     ).toAnnotatedString()
                                 )
                             },
-                            embeds = message.embeds.ifEmpty { null }?.letComposable { embeds ->
+                            embeds = message.embeds.ifNotEmptyComposable { embeds ->
                                 for (embed in embeds) {
                                     WidgetEmbed(
                                         title = embed.title,
                                         description = embed.description,
                                         color = embed.color,
-                                        author = embed.author?.letComposable {
+                                        author = embed.author.ifNotNullComposable {
                                             WidgetEmbedAuthor(name = it.name)
                                         },
-                                        fields = embed.fields?.letComposable {
+                                        fields = embed.fields.ifNotNullComposable {
                                             for (field in it) {
                                                 WidgetEmbedField(
                                                     name = field.name,
@@ -218,7 +243,7 @@ private fun ChatScreenLoaded(
                                     )
                                 }
                             },
-                            attachments = message.attachments.ifEmpty { null }?.letComposable { attachments ->
+                            attachments = message.attachments.ifNotEmptyComposable { attachments ->
                                 for (attachment in attachments) {
                                     when (attachment) {
                                         is DomainAttachment.Picture -> {
