@@ -32,8 +32,8 @@ class CacheManagerImpl(
     }
 
     override fun getCurrentSession(): SessionData {
-        val gwSessionId = gateway.getSessionId()
-        return getSessions().find { it.sessionId == gwSessionId }
+        val sessionId = gateway.getSessionId()
+        return getSessions().find { it.sessionId == sessionId }
             ?: throw IllegalStateException("Current session is not cached!")
     }
 

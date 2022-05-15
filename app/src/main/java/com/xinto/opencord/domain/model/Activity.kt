@@ -20,19 +20,6 @@ interface DomainActivity {
     val name: String
     val createdAt: Long
     val type: ActivityType
-//    val timestamps: DomainActivityTimestamp?
-//    val applicationId: ULong?
-//    val details: String?
-//    val state: String?
-//    val emoji: DomainActivityEmoji?
-//    val party: DomainActivityParty?
-//    val assets: DomainActivityAssets?
-//    val secrets: DomainActivitySecrets?
-//    val instance: Boolean?
-//    val buttons: List<DomainActivityButton>?
-//    val id: String?
-    // TODO: https://discord.com/developers/docs/topics/gateway#activity-object-activity-flags
-//    val flags: Int?
 }
 
 data class DomainActivityGame(
@@ -60,6 +47,22 @@ data class DomainActivityStreaming(
     val assets: DomainActivityAssets,
 ) : DomainActivity {
     override val type = ActivityType.Streaming
+}
+
+data class DomainActivityListening(
+    override val name: String,
+    override val createdAt: Long,
+    val id: String,
+    val flags: Int,
+    val state: String,
+    val details: String,
+    val syncId: String,
+    val party: DomainActivityParty,
+    val assets: DomainActivityAssets,
+    val metadata: DomainActivityMetadata?,
+    val timestamps: DomainActivityTimestamp,
+) : DomainActivity {
+    override val type = ActivityType.Listening
 }
 
 data class DomainActivityCustom(
@@ -114,3 +117,9 @@ data class DomainActivitySecrets(
 //    val label: String,
 //    val url: String,
 //)
+
+data class DomainActivityMetadata(
+    val albumId: String?,
+    val artistIds: List<String>?,
+    val contextUri: String?,
+)

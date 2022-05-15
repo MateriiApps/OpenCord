@@ -366,6 +366,19 @@ fun ApiActivity.toDomain(): DomainActivity {
             details = details!!,
             assets = assets!!.toDomain()
         )
+        ActivityType.Listening -> DomainActivityListening(
+            name = name,
+            createdAt = createdAt ?: 0,
+            id = id!!,
+            flags = flags!!,
+            state  = state!!,
+            details = details!!,
+            syncId = syncId!!,
+            party = party!!.toDomain(),
+            assets = assets!!.toDomain(),
+            metadata = metadata?.toDomain(),
+            timestamps = timestamps!!.toDomain(),
+        )
         ActivityType.Custom -> DomainActivityCustom(
             name = name,
             createdAt = createdAt ?: 0,
@@ -425,3 +438,11 @@ fun ApiActivitySecrets.toDomain(): DomainActivitySecrets {
 //        url = url,
 //    )
 //}
+
+fun ApiActivityMetadata.toDomain(): DomainActivityMetadata {
+    return DomainActivityMetadata(
+        albumId = albumId,
+        artistIds = artistIds,
+        contextUri = contextUri,
+    )
+}

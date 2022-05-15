@@ -53,8 +53,15 @@ data class ApiActivity(
 
     @SerialName("id")
     val id: String? = null,
+
+    @SerialName("metadata")
+    val metadata: ApiActivityMetadata? = null,
+
+    @SerialName("sync_id")
+    val syncId: String? = null,
 )
 
+// TODO: replace this with ApiEmoji when reactions pr is merged
 @Serializable
 data class ApiActivityEmoji(
     val name: String? = null,
@@ -101,3 +108,15 @@ data class ApiActivitySecrets(
 //    val label: String,
 //    val url: String,
 //)
+
+@Serializable
+data class ApiActivityMetadata(
+    @SerialName("album_id")
+    val albumId: String? = null,
+
+    @SerialName("artist_ids")
+    val artistIds: List<String>? = null,
+
+    @SerialName("context_uri")
+    val contextUri: String? = null,
+)
