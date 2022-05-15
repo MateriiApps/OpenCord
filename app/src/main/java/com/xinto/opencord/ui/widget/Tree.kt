@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
 
 @Composable
-fun WidgetBranchBTR(
+fun WidgetBranchReply(
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.outline
 ) {
@@ -17,20 +17,22 @@ fun WidgetBranchBTR(
         drawPath(
             path = Path().apply {
                 moveTo(
-                    x = size.width / 2,
+                    x = 0f,
                     y = size.height
                 )
                 cubicTo(
-                    x1 = size.width / 2.1f,
-                    y1 = size.height / 2.1f,
-                    x2 = size.width / 1.9f,
-                    y2 = size.height / 1.9f,
+                    x1 = 0f,
+                    y1 = 0f,
+                    x2 = 0f,
+                    y2 = 0f,
                     x3 = size.width,
-                    y3 = size.height / 2
+                    y3 = 0f
                 )
             },
             color = color,
-            style = Stroke(width = 5f)
+            style = Stroke(
+                width = 5f,
+            )
         )
     }
 }

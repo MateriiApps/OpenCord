@@ -178,28 +178,28 @@ private fun ChatScreenLoaded(
                             reply = message.isReply.let { if (it) it else null }?.letComposable { _ ->
                                 val referencedMessage = message.referencedMessage
                                 if (referencedMessage != null) {
-                                    WidgetMessageAvatar(
-                                        modifier = Modifier.size(20.dp),
-                                        url = referencedMessage.author.avatarUrl
+                                    WidgetMessageReply(
+                                        avatar = {
+                                            WidgetMessageAvatar(url = referencedMessage.author.avatarUrl)
+                                        },
+                                        author = {
+                                            WidgetMessageReplyAuthor(author = referencedMessage.author.username)
+                                        },
+                                        content = {
+                                            WidgetMessageReplyContent(
+                                                text = render(
+                                                    nodes = referencedMessage.contentNodes,
+                                                    renderContext = null
+                                                ).toAnnotatedString()
+                                            )
+                                        }
                                     )
-                                    WidgetMessageReplyAuthor(author = referencedMessage.author.username)
-                                    if (referencedMessage.contentNodes.isNotEmpty()) {
-                                        WidgetMessageReplyContent(
-                                            text = render(
-                                                nodes = referencedMessage.contentNodes,
-                                                renderContext = null
-                                            ).toAnnotatedString()
-                                        )
-                                    }
                                 } else {
                                     Text("Unknown message")
                                 }
                             },
                             avatar = {
-                                WidgetMessageAvatar(
-                                    modifier = Modifier.size(40.dp),
-                                    url = message.author.avatarUrl
-                                )
+                                WidgetMessageAvatar(url = message.author.avatarUrl)
                             },
                             author = {
                                 WidgetMessageAuthor(

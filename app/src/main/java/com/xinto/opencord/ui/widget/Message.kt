@@ -46,20 +46,14 @@ fun WidgetChatMessage(
                         .fillMaxWidth()
                         .height(IntrinsicSize.Min),
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.Bottom
                 ) {
-                    Box(
+                    WidgetBranchReply(
                         modifier = Modifier
-                            .width(40.dp)
-                            .fillMaxHeight(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        WidgetBranchBTR(
-                            modifier = Modifier
-                                .height(16.dp)
-                                .width(36.dp),
-                        )
-                    }
+                            .padding(start = 20.dp)
+                            .width(24.dp)
+                            .fillMaxHeight(0.5f),
+                    )
                     reply()
                 }
             }
@@ -68,7 +62,12 @@ fun WidgetChatMessage(
                 verticalAlignment = Alignment.Top
             ) {
                 if (avatar != null) {
-                    avatar()
+                    Box(
+                        modifier = Modifier.size(40.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        avatar()
+                    }
                 }
                 Column(
                     modifier = Modifier.weight(1f),
@@ -81,7 +80,9 @@ fun WidgetChatMessage(
                             author()
                         }
                         if (content != null) {
-                            content()
+                            ProvideTextStyle(MaterialTheme.typography.bodyMedium) {
+                                content()
+                            }
                         }
                     }
                     if (attachments != null) {
@@ -107,31 +108,50 @@ fun WidgetChatMessage(
 }
 
 @Composable
+fun WidgetMessageReply(
+    modifier: Modifier = Modifier,
+    avatar: @Composable (() -> Unit)? = null,
+    author: @Composable (() -> Unit)? = null,
+    content: @Composable (() -> Unit)? = null,
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (avatar != null) {
+            Box(
+                modifier = Modifier.size(20.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                avatar()
+            }
+        }
+        if (author != null) {
+            ProvideTextStyle(MaterialTheme.typography.labelMedium) {
+                author()
+            }
+        }
+        if (content != null) {
+            ProvideTextStyle(MaterialTheme.typography.bodySmall) {
+                content()
+            }
+        }
+    }
+}
+
+@Composable
 fun WidgetMessageReplyContent(
     text: AnnotatedString,
     modifier: Modifier = Modifier,
 ) {
-    ProvideTextStyle(MaterialTheme.typography.bodySmall) {
-        Text(
-            modifier = modifier,
-            text = text,
-            inlineContent = mapOf(
-                "emote" to InlineTextContent(
-                    placeholder = Placeholder(
-                        width = 12.sp,
-                        height = 12.sp,
-                        placeholderVerticalAlign = PlaceholderVerticalAlign.Center
-                    )
-                ) { emoteId ->
-                    OCAsyncImage(
-                        url = "${BuildConfig.URL_CDN}/emojis/$emoteId",
-                    )
-                }
-            ),
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 1
-        )
-    }
+    Text(
+        modifier = modifier,
+        text = text,
+        inlineContent = textInlineContent(),
+        overflow = TextOverflow.Ellipsis,
+        maxLines = 1
+    )
 }
 
 @Composable
@@ -139,14 +159,12 @@ fun WidgetMessageReplyAuthor(
     author: String,
     modifier: Modifier = Modifier
 ) {
-    ProvideTextStyle(MaterialTheme.typography.labelMedium) {
-        Text(
-            modifier = modifier,
-            text = author,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 1
-        )
-    }
+    Text(
+        modifier = modifier,
+        text = author,
+        overflow = TextOverflow.Ellipsis,
+        maxLines = 1
+    )
 }
 
 @Composable
@@ -212,23 +230,27 @@ fun WidgetMessageContent(
     text: AnnotatedString,
     modifier: Modifier = Modifier,
 ) {
-    ProvideTextStyle(MaterialTheme.typography.bodyMedium) {
-        Text(
-            modifier = modifier,
-            text = text,
-            inlineContent = mapOf(
-                "emote" to InlineTextContent(
-                    placeholder = Placeholder(
-                        width = 20.sp,
-                        height = 20.sp,
-                        placeholderVerticalAlign = PlaceholderVerticalAlign.Center
-                    )
-                ) { emoteId ->
-                    OCAsyncImage(
-                        url = "${BuildConfig.URL_CDN}/emojis/$emoteId",
-                    )
-                }
+    Text(
+        modifier = modifier,
+        text = text,
+        inlineContent = textInlineContent()
+    )
+}
+
+@Composable
+private fun textInlineContent(): Map<String, InlineTextContent> {
+    val emoteSize = (LocalTextStyle.current.fontSize.value + 2f).sp
+    return mapOf(
+        "emote" to InlineTextContent(
+            placeholder = Placeholder(
+                width = emoteSize,
+                height = emoteSize,
+                placeholderVerticalAlign = PlaceholderVerticalAlign.Center
             )
-        )
-    }
+        ) { emoteId ->
+            OCAsyncImage(
+                url = "${BuildConfig.URL_CDN}/emojis/$emoteId",
+            )
+        }
+    )
 }
