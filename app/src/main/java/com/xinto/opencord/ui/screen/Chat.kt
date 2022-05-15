@@ -197,7 +197,9 @@ private fun ChatScreenLoaded(
                                         }
                                     )
                                 } else {
-                                    Text("Unknown message")
+                                    ProvideTextStyle(MaterialTheme.typography.bodySmall) {
+                                        Text(stringResource(R.string.message_reply_unknown))
+                                    }
                                 }
                             },
                             avatar = {

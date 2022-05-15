@@ -30,4 +30,6 @@
     <string name="timestamp_today">Today at %1$s</string>
     <string name="timestamp_yesterday">Yesterday at %1$s</string>
 
+    <string name="message_reply_unknown">Unknown message.</string>
+
 </resources>
