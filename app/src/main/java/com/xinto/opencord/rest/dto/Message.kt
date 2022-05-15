@@ -40,15 +40,18 @@ data class ApiMessage(
     val embeds: List<ApiEmbed>,
 
     @SerialName("type")
-    val type: ApiMessageType
-)
+    val type: ApiMessageType,
 
+    @SerialName("referenced_message")
+    val referencedMessage: ApiMessage? = null,
+)
 
 @Serializable(ApiMessageType.Serializer::class)
 @GetterGen
 enum class ApiMessageType(val value: Int) {
     Default(0),
-    GuildMemberJoin(7);
+    GuildMemberJoin(7),
+    Reply(19);
 
     companion object Serializer : KSerializer<ApiMessageType> {
         override val descriptor: SerialDescriptor

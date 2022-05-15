@@ -1,6 +1,5 @@
 package com.xinto.opencord.ui.widget
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -14,10 +13,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.xinto.opencord.BuildConfig
@@ -27,6 +26,7 @@ import com.xinto.opencord.ui.component.OCAsyncImage
 @Composable
 fun WidgetChatMessage(
     modifier: Modifier = Modifier,
+    reply: (@Composable () -> Unit)? = null,
     avatar: (@Composable () -> Unit)? = null,
     author: (@Composable () -> Unit)? = null,
     content: (@Composable () -> Unit)? = null,
@@ -34,46 +34,118 @@ fun WidgetChatMessage(
     embeds: (@Composable () -> Unit)? = null,
 ) {
     Box(modifier = modifier) {
-        Row(
-            modifier = Modifier.padding(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.Top
+        Column(
+            modifier = Modifier
+                .height(IntrinsicSize.Min)
+                .padding(8.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            if (avatar != null) {
-                avatar()
-            }
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-            ) {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
+            if (reply != null) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(IntrinsicSize.Min),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    if (author != null) {
-                        author()
-                    }
-                    if (content != null) {
-                        content()
-                    }
-                }
-                if (attachments != null) {
-                    Column(
-                        modifier = Modifier.fillMaxWidth(0.9f),
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    Box(
+                        modifier = Modifier
+                            .width(40.dp)
+                            .fillMaxHeight(),
+                        contentAlignment = Alignment.Center
                     ) {
-                        attachments()
+                        WidgetBranchBTR(
+                            modifier = Modifier
+                                .height(16.dp)
+                                .width(36.dp),
+                        )
                     }
+                    reply()
                 }
-                if (embeds != null) {
+            }
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.Top
+            ) {
+                if (avatar != null) {
+                    avatar()
+                }
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                ) {
                     Column(
-                        modifier = Modifier.fillMaxWidth(0.9f),
-                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                        modifier = Modifier.fillMaxWidth(),
                     ) {
-                        embeds()
+                        if (author != null) {
+                            author()
+                        }
+                        if (content != null) {
+                            content()
+                        }
+                    }
+                    if (attachments != null) {
+                        Column(
+                            modifier = Modifier.fillMaxWidth(0.9f),
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            attachments()
+                        }
+                    }
+                    if (embeds != null) {
+                        Column(
+                            modifier = Modifier.fillMaxWidth(0.9f),
+                            verticalArrangement = Arrangement.spacedBy(2.dp)
+                        ) {
+                            embeds()
+                        }
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+fun WidgetMessageReplyContent(
+    text: AnnotatedString,
+    modifier: Modifier = Modifier,
+) {
+    ProvideTextStyle(MaterialTheme.typography.bodySmall) {
+        Text(
+            modifier = modifier,
+            text = text,
+            inlineContent = mapOf(
+                "emote" to InlineTextContent(
+                    placeholder = Placeholder(
+                        width = 12.sp,
+                        height = 12.sp,
+                        placeholderVerticalAlign = PlaceholderVerticalAlign.Center
+                    )
+                ) { emoteId ->
+                    OCAsyncImage(
+                        url = "${BuildConfig.URL_CDN}/emojis/$emoteId",
+                    )
+                }
+            ),
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1
+        )
+    }
+}
+
+@Composable
+fun WidgetMessageReplyAuthor(
+    author: String,
+    modifier: Modifier = Modifier
+) {
+    ProvideTextStyle(MaterialTheme.typography.labelMedium) {
+        Text(
+            modifier = modifier,
+            text = author,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1
+        )
     }
 }
 
@@ -84,7 +156,6 @@ fun WidgetMessageAvatar(
 ) {
     OCAsyncImage(
         modifier = modifier
-            .size(40.dp)
             .clip(CircleShape),
         url = url,
     )
@@ -105,7 +176,7 @@ fun WidgetMessageAuthor(
     ) {
         ProvideTextStyle(MaterialTheme.typography.labelLarge) {
             Text(
-                author,
+                text = author,
                 modifier = Modifier
                     .clickable(
                         enabled = onAuthorClick != null,

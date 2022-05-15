@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.xinto.bdc.BottomSheetDialog
@@ -176,8 +175,31 @@ private fun ChatScreenLoaded(
                                     onClick = {},
                                     onLongClick = { showBottomDialog = true }
                                 ),
+                            reply = message.isReply.let { if (it) it else null }?.letComposable { _ ->
+                                val referencedMessage = message.referencedMessage
+                                if (referencedMessage != null) {
+                                    WidgetMessageAvatar(
+                                        modifier = Modifier.size(20.dp),
+                                        url = referencedMessage.author.avatarUrl
+                                    )
+                                    WidgetMessageReplyAuthor(author = referencedMessage.author.username)
+                                    if (referencedMessage.contentNodes.isNotEmpty()) {
+                                        WidgetMessageReplyContent(
+                                            text = render(
+                                                nodes = referencedMessage.contentNodes,
+                                                renderContext = null
+                                            ).toAnnotatedString()
+                                        )
+                                    }
+                                } else {
+                                    Text("Unknown message")
+                                }
+                            },
                             avatar = {
-                                WidgetMessageAvatar(url = message.author.avatarUrl)
+                                WidgetMessageAvatar(
+                                    modifier = Modifier.size(40.dp),
+                                    url = message.author.avatarUrl
+                                )
                             },
                             author = {
                                 WidgetMessageAuthor(
@@ -192,7 +214,6 @@ private fun ChatScreenLoaded(
                             content = message.contentNodes.ifEmpty { null }?.letComposable { nodes ->
                                 WidgetMessageContent(
                                     text = render(
-                                        builder = AnnotatedString.Builder(),
                                         nodes = nodes,
                                         renderContext = null
                                     ).toAnnotatedString()
