@@ -15,6 +15,7 @@ import com.xinto.opencord.gateway.event.MessageUpdateEvent
 import com.xinto.opencord.gateway.onEvent
 import com.xinto.opencord.rest.body.MessageBody
 import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
+import com.xinto.opencord.util.throttle
 import com.xinto.partialgen.getOrNull
 import kotlinx.coroutines.launch
 
@@ -41,6 +42,10 @@ class ChatViewModel(
         private set
     var sendEnabled by mutableStateOf(true)
         private set
+
+    val startTyping = throttle(9500, viewModelScope) {
+        repository.startTyping(persistentChannelId)
+    }
 
     fun load() {
         viewModelScope.launch {
@@ -76,6 +81,11 @@ class ChatViewModel(
 
     fun updateMessage(message: String) {
         userMessage = message
+        startTyping()
+    }
+
+    fun getSortedMessages(): List<DomainMessage> {
+        return messages.values.sortedByDescending { it.id }
     }
 
     init {

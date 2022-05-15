@@ -6,8 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,7 +28,6 @@ import com.xinto.opencord.ui.viewmodel.ChannelsViewModel
 import com.xinto.opencord.ui.viewmodel.CurrentUserViewModel
 import com.xinto.opencord.ui.viewmodel.GuildsViewModel
 import com.xinto.opencord.ui.widget.*
-import com.xinto.opencord.util.getSortedChannels
 import com.xinto.opencord.util.letComposable
 import org.koin.androidx.compose.getViewModel
 
@@ -108,6 +106,11 @@ private fun ChannelsList(
     viewModel: ChannelsViewModel,
     modifier: Modifier = Modifier
 ) {
+    val sortedChannels by remember(viewModel.channels) {
+        derivedStateOf {
+            viewModel.getSortedChannels()
+        }
+    }
     CompositionLocalProvider(LocalAbsoluteTonalElevation provides 1.dp) {
         Surface(
             modifier = modifier,
@@ -137,7 +140,7 @@ private fun ChannelsList(
                         bannerUrl = viewModel.guildBannerUrl,
                         boostLevel = viewModel.guildBoostLevel,
                         guildName = viewModel.guildName,
-                        channels = viewModel.channels.values.toList(),
+                        channels = sortedChannels,
                         collapsedCategories = viewModel.collapsedCategories,
                         selectedChannelId = viewModel.selectedChannelId
                     )
@@ -338,7 +341,7 @@ private fun ChannelsListLoaded(
     bannerUrl: String?,
     boostLevel: Int,
     guildName: String,
-    channels: List<DomainChannel>,
+    channels: Map<DomainChannel.Category?, List<DomainChannel>>,
     collapsedCategories: List<ULong>,
     modifier: Modifier = Modifier
 ) {
@@ -415,7 +418,7 @@ private fun ChannelsListLoaded(
                 }
             }
         }
-        for ((category, categoryChannels) in getSortedChannels(channels)) {
+        for ((category, categoryChannels) in channels) {
             val collapsed = collapsedCategories.contains(category?.id)
 
             if (category != null) item {

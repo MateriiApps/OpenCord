@@ -28,6 +28,8 @@ interface DiscordApiService {
 
     suspend fun getUserSettings(): ApiUserSettings
     suspend fun updateUserSettings(settings: ApiUserSettingsPartial): ApiUserSettings
+
+    suspend fun startTyping(channelId: ULong)
 }
 
 class DiscordApiServiceImpl(
@@ -138,6 +140,13 @@ class DiscordApiServiceImpl(
         }
     }
 
+    override suspend fun startTyping(channelId: ULong) {
+        withContext(Dispatchers.IO) {
+            val url = getTypingUrl(channelId)
+            client.post(url)
+        }
+    }
+
     init {
         gateway.onEvent<MessageCreateEvent> {
             val data = it.data
@@ -196,6 +205,11 @@ class DiscordApiServiceImpl(
 
         fun getUserSettingsUrl(): String {
             return "$BASE/users/@me/settings"
+        }
+
+        fun getTypingUrl(channelId: ULong): String {
+            val channelUrl = getChannelUrl(channelId)
+            return "$channelUrl/typing"
         }
     }
 }
