@@ -24,6 +24,8 @@ import com.xinto.opencord.domain.model.DomainChannel
 import com.xinto.opencord.domain.model.DomainGuild
 import com.xinto.opencord.ui.component.OCAsyncImage
 import com.xinto.opencord.ui.component.OCBadgeBox
+import com.xinto.opencord.ui.util.ContentAlpha
+import com.xinto.opencord.ui.util.ProvideContentAlpha
 import com.xinto.opencord.ui.viewmodel.ChannelsViewModel
 import com.xinto.opencord.ui.viewmodel.CurrentUserViewModel
 import com.xinto.opencord.ui.viewmodel.GuildsViewModel
@@ -422,17 +424,19 @@ private fun ChannelsListLoaded(
             val collapsed = collapsedCategories.contains(category?.id)
 
             if (category != null) item {
-                WidgetCategory(
-                    modifier = Modifier.padding(
-                        top = 12.dp,
-                        bottom = 4.dp
-                    ),
-                    title = category.name,
-                    collapsed = collapsed,
-                    onClick = {
-                        onCategoryClick(category.id)
-                    },
-                )
+                ProvideContentAlpha(ContentAlpha.medium) {
+                    WidgetCategory(
+                        modifier = Modifier.padding(
+                            top = 12.dp,
+                            bottom = 4.dp
+                        ),
+                        title = category.name,
+                        collapsed = collapsed,
+                        onClick = {
+                            onCategoryClick(category.id)
+                        },
+                    )
+                }
             }
 
             items(categoryChannels) { channel ->
