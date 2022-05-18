@@ -122,4 +122,5 @@ dependencies {
     Dependencies.Accompanist(this)
     Dependencies.Coil(this)
     Dependencies.ExoPlayer(this)
+    implementation("com.valentinilk.shimmer:compose-shimmer:1.0.2")
 }
