@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun WidgetChannelListItem(
     onClick: () -> Unit,
-    title: String,
+    title: (@Composable () -> Unit),
     painter: Painter,
     selected: Boolean,
     showIndicator: Boolean,
@@ -58,10 +58,7 @@ fun WidgetChannelListItem(
                     painter = painter,
                     contentDescription = "Channel Type"
                 )
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleMedium
-                )
+                title()
             }
         }
     }

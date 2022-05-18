@@ -19,6 +19,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.valentinilk.shimmer.shimmer
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainChannel
 import com.xinto.opencord.domain.model.DomainGuild
@@ -325,11 +326,45 @@ private fun ChannelsListUnselected(
 private fun ChannelsListLoading(
     modifier: Modifier = Modifier,
 ) {
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator()
+    Column(modifier = modifier) {
+        for (i in 0 until (5..20).random()) {
+            if (i == 0 || (0..6).random() == 1) {
+                WidgetCategory(
+                    modifier = Modifier.padding(
+                        top = 12.dp,
+                        bottom = 4.dp
+                    ),
+                    title = {
+                        Box(
+                            modifier = Modifier
+                                .shimmer()
+                                .size((30..100).random().dp, 14.dp)
+                                .clip(MaterialTheme.shapes.medium)
+                                .background(Color.LightGray.copy(alpha = 0.7f))
+                        )
+                    },
+                    collapsed = false,
+                    onClick = {},
+                )
+            } else {
+                WidgetChannelListItem(
+                    modifier = Modifier.padding(bottom = 2.dp),
+                    title = {
+                        Box(
+                            modifier = Modifier
+                                .shimmer()
+                                .size((50..150).random().dp, 14.dp)
+                                .clip(MaterialTheme.shapes.medium)
+                                .background(Color.LightGray.copy(alpha = 0.3f))
+                        )
+                    },
+                    painter = painterResource(R.drawable.ic_tag),
+                    selected = false,
+                    showIndicator = false,
+                    onClick = {},
+                )
+            }
+        }
     }
 }
 
@@ -427,7 +462,7 @@ private fun ChannelsListLoaded(
                         top = 12.dp,
                         bottom = 4.dp
                     ),
-                    title = category.name,
+                    title = { Text(category.name) },
                     collapsed = collapsed,
                     onClick = {
                         onCategoryClick(category.id)
@@ -442,7 +477,7 @@ private fun ChannelsListLoaded(
                         is DomainChannel.TextChannel -> {
                             WidgetChannelListItem(
                                 modifier = Modifier.padding(bottom = 2.dp),
-                                title = channel.name,
+                                title = { Text(channel.name) },
                                 painter = painterResource(R.drawable.ic_tag),
                                 selected = selectedChannelId == channel.id,
                                 showIndicator = selectedChannelId != channel.id,
@@ -454,7 +489,7 @@ private fun ChannelsListLoaded(
                         is DomainChannel.VoiceChannel -> {
                             WidgetChannelListItem(
                                 modifier = Modifier.padding(bottom = 2.dp),
-                                title = channel.name,
+                                title = { Text(channel.name) },
                                 painter = painterResource(R.drawable.ic_volume_up),
                                 selected = false,
                                 showIndicator = false,

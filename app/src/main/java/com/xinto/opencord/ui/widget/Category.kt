@@ -24,9 +24,9 @@ import java.util.*
 
 @Composable
 fun WidgetCategory(
-    title: String,
     modifier: Modifier = Modifier,
     collapsed: Boolean,
+    title: (@Composable () -> Unit),
     onClick: () -> Unit,
 ) {
     val iconRotation = animateFloatAsState(
@@ -59,7 +59,7 @@ fun WidgetCategory(
                         .size(18.dp)
                         .rotate(iconRotation.value)
                 )
-                Text(title.uppercase(Locale.getDefault()))
+                title()
             }
         }
     }
