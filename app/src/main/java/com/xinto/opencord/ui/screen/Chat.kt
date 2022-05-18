@@ -18,6 +18,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 import com.xinto.bdc.BottomSheetDialog
 import com.xinto.opencord.R
@@ -132,6 +134,7 @@ private fun ChatScreenUnselected(
 private fun ChatScreenLoading(
     modifier: Modifier = Modifier,
 ) {
+    val shimmer = rememberShimmer(shimmerBounds = ShimmerBounds.View)
     Column(modifier = modifier) {
         for (i in 0..7) {
             WidgetChatMessage(
@@ -140,7 +143,7 @@ private fun ChatScreenLoading(
                 avatar = {
                     Box(
                         modifier = Modifier
-                            .shimmer()
+                            .shimmer(shimmer)
                             .size(40.dp)
                             .clip(CircleShape)
                             .background(Color.LightGray.copy(alpha = 0.4f))
@@ -149,7 +152,7 @@ private fun ChatScreenLoading(
                 author = {
                     Box(
                         modifier = Modifier
-                            .shimmer()
+                            .shimmer(shimmer)
                             .size((20..100).random().dp, 14.dp)
                             .clip(MaterialTheme.shapes.medium)
                             .background(Color.LightGray.copy(alpha = 0.6f))
@@ -161,7 +164,7 @@ private fun ChatScreenLoading(
                             for (m in 0 until (0..5).random()) {
                                 Box(
                                     modifier = Modifier
-                                        .shimmer()
+                                        .shimmer(shimmer)
                                         .padding(top = 8.dp)
                                         .size((20..70).random().dp, 14.dp)
                                         .clip(MaterialTheme.shapes.medium)

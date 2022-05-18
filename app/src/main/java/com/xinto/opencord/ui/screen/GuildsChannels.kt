@@ -19,6 +19,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainChannel
@@ -326,6 +328,7 @@ private fun ChannelsListUnselected(
 private fun ChannelsListLoading(
     modifier: Modifier = Modifier,
 ) {
+    val shimmer = rememberShimmer(shimmerBounds = ShimmerBounds.View)
     Column(modifier = modifier) {
         for (i in 0 until (5..20).random()) {
             if (i == 0 || (0..6).random() == 1) {
@@ -337,7 +340,7 @@ private fun ChannelsListLoading(
                     title = {
                         Box(
                             modifier = Modifier
-                                .shimmer()
+                                .shimmer(shimmer)
                                 .size((30..100).random().dp, 14.dp)
                                 .clip(MaterialTheme.shapes.medium)
                                 .background(Color.LightGray.copy(alpha = 0.7f))
@@ -352,7 +355,7 @@ private fun ChannelsListLoading(
                     title = {
                         Box(
                             modifier = Modifier
-                                .shimmer()
+                                .shimmer(shimmer)
                                 .size((50..150).random().dp, 14.dp)
                                 .clip(MaterialTheme.shapes.medium)
                                 .background(Color.LightGray.copy(alpha = 0.3f))
