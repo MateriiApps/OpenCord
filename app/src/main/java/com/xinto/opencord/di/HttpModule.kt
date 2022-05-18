@@ -1,8 +1,8 @@
 package com.xinto.opencord.di
 
-import com.xinto.opencord.BuildConfig
 import com.xinto.opencord.domain.manager.AccountManager
-import com.xinto.opencord.rest.body.XSuperProperties
+import com.xinto.opencord.domain.provider.TelemetryProvider
+import com.xinto.opencord.domain.provider.PropertyProvider
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.*
@@ -16,26 +16,6 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import java.util.*
-
-private const val userAgent = "Discord-Android/${BuildConfig.DISCORD_VERSION_CODE}"
-private val superProperties = XSuperProperties(
-    browser = "Discord Android",
-    userAgent = userAgent,
-    clientBuildNumber = BuildConfig.DISCORD_VERSION_CODE,
-    clientBuildVersion = BuildConfig.DISCORD_VERSION_NAME,
-    deviceName = "Pixel, oriole",
-    os = "Android",
-    osSdkVersion = "32",
-    osVersion = "12",
-    systemLocale = "en-US",
-    cpuPerformance = (5..40).random(),
-    memoryPerformance = (100_000..800_000).random(),
-    cpuCores = 4,
-    accessibilitySupport = false,
-    accessibilityFeatures = 128,
-    deviceAdId = UUID.randomUUID().toString()
-)
 
 val HttpHeaders.XSuperProperties: String
     get() = "X-Super-Properties"
@@ -50,17 +30,19 @@ val httpModule = module {
     }
 
     fun provideAuthClient(
-        json: Json
+        json: Json,
+        telemetryProvider: TelemetryProvider,
+        propertyProvider: PropertyProvider
     ): HttpClient {
         return HttpClient(CIO) {
             defaultRequest {
                 header(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-                header(HttpHeaders.UserAgent, userAgent)
+                header(HttpHeaders.UserAgent, telemetryProvider.userAgent)
                 header(HttpHeaders.AcceptLanguage, "en-US")
                 header(HttpHeaders.XDiscordLocale, "en-US")
                 header(
                     HttpHeaders.XSuperProperties,
-                    json.encodeToString(superProperties).encodeBase64()
+                    json.encodeToString(propertyProvider.xSuperProperties).encodeBase64()
                 )
             }
             install(HttpRequestRetry) {
@@ -83,18 +65,20 @@ val httpModule = module {
 
     fun provideApiClient(
         json: Json,
-        accountManager: AccountManager
+        accountManager: AccountManager,
+        telemetryProvider: TelemetryProvider,
+        propertyProvider: PropertyProvider
     ): HttpClient {
         return HttpClient(CIO) {
             defaultRequest {
                 header(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                 header(HttpHeaders.Authorization, accountManager.currentAccountToken)
-                header(HttpHeaders.UserAgent, userAgent)
+                header(HttpHeaders.UserAgent, telemetryProvider.userAgent)
                 header(HttpHeaders.AcceptLanguage, "en-US")
                 header(HttpHeaders.XDiscordLocale, "en-US")
                 header(
                     HttpHeaders.XSuperProperties,
-                    json.encodeToString(superProperties).encodeBase64()
+                    json.encodeToString(propertyProvider.xSuperProperties).encodeBase64()
                 )
             }
             install(HttpRequestRetry) {
@@ -124,7 +108,7 @@ val httpModule = module {
     }
 
     single { provideJson() }
-    single(named("auth")) { provideAuthClient(get()) }
-    single(named("api")) { provideApiClient(get(), get()) }
+    single(named("auth")) { provideAuthClient(get(), get(), get()) }
+    single(named("api")) { provideApiClient(get(), get(), get(), get()) }
     single(named("gateway")) { provideGatewayClient() }
 }

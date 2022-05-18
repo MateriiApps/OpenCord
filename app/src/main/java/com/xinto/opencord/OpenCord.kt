@@ -21,6 +21,7 @@ class OpenCord : Application() {
                 simpleAstModule,
                 viewModelModule,
                 loggerModule,
+                providerModule
             )
         }
     }
