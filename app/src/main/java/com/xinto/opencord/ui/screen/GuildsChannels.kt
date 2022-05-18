@@ -330,20 +330,23 @@ private fun ChannelsListLoading(
 ) {
     val shimmer = rememberShimmer(shimmerBounds = ShimmerBounds.View)
     Column(modifier = modifier) {
-        for (i in 0 until (5..20).random()) {
-            if (i == 0 || (0..6).random() == 1) {
+        val items = remember { (5..20).random() }
+        repeat(items) { itemIndex ->
+            val isCategory = remember { itemIndex == 0 || (0..6).random() == 1 }
+            if (isCategory) {
                 WidgetCategory(
                     modifier = Modifier.padding(
                         top = 12.dp,
                         bottom = 4.dp
                     ),
                     title = {
-                        Box(
+                        val spaces = remember { (10..20).random() }
+                        Text(
                             modifier = Modifier
                                 .shimmer(shimmer)
-                                .size((30..100).random().dp, 14.dp)
                                 .clip(MaterialTheme.shapes.medium)
-                                .background(Color.LightGray.copy(alpha = 0.7f))
+                                .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)),
+                            text = " ".repeat(spaces)
                         )
                     },
                     collapsed = false,
@@ -353,12 +356,13 @@ private fun ChannelsListLoading(
                 WidgetChannelListItem(
                     modifier = Modifier.padding(bottom = 2.dp),
                     title = {
-                        Box(
+                        val spaces = remember { (15..30).random() }
+                        Text(
                             modifier = Modifier
                                 .shimmer(shimmer)
-                                .size((50..150).random().dp, 14.dp)
                                 .clip(MaterialTheme.shapes.medium)
-                                .background(Color.LightGray.copy(alpha = 0.3f))
+                                .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)),
+                            text = " ".repeat(spaces)
                         )
                     },
                     painter = painterResource(R.drawable.ic_tag),

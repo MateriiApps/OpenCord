@@ -15,13 +15,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.ShimmerBounds
-import com.valentinilk.shimmer.defaultShimmerTheme
 import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 import com.xinto.bdc.BottomSheetDialog
@@ -137,9 +135,7 @@ private fun ChatScreenUnselected(
 private fun ChatScreenLoading(
     modifier: Modifier = Modifier,
 ) {
-    val shimmer = rememberShimmer(
-        shimmerBounds = ShimmerBounds.View,
-    )
+    val shimmer = rememberShimmer(shimmerBounds = ShimmerBounds.View)
     Column(
         modifier = modifier
             .verticalScroll(
@@ -148,39 +144,45 @@ private fun ChatScreenLoading(
             )
         )
     {
-        for (i in 0..7) {
+        repeat(10) {
             WidgetChatMessage(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 avatar = {
                     Box(
                         modifier = Modifier
                             .shimmer(shimmer)
                             .size(40.dp)
                             .clip(CircleShape)
-                            .background(Color.LightGray.copy(alpha = 0.4f))
+                            .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f))
                     )
                 },
                 author = {
+                    //TODO use WidgetMessageAuthor
+                    val width = remember { (20..100).random().dp  }
                     Box(
                         modifier = Modifier
                             .shimmer(shimmer)
-                            .size((20..100).random().dp, 14.dp)
+                            .size(width = width, height = 14.dp)
                             .clip(MaterialTheme.shapes.medium)
-                            .background(Color.LightGray.copy(alpha = 0.6f))
+                            .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
                     )
                 },
                 content = {
-                    for (j in 0 until (1..4).random()) {
-                        Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                            for (m in 0 until (0..5).random()) {
-                                Box(
+                    val rowCount = remember { (1..3).random() }
+                    repeat(rowCount) {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        ) {
+                            val itemCount = (1..5).random()
+                            repeat(itemCount) {
+                                val spaces = remember { (10..25).random() }
+                                Text(
+                                    text = " ".repeat(spaces),
                                     modifier = Modifier
                                         .shimmer(shimmer)
                                         .padding(top = 8.dp)
-                                        .size((20..70).random().dp, 14.dp)
                                         .clip(MaterialTheme.shapes.medium)
-                                        .background(Color.LightGray.copy(alpha = 0.3f))
+                                        .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f))
                                 )
                             }
                         }
