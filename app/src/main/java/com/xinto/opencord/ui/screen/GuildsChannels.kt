@@ -4,7 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -239,11 +241,45 @@ private fun CurrentUserItem(
 private fun GuildsListLoading(
     modifier: Modifier = Modifier,
 ) {
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
+    val shimmer = rememberShimmer(shimmerBounds = ShimmerBounds.View)
+    Column(
+        modifier = modifier
+            .padding(16.dp)
+            .fillMaxWidth()
+            .verticalScroll(
+                state = rememberScrollState(),
+                enabled = false,
+            ),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        CircularProgressIndicator()
+        Icon(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .size(35.dp),
+            painter = painterResource(R.drawable.ic_discord_logo),
+            contentDescription = null,
+        )
+
+        Divider(
+            modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .padding(vertical = 8.dp)
+                .clip(MaterialTheme.shapes.medium),
+            thickness = 2.dp,
+            color = LocalContentColor.current.copy(alpha = 0.3f),
+        )
+
+        val count = remember { (4..10).random() }
+        repeat(count) {
+            Box(
+                modifier = Modifier
+                    .shimmer(shimmer)
+                    .size(48.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
+            )
+        }
     }
 }
 
@@ -254,7 +290,6 @@ private fun GuildsListLoaded(
     guilds: List<DomainGuild>,
     modifier: Modifier = Modifier
 ) {
-    val discordIcon = painterResource(R.drawable.ic_discord_logo)
     LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -270,9 +305,9 @@ private fun GuildsListLoaded(
             ) {
                 Icon(
                     modifier = Modifier
-                        .size(28.dp)
+                        .size(35.dp)
                         .align(Alignment.Center),
-                    painter = discordIcon,
+                    painter = painterResource(R.drawable.ic_discord_logo),
                     contentDescription = "Home",
                 )
             }
@@ -281,10 +316,11 @@ private fun GuildsListLoaded(
         item {
             Divider(
                 modifier = Modifier
-                    .fillParentMaxWidth(0.5f)
-                    .padding(bottom = 6.dp)
+                    .fillParentMaxWidth(0.55f)
+                    .padding(bottom = 4.dp)
                     .clip(MaterialTheme.shapes.medium),
-                thickness = 2.dp
+                thickness = 2.dp,
+                color = LocalContentColor.current.copy(alpha = 0.3f),
             )
         }
 

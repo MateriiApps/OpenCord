@@ -23,7 +23,7 @@ class GuildsViewModel(
         object Error : State
     }
 
-    var state by mutableStateOf<State>(State.Loaded)
+    var state by mutableStateOf<State>(State.Loading)
         private set
 
     val guilds = mutableStateMapOf<ULong, DomainGuild>()
