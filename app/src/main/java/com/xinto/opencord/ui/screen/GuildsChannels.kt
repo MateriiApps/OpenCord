@@ -160,8 +160,8 @@ private fun ChannelsList(
 
 @Composable
 private fun CurrentUserItem(
-    onSettingsClick: () -> Unit,
     modifier: Modifier = Modifier,
+    onSettingsClick: () -> Unit,
     viewModel: CurrentUserViewModel = getViewModel()
 ) {
     Surface(
@@ -170,68 +170,153 @@ private fun CurrentUserItem(
         shape = MaterialTheme.shapes.medium,
         tonalElevation = 1.dp
     ) {
-        Row(
-            modifier = Modifier
-                .padding(
-                    start = 12.dp,
-                    top = 12.dp,
-                    bottom = 12.dp,
-                    end = 4.dp
-                )
-                .height(40.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            OCBadgeBox(
-                badge = viewModel.userStatus.ifNotNullComposable { userStatus ->
-                    WidgetStatusIcon(
-                        modifier = Modifier.size(10.dp),
-                        userStatus = userStatus
-                    )
-                }
-            ) {
-                OCAsyncImage(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(CircleShape),
-                    url = viewModel.avatarUrl
+        when (viewModel.state) {
+            CurrentUserViewModel.State.Loading -> {
+                CurrentUserItemLoading(
+                    onSettingsClick = onSettingsClick
                 )
             }
-            Column(
-                verticalArrangement = Arrangement.spacedBy(2.dp),
+            CurrentUserViewModel.State.Loaded -> {
+                CurrentUserItemLoaded(
+                    onSettingsClick = onSettingsClick,
+                    viewModel = viewModel
+                )
+            }
+            CurrentUserViewModel.State.Error -> {
+
+            }
+        }
+    }
+}
+
+@Composable
+private fun CurrentUserItemLoading(
+    onSettingsClick: () -> Unit
+) {
+    val shimmer = rememberShimmer(shimmerBounds = ShimmerBounds.View)
+    Row(
+        modifier = Modifier
+            .padding(
+                start = 12.dp,
+                top = 12.dp,
+                bottom = 12.dp,
+                end = 4.dp
+            )
+            .height(40.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        OCBadgeBox(
+            badge = {}
+        ) {
+            Box(
+                modifier = Modifier
+                    .shimmer(shimmer)
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)),
+            )
+        }
+        Column(
+            verticalArrangement = Arrangement.spacedBy(2.dp),
+        ) {
+            val spaces = remember { (15..30).random() }
+            Text(
+                text = " ".repeat(spaces),
+                modifier = Modifier
+                    .shimmer(shimmer)
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f))
+            )
+
+            Text(
+                text = " ".repeat(10),
+                modifier = Modifier
+                    .shimmer(shimmer)
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f))
+            )
+        }
+        Row(
+            modifier = Modifier.weight(1f),
+            horizontalArrangement = Arrangement.End
+        ) {
+            IconButton(onClick = onSettingsClick) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_settings),
+                    contentDescription = "Open settings"
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun CurrentUserItemLoaded(
+    onSettingsClick: () -> Unit,
+    viewModel: CurrentUserViewModel
+) {
+    Row(
+        modifier = Modifier
+            .padding(
+                start = 12.dp,
+                top = 12.dp,
+                bottom = 12.dp,
+                end = 4.dp
+            )
+            .height(40.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        OCBadgeBox(
+            badge = viewModel.userStatus.ifNotNullComposable { userStatus ->
+                WidgetStatusIcon(
+                    modifier = Modifier.size(10.dp),
+                    userStatus = userStatus
+                )
+            }
+        ) {
+            OCAsyncImage(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape),
+                url = viewModel.avatarUrl
+            )
+        }
+        Column(
+            verticalArrangement = Arrangement.spacedBy(2.dp),
+        ) {
+            val customStatus = viewModel.userCustomStatus
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                val customStatus = viewModel.userCustomStatus
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    ProvideTextStyle(MaterialTheme.typography.titleSmall) {
-                        Text(viewModel.username)
-                    }
-                    if (customStatus != null) {
-                        ProvideTextStyle(MaterialTheme.typography.bodySmall) {
-                            Text(viewModel.discriminator)
-                        }
-                    }
+                ProvideTextStyle(MaterialTheme.typography.titleSmall) {
+                    Text(viewModel.username)
                 }
-                ProvideTextStyle(MaterialTheme.typography.bodySmall) {
-                    if (customStatus != null) {
-                        Text(customStatus)
-                    } else {
+                if (customStatus != null) {
+                    ProvideTextStyle(MaterialTheme.typography.bodySmall) {
                         Text(viewModel.discriminator)
                     }
                 }
             }
-            Row(
-                modifier = modifier.weight(1f),
-                horizontalArrangement = Arrangement.End
-            ) {
-                IconButton(onClick = onSettingsClick) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_settings),
-                        contentDescription = null
-                    )
+            ProvideTextStyle(MaterialTheme.typography.bodySmall) {
+                if (customStatus != null) {
+                    Text(customStatus)
+                } else {
+                    Text(viewModel.discriminator)
                 }
+            }
+        }
+        Row(
+            modifier = Modifier.weight(1f),
+            horizontalArrangement = Arrangement.End
+        ) {
+            IconButton(onClick = onSettingsClick) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_settings),
+                    contentDescription = "Open settings"
+                )
             }
         }
     }
