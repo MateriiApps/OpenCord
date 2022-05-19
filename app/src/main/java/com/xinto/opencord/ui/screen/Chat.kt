@@ -138,6 +138,7 @@ private fun ChatScreenLoading(
     val shimmer = rememberShimmer(shimmerBounds = ShimmerBounds.View)
     Column(
         modifier = modifier
+            .padding(vertical = 8.dp)
             .verticalScroll(
                 state = rememberScrollState(),
                 enabled = false
