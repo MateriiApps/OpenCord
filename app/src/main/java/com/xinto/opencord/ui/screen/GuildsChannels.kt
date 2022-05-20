@@ -304,7 +304,7 @@ private fun GuildsListLoading(
         Icon(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .size(35.dp),
+                .size(32.dp),
             painter = painterResource(R.drawable.ic_discord_logo),
             contentDescription = null,
         )
