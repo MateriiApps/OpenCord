@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 fun WidgetChannelListItem(
     onClick: () -> Unit,
     title: @Composable () -> Unit,
-    painter: Painter,
+    icon: @Composable () -> Unit,
     selected: Boolean,
     showIndicator: Boolean,
     modifier: Modifier = Modifier,
@@ -51,10 +51,12 @@ fun WidgetChannelListItem(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    painter = painter,
-                    contentDescription = "Channel Type"
-                )
+                Box(
+                    modifier = Modifier.size(24.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    icon()
+                }
                 ProvideTextStyle(MaterialTheme.typography.titleMedium) {
                     title()
                 }

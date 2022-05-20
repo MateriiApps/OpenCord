@@ -1,5 +1,8 @@
 package com.xinto.opencord.ui.screen
 
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -466,7 +470,15 @@ private fun ChannelsListLoading(
                             text = " ".repeat(spaces)
                         )
                     },
-                    collapsed = false,
+                    icon = {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .shimmer(shimmer)
+                                .clip(CircleShape)
+                                .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f))
+                        )
+                    },
                     onClick = {},
                 )
             } else {
@@ -482,7 +494,15 @@ private fun ChannelsListLoading(
                             text = " ".repeat(spaces)
                         )
                     },
-                    painter = painterResource(R.drawable.ic_tag),
+                    icon = {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .shimmer(shimmer)
+                                .clip(CircleShape)
+                                .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f))
+                        )
+                    },
                     selected = false,
                     showIndicator = false,
                     onClick = {},
@@ -578,20 +598,35 @@ private fun ChannelsListLoaded(
             }
         }
         for ((category, categoryChannels) in channels) {
+            //TODO put this in remember
             val collapsed = collapsedCategories.contains(category?.id)
-
-            if (category != null) item {
-                WidgetCategory(
-                    modifier = Modifier.padding(
-                        top = 12.dp,
-                        bottom = 4.dp
-                    ),
-                    title = { Text(category.capsName) },
-                    collapsed = collapsed,
-                    onClick = {
-                        onCategoryClick(category.id)
-                    },
-                )
+            if (category != null) {
+                item {
+                    val iconRotation by animateFloatAsState(
+                        targetValue = if (collapsed) -90f else 0f,
+                        animationSpec = spring(
+                            dampingRatio = Spring.DampingRatioMediumBouncy,
+                            stiffness = Spring.StiffnessLow
+                        )
+                    )
+                    WidgetCategory(
+                        modifier = Modifier.padding(
+                            top = 12.dp,
+                            bottom = 4.dp
+                        ),
+                        title = { Text(category.capsName) },
+                        icon = {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_keyboard_arrow_down),
+                                contentDescription = "Collapse category",
+                                modifier = Modifier.rotate(iconRotation)
+                            )
+                        },
+                        onClick = {
+                            onCategoryClick(category.id)
+                        },
+                    )
+                }
             }
 
             items(categoryChannels) { channel ->
@@ -602,7 +637,12 @@ private fun ChannelsListLoaded(
                             WidgetChannelListItem(
                                 modifier = Modifier.padding(bottom = 2.dp),
                                 title = { Text(channel.name) },
-                                painter = painterResource(R.drawable.ic_tag),
+                                icon = {
+                                    Icon(
+                                        painter = painterResource(R.drawable.ic_tag),
+                                        contentDescription = null
+                                    )
+                                },
                                 selected = selectedChannelId == channel.id,
                                 showIndicator = selectedChannelId != channel.id,
                                 onClick = {
@@ -614,7 +654,12 @@ private fun ChannelsListLoaded(
                             WidgetChannelListItem(
                                 modifier = Modifier.padding(bottom = 2.dp),
                                 title = { Text(channel.name) },
-                                painter = painterResource(R.drawable.ic_volume_up),
+                                icon = {
+                                    Icon(
+                                        painter = painterResource(R.drawable.ic_volume_up),
+                                        contentDescription = null
+                                    )
+                                },
                                 selected = false,
                                 showIndicator = false,
                                 onClick = { /*TODO*/ },

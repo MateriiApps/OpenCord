@@ -54,7 +54,7 @@ class ChannelsViewModel(
                 guildName = guild.name
                 guildBannerUrl = guild.bannerUrl
                 guildBoostLevel = guild.premiumTier
-                state = State.Loaded
+//                state = State.Loaded
             } catch (e: Exception) {
                 state = State.Error
                 e.printStackTrace()
