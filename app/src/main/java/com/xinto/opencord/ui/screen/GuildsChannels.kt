@@ -586,7 +586,7 @@ private fun ChannelsListLoaded(
                         top = 12.dp,
                         bottom = 4.dp
                     ),
-                    title = { Text(category.name) },
+                    title = { Text(category.capsName) },
                     collapsed = collapsed,
                     onClick = {
                         onCategoryClick(category.id)

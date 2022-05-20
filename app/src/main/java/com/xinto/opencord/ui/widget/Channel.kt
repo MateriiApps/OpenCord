@@ -6,10 +6,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -20,7 +17,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun WidgetChannelListItem(
     onClick: () -> Unit,
-    title: (@Composable () -> Unit),
+    title: @Composable () -> Unit,
     painter: Painter,
     selected: Boolean,
     showIndicator: Boolean,
@@ -58,7 +55,9 @@ fun WidgetChannelListItem(
                     painter = painter,
                     contentDescription = "Channel Type"
                 )
-                title()
+                ProvideTextStyle(MaterialTheme.typography.titleMedium) {
+                    title()
+                }
             }
         }
     }

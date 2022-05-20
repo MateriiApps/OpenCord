@@ -54,6 +54,8 @@ sealed class DomainChannel : Comparable<DomainChannel>, Mentionable {
         override val permissions: List<DomainPermission>,
     ) : DomainChannel() {
         override val parentId: ULong? = null
+
+        val capsName = name.uppercase()
     }
 
     override fun compareTo(other: DomainChannel): Int {
