@@ -31,6 +31,7 @@ import com.valentinilk.shimmer.shimmer
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainChannel
 import com.xinto.opencord.domain.model.DomainGuild
+import com.xinto.opencord.domain.model.DomainUserStatus
 import com.xinto.opencord.ui.component.OCAsyncImage
 import com.xinto.opencord.ui.component.OCBadgeBox
 import com.xinto.opencord.ui.viewmodel.ChannelsViewModel
@@ -183,7 +184,11 @@ private fun CurrentUserItem(
             CurrentUserViewModel.State.Loaded -> {
                 CurrentUserItemLoaded(
                     onSettingsClick = onSettingsClick,
-                    viewModel = viewModel
+                    avatarUrl = viewModel.avatarUrl,
+                    username = viewModel.username,
+                    discriminator = viewModel.discriminator,
+                    status = viewModel.userStatus,
+                    customStatus = viewModel.userCustomStatus
                 )
             }
             CurrentUserViewModel.State.Error -> {
@@ -198,28 +203,17 @@ private fun CurrentUserItemLoading(
     onSettingsClick: () -> Unit
 ) {
     val shimmer = rememberShimmer(shimmerBounds = ShimmerBounds.View)
-    Row(
-        modifier = Modifier
-            .padding(
-                start = 12.dp,
-                top = 12.dp,
-                bottom = 12.dp,
-                end = 4.dp
+    WidgetCurrentUser(
+        avatar = {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .shimmer(shimmer)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)),
             )
-            .height(40.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .shimmer(shimmer)
-                .size(40.dp)
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)),
-        )
-        Column(
-            verticalArrangement = Arrangement.spacedBy(2.dp),
-        ) {
+        },
+        username = {
             val spaces = remember { (15..30).random() }
             Text(
                 text = " ".repeat(spaces),
@@ -228,7 +222,8 @@ private fun CurrentUserItemLoading(
                     .clip(MaterialTheme.shapes.medium)
                     .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f))
             )
-
+        },
+        discriminator = {
             Text(
                 text = " ".repeat(10),
                 modifier = Modifier
@@ -236,82 +231,50 @@ private fun CurrentUserItemLoading(
                     .clip(MaterialTheme.shapes.medium)
                     .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f))
             )
-        }
-        Row(
-            modifier = Modifier.weight(1f),
-            horizontalArrangement = Arrangement.End
-        ) {
+        },
+        buttons = {
             IconButton(onClick = onSettingsClick) {
                 Icon(
                     painter = painterResource(R.drawable.ic_settings),
                     contentDescription = "Open settings"
                 )
             }
-        }
-    }
+        },
+        customStatus = null
+    )
 }
 
 @Composable
 private fun CurrentUserItemLoaded(
     onSettingsClick: () -> Unit,
-    viewModel: CurrentUserViewModel
+    avatarUrl: String,
+    username: String,
+    discriminator: String,
+    status: DomainUserStatus?,
+    customStatus: String?,
 ) {
-    Row(
-        modifier = Modifier
-            .padding(
-                start = 12.dp,
-                top = 12.dp,
-                bottom = 12.dp,
-                end = 4.dp
-            )
-            .height(40.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        OCBadgeBox(
-            badge = viewModel.userStatus.ifNotNullComposable { userStatus ->
-                WidgetStatusIcon(
-                    modifier = Modifier.size(10.dp),
-                    userStatus = userStatus
+    WidgetCurrentUser(
+        avatar = {
+            OCBadgeBox(
+                badge = status.ifNotNullComposable { userStatus ->
+                    WidgetStatusIcon(
+                        modifier = Modifier.size(10.dp),
+                        userStatus = userStatus
+                    )
+                }
+            ) {
+                OCAsyncImage(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape),
+                    url = avatarUrl
                 )
             }
-        ) {
-            OCAsyncImage(
-                modifier = Modifier
-                    .size(40.dp)
-                    .clip(CircleShape),
-                url = viewModel.avatarUrl
-            )
-        }
-        Column(
-            verticalArrangement = Arrangement.spacedBy(2.dp),
-        ) {
-            val customStatus = viewModel.userCustomStatus
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                ProvideTextStyle(MaterialTheme.typography.titleSmall) {
-                    Text(viewModel.username)
-                }
-                if (customStatus != null) {
-                    ProvideTextStyle(MaterialTheme.typography.bodySmall) {
-                        Text(viewModel.discriminator)
-                    }
-                }
-            }
-            ProvideTextStyle(MaterialTheme.typography.bodySmall) {
-                if (customStatus != null) {
-                    Text(customStatus)
-                } else {
-                    Text(viewModel.discriminator)
-                }
-            }
-        }
-        Row(
-            modifier = Modifier.weight(1f),
-            horizontalArrangement = Arrangement.End
-        ) {
+        },
+        username = { Text(username) },
+        discriminator = { Text(discriminator) },
+        customStatus = customStatus?.ifNotNullComposable { Text(it) },
+        buttons = {
             IconButton(onClick = onSettingsClick) {
                 Icon(
                     painter = painterResource(R.drawable.ic_settings),
@@ -319,7 +282,7 @@ private fun CurrentUserItemLoaded(
                 )
             }
         }
-    }
+    )
 }
 
 @Composable
