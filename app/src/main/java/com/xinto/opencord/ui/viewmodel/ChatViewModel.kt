@@ -56,7 +56,7 @@ class ChatViewModel(
                 messages.clear()
                 messages.putAll(channelMessages)
                 channelName = channel.name
-//                state = State.Loaded
+                state = State.Loaded
             } catch (e: Exception) {
                 state = State.Error
                 e.printStackTrace()
