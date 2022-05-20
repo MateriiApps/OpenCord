@@ -292,7 +292,7 @@ private fun GuildsListLoading(
     val shimmer = rememberShimmer(shimmerBounds = ShimmerBounds.View)
     Column(
         modifier = modifier
-            .padding(16.dp)
+            .padding(vertical = 8.dp)
             .fillMaxWidth()
             .verticalScroll(
                 state = rememberScrollState(),
@@ -301,21 +301,30 @@ private fun GuildsListLoading(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Icon(
+        Box(
             modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .size(32.dp),
-            painter = painterResource(R.drawable.ic_discord_logo),
-            contentDescription = null,
-        )
+                .size(48.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            CompositionLocalProvider(
+                LocalContentColor provides MaterialTheme.colorScheme.primary
+            ) {
+                Icon(
+                    modifier = Modifier
+                        .size(32.dp),
+                    painter = painterResource(R.drawable.ic_discord_logo),
+                    contentDescription = null,
+                )
+            }
+        }
 
         Divider(
             modifier = Modifier
-                .fillMaxWidth(0.9f)
-                .padding(vertical = 8.dp)
+                .fillMaxWidth(0.55f)
+                .padding(bottom = 4.dp)
                 .clip(MaterialTheme.shapes.medium),
             thickness = 2.dp,
-            color = LocalContentColor.current.copy(alpha = 0.3f),
+            color = MaterialTheme.colorScheme.outline,
         )
 
         val count = remember { (4..10).random() }
@@ -353,7 +362,7 @@ private fun GuildsListLoaded(
             ) {
                 Icon(
                     modifier = Modifier
-                        .size(35.dp)
+                        .size(32.dp)
                         .align(Alignment.Center),
                     painter = painterResource(R.drawable.ic_discord_logo),
                     contentDescription = "Home",
@@ -368,7 +377,7 @@ private fun GuildsListLoaded(
                     .padding(bottom = 4.dp)
                     .clip(MaterialTheme.shapes.medium),
                 thickness = 2.dp,
-                color = LocalContentColor.current.copy(alpha = 0.3f),
+                color = MaterialTheme.colorScheme.outline,
             )
         }
 
