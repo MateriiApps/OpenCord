@@ -39,7 +39,7 @@ class GuildsViewModel(
 //                val meGuilds = repository.getMeGuilds()
 //                guilds.clear()
 //                guilds.addAll(meGuilds)
-//                state = State.Loaded
+                state = State.Loaded
             } catch (e: Exception) {
                 state = State.Error
                 e.printStackTrace()

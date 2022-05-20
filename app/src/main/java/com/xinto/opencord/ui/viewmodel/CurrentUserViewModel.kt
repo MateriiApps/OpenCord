@@ -67,7 +67,7 @@ class CurrentUserViewModel(
                 userSettings = settings
                 userStatus = settings.status
                 userCustomStatus = settings.customStatus?.text
-//                state = State.Loaded
+                state = State.Loaded
             } catch (e: Throwable) {
                 e.printStackTrace()
                 state = State.Error
