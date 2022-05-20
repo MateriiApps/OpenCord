@@ -159,7 +159,7 @@ private fun ChatScreenLoading(
                 },
                 author = {
                     //TODO use WidgetMessageAuthor
-                    val width = remember { (20..100).random().dp  }
+                    val width = remember { (30..100).random().dp  }
                     Box(
                         modifier = Modifier
                             .shimmer(shimmer)
@@ -176,7 +176,7 @@ private fun ChatScreenLoading(
                         ) {
                             val itemCount = (1..5).random()
                             repeat(itemCount) {
-                                val spaces = remember { (10..25).random() }
+                                val spaces = remember { (10..30).random() }
                                 Text(
                                     text = " ".repeat(spaces),
                                     modifier = Modifier

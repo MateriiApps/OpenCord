@@ -206,17 +206,13 @@ private fun CurrentUserItemLoading(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        OCBadgeBox(
-            badge = {}
-        ) {
-            Box(
-                modifier = Modifier
-                    .shimmer(shimmer)
-                    .size(40.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)),
-            )
-        }
+        Box(
+            modifier = Modifier
+                .shimmer(shimmer)
+                .size(40.dp)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)),
+        )
         Column(
             verticalArrangement = Arrangement.spacedBy(2.dp),
         ) {
