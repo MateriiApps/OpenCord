@@ -16,7 +16,7 @@ enum class ActivityType(val value: Int) {
     companion object
 }
 
-interface DomainActivity {
+sealed interface DomainActivity {
     val name: String
     val createdAt: Long
     val type: ActivityType
