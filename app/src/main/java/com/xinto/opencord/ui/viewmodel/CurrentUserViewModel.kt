@@ -62,7 +62,6 @@ class CurrentUserViewModel(
                 .also { mergedData -> userSettings = mergedData }
             userStatus = mergedData?.status
             userCustomStatus = mergedData?.customStatus?.text
-            println(mergedData?.customStatus?.text)
         }
         gateway.onEvent<SessionsReplaceEvent> {
             isStreaming = cache.getActivities()
