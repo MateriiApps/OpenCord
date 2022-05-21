@@ -13,6 +13,7 @@ import com.xinto.opencord.gateway.event.ChannelUpdateEvent
 import com.xinto.opencord.gateway.event.GuildUpdateEvent
 import com.xinto.opencord.gateway.onEvent
 import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
+import com.xinto.opencord.util.getSortedChannels
 import kotlinx.coroutines.launch
 
 class ChannelsViewModel(
@@ -20,6 +21,7 @@ class ChannelsViewModel(
     persistentDataManager: PersistentDataManager,
     private val repository: DiscordApiRepository
 ) : BasePersistenceViewModel(persistentDataManager) {
+
     sealed interface State {
         object Unselected : State
         object Loading : State
@@ -74,6 +76,10 @@ class ChannelsViewModel(
 
         if (!collapsedCategories.remove(categoryId))
             collapsedCategories.add(categoryId)
+    }
+
+    fun getSortedChannels(): Map<DomainChannel.Category?, List<DomainChannel>> {
+        return getSortedChannels(channels.values)
     }
 
     init {

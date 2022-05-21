@@ -136,9 +136,10 @@ fun ApiMeGuild.toDomain(): DomainMeGuild {
 fun ApiMessage.toDomain(): DomainMessage {
     val domainAuthor = author.toDomain()
     return when (type) {
-        ApiMessageType.Default -> {
+        ApiMessageType.Default, ApiMessageType.Reply -> {
             val domainAttachments = attachments.map { it.toDomain() }
             val domainEmbeds = embeds.map { it.toDomain() }
+            val domainReferencedMessage = referencedMessage?.toDomain()
             DomainMessageRegular(
                 id = id.value,
                 channelId = channelId.value,
@@ -147,7 +148,9 @@ fun ApiMessage.toDomain(): DomainMessage {
                 timestamp = timestamp,
                 editedTimestamp = editedTimestamp,
                 attachments = domainAttachments,
-                embeds = domainEmbeds
+                embeds = domainEmbeds,
+                isReply = type == ApiMessageType.Reply,
+                referencedMessage = domainReferencedMessage as? DomainMessageRegular
             )
         }
         ApiMessageType.GuildMemberJoin -> {
@@ -363,16 +366,29 @@ fun ApiActivity.toDomain(): DomainActivity {
             details = details!!,
             assets = assets!!.toDomain()
         )
+        ActivityType.Listening -> DomainActivityListening(
+            name = name,
+            createdAt = createdAt ?: 0,
+            id = id!!,
+            flags = flags!!,
+            state  = state!!,
+            details = details!!,
+            syncId = syncId!!,
+            party = party!!.toDomain(),
+            assets = assets!!.toDomain(),
+            metadata = metadata?.toDomain(),
+            timestamps = timestamps!!.toDomain(),
+        )
         ActivityType.Custom -> DomainActivityCustom(
             name = name,
             createdAt = createdAt ?: 0,
             state = state!!,
             emoji = emoji?.toDomain()
         )
-        ActivityType.Listening -> TODO("Unfinished activity type!")
-        ActivityType.Watching -> TODO("Unfinished activity type!")
-        ActivityType.Competing -> TODO("Unfinished activity type!")
-        null -> throw IllegalArgumentException("Unknown activity type ${this.type}!")
+        else -> DomainActivityUnknown(
+            name = name,
+            createdAt = createdAt ?: 0,
+        )
     }
 }
 
@@ -386,8 +402,8 @@ fun ApiActivityEmoji.toDomain(): DomainActivityEmoji {
 
 fun ApiActivityTimestamp.toDomain(): DomainActivityTimestamp {
     return DomainActivityTimestamp(
-        start = start,
-        end = end,
+        start = start?.let { Instant.fromEpochMilliseconds(it.toLong()) },
+        end = end?.let { Instant.fromEpochMilliseconds(it.toLong()) },
     )
 }
 
@@ -416,9 +432,17 @@ fun ApiActivitySecrets.toDomain(): DomainActivitySecrets {
     )
 }
 
-fun ApiActivityButton.toDomain(): DomainActivityButton {
-    return DomainActivityButton(
-        label = label,
-        url = url,
+//fun ApiActivityButton.toDomain(): DomainActivityButton {
+//    return DomainActivityButton(
+//        label = label,
+//        url = url,
+//    )
+//}
+
+fun ApiActivityMetadata.toDomain(): DomainActivityMetadata {
+    return DomainActivityMetadata(
+        albumId = albumId,
+        artistIds = artistIds,
+        contextUri = contextUri,
     )
 }

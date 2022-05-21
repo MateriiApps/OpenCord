@@ -47,13 +47,21 @@ data class ApiActivity(
     @SerialName("flags")
     val flags: Int? = null,
 
-    @SerialName("buttons")
-    val buttons: List<ApiActivityButton>? = null,
+    // TODO: verify whether its List<String name> or List<ApiActivityButton> since I've seen both
+//    @SerialName("buttons")
+//    val buttons: List<ApiActivityButton>? = null,
 
     @SerialName("id")
     val id: String? = null,
+
+    @SerialName("metadata")
+    val metadata: ApiActivityMetadata? = null,
+
+    @SerialName("sync_id")
+    val syncId: String? = null,
 )
 
+// TODO: replace this with ApiEmoji when reactions pr is merged
 @Serializable
 data class ApiActivityEmoji(
     val name: String? = null,
@@ -63,8 +71,8 @@ data class ApiActivityEmoji(
 
 @Serializable
 data class ApiActivityTimestamp(
-    val start: Int?,
-    val end: Int?,
+    val start: String? = null,
+    val end: String? = null,
 )
 
 @Serializable
@@ -95,8 +103,20 @@ data class ApiActivitySecrets(
     val match: String? = null,
 )
 
+//@Serializable
+//data class ApiActivityButton(
+//    val label: String,
+//    val url: String,
+//)
+
 @Serializable
-data class ApiActivityButton(
-    val label: String,
-    val url: String,
+data class ApiActivityMetadata(
+    @SerialName("album_id")
+    val albumId: String? = null,
+
+    @SerialName("artist_ids")
+    val artistIds: List<String>? = null,
+
+    @SerialName("context_uri")
+    val contextUri: String? = null,
 )

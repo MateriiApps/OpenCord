@@ -4,6 +4,7 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -12,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.xinto.bdc.BottomSheetDialog
@@ -22,7 +22,9 @@ import com.xinto.opencord.domain.model.DomainMessage
 import com.xinto.opencord.domain.model.DomainMessageRegular
 import com.xinto.opencord.ui.viewmodel.ChatViewModel
 import com.xinto.opencord.ui.widget.*
-import com.xinto.opencord.util.letComposable
+import com.xinto.opencord.util.ifComposable
+import com.xinto.opencord.util.ifNotEmptyComposable
+import com.xinto.opencord.util.ifNotNullComposable
 import com.xinto.simpleast.render
 import org.koin.androidx.compose.getViewModel
 
@@ -34,6 +36,12 @@ fun ChatScreen(
     modifier: Modifier = Modifier,
     viewModel: ChatViewModel = getViewModel(),
 ) {
+    val sortedMessages by remember(viewModel.messages) {
+        derivedStateOf {
+            viewModel.getSortedMessages()
+        }
+    }
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -83,9 +91,7 @@ fun ChatScreen(
                 }
                 is ChatViewModel.State.Loaded -> {
                     ChatScreenLoaded(
-                        messages = viewModel.messages.values.sortedByDescending {
-                            it.timestamp
-                        },
+                        messages = sortedMessages,
                         channelName = viewModel.channelName,
                         userMessage = viewModel.userMessage,
                         sendEnabled = viewModel.sendEnabled,
@@ -140,15 +146,26 @@ private fun ChatScreenLoaded(
     onUserMessageSend: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    // TODO: scroll to target message if jumping
+    val listState = rememberLazyListState()
+
+    // TODO: toggleable auto scroll by scrolling up
+    LaunchedEffect(messages.size) {
+        if (listState.firstVisibleItemIndex <= 1) {
+            listState.animateScrollToItem(0)
+        }
+    }
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         LazyColumn(
+            state = listState,
             modifier = Modifier.weight(1f),
             reverseLayout = true,
         ) {
-            items(messages) { message ->
+            items(messages, key = { it.id.toLong() }) { message ->
                 var showBottomDialog by rememberSaveable { mutableStateOf(false) }
                 when (message) {
                     is DomainMessageRegular -> {
@@ -160,6 +177,31 @@ private fun ChatScreenLoaded(
                                     onClick = {},
                                     onLongClick = { showBottomDialog = true }
                                 ),
+                            reply = message.isReply.ifComposable {
+                                val referencedMessage = message.referencedMessage
+                                if (referencedMessage != null) {
+                                    WidgetMessageReply(
+                                        avatar = {
+                                            WidgetMessageAvatar(url = referencedMessage.author.avatarUrl)
+                                        },
+                                        author = {
+                                            WidgetMessageReplyAuthor(author = referencedMessage.author.username)
+                                        },
+                                        content = {
+                                            WidgetMessageReplyContent(
+                                                text = render(
+                                                    nodes = referencedMessage.contentNodes,
+                                                    renderContext = null
+                                                ).toAnnotatedString()
+                                            )
+                                        }
+                                    )
+                                } else {
+                                    ProvideTextStyle(MaterialTheme.typography.bodySmall) {
+                                        Text(stringResource(R.string.message_reply_unknown))
+                                    }
+                                }
+                            },
                             avatar = {
                                 WidgetMessageAvatar(url = message.author.avatarUrl)
                             },
@@ -173,25 +215,24 @@ private fun ChatScreenLoaded(
                                     },
                                 )
                             },
-                            content = message.contentNodes.ifEmpty { null }?.letComposable { nodes ->
+                            content = message.contentNodes.ifNotEmptyComposable { nodes ->
                                 WidgetMessageContent(
                                     text = render(
-                                        builder = AnnotatedString.Builder(),
                                         nodes = nodes,
                                         renderContext = null
                                     ).toAnnotatedString()
                                 )
                             },
-                            embeds = message.embeds.ifEmpty { null }?.letComposable { embeds ->
+                            embeds = message.embeds.ifNotEmptyComposable { embeds ->
                                 for (embed in embeds) {
                                     WidgetEmbed(
                                         title = embed.title,
                                         description = embed.description,
                                         color = embed.color,
-                                        author = embed.author?.letComposable {
+                                        author = embed.author.ifNotNullComposable {
                                             WidgetEmbedAuthor(name = it.name)
                                         },
-                                        fields = embed.fields?.letComposable {
+                                        fields = embed.fields.ifNotNullComposable {
                                             for (field in it) {
                                                 WidgetEmbedField(
                                                     name = field.name,
@@ -202,7 +243,7 @@ private fun ChatScreenLoaded(
                                     )
                                 }
                             },
-                            attachments = message.attachments.ifEmpty { null }?.letComposable { attachments ->
+                            attachments = message.attachments.ifNotEmptyComposable { attachments ->
                                 for (attachment in attachments) {
                                     when (attachment) {
                                         is DomainAttachment.Picture -> {
