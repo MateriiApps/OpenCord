@@ -301,19 +301,18 @@ private fun GuildsListLoading(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Box(
-            modifier = Modifier
-                .size(48.dp),
-            contentAlignment = Alignment.Center
+        WidgetGuildListItem(
+            selected = false,
+            showIndicator = false,
+            onClick = {}
         ) {
-            CompositionLocalProvider(
-                LocalContentColor provides MaterialTheme.colorScheme.primary
-            ) {
+            WidgetGuildContentVector {
                 Icon(
                     modifier = Modifier
-                        .size(32.dp),
+                        .size(32.dp)
+                        .align(Alignment.Center),
                     painter = painterResource(R.drawable.ic_discord_logo),
-                    contentDescription = null,
+                    contentDescription = "Home",
                 )
             }
         }
@@ -360,13 +359,15 @@ private fun GuildsListLoaded(
                 showIndicator = false,
                 onClick = {}
             ) {
-                Icon(
-                    modifier = Modifier
-                        .size(32.dp)
-                        .align(Alignment.Center),
-                    painter = painterResource(R.drawable.ic_discord_logo),
-                    contentDescription = "Home",
-                )
+                WidgetGuildContentVector {
+                    Icon(
+                        modifier = Modifier
+                            .size(32.dp)
+                            .align(Alignment.Center),
+                        painter = painterResource(R.drawable.ic_discord_logo),
+                        contentDescription = "Home",
+                    )
+                }
             }
         }
 
