@@ -1,8 +1,9 @@
 package com.xinto.opencord.ui.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,6 +18,7 @@ import coil.compose.SubcomposeAsyncImageContent
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import coil.size.Size
+import com.valentinilk.shimmer.shimmer
 
 @Composable
 fun OCAsyncImage(
@@ -41,11 +43,11 @@ fun OCAsyncImage(
         contentDescription = null,
         loading = {
             Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
+                modifier = Modifier
+                    .shimmer()
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.onSurface.copy(alpha))
+            )
         },
         success = {
             SubcomposeAsyncImageContent()

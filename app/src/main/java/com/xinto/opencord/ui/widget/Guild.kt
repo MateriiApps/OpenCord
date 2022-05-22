@@ -54,12 +54,7 @@ fun WidgetGuildListItem(
                 .clickable(onClick = onClick),
             contentAlignment = Alignment.Center
         ) {
-            CompositionLocalProvider(
-                LocalContentColor provides MaterialTheme.colorScheme.primary,
-                LocalTextStyle provides MaterialTheme.typography.headlineSmall
-            ) {
-                content()
-            }
+            content()
         }
     }
 }

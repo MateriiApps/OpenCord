@@ -71,9 +71,7 @@ class CurrentUserViewModel(
         viewModelScope.launch {
             try {
                 val settings = repository.getUserSettings()
-                    .also {
-                        userSettings = it
-                    }
+                userSettings = settings
                 userStatus = settings.status
                 userCustomStatus = settings.customStatus?.text
                 state = State.Loaded
