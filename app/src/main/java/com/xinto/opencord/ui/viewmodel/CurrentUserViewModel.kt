@@ -53,8 +53,9 @@ class CurrentUserViewModel(
         }
         gateway.onEvent<UserSettingsUpdateEvent> {
             val mergedData = userSettings?.merge(it.data.toDomain())
-                .also { mergedData -> userSettings = mergedData }
-            //TODO fix unsetting values bug by fixing the merger
+                .also { mergedData ->
+                    userSettings = mergedData
+                }
             userStatus = mergedData?.status
             userCustomStatus = mergedData?.customStatus?.text
             println(mergedData?.customStatus?.text)
@@ -63,9 +64,7 @@ class CurrentUserViewModel(
         viewModelScope.launch {
             try {
                 val settings = repository.getUserSettings()
-                    .also {
-                        userSettings = it
-                    }
+                userSettings = settings
                 userStatus = settings.status
                 userCustomStatus = settings.customStatus?.text
                 state = State.Loaded

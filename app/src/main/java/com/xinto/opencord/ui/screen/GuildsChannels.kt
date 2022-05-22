@@ -1,15 +1,21 @@
 package com.xinto.opencord.ui.screen
 
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -19,9 +25,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
+import com.valentinilk.shimmer.shimmer
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainChannel
 import com.xinto.opencord.domain.model.DomainGuild
+import com.xinto.opencord.domain.model.DomainUserStatus
 import com.xinto.opencord.ui.component.OCAsyncImage
 import com.xinto.opencord.ui.component.OCBadgeBox
 import com.xinto.opencord.ui.viewmodel.ChannelsViewModel
@@ -155,8 +165,8 @@ private fun ChannelsList(
 
 @Composable
 private fun CurrentUserItem(
-    onSettingsClick: () -> Unit,
     modifier: Modifier = Modifier,
+    onSettingsClick: () -> Unit,
     viewModel: CurrentUserViewModel = getViewModel()
 ) {
     Surface(
@@ -165,20 +175,88 @@ private fun CurrentUserItem(
         shape = MaterialTheme.shapes.medium,
         tonalElevation = 1.dp
     ) {
-        Row(
-            modifier = Modifier
-                .padding(
-                    start = 12.dp,
-                    top = 12.dp,
-                    bottom = 12.dp,
-                    end = 4.dp
+        when (viewModel.state) {
+            CurrentUserViewModel.State.Loading -> {
+                CurrentUserItemLoading(
+                    onSettingsClick = onSettingsClick
                 )
-                .height(40.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
+            }
+            CurrentUserViewModel.State.Loaded -> {
+                CurrentUserItemLoaded(
+                    onSettingsClick = onSettingsClick,
+                    avatarUrl = viewModel.avatarUrl,
+                    username = viewModel.username,
+                    discriminator = viewModel.discriminator,
+                    status = viewModel.userStatus,
+                    customStatus = viewModel.userCustomStatus
+                )
+            }
+            CurrentUserViewModel.State.Error -> {
+
+            }
+        }
+    }
+}
+
+@Composable
+private fun CurrentUserItemLoading(
+    onSettingsClick: () -> Unit
+) {
+    val shimmer = rememberShimmer(shimmerBounds = ShimmerBounds.View)
+    WidgetCurrentUser(
+        avatar = {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .shimmer(shimmer)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)),
+            )
+        },
+        username = {
+            val spaces = remember { (15..30).random() }
+            Text(
+                text = " ".repeat(spaces),
+                modifier = Modifier
+                    .shimmer(shimmer)
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f))
+            )
+        },
+        discriminator = {
+            Text(
+                text = " ".repeat(10),
+                modifier = Modifier
+                    .shimmer(shimmer)
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f))
+            )
+        },
+        buttons = {
+            IconButton(onClick = onSettingsClick) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_settings),
+                    contentDescription = "Open settings"
+                )
+            }
+        },
+        customStatus = null
+    )
+}
+
+@Composable
+private fun CurrentUserItemLoaded(
+    onSettingsClick: () -> Unit,
+    avatarUrl: String,
+    username: String,
+    discriminator: String,
+    status: DomainUserStatus?,
+    customStatus: String?,
+) {
+    WidgetCurrentUser(
+        avatar = {
             OCBadgeBox(
-                badge = viewModel.userStatus.ifNotNullComposable { userStatus ->
+                badge = status.ifNotNullComposable { userStatus ->
                     WidgetStatusIcon(
                         modifier = Modifier.size(10.dp),
                         userStatus = userStatus
@@ -189,58 +267,75 @@ private fun CurrentUserItem(
                     modifier = Modifier
                         .size(40.dp)
                         .clip(CircleShape),
-                    url = viewModel.avatarUrl
+                    url = avatarUrl
                 )
             }
-            Column(
-                verticalArrangement = Arrangement.spacedBy(2.dp),
-            ) {
-                val customStatus = viewModel.userCustomStatus
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    ProvideTextStyle(MaterialTheme.typography.titleSmall) {
-                        Text(viewModel.username)
-                    }
-                    if (customStatus != null) {
-                        ProvideTextStyle(MaterialTheme.typography.bodySmall) {
-                            Text(viewModel.discriminator)
-                        }
-                    }
-                }
-                ProvideTextStyle(MaterialTheme.typography.bodySmall) {
-                    if (customStatus != null) {
-                        Text(customStatus)
-                    } else {
-                        Text(viewModel.discriminator)
-                    }
-                }
-            }
-            Row(
-                modifier = modifier.weight(1f),
-                horizontalArrangement = Arrangement.End
-            ) {
-                IconButton(onClick = onSettingsClick) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_settings),
-                        contentDescription = null
-                    )
-                }
+        },
+        username = { Text(username) },
+        discriminator = { Text(discriminator) },
+        customStatus = customStatus?.ifNotNullComposable { Text(it) },
+        buttons = {
+            IconButton(onClick = onSettingsClick) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_settings),
+                    contentDescription = "Open settings"
+                )
             }
         }
-    }
+    )
 }
 
 @Composable
 private fun GuildsListLoading(
     modifier: Modifier = Modifier,
 ) {
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
+    val shimmer = rememberShimmer(shimmerBounds = ShimmerBounds.View)
+    Column(
+        modifier = modifier
+            .padding(vertical = 8.dp)
+            .fillMaxWidth()
+            .verticalScroll(
+                state = rememberScrollState(),
+                enabled = false,
+            ),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        CircularProgressIndicator()
+        WidgetGuildListItem(
+            selected = false,
+            showIndicator = false,
+            onClick = {}
+        ) {
+            WidgetGuildContentVector {
+                Icon(
+                    modifier = Modifier
+                        .size(32.dp)
+                        .align(Alignment.Center),
+                    painter = painterResource(R.drawable.ic_discord_logo),
+                    contentDescription = "Home",
+                )
+            }
+        }
+
+        Divider(
+            modifier = Modifier
+                .fillMaxWidth(0.55f)
+                .padding(bottom = 4.dp)
+                .clip(MaterialTheme.shapes.medium),
+            thickness = 2.dp,
+            color = MaterialTheme.colorScheme.outline,
+        )
+
+        val count = remember { (4..10).random() }
+        repeat(count) {
+            Box(
+                modifier = Modifier
+                    .shimmer(shimmer)
+                    .size(48.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
+            )
+        }
     }
 }
 
@@ -251,7 +346,6 @@ private fun GuildsListLoaded(
     guilds: List<DomainGuild>,
     modifier: Modifier = Modifier
 ) {
-    val discordIcon = painterResource(R.drawable.ic_discord_logo)
     LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -265,23 +359,26 @@ private fun GuildsListLoaded(
                 showIndicator = false,
                 onClick = {}
             ) {
-                Icon(
-                    modifier = Modifier
-                        .size(28.dp)
-                        .align(Alignment.Center),
-                    painter = discordIcon,
-                    contentDescription = "Home",
-                )
+                WidgetGuildContentVector {
+                    Icon(
+                        modifier = Modifier
+                            .size(32.dp)
+                            .align(Alignment.Center),
+                        painter = painterResource(R.drawable.ic_discord_logo),
+                        contentDescription = "Home",
+                    )
+                }
             }
         }
 
         item {
             Divider(
                 modifier = Modifier
-                    .fillParentMaxWidth(0.5f)
-                    .padding(bottom = 6.dp)
+                    .fillParentMaxWidth(0.55f)
+                    .padding(bottom = 4.dp)
                     .clip(MaterialTheme.shapes.medium),
-                thickness = 2.dp
+                thickness = 2.dp,
+                color = MaterialTheme.colorScheme.outline,
             )
         }
 
@@ -325,11 +422,92 @@ private fun ChannelsListUnselected(
 private fun ChannelsListLoading(
     modifier: Modifier = Modifier,
 ) {
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator()
+    val shimmer = rememberShimmer(shimmerBounds = ShimmerBounds.View)
+    Column(modifier = modifier) {
+        val items = remember { (5..20).random() }
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(14.dp)
+        ) {
+            val guildName = remember { " ".repeat((20..30).random()) }
+            val shimmerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+            Box(
+                modifier = Modifier
+                    .size(24.dp)
+                    .shimmer(shimmer)
+                    .clip(CircleShape)
+                    .background(shimmerColor)
+            )
+            Text(
+                modifier = Modifier
+                    .shimmer(shimmer)
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(shimmerColor),
+                text = guildName,
+                fontWeight = FontWeight.SemiBold,
+                style = MaterialTheme.typography.titleLarge,
+            )
+        }
+        repeat(items) { itemIndex ->
+            val isCategory = remember { itemIndex == 0 || (0..6).random() == 1 }
+            if (isCategory) {
+                WidgetCategory(
+                    modifier = Modifier.padding(
+                        top = 12.dp,
+                        bottom = 4.dp
+                    ),
+                    title = {
+                        val title = remember { " ".repeat((10..20).random()) }
+                        Text(
+                            modifier = Modifier
+                                .shimmer(shimmer)
+                                .clip(MaterialTheme.shapes.medium)
+                                .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)),
+                            text = title
+                        )
+                    },
+                    icon = {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .shimmer(shimmer)
+                                .clip(CircleShape)
+                                .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f))
+                        )
+                    },
+                    onClick = {},
+                )
+            } else {
+                WidgetChannelListItem(
+                    modifier = Modifier.padding(bottom = 2.dp),
+                    title = {
+                        val title = remember { " ".repeat((15..30).random()) }
+                        Text(
+                            modifier = Modifier
+                                .shimmer(shimmer)
+                                .clip(MaterialTheme.shapes.medium)
+                                .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)),
+                            text = title
+                        )
+                    },
+                    icon = {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .shimmer(shimmer)
+                                .clip(CircleShape)
+                                .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f))
+                        )
+                    },
+                    selected = false,
+                    showIndicator = false,
+                    onClick = {},
+                )
+            }
+        }
     }
 }
 
@@ -419,20 +597,35 @@ private fun ChannelsListLoaded(
             }
         }
         for ((category, categoryChannels) in channels) {
+            //TODO put this in remember
             val collapsed = collapsedCategories.contains(category?.id)
-
-            if (category != null) item {
-                WidgetCategory(
-                    modifier = Modifier.padding(
-                        top = 12.dp,
-                        bottom = 4.dp
-                    ),
-                    title = category.name,
-                    collapsed = collapsed,
-                    onClick = {
-                        onCategoryClick(category.id)
-                    },
-                )
+            if (category != null) {
+                item {
+                    val iconRotation by animateFloatAsState(
+                        targetValue = if (collapsed) -90f else 0f,
+                        animationSpec = spring(
+                            dampingRatio = Spring.DampingRatioMediumBouncy,
+                            stiffness = Spring.StiffnessLow
+                        )
+                    )
+                    WidgetCategory(
+                        modifier = Modifier.padding(
+                            top = 12.dp,
+                            bottom = 4.dp
+                        ),
+                        title = { Text(category.capsName) },
+                        icon = {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_keyboard_arrow_down),
+                                contentDescription = "Collapse category",
+                                modifier = Modifier.rotate(iconRotation)
+                            )
+                        },
+                        onClick = {
+                            onCategoryClick(category.id)
+                        },
+                    )
+                }
             }
 
             items(categoryChannels) { channel ->
@@ -442,8 +635,13 @@ private fun ChannelsListLoaded(
                         is DomainChannel.TextChannel -> {
                             WidgetChannelListItem(
                                 modifier = Modifier.padding(bottom = 2.dp),
-                                title = channel.name,
-                                painter = painterResource(R.drawable.ic_tag),
+                                title = { Text(channel.name) },
+                                icon = {
+                                    Icon(
+                                        painter = painterResource(R.drawable.ic_tag),
+                                        contentDescription = null
+                                    )
+                                },
                                 selected = selectedChannelId == channel.id,
                                 showIndicator = selectedChannelId != channel.id,
                                 onClick = {
@@ -454,8 +652,13 @@ private fun ChannelsListLoaded(
                         is DomainChannel.VoiceChannel -> {
                             WidgetChannelListItem(
                                 modifier = Modifier.padding(bottom = 2.dp),
-                                title = channel.name,
-                                painter = painterResource(R.drawable.ic_volume_up),
+                                title = { Text(channel.name) },
+                                icon = {
+                                    Icon(
+                                        painter = painterResource(R.drawable.ic_volume_up),
+                                        contentDescription = null
+                                    )
+                                },
                                 selected = false,
                                 showIndicator = false,
                                 onClick = { /*TODO*/ },

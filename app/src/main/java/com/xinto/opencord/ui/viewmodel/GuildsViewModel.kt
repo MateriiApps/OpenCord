@@ -1,6 +1,7 @@
 package com.xinto.opencord.ui.viewmodel
 
 import androidx.compose.runtime.*
+import androidx.lifecycle.viewModelScope
 import com.xinto.opencord.domain.manager.PersistentDataManager
 import com.xinto.opencord.domain.mapper.toDomain
 import com.xinto.opencord.domain.model.DomainGuild
@@ -10,6 +11,7 @@ import com.xinto.opencord.gateway.event.GuildCreateEvent
 import com.xinto.opencord.gateway.event.ReadyEvent
 import com.xinto.opencord.gateway.onEvent
 import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
+import kotlinx.coroutines.launch
 
 class GuildsViewModel(
     gateway: DiscordGateway,
@@ -23,7 +25,7 @@ class GuildsViewModel(
         object Error : State
     }
 
-    var state by mutableStateOf<State>(State.Loaded)
+    var state by mutableStateOf<State>(State.Loading)
         private set
 
     val guilds = mutableStateMapOf<ULong, DomainGuild>()
@@ -31,18 +33,18 @@ class GuildsViewModel(
         private set
 
     fun load() {
-//        viewModelScope.launch {
-//            try {
-//                state = State.Loading
+        viewModelScope.launch {
+            try {
+                state = State.Loading
 //                val meGuilds = repository.getMeGuilds()
 //                guilds.clear()
 //                guilds.addAll(meGuilds)
-//                state = State.Loaded
-//            } catch (e: Exception) {
-//                state = State.Error
-//                e.printStackTrace()
-//            }
-//        }
+                state = State.Loaded
+            } catch (e: Exception) {
+                state = State.Error
+                e.printStackTrace()
+            }
+        }
     }
 
     fun selectGuild(guildId: ULong) {
@@ -51,7 +53,7 @@ class GuildsViewModel(
     }
 
     init {
-//        load()
+        load()
 
         gateway.onEvent<ReadyEvent> { event ->
             event.data.guilds.forEach {

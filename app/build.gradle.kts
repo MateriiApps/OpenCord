@@ -120,6 +120,7 @@ dependencies {
     Dependencies.Material(this)
     Dependencies.Compose(this)
     Dependencies.Accompanist(this)
+    Dependencies.Shimmer(this)
     Dependencies.Coil(this)
     Dependencies.ExoPlayer(this)
 }

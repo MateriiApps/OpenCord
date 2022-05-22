@@ -1,10 +1,14 @@
 package com.xinto.opencord.ui.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -15,6 +19,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.valentinilk.shimmer.ShimmerBounds
+import com.valentinilk.shimmer.rememberShimmer
+import com.valentinilk.shimmer.shimmer
 import com.xinto.bdc.BottomSheetDialog
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainAttachment
@@ -128,11 +135,62 @@ private fun ChatScreenUnselected(
 private fun ChatScreenLoading(
     modifier: Modifier = Modifier,
 ) {
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator()
+    val shimmer = rememberShimmer(shimmerBounds = ShimmerBounds.View)
+    Column(
+        modifier = modifier
+            .padding(vertical = 8.dp)
+            .verticalScroll(
+                state = rememberScrollState(),
+                enabled = false
+            )
+        )
+    {
+        repeat(10) {
+            WidgetChatMessage(
+                modifier = Modifier.fillMaxWidth(),
+                avatar = {
+                    Box(
+                        modifier = Modifier
+                            .shimmer(shimmer)
+                            .size(40.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f))
+                    )
+                },
+                author = {
+                    //TODO use WidgetMessageAuthor
+                    val width = remember { (30..100).random().dp  }
+                    Box(
+                        modifier = Modifier
+                            .shimmer(shimmer)
+                            .size(width = width, height = 14.dp)
+                            .clip(MaterialTheme.shapes.medium)
+                            .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
+                    )
+                },
+                content = {
+                    val rowCount = remember { (1..3).random() }
+                    repeat(rowCount) {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        ) {
+                            val itemCount = (1..5).random()
+                            repeat(itemCount) {
+                                val spaces = remember { (10..30).random() }
+                                Text(
+                                    text = " ".repeat(spaces),
+                                    modifier = Modifier
+                                        .shimmer(shimmer)
+                                        .padding(top = 8.dp)
+                                        .clip(MaterialTheme.shapes.medium)
+                                        .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f))
+                                )
+                            }
+                        }
+                    }
+                }
+            )
+        }
     }
 }
 
@@ -261,7 +319,8 @@ private fun ChatScreenLoaded(
                             }
                         )
                     }
-                    else -> {/* ignore */}
+                    else -> {/* ignore */
+                    }
                 }
                 if (showBottomDialog) {
                     MessageActionMenu(
