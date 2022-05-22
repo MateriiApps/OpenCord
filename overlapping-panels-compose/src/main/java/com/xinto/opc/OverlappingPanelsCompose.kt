@@ -1,20 +1,20 @@
 package com.xinto.opc
 
 import android.content.res.Configuration
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.FractionalThreshold
+import androidx.compose.material.SwipeableState
+import androidx.compose.material.swipeable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
@@ -57,7 +57,7 @@ public class OverlappingPanelsState(
     confirmStateChange: (OverlappingPanelsValue) -> Boolean = { true },
 ) {
 
-    public val swipeableState: SwipeableState<OverlappingPanelsValue> =
+    internal val swipeableState: SwipeableState<OverlappingPanelsValue> =
         SwipeableState(
             initialValue = initialValue,
             animationSpec = spring(),
@@ -158,11 +158,8 @@ public fun rememberOverlappingPanelsState(
  * @param panelsState state of the Overlapping Panels.
  * @param modifier optional modifier for the Overlapping Panels.
  * @param gesturesEnabled Whether to enable swipe gestures.
- * @param velocityThreshold Minimum swipe speed required to open/close side panels.
- * @param resistance Controls how much resistance will be applied when swiping past the bounds.
  * @param sidePanelWidthFraction Maximum width in fractions for side panels to occupy when opened.
  * @param centerPanelAlpha Opacity of the center panel when side panels are closed and opened.
- * @param centerPanelElevation Elevation of the center panel.
  */
 @ExperimentalMaterialApi
 @Composable
@@ -171,18 +168,21 @@ public fun OverlappingPanels(
     panelCenter: @Composable BoxScope.() -> Unit,
     panelEnd: @Composable BoxScope.() -> Unit,
     modifier: Modifier = Modifier,
-    panelsState: OverlappingPanelsState = rememberOverlappingPanelsState(initialValue = OverlappingPanelsValue.Closed),
+    panelsState: OverlappingPanelsState = rememberOverlappingPanelsState(OverlappingPanelsValue.Closed),
     gesturesEnabled: Boolean = true,
-    velocityThreshold: Dp = 400.dp,
-    resistance: (anchors: Set<Float>) -> ResistanceConfig? = { null },
     sidePanelWidthFraction: SidePanelWidthFraction = PanelDefaults.sidePanelWidthFraction(),
     centerPanelAlpha: CenterPanelAlpha = PanelDefaults.centerPanelAlpha(),
-    centerPanelElevation: Dp = 8.dp,
 ) {
     val resources = LocalContext.current.resources
     val layoutDirection = LocalLayoutDirection.current
 
-    BoxWithConstraints(modifier.fillMaxSize()) {
+    BoxWithConstraints(modifier = modifier.fillMaxSize()) {
+        val constraints = constraints
+
+        if (!constraints.hasBoundedWidth) {
+            throw IllegalStateException("OverlappingPanels can't have infinite width")
+        }
+
         val fraction =
             if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
                 sidePanelWidthFraction.portrait()
@@ -191,14 +191,11 @@ public fun OverlappingPanels(
 
         val offsetValue = (constraints.maxWidth * fraction) + PanelDefaults.MarginBetweenPanels.value
 
-        //TODO make animation configurable
-        val animatedCenterPanelAlpha by animateFloatAsState(
-            targetValue =
+        val animatedCenterPanelAlpha =
             if (abs(panelsState.offset.value) == abs(offsetValue))
                 centerPanelAlpha.sidesOpened()
             else
-                centerPanelAlpha.sidesClosed(),
-        )
+                centerPanelAlpha.sidesClosed()
 
         val anchors = mapOf(
             offsetValue to OverlappingPanelsValue.OpenEnd,
@@ -207,36 +204,42 @@ public fun OverlappingPanels(
         )
 
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .swipeable(
-                    state = panelsState.swipeableState,
-                    orientation = Orientation.Horizontal,
-                    velocityThreshold = velocityThreshold,
-                    anchors = anchors,
-                    enabled = gesturesEnabled,
-                    reverseDirection = layoutDirection == LayoutDirection.Rtl,
-                    resistance = resistance(anchors.keys),
-                )
-        ) {
-            val sidePanelAlignment = organizeSidePanel(
-                panelsState,
-                onStartPanel = { Alignment.CenterStart },
-                onEndPanel = { Alignment.CenterEnd },
-                onNeither = { Alignment.Center }
+            modifier = Modifier.swipeable(
+                state = panelsState.swipeableState,
+                orientation = Orientation.Horizontal,
+                velocityThreshold = 400.dp,
+                anchors = anchors,
+                enabled = gesturesEnabled,
+                reverseDirection = layoutDirection == LayoutDirection.Rtl,
+                resistance = null,
+                thresholds = { _, _ -> FractionalThreshold(0.5f) }
             )
-            val sidePanelContent = organizeSidePanel(
-                panelsState,
-                onStartPanel = { panelStart },
-                onEndPanel = { panelEnd },
-                onNeither = { {} }
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .fillMaxWidth(fraction)
+                    .align(Alignment.CenterStart)
+                    .offset {
+                        IntOffset(
+                            x = if (panelsState.offsetIsPositive) 0 else -constraints.maxWidth,
+                            y = 0
+                        )
+                    },
+                content = panelStart
             )
             Box(
                 modifier = Modifier
                     .fillMaxHeight()
                     .fillMaxWidth(fraction)
-                    .align(sidePanelAlignment),
-                content = sidePanelContent
+                    .align(Alignment.CenterEnd)
+                    .offset {
+                        IntOffset(
+                            x = if (panelsState.offsetIsNegative) 0 else constraints.maxWidth,
+                            y = 0
+                        )
+                    },
+                content = panelEnd
             )
             Box(
                 modifier = Modifier
@@ -248,8 +251,7 @@ public fun OverlappingPanels(
                             x = panelsState.offset.value.roundToInt(),
                             y = 0
                         )
-                    }
-                    .shadow(centerPanelElevation),
+                    },
                 content = panelCenter
             )
         }
@@ -274,18 +276,6 @@ public interface CenterPanelAlpha {
     @Composable
     public fun sidesClosed(): Float
 
-}
-
-@ExperimentalMaterialApi
-private inline fun <T> organizeSidePanel(
-    panelsState: OverlappingPanelsState,
-    onStartPanel: () -> T,
-    onEndPanel: () -> T,
-    onNeither: () -> T,
-) = when {
-    panelsState.offsetIsPositive -> onStartPanel()
-    panelsState.offsetIsNegative -> onEndPanel()
-    else -> onNeither()
 }
 
 public object PanelDefaults {
