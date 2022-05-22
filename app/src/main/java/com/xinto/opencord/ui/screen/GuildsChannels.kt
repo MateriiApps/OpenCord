@@ -188,6 +188,7 @@ private fun CurrentUserItem(
                     username = viewModel.username,
                     discriminator = viewModel.discriminator,
                     status = viewModel.userStatus,
+                    isStreaming = viewModel.isStreaming,
                     customStatus = viewModel.userCustomStatus
                 )
             }
@@ -251,6 +252,7 @@ private fun CurrentUserItemLoaded(
     username: String,
     discriminator: String,
     status: DomainUserStatus?,
+    isStreaming: Boolean,
     customStatus: String?,
 ) {
     WidgetCurrentUser(
@@ -259,6 +261,7 @@ private fun CurrentUserItemLoaded(
                 badge = status.ifNotNullComposable { userStatus ->
                     WidgetStatusIcon(
                         modifier = Modifier.size(10.dp),
+                        isStreaming = isStreaming,
                         userStatus = userStatus
                     )
                 }

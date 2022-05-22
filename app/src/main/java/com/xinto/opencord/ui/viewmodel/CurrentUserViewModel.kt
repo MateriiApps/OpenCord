@@ -5,20 +5,24 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.xinto.opencord.domain.manager.CacheManager
 import com.xinto.opencord.domain.mapper.toDomain
+import com.xinto.opencord.domain.model.DomainActivityStreaming
 import com.xinto.opencord.domain.model.DomainUserSettings
 import com.xinto.opencord.domain.model.DomainUserStatus
 import com.xinto.opencord.domain.model.merge
 import com.xinto.opencord.domain.repository.DiscordApiRepository
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.event.ReadyEvent
+import com.xinto.opencord.gateway.event.SessionsReplaceEvent
 import com.xinto.opencord.gateway.event.UserSettingsUpdateEvent
 import com.xinto.opencord.gateway.onEvent
 import kotlinx.coroutines.launch
 
 class CurrentUserViewModel(
     gateway: DiscordGateway,
-    repository: DiscordApiRepository
+    repository: DiscordApiRepository,
+    cache: CacheManager,
 ) : ViewModel() {
 
     sealed interface State {
@@ -41,6 +45,8 @@ class CurrentUserViewModel(
         private set
     var userCustomStatus by mutableStateOf<String?>(null)
         private set
+    var isStreaming by mutableStateOf(false)
+        private set
 
     private var userSettings: DomainUserSettings? = null
 
@@ -53,12 +59,13 @@ class CurrentUserViewModel(
         }
         gateway.onEvent<UserSettingsUpdateEvent> {
             val mergedData = userSettings?.merge(it.data.toDomain())
-                .also { mergedData ->
-                    userSettings = mergedData
-                }
+                .also { mergedData -> userSettings = mergedData }
             userStatus = mergedData?.status
             userCustomStatus = mergedData?.customStatus?.text
-            println(mergedData?.customStatus?.text)
+        }
+        gateway.onEvent<SessionsReplaceEvent> {
+            isStreaming = cache.getActivities()
+                .any { it is DomainActivityStreaming }
         }
 
         viewModelScope.launch {
