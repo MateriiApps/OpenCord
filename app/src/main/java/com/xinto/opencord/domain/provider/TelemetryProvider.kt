@@ -27,39 +27,71 @@ interface TelemetryProvider {
 //TODO add device generation
 class AnonymousTelemetryProvider: TelemetryProvider {
 
-    override val browser: String =
-        "Discord Android"
-    override val userAgent: String =
-        "Discord-Android/${BuildConfig.DISCORD_VERSION_CODE}"
+    private val device = AnonymousDevice.devices.random()
 
-    override val clientBuildVersion: String =
-        BuildConfig.DISCORD_VERSION_NAME
-    override val clientBuildCode: Int =
-        BuildConfig.DISCORD_VERSION_CODE
+    override val browser = "Discord Android"
+    override val userAgent = "Discord-Android/${BuildConfig.DISCORD_VERSION_CODE}"
 
-    override val deviceName: String =
-        "Pixel, oriole"
-    override val os: String =
-        "Android"
-    override val osVersion: String =
-        "12"
-    override val osSdk: String =
-        "32"
-    override val systemLocale: String =
-        "en-US"
-    override val cpuCores: Int =
-        4
-    override val cpuPerformance: Int =
-        (5..40).random()
-    override val memoryPerformance: Int =
-        (100_000..800_000).random()
-    override val accessibility:Boolean =
-        false
-    override val accessibilityFeatures: Int =
-        128
+    override val clientBuildVersion = BuildConfig.DISCORD_VERSION_NAME
+    override val clientBuildCode = BuildConfig.DISCORD_VERSION_CODE
 
-    override val deviceAdId: UUID =
-        UUID.randomUUID()
+    override val deviceName = device.name
+    override val os = device.os
+    override val osVersion = device.osVersion
+    override val osSdk = device.osSdk
+    override val systemLocale = device.systemLocale
+    override val cpuCores = device.cpuCores
+    override val cpuPerformance = device.cpuPerformance
+    override val memoryPerformance = device.memoryPerformance
+    override val accessibility = false
+    override val accessibilityFeatures = 128
 
+    override val deviceAdId: UUID = UUID.randomUUID()
 
+}
+
+data class AnonymousDevice(
+    val name: String,
+    val os: String,
+    val osVersion: String,
+    val osSdk: String,
+    val systemLocale: String,
+    val cpuCores: Int,
+    val cpuPerformance: Int,
+    val memoryPerformance: Int,
+) {
+
+    companion object {
+        val devices = listOf(
+            buildAnonymousDevice(
+                name = "Pixel, coral",
+                cpuCores = 8,
+            ),
+            buildAnonymousDevice(
+                name = "Pixel, redfin",
+                cpuCores = 8,
+            ),
+            buildAnonymousDevice(
+                name = "Pixel, oriole",
+                cpuCores = 8,
+            ),
+            buildAnonymousDevice(
+                name = "Pixel, raven",
+                cpuCores = 8,
+            ),
+        )
+
+        private fun buildAnonymousDevice(name: String, cpuCores: Int): AnonymousDevice {
+            return AnonymousDevice(
+                name = name,
+                os = "Android",
+                osVersion = "12",
+                osSdk = "32",
+                systemLocale = "en-US",
+                cpuCores = cpuCores,
+                cpuPerformance = cpuCores * (7..10).random(),
+                memoryPerformance = cpuCores * (50_000..100_000).random(),
+            )
+        }
+    }
 }
