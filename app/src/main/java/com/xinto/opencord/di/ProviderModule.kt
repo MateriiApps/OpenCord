@@ -8,7 +8,7 @@ import org.koin.dsl.module
 
 val providerModule = module {
 
-    fun provideAnonymousDataProvider(): TelemetryProvider {
+    fun provideAnonymousTelemetryProvider(): TelemetryProvider {
         return AnonymousTelemetryProvider()
     }
 
@@ -20,6 +20,6 @@ val providerModule = module {
         )
     }
 
-    single { provideAnonymousDataProvider() }
+    single { provideAnonymousTelemetryProvider() }
     single { providePropertyProvider(get()) }
 }
