@@ -1,6 +1,7 @@
 package com.xinto.opencord.di
 
 import com.xinto.opencord.domain.manager.AccountManager
+import com.xinto.opencord.domain.provider.PropertyProvider
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.DiscordGatewayImpl
 import com.xinto.opencord.util.Logger
@@ -15,15 +16,17 @@ val gatewayModule = module {
         client: HttpClient,
         json: Json,
         accountManager: AccountManager,
+        propertyProvider: PropertyProvider,
         logger: Logger
     ): DiscordGateway {
         return DiscordGatewayImpl(
             client = client,
             json = json,
             accountManager = accountManager,
+            propertyProvider = propertyProvider,
             logger = logger
         )
     }
 
-    single { provideGateway(get(named("gateway")), get(), get(), get()) }
+    single { provideGateway(get(named("gateway")), get(), get(), get(), get()) }
 }
