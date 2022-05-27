@@ -1,5 +1,6 @@
 package com.xinto.opencord.domain.model
 
+import com.xinto.opencord.domain.model.base.DomainModel
 import com.xinto.opencord.util.SimpleAstParser
 import com.xinto.opencord.util.Timestamp
 import com.xinto.partialgen.Partial
@@ -7,7 +8,7 @@ import kotlinx.datetime.Instant
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
-sealed class DomainMessage {
+sealed class DomainMessage : DomainModel {
     abstract val id: ULong
     abstract val channelId: ULong
     abstract val timestamp: Instant

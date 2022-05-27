@@ -118,6 +118,7 @@ dependencies {
     Dependencies.HCaptcha(this)
     Dependencies.AndroidxCore(this)
     Dependencies.AndroidxPreferences(this)
+    Dependencies.AndroidxRoom(this)
     Dependencies.Material(this)
     Dependencies.Compose(this)
     Dependencies.Accompanist(this)

@@ -1,5 +1,6 @@
 package com.xinto.opencord.di
 
+import com.xinto.opencord.db.database.AppDatabase
 import com.xinto.opencord.domain.repository.DiscordApiRepository
 import com.xinto.opencord.domain.repository.DiscordApiRepositoryImpl
 import com.xinto.opencord.domain.repository.DiscordAuthRepository
@@ -19,13 +20,15 @@ val repositoryModule = module {
     }
 
     fun provideDiscordApiRepository(
-        service: DiscordApiService
+        service: DiscordApiService,
+        database: AppDatabase,
     ): DiscordApiRepository {
         return DiscordApiRepositoryImpl(
-            service = service
+            service = service,
+            database = database
         )
     }
 
     single { provideDiscordAuthRepository(get()) }
-    single { provideDiscordApiRepository(get()) }
+    single { provideDiscordApiRepository(get(), get()) }
 }

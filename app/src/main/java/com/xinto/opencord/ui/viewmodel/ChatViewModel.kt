@@ -2,6 +2,8 @@ package com.xinto.opencord.ui.viewmodel
 
 import androidx.compose.runtime.*
 import androidx.lifecycle.viewModelScope
+import com.xinto.opencord.domain.manager.CacheManager
+import com.xinto.opencord.domain.manager.Event
 import com.xinto.opencord.domain.manager.PersistentDataManager
 import com.xinto.opencord.domain.mapper.toDomain
 import com.xinto.opencord.domain.model.DomainMessage
@@ -9,7 +11,6 @@ import com.xinto.opencord.domain.model.DomainMessageRegular
 import com.xinto.opencord.domain.model.merge
 import com.xinto.opencord.domain.repository.DiscordApiRepository
 import com.xinto.opencord.gateway.DiscordGateway
-import com.xinto.opencord.gateway.event.MessageCreateEvent
 import com.xinto.opencord.gateway.event.MessageDeleteEvent
 import com.xinto.opencord.gateway.event.MessageUpdateEvent
 import com.xinto.opencord.gateway.onEvent
@@ -17,12 +18,14 @@ import com.xinto.opencord.rest.body.MessageBody
 import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
 import com.xinto.opencord.util.throttle
 import com.xinto.partialgen.getOrNull
+import kotlinx.coroutines.flow.collectIndexed
 import kotlinx.coroutines.launch
 
 class ChatViewModel(
     gateway: DiscordGateway,
     persistentDataManager: PersistentDataManager,
-    private val repository: DiscordApiRepository
+    private val repository: DiscordApiRepository,
+    private val cacheManager: CacheManager,
 ) : BasePersistenceViewModel(persistentDataManager) {
 
     sealed interface State {
@@ -51,12 +54,28 @@ class ChatViewModel(
         viewModelScope.launch {
             try {
                 state = State.Loading
-                val channelMessages = repository.getChannelMessages(persistentChannelId)
-                val channel = repository.getChannel(persistentChannelId)
                 messages.clear()
-                messages.putAll(channelMessages)
+                cacheManager.retriveMessages(persistentChannelId)
+                    .collectIndexed { index, value ->
+                        when (value) {
+                            is Event.Create -> {
+                                if (index == 0) {
+                                    state = State.Loaded
+                                }
+                                messages[value.model.id] = value.model
+                            }
+                            is Event.Update -> {
+                                //should be using the replace method but it's Api24+
+                                messages[value.model.id] = value.model
+                            }
+                            is Event.Delete -> {
+                                messages.remove(value.model.id)
+                            }
+                        }
+
+                    }
+                val channel = repository.getChannel(persistentChannelId)
                 channelName = channel.name
-                state = State.Loaded
             } catch (e: Exception) {
                 state = State.Error
                 e.printStackTrace()
@@ -89,12 +108,12 @@ class ChatViewModel(
     }
 
     init {
-        gateway.onEvent<MessageCreateEvent>(
-            filterPredicate = { it.data.channelId.value == persistentChannelId }
-        ) { event ->
-            val domainData = event.data.toDomain()
-            messages[domainData.id] = domainData
-        }
+//        gateway.onEvent<MessageCreateEvent>(
+//            filterPredicate = { it.data.channelId.value == persistentChannelId }
+//        ) { event ->
+//            val domainData = event.data.toDomain()
+//            messages[domainData.id] = domainData
+//        }
 
         gateway.onEvent<MessageUpdateEvent>(
             filterPredicate = { it.data.channelId.getOrNull()!!.value == persistentChannelId }

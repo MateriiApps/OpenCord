@@ -1,6 +1,7 @@
 package com.xinto.opencord.domain.model
 
 import com.xinto.enumgetter.GetterGen
+import com.xinto.opencord.domain.model.base.DomainModel
 import kotlinx.datetime.Instant
 
 @GetterGen
@@ -16,7 +17,7 @@ enum class ActivityType(val value: Int) {
     companion object
 }
 
-sealed interface DomainActivity {
+sealed interface DomainActivity : DomainModel {
     val name: String
     val createdAt: Long
     val type: ActivityType

@@ -14,3 +14,5 @@ value class ApiSnowflake(val value: ULong) {
         val validRange = ULong.MIN_VALUE..Long.MAX_VALUE.toULong()
     }
 }
+
+fun ApiSnowflake(value: Long) = ApiSnowflake(value.toULong())

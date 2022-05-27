@@ -1,6 +1,8 @@
 package com.xinto.opencord.domain.model
 
-sealed interface DomainAttachment {
+import com.xinto.opencord.domain.model.base.DomainModel
+
+sealed interface DomainAttachment : DomainModel {
 
     val id: ULong
     val filename: String

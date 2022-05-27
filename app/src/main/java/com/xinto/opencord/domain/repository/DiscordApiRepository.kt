@@ -1,9 +1,12 @@
 package com.xinto.opencord.domain.repository
 
+import com.xinto.opencord.db.database.AppDatabase
 import com.xinto.opencord.domain.mapper.toApi
 import com.xinto.opencord.domain.mapper.toDomain
+import com.xinto.opencord.domain.mapper.toEntity
 import com.xinto.opencord.domain.model.*
 import com.xinto.opencord.rest.body.MessageBody
+import com.xinto.opencord.rest.dto.ApiMessage
 import com.xinto.opencord.rest.service.DiscordApiService
 
 interface DiscordApiRepository {
@@ -12,7 +15,7 @@ interface DiscordApiRepository {
     suspend fun getGuildChannels(guildId: ULong): Map<ULong, DomainChannel>
 
     suspend fun getChannel(channelId: ULong): DomainChannel
-    suspend fun getChannelMessages(channelId: ULong): Map<ULong, DomainMessage>
+    suspend fun getChannelMessages(channelId: ULong): List<DomainMessage>
     suspend fun getChannelPins(channelId: ULong): Map<ULong, DomainMessage>
 
     suspend fun postChannelMessage(channelId: ULong, body: MessageBody)
@@ -24,8 +27,11 @@ interface DiscordApiRepository {
 }
 
 class DiscordApiRepositoryImpl(
-    private val service: DiscordApiService
+    private val service: DiscordApiService,
+    private val database: AppDatabase
 ) : DiscordApiRepository {
+
+    private val messagesDao = database.messagesDao()
 
     override suspend fun getMeGuilds(): List<DomainMeGuild> {
         return service.getMeGuilds().map { it.toDomain() }
@@ -46,10 +52,16 @@ class DiscordApiRepositoryImpl(
         return service.getChannel(channelId).toDomain()
     }
 
-    override suspend fun getChannelMessages(channelId: ULong): Map<ULong, DomainMessage> {
-        return service.getChannelMessages(channelId)
-            .toList().associate {
-                it.first.value to it.second.toDomain()
+    override suspend fun getChannelMessages(channelId: ULong): List<DomainMessage> {
+        return messagesDao.getMessagesByChannelId(channelId.toLong())
+            .map { it.toDomain() }
+            .ifEmpty {
+                service.getChannelMessages(channelId)
+                    .also {
+                        val entityMessages = it.map(ApiMessage::toEntity)
+                        messagesDao.insertAll(entityMessages)
+                    }
+                    .map { it.toDomain() }
             }
     }
 
