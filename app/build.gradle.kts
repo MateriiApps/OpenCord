@@ -22,20 +22,24 @@ android {
             useSupportLibrary = true
         }
 
-        buildConfigField("int", "DISCORD_VERSION_CODE", "89108")
+        buildConfigField("int", "DISCORD_VERSION_CODE", "124012")
+        buildConfigField("String", "DISCORD_VERSION_NAME", "\"124.12 - Stable\"")
     }
 
     buildTypes {
-        getByName("release") {
+        release {
             isMinifyEnabled = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 
     productFlavors {
         create("discord") {
             dimension = "api"
-            
+
             isDefault = true
 
             buildConfigField("String", "URL_API", "\"https://discord.com/api/v9\"")
@@ -101,7 +105,7 @@ dependencies {
     implementation(project(":bottom-dialog-compose"))
     implementation(project(":overlapping-panels-compose"))
     implementation(project(":simpleast-compose"))
-    
+
     implementation(project(":partialgen"))
     ksp(project(":partialgen"))
 
@@ -110,13 +114,14 @@ dependencies {
 
     Dependencies.Koin(this)
     Dependencies.Ktor(this)
-    Dependencies.KotlinXDatetime(this)
+    Dependencies.KotlinX(this)
     Dependencies.HCaptcha(this)
     Dependencies.AndroidxCore(this)
     Dependencies.AndroidxPreferences(this)
     Dependencies.Material(this)
     Dependencies.Compose(this)
     Dependencies.Accompanist(this)
+    Dependencies.Shimmer(this)
     Dependencies.Coil(this)
     Dependencies.ExoPlayer(this)
 }

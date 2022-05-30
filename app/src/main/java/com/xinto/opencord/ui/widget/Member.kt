@@ -10,22 +10,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.domain.model.DomainGuildMember
-import com.xinto.opencord.ui.component.rememberOCCoilPainter
+import com.xinto.opencord.ui.component.OCAsyncImage
 
 @Composable
 fun WidgetMemberListItem(
     guildMember: DomainGuildMember,
     modifier: Modifier = Modifier
 ) {
-    val memberAvatar = rememberOCCoilPainter(guildMember.avatarUrl)
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Image(
+        OCAsyncImage(
             modifier = Modifier.size(56.dp),
-            painter = memberAvatar,
-            contentDescription = null,
+            url = guildMember.avatarUrl
         )
         Text(
             text = guildMember.nick ?: guildMember.user?.username ?: "",

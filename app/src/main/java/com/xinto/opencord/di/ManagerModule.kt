@@ -2,11 +2,11 @@ package com.xinto.opencord.di
 
 import android.content.Context
 import com.xinto.opencord.domain.manager.*
+import com.xinto.opencord.gateway.DiscordGateway
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 val managerModule = module {
-
     fun provideAccountManager(
         context: Context
     ): AccountManager {
@@ -31,7 +31,16 @@ val managerModule = module {
         )
     }
 
+    fun provideCacheManager(
+        gateway: DiscordGateway
+    ): CacheManager {
+        return CacheManagerImpl(
+            gateway = gateway,
+        )
+    }
+
     single { provideAccountManager(androidContext()) }
     single { provideActivityManager(androidContext()) }
     single { providePersistentDataManager(androidContext()) }
+    single { provideCacheManager(get()) }
 }

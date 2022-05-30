@@ -1,6 +1,5 @@
 package com.xinto.opencord.ui.widget
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -14,19 +13,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.xinto.opencord.BuildConfig
 import com.xinto.opencord.R
-import com.xinto.opencord.ui.component.rememberOCCoilPainter
+import com.xinto.opencord.ui.component.OCAsyncImage
 
 @Composable
 fun WidgetChatMessage(
     modifier: Modifier = Modifier,
+    reply: (@Composable () -> Unit)? = null,
     avatar: (@Composable () -> Unit)? = null,
     author: (@Composable () -> Unit)? = null,
     content: (@Composable () -> Unit)? = null,
@@ -34,42 +34,72 @@ fun WidgetChatMessage(
     embeds: (@Composable () -> Unit)? = null,
 ) {
     Box(modifier = modifier) {
-        Row(
-            modifier = Modifier.padding(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.Top
+        Column(
+            modifier = Modifier
+                .height(IntrinsicSize.Min)
+                .padding(8.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            if (avatar != null) {
-                avatar()
-            }
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-            ) {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
+            if (reply != null) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(IntrinsicSize.Min),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.Bottom
                 ) {
-                    if (author != null) {
-                        author()
-                    }
-                    if (content != null) {
-                        content()
+                    WidgetBranchReply(
+                        modifier = Modifier
+                            .padding(start = 20.dp)
+                            .width(24.dp)
+                            .fillMaxHeight(0.5f),
+                    )
+                    reply()
+                }
+            }
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.Top
+            ) {
+                if (avatar != null) {
+                    Box(
+                        modifier = Modifier.size(40.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        avatar()
                     }
                 }
-                if (attachments != null) {
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                ) {
                     Column(
-                        modifier = Modifier.fillMaxWidth(0.9f),
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                        modifier = Modifier.fillMaxWidth(),
                     ) {
-                        attachments()
+                        if (author != null) {
+                            author()
+                        }
+                        if (content != null) {
+                            ProvideTextStyle(MaterialTheme.typography.bodyMedium) {
+                                content()
+                            }
+                        }
                     }
-                }
-                if (embeds != null) {
-                    Column(
-                        modifier = Modifier.fillMaxWidth(0.9f),
-                        verticalArrangement = Arrangement.spacedBy(2.dp)
-                    ) {
-                        embeds()
+                    if (attachments != null) {
+                        Column(
+                            modifier = Modifier.fillMaxWidth(0.9f),
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            attachments()
+                        }
+                    }
+                    if (embeds != null) {
+                        Column(
+                            modifier = Modifier.fillMaxWidth(0.9f),
+                            verticalArrangement = Arrangement.spacedBy(2.dp)
+                        ) {
+                            embeds()
+                        }
                     }
                 }
             }
@@ -78,17 +108,74 @@ fun WidgetChatMessage(
 }
 
 @Composable
+fun WidgetMessageReply(
+    modifier: Modifier = Modifier,
+    avatar: @Composable (() -> Unit)? = null,
+    author: @Composable (() -> Unit)? = null,
+    content: @Composable (() -> Unit)? = null,
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (avatar != null) {
+            Box(
+                modifier = Modifier.size(20.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                avatar()
+            }
+        }
+        if (author != null) {
+            ProvideTextStyle(MaterialTheme.typography.labelMedium) {
+                author()
+            }
+        }
+        if (content != null) {
+            ProvideTextStyle(MaterialTheme.typography.bodySmall) {
+                content()
+            }
+        }
+    }
+}
+
+@Composable
+fun WidgetMessageReplyContent(
+    text: AnnotatedString,
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        modifier = modifier,
+        text = text,
+        inlineContent = textInlineContent(),
+        overflow = TextOverflow.Ellipsis,
+        maxLines = 1
+    )
+}
+
+@Composable
+fun WidgetMessageReplyAuthor(
+    author: String,
+    modifier: Modifier = Modifier
+) {
+    Text(
+        modifier = modifier,
+        text = author,
+        overflow = TextOverflow.Ellipsis,
+        maxLines = 1
+    )
+}
+
+@Composable
 fun WidgetMessageAvatar(
     url: String,
     modifier: Modifier = Modifier,
 ) {
-    val painter = rememberOCCoilPainter(url)
-    Image(
+    OCAsyncImage(
         modifier = modifier
-            .size(40.dp)
             .clip(CircleShape),
-        painter = painter,
-        contentDescription = null
+        url = url,
     )
 }
 
@@ -107,7 +194,7 @@ fun WidgetMessageAuthor(
     ) {
         ProvideTextStyle(MaterialTheme.typography.labelLarge) {
             Text(
-                author,
+                text = author,
                 modifier = Modifier
                     .clickable(
                         enabled = onAuthorClick != null,
@@ -143,25 +230,27 @@ fun WidgetMessageContent(
     text: AnnotatedString,
     modifier: Modifier = Modifier,
 ) {
-    ProvideTextStyle(MaterialTheme.typography.bodyMedium) {
-        Text(
-            modifier = modifier,
-            text = text,
-            inlineContent = mapOf(
-                "emote" to InlineTextContent(
-                    placeholder = Placeholder(
-                        width = 20.sp,
-                        height = 20.sp,
-                        placeholderVerticalAlign = PlaceholderVerticalAlign.Center
-                    )
-                ) { emoteId ->
-                    val image = rememberOCCoilPainter("${BuildConfig.URL_CDN}/emojis/$emoteId")
-                    Image(
-                        painter = image,
-                        contentDescription = "Emote"
-                    )
-                }
+    Text(
+        modifier = modifier,
+        text = text,
+        inlineContent = textInlineContent()
+    )
+}
+
+@Composable
+private fun textInlineContent(): Map<String, InlineTextContent> {
+    val emoteSize = (LocalTextStyle.current.fontSize.value + 2f).sp
+    return mapOf(
+        "emote" to InlineTextContent(
+            placeholder = Placeholder(
+                width = emoteSize,
+                height = emoteSize,
+                placeholderVerticalAlign = PlaceholderVerticalAlign.Center
             )
-        )
-    }
+        ) { emoteId ->
+            OCAsyncImage(
+                url = "${BuildConfig.URL_CDN}/emojis/$emoteId",
+            )
+        }
+    )
 }

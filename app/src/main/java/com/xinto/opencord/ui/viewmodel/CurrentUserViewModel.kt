@@ -6,12 +6,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.xinto.opencord.domain.manager.CacheManager
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.mapper.toDomain
 import com.xinto.opencord.domain.model.*
 import com.xinto.opencord.domain.repository.DiscordApiRepository
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.event.ReadyEvent
+import com.xinto.opencord.gateway.event.SessionsReplaceEvent
 import com.xinto.opencord.gateway.event.UserSettingsUpdateEvent
 import com.xinto.opencord.gateway.onEvent
 import com.xinto.partialgen.PartialValue
@@ -19,7 +21,8 @@ import kotlinx.coroutines.launch
 
 class CurrentUserViewModel(
     gateway: DiscordGateway,
-    private val repository: DiscordApiRepository
+    repository: DiscordApiRepository,
+    cache: CacheManager,
 ) : ViewModel() {
 
     sealed interface State {
@@ -41,6 +44,8 @@ class CurrentUserViewModel(
     var userStatus by mutableStateOf<DomainUserStatus?>(null)
         private set
     var userCustomStatus by mutableStateOf<DomainCustomStatus?>(null)
+        private set
+    var isStreaming by mutableStateOf(false)
         private set
 
     private var userSettings: DomainUserSettings? = null
@@ -82,16 +87,17 @@ class CurrentUserViewModel(
             val mergedData = userSettings?.merge(it.data.toDomain())
                 .also { mergedData -> userSettings = mergedData }
             userStatus = mergedData?.status
-            userCustomStatus = mergedData?.customStatus
-            println(mergedData?.customStatus?.text)
+            userCustomStatus = mergedData?.customStatus?.text
+        }
+        gateway.onEvent<SessionsReplaceEvent> {
+            isStreaming = cache.getActivities()
+                .any { it is DomainActivityStreaming }
         }
 
         viewModelScope.launch {
             try {
                 val settings = repository.getUserSettings()
-                    .also {
-                        userSettings = it
-                    }
+                userSettings = settings
                 userStatus = settings.status
                 userCustomStatus = settings.customStatus
                 state = State.Loaded

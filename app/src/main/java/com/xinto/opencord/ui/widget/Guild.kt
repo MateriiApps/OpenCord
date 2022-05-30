@@ -20,7 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.xinto.opencord.ui.component.rememberOCCoilPainter
+import com.xinto.opencord.ui.component.OCAsyncImage
 
 @Composable
 fun WidgetGuildListItem(
@@ -54,12 +54,7 @@ fun WidgetGuildListItem(
                 .clickable(onClick = onClick),
             contentAlignment = Alignment.Center
         ) {
-            CompositionLocalProvider(
-                LocalContentColor provides MaterialTheme.colorScheme.primary,
-                LocalTextStyle provides MaterialTheme.typography.headlineSmall
-            ) {
-                content()
-            }
+            content()
         }
     }
 }
@@ -69,11 +64,9 @@ fun WidgetGuildContentImage(
     url: String,
     modifier: Modifier = Modifier,
 ) {
-    val imagePainter = rememberOCCoilPainter(url)
-    Image(
+    OCAsyncImage(
         modifier = modifier.size(48.dp),
-        painter = imagePainter,
-        contentDescription = null
+        url = url,
     )
 }
 
