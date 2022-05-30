@@ -16,11 +16,12 @@ import androidx.compose.ui.unit.dp
 import com.xinto.bdc.BottomSheetDialog
 import com.xinto.opencord.R
 import com.xinto.opencord.ui.viewmodel.CurrentUserViewModel
+import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun CurrentUserSheet(
-    viewModel: CurrentUserViewModel,
-    onClose: () -> Unit
+    onClose: () -> Unit,
+    viewModel: CurrentUserViewModel = getViewModel(),
 ) {
     BottomSheetDialog(onDismissRequest = onClose) {
         Column(

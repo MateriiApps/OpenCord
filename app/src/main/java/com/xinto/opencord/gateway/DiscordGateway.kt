@@ -103,17 +103,6 @@ class DiscordGatewayImpl(
         _state.emit(DiscordGateway.State.Disconnected)
     }
 
-    override suspend fun requestGuildMembers(guildId: ULong) {
-        sendSerializedData(
-            OutgoingPayload(
-                opCode = OpCode.RequestGuildMembers,
-                data = RequestGuildMembers(
-                    guildId = ApiSnowflake(guildId)
-                )
-            )
-        )
-    }
-
     override fun getSessionId(): String {
         return sessionId
     }

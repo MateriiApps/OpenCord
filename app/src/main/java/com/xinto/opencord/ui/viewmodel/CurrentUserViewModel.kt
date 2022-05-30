@@ -1,13 +1,14 @@
 package com.xinto.opencord.ui.viewmodel
 
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.xinto.opencord.domain.manager.CacheManager
 import com.xinto.opencord.R
+import com.xinto.opencord.domain.manager.CacheManager
 import com.xinto.opencord.domain.mapper.toDomain
 import com.xinto.opencord.domain.model.*
 import com.xinto.opencord.domain.repository.DiscordApiRepository
@@ -16,12 +17,14 @@ import com.xinto.opencord.gateway.event.ReadyEvent
 import com.xinto.opencord.gateway.event.SessionsReplaceEvent
 import com.xinto.opencord.gateway.event.UserSettingsUpdateEvent
 import com.xinto.opencord.gateway.onEvent
+import com.xinto.opencord.util.Logger
 import com.xinto.partialgen.PartialValue
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.get
 
 class CurrentUserViewModel(
+    val repository: DiscordApiRepository,
     gateway: DiscordGateway,
-    repository: DiscordApiRepository,
     cache: CacheManager,
 ) : ViewModel() {
 
@@ -87,7 +90,7 @@ class CurrentUserViewModel(
             val mergedData = userSettings?.merge(it.data.toDomain())
                 .also { mergedData -> userSettings = mergedData }
             userStatus = mergedData?.status
-            userCustomStatus = mergedData?.customStatus?.text
+            userCustomStatus = mergedData?.customStatus
         }
         gateway.onEvent<SessionsReplaceEvent> {
             isStreaming = cache.getActivities()
