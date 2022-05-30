@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UpdatePresence(
-    val since: Int?,
+    val since: Int? = 0,
     val activities: List<ApiActivity>,
     val status: String,
     val afk: Boolean,

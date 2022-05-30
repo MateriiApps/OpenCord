@@ -1,6 +1,5 @@
 package com.xinto.opencord.ui.viewmodel
 
-import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -9,23 +8,23 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.manager.CacheManager
+import com.xinto.opencord.domain.mapper.toApi
 import com.xinto.opencord.domain.mapper.toDomain
 import com.xinto.opencord.domain.model.*
 import com.xinto.opencord.domain.repository.DiscordApiRepository
 import com.xinto.opencord.gateway.DiscordGateway
+import com.xinto.opencord.gateway.dto.UpdatePresence
 import com.xinto.opencord.gateway.event.ReadyEvent
 import com.xinto.opencord.gateway.event.SessionsReplaceEvent
 import com.xinto.opencord.gateway.event.UserSettingsUpdateEvent
 import com.xinto.opencord.gateway.onEvent
-import com.xinto.opencord.util.Logger
 import com.xinto.partialgen.PartialValue
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.get
 
 class CurrentUserViewModel(
     val repository: DiscordApiRepository,
-    gateway: DiscordGateway,
-    cache: CacheManager,
+    val gateway: DiscordGateway,
+    val cache: CacheManager,
 ) : ViewModel() {
 
     sealed interface State {
@@ -63,10 +62,17 @@ class CurrentUserViewModel(
                 else -> throw IllegalStateException("Unknown status icon!")
             }
 
+            gateway.updatePresence(
+                UpdatePresence(
+                    activities = cache.getActivities().map { it.toApi() },
+                    status = status.value,
+                    afk = false,
+                )
+            )
+
             val settings = DomainUserSettingsPartial(status = PartialValue.Value(status))
             repository.updateUserSettings(settings)
         }
-        // TODO: send a presence update
     }
 
     fun setCustomStatus(status: DomainCustomStatus?) {
@@ -75,8 +81,33 @@ class CurrentUserViewModel(
                 customStatus = PartialValue.toPartial(status)
             )
             repository.updateUserSettings(settings)
+
+            val activities = cache.getActivities()
+                .filter { it !is DomainActivityCustom }
+                .toMutableList()
+            if (status != null) {
+                activities += DomainActivityCustom(
+                    name = "Custom Status",
+                    state = status.text,
+                    createdAt = 0, // TODO: remove this from custom as it is not present everywhere, discord lies
+                    emoji = if (status.emojiId == null || status.emojiName == null) null else {
+                        DomainActivityEmoji(
+                            name = status.emojiName,
+                            id = status.emojiId,
+                            animated = false, // TODO: fix this
+                        )
+                    }
+                )
+            }
+
+            gateway.updatePresence(
+                UpdatePresence(
+                    activities = activities.map { it.toApi() },
+                    status = cache.getCurrentSession().status,
+                    afk = false
+                )
+            )
         }
-        // TODO: send a presence update
     }
 
     init {
