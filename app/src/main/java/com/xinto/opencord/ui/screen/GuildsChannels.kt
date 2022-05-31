@@ -607,32 +607,32 @@ private fun ChannelsListLoaded(
 
             if (category != null) {
                 item {
-                ProvideContentAlpha(ContentAlpha.medium) {
-                    val iconRotation by animateFloatAsState(
-                        targetValue = if (collapsed) -90f else 0f,
-                        animationSpec = spring(
-                            dampingRatio = Spring.DampingRatioMediumBouncy,
-                            stiffness = Spring.StiffnessLow
-                        )
-                    )
-                    WidgetCategory(
-                        modifier = Modifier.padding(
-                            top = 12.dp,
-                            bottom = 4.dp
-                        ),
-                        title = { Text(category.capsName) },
-                        icon = {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_keyboard_arrow_down),
-                                contentDescription = "Collapse category",
-                                modifier = Modifier.rotate(iconRotation)
+                    ProvideContentAlpha(ContentAlpha.medium) {
+                        val iconRotation by animateFloatAsState(
+                            targetValue = if (collapsed) -90f else 0f,
+                            animationSpec = spring(
+                                dampingRatio = Spring.DampingRatioMediumBouncy,
+                                stiffness = Spring.StiffnessLow
                             )
-                        },
-                        onClick = {
-                            onCategoryClick(category.id)
-                        },
-                    )
-                }
+                        )
+                        WidgetCategory(
+                            modifier = Modifier.padding(
+                                top = 12.dp,
+                                bottom = 4.dp
+                            ),
+                            title = { Text(category.capsName) },
+                            icon = {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_keyboard_arrow_down),
+                                    contentDescription = "Collapse category",
+                                    modifier = Modifier.rotate(iconRotation)
+                                )
+                            },
+                            onClick = {
+                                onCategoryClick(category.id)
+                            },
+                        )
+                    }
                 }
             }
 
