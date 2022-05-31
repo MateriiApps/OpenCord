@@ -1,7 +1,7 @@
 package com.xinto.opencord.rest.dto
 
 import com.xinto.enumgetter.GetterGen
-import com.xinto.partialgen.Partial
+import com.xinto.partialgen.Partialable
 import kotlinx.datetime.Instant
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
@@ -13,7 +13,7 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable
-@Partial
+@Partialable
 data class ApiMessage(
     @SerialName("id")
     val id: ApiSnowflake,
