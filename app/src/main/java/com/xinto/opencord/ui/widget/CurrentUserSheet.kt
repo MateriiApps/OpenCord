@@ -25,11 +25,10 @@ fun CurrentUserSheet(
 ) {
     BottomSheetDialog(onDismissRequest = onClose) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(20.dp),
             modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.background)
-                .padding(horizontal = 28.dp, vertical = 35.dp),
+                .padding(vertical = 25.dp),
         ) {
             // Status selector icons
             Row(
@@ -39,7 +38,7 @@ fun CurrentUserSheet(
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 12.dp),
+                    .padding(vertical = 15.dp),
             ) {
                 val statuses = arrayOf(
                     R.drawable.ic_status_online,
@@ -63,11 +62,14 @@ fun CurrentUserSheet(
             }
 
             ProvideTextStyle(MaterialTheme.typography.labelLarge) {
-                // Custom status
                 if (viewModel.userCustomStatus != null) {
-                    val status = viewModel.userCustomStatus!!
-                    Box(modifier = Modifier.fillMaxWidth()) {
-                        Text(status.text)
+                    // Custom status
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 25.dp, vertical = 12.dp)
+                    ) {
+                        Text(viewModel.userCustomStatus!!.text)
                         Icon(
                             painter = painterResource(R.drawable.ic_cancel),
                             contentDescription = "Clear status",
@@ -79,24 +81,32 @@ fun CurrentUserSheet(
                                 }
                         )
                     }
-                }
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    modifier = Modifier.clickable { /*TODO*/ }
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_set_custom_status),
-                        contentDescription = null,
-                        tint = Color.Unspecified,
-                        modifier = Modifier.size(25.dp),
-                    )
-                    Text("Set a custom status")
+                } else {
+                    // Custom status select
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { /*TODO*/ }
+                            .padding(horizontal = 25.dp, vertical = 9.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_set_custom_status),
+                            contentDescription = null,
+                            tint = Color.Unspecified,
+                            modifier = Modifier.size(25.dp),
+                        )
+                        Text("Set a custom status")
+                    }
                 }
 
                 // Account switcher button
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    modifier = Modifier.clickable { /*TODO*/ }
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { /*TODO*/ }
+                        .padding(horizontal = 25.dp, vertical = 9.dp)
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_account_switch),
