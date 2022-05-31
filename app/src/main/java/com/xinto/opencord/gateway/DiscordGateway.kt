@@ -134,7 +134,7 @@ class DiscordGatewayImpl(
                 else -> null
             }
             jsonString?.let { str ->
-                logger.debug("Gateway", str)
+                logger.debug("Gateway", "Inbound: $str")
                 try {
                     json.decodeFromString<IncomingPayload>(str)
                 } catch (e: Exception) {
@@ -244,6 +244,7 @@ class DiscordGatewayImpl(
 
     private suspend inline fun <reified T> sendSerializedData(data: T) {
         val json = json.encodeToString(data)
+        logger.debug("Gateway", "Outbound: $json")
         webSocketSession.send(Frame.Text(json))
     }
 }
