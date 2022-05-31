@@ -245,7 +245,7 @@ class DiscordGatewayImpl(
     override suspend fun updatePresence(presence: UpdatePresence) {
         sendPayload(
             opCode = OpCode.PresenceUpdate,
-            data = UpdatePresence,
+            data = presence,
         )
     }
 }

@@ -20,6 +20,7 @@ import com.xinto.opencord.gateway.event.UserSettingsUpdateEvent
 import com.xinto.opencord.gateway.onEvent
 import com.xinto.partialgen.PartialValue
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
 
 class CurrentUserViewModel(
     val repository: DiscordApiRepository,
@@ -64,9 +65,10 @@ class CurrentUserViewModel(
 
             gateway.updatePresence(
                 UpdatePresence(
-                    activities = cache.getActivities().map { it.toApi() },
                     status = status.value,
-                    afk = false,
+                    afk = PartialValue.Value<Boolean?>(null),
+                    since = Clock.System.now().toEpochMilliseconds(),
+                    activities = cache.getActivities().map { it.toApi() },
                 )
             )
 
@@ -102,9 +104,10 @@ class CurrentUserViewModel(
 
             gateway.updatePresence(
                 UpdatePresence(
-                    activities = activities.map { it.toApi() },
                     status = cache.getCurrentSession().status,
-                    afk = false
+                    since = Clock.System.now().toEpochMilliseconds(),
+                    afk = PartialValue.Value<Boolean?>(null),
+                    activities = activities.map { it.toApi() },
                 )
             )
         }
