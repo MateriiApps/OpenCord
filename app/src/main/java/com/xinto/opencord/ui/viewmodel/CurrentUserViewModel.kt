@@ -84,14 +84,16 @@ class CurrentUserViewModel(
             )
             repository.updateUserSettings(settings)
 
+            val currentMillis = Clock.System.now().toEpochMilliseconds()
             val activities = cache.getActivities()
                 .filter { it !is DomainActivityCustom }
                 .toMutableList()
+
             if (status != null) {
                 activities += DomainActivityCustom(
                     name = "Custom Status",
                     state = status.text,
-                    createdAt = 0, // TODO: remove this from custom as it is not present everywhere, discord lies
+                    createdAt = currentMillis,
                     emoji = if (status.emojiId == null || status.emojiName == null) null else {
                         DomainActivityEmoji(
                             name = status.emojiName,
@@ -105,7 +107,7 @@ class CurrentUserViewModel(
             gateway.updatePresence(
                 UpdatePresence(
                     status = cache.getCurrentSession().status,
-                    since = Clock.System.now().toEpochMilliseconds(),
+                    since = currentMillis,
                     afk = null,
                     activities = activities.map { it.toApi() },
                 )
