@@ -8,6 +8,6 @@ import kotlinx.serialization.Serializable
 data class UpdatePresence(
     val since: Long,
     val status: String,
-    val afk: PartialValue<Boolean?>,
+    val afk: Boolean?,
     val activities: List<ApiActivity>,
 )

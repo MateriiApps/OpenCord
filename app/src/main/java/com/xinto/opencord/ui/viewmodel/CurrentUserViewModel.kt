@@ -66,7 +66,7 @@ class CurrentUserViewModel(
             gateway.updatePresence(
                 UpdatePresence(
                     status = status.value,
-                    afk = PartialValue.Value<Boolean?>(null),
+                    afk = null,
                     since = Clock.System.now().toEpochMilliseconds(),
                     activities = cache.getActivities().map { it.toApi() },
                 )
@@ -106,7 +106,7 @@ class CurrentUserViewModel(
                 UpdatePresence(
                     status = cache.getCurrentSession().status,
                     since = Clock.System.now().toEpochMilliseconds(),
-                    afk = PartialValue.Value<Boolean?>(null),
+                    afk = null,
                     activities = activities.map { it.toApi() },
                 )
             )
