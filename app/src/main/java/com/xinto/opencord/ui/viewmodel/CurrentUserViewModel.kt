@@ -80,7 +80,7 @@ class CurrentUserViewModel(
     fun setCustomStatus(status: DomainCustomStatus?) {
         viewModelScope.launch {
             val settings = DomainUserSettingsPartial(
-                customStatus = PartialValue.toPartial(status)
+                customStatus = PartialValue.Value(status)
             )
             repository.updateUserSettings(settings)
 

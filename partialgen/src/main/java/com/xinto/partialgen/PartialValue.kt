@@ -56,14 +56,6 @@ public sealed class PartialValue<out T> {
             return Value(value)
         }
     }
-
-    companion object {
-        fun <T> toPartial(value: T?): PartialValue<T> {
-            return value
-                ?.let { Value(value) }
-                ?: Missing()
-        }
-    }
 }
 
 public inline fun <T> PartialValue<T>.getOrElse(block: () -> T): T {
