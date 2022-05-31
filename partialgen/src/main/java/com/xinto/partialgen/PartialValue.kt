@@ -7,17 +7,25 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable(PartialValue.Serializer::class)
-sealed class PartialValue<out T> {
-    class Value<T>(val value: T) : PartialValue<T>() {
-        override fun toString(): String {
-            return value.toString()
+public sealed class PartialValue<out T> {
+
+    public class Value<out T>(public val value: T) : PartialValue<T>() {
+        override fun toString(): String = value.toString()
+
+        override fun equals(other: Any?): Boolean {
+            val value = other as? Value<*> ?: return false
+            return value.value == this.value
         }
+
+        override fun hashCode(): Int = value.hashCode()
     }
 
-    class Missing<out T> : PartialValue<T>() {
-        override fun toString(): String {
-            return "Missing"
-        }
+    public object Missing : PartialValue<Nothing>() {
+        override fun toString(): String = "Missing"
+
+        override fun equals(other: Any?): Boolean = other is Missing
+
+        override fun hashCode(): Int = 0
     }
 
     internal class Serializer<T>(
@@ -50,18 +58,18 @@ sealed class PartialValue<out T> {
     }
 }
 
-inline fun <T> PartialValue<T>.getOrElse(block: () -> T): T {
+public inline fun <T> PartialValue<T>.getOrElse(block: () -> T): T {
     return when (this) {
         is PartialValue.Missing -> block()
         is PartialValue.Value -> value
     }
 }
 
-fun <T> PartialValue<T>.getOrNull() = getOrElse { null }
+public fun <T> PartialValue<T>.getOrNull(): T? = getOrElse { null }
 
-inline fun <T, R> PartialValue<T>.mapToPartial(block: (T) -> R): PartialValue<R> {
+public inline fun <T, R> PartialValue<T>.mapToPartial(block: (T) -> R): PartialValue<R> {
     return when (this) {
-        is PartialValue.Missing -> PartialValue.Missing()
+        is PartialValue.Missing -> this
         is PartialValue.Value -> PartialValue.Value(block(value))
     }
 }

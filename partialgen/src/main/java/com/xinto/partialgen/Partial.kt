@@ -5,4 +5,4 @@ package com.xinto.partialgen
  * marked nullable and null by default.
  */
 @Target(AnnotationTarget.CLASS)
-annotation class Partial
+public annotation class Partial
