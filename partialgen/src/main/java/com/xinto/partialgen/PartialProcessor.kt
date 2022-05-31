@@ -175,6 +175,6 @@ internal class PartialProcessor(val codeGenerator: CodeGenerator) : SymbolProces
     }
 
     companion object {
-        const val PARTIAL_ANNOTATION_IDENTIFIER = "com.xinto.partialgen.Partial"
+        const val PARTIAL_ANNOTATION_IDENTIFIER = "com.xinto.partialgen.Partialable"
     }
 }
