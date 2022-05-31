@@ -1,10 +1,10 @@
 package com.xinto.opencord.domain.model
 
 import com.xinto.enumgetter.GetterGen
-import com.xinto.partialgen.Partial
+import com.xinto.partialgen.Partialable
 import kotlinx.datetime.Instant
 
-@Partial
+@Partialable
 data class DomainUserSettings(
     val locale: String,
     val showCurrentGame: Boolean,

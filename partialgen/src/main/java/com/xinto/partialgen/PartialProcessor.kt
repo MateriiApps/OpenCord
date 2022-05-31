@@ -9,7 +9,7 @@ import com.google.devtools.ksp.validate
 import com.xinto.ksputil.*
 import java.io.OutputStream
 
-class PartialProcessor(val codeGenerator: CodeGenerator) : SymbolProcessor {
+internal class PartialProcessor(val codeGenerator: CodeGenerator) : SymbolProcessor {
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
         val symbols = resolver.getSymbolsWithAnnotation(PARTIAL_ANNOTATION_IDENTIFIER)
@@ -67,7 +67,7 @@ class PartialProcessor(val codeGenerator: CodeGenerator) : SymbolProcessor {
                 }
 
                 val annotations = parameter.annotations
-                    .mapNotNull { annotation ->
+                    .map { annotation ->
                         annotation.sourceAnnotation().let { (type, import) ->
                             if (import != null) {
                                 imports.add(import)
@@ -131,9 +131,7 @@ class PartialProcessor(val codeGenerator: CodeGenerator) : SymbolProcessor {
                     appendText(name)
                     appendText(": PartialValue<")
                     appendText(type)
-                    appendText("> = PartialValue.Missing<")
-                    appendText(type)
-                    appendTextNewline(">(),")
+                    appendText("> = PartialValue.Missing,")
                 }
             }
             appendTextDoubleNewline(")")
@@ -177,6 +175,6 @@ class PartialProcessor(val codeGenerator: CodeGenerator) : SymbolProcessor {
     }
 
     companion object {
-        const val PARTIAL_ANNOTATION_IDENTIFIER = "com.xinto.partialgen.Partial"
+        const val PARTIAL_ANNOTATION_IDENTIFIER = "com.xinto.partialgen.Partialable"
     }
 }

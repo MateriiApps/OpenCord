@@ -2,7 +2,7 @@ package com.xinto.opencord.domain.model
 
 import com.xinto.opencord.util.SimpleAstParser
 import com.xinto.opencord.util.Timestamp
-import com.xinto.partialgen.Partial
+import com.xinto.partialgen.Partialable
 import kotlinx.datetime.Instant
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
@@ -17,7 +17,7 @@ sealed class DomainMessage {
     val formattedTimestamp by lazy { Timestamp.getFormattedTimestamp(timestamp) }
 }
 
-@Partial
+@Partialable
 data class DomainMessageRegular(
     override val id: ULong,
     override val channelId: ULong,
