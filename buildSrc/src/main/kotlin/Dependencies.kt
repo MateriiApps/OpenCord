@@ -127,6 +127,18 @@ sealed class Dependencies {
         }
     }
 
+    object Shimmer : Dependencies() {
+        const val version = "1.0.2"
+
+        const val shimmer = "com.valentinilk.shimmer:compose-shimmer:$version"
+
+        override fun invoke(scope: DependencyHandlerScope) {
+            scope {
+                implementation(shimmer)
+            }
+        }
+    }
+
     object Material : Dependencies() {
         const val version = "1.5.0"
 

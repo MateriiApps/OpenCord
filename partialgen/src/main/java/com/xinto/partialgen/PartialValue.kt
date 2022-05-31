@@ -8,9 +8,17 @@ import kotlinx.serialization.encoding.Encoder
 
 @Serializable(PartialValue.Serializer::class)
 sealed class PartialValue<out T> {
+    class Value<T>(val value: T) : PartialValue<T>() {
+        override fun toString(): String {
+            return value.toString()
+        }
+    }
 
-    class Value<T>(val value: T): PartialValue<T>()
-    class Missing<out T> : PartialValue<T>()
+    class Missing<out T> : PartialValue<T>() {
+        override fun toString(): String {
+            return "Missing"
+        }
+    }
 
     internal class Serializer<T>(
         private val valueSerializer: KSerializer<T>

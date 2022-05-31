@@ -2,6 +2,7 @@ package com.xinto.opencord.di
 
 import com.xinto.opencord.domain.manager.AccountManager
 import com.xinto.opencord.domain.manager.ActivityManager
+import com.xinto.opencord.domain.manager.CacheManager
 import com.xinto.opencord.domain.manager.PersistentDataManager
 import com.xinto.opencord.domain.repository.DiscordApiRepository
 import com.xinto.opencord.domain.repository.DiscordAuthRepository
@@ -83,11 +84,13 @@ val viewModelModule = module {
 
     fun provideCurrentUserViewModel(
         gateway: DiscordGateway,
-        repository: DiscordApiRepository
+        repository: DiscordApiRepository,
+        cache: CacheManager,
     ): CurrentUserViewModel {
         return CurrentUserViewModel(
             gateway = gateway,
-            repository = repository
+            repository = repository,
+            cache = cache,
         )
     }
 
@@ -107,6 +110,6 @@ val viewModelModule = module {
     viewModel { provideGuildsViewModel(get(), get(), get()) }
     viewModel { provideChannelsViewModel(get(), get(), get()) }
     viewModel { provideMembersViewModel(get(), get(), get()) }
-    viewModel { provideCurrentUserViewModel(get(), get()) }
+    viewModel { provideCurrentUserViewModel(get(), get(), get()) }
     viewModel { provideChannelPinsViewModel(get(), get()) }
 }

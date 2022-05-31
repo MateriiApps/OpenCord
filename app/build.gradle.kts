@@ -22,7 +22,8 @@ android {
             useSupportLibrary = true
         }
 
-        buildConfigField("int", "DISCORD_VERSION_CODE", "89108")
+        buildConfigField("int", "DISCORD_VERSION_CODE", "124012")
+        buildConfigField("String", "DISCORD_VERSION_NAME", "\"124.12 - Stable\"")
     }
 
     buildTypes {
@@ -120,6 +121,7 @@ dependencies {
     Dependencies.Material(this)
     Dependencies.Compose(this)
     Dependencies.Accompanist(this)
+    Dependencies.Shimmer(this)
     Dependencies.Coil(this)
     Dependencies.ExoPlayer(this)
 }

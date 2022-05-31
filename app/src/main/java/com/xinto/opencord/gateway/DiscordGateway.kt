@@ -1,8 +1,8 @@
 package com.xinto.opencord.gateway
 
-import android.os.Build
 import com.xinto.opencord.BuildConfig
 import com.xinto.opencord.domain.manager.AccountManager
+import com.xinto.opencord.domain.provider.PropertyProvider
 import com.xinto.opencord.gateway.dto.*
 import com.xinto.opencord.gateway.event.Event
 import com.xinto.opencord.gateway.event.EventDeserializationStrategy
@@ -23,7 +23,6 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromJsonElement
 import java.io.ByteArrayOutputStream
-import java.util.*
 import java.util.zip.Inflater
 import java.util.zip.InflaterOutputStream
 import kotlin.coroutines.CoroutineContext
@@ -45,6 +44,8 @@ interface DiscordGateway : CoroutineScope {
 
     suspend fun disconnect()
 
+    fun getSessionId(): String
+
     suspend fun requestGuildMembers(guildId: ULong)
 
 }
@@ -53,6 +54,7 @@ class DiscordGatewayImpl(
     private val client: HttpClient,
     private val json: Json,
     private val accountManager: AccountManager,
+    private val propertyProvider: PropertyProvider,
     private val logger: Logger
 ) : DiscordGateway {
 
@@ -113,6 +115,10 @@ class DiscordGatewayImpl(
                 )
             )
         )
+    }
+
+    override fun getSessionId(): String {
+        return sessionId
     }
 
     private suspend fun listenToSocket() {
@@ -205,17 +211,7 @@ class DiscordGatewayImpl(
                 capabilities = 95,
                 largeThreshold = 100,
                 compress = true,
-                properties = IdentificationProperties(
-                    browser = "Discord Android",
-                    browserUserAgent = "Discord-Android/${BuildConfig.DISCORD_VERSION_CODE}",
-                    clientBuildNumber = BuildConfig.DISCORD_VERSION_CODE,
-                    clientVersion = "89.8 - Beta",
-                    device = Build.MODEL + ", " + Build.PRODUCT,
-                    os = "Android",
-                    osSdkVersion = Build.VERSION.SDK_INT.toString(),
-                    osVersion = Build.VERSION.RELEASE,
-                    systemLocale = Locale.getDefault().toString().replace("_", "-")
-                ),
+                properties = propertyProvider.identificationProperties,
                 clientState = IdentificationClientState(
                     guildHashes = emptyMap(),
                     highestLastMessageId = 0,
@@ -237,7 +233,7 @@ class DiscordGatewayImpl(
         )
     }
 
-    private suspend inline  fun <reified T> sendPayload(opCode: OpCode, data: T?) {
+    private suspend inline fun <reified T> sendPayload(opCode: OpCode, data: T?) {
         sendSerializedData(
             OutgoingPayload(
                 opCode = opCode,
