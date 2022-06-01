@@ -203,9 +203,11 @@ private fun CurrentUserItem(
         }
     }
 
-    if (showStatusSheet) CurrentUserSheet(
-        onClose = { showStatusSheet = false },
-    )
+    if (showStatusSheet) {
+        CurrentUserSheet(
+            onClose = { showStatusSheet = false },
+        )
+    }
 }
 
 @Composable

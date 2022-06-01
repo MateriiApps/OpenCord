@@ -33,14 +33,14 @@ fun CurrentUserSheet(
             // Status selector icons
             Row(
                 horizontalArrangement = Arrangement.spacedBy(
-                    16.dp,
-                    Alignment.CenterHorizontally
+                    space = 16.dp,
+                    alignment = Alignment.CenterHorizontally,
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 15.dp),
             ) {
-                val statuses = arrayOf(
+                val statuses = listOf(
                     R.drawable.ic_status_online,
                     R.drawable.ic_status_idle,
                     R.drawable.ic_status_dnd,

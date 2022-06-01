@@ -75,59 +75,51 @@ fun DomainCustomStatus.toApi(): ApiCustomStatus {
 }
 
 fun DomainActivity.toApi(): ApiActivity {
-    return when (this.type) {
-        ActivityType.Game -> with(this as DomainActivityGame) {
-            ApiActivity(
-                type = type.value,
-                name = name,
-                createdAt = createdAt,
-                id = id,
-                state = state,
-                details = details,
-                applicationId = ApiSnowflake(applicationId),
-                party = party?.toApi(),
-                assets = assets?.toApi(),
-                secrets = secrets?.toApi(),
-                timestamps = timestamps?.toApi(),
-            )
-        }
-        ActivityType.Streaming -> with(this as DomainActivityStreaming) {
-            ApiActivity(
-                type = type.value,
-                name = name,
-                createdAt = createdAt,
-                id = id,
-                url = url,
-                state = state,
-                details = details,
-                assets = assets.toApi()
-            )
-        }
-        ActivityType.Listening -> with(this as DomainActivityListening) {
-            ApiActivity(
-                type = type.value,
-                name = name,
-                createdAt = createdAt,
-                id = id,
-                flags = flags,
-                state = state,
-                details = details,
-                syncId = syncId,
-                party = party.toApi(),
-                assets = assets.toApi(),
-                metadata = metadata?.toApi(),
-                timestamps = timestamps.toApi(),
-            )
-        }
-        ActivityType.Custom -> with(this as DomainActivityCustom) {
-            ApiActivity(
-                type = type.value,
-                name = name,
-                createdAt = createdAt,
-                state = state,
-                emoji = emoji?.toApi()
-            )
-        }
+    return when (this) {
+        is DomainActivityGame -> ApiActivity(
+            type = type.value,
+            name = name,
+            createdAt = createdAt,
+            id = id,
+            state = state,
+            details = details,
+            applicationId = ApiSnowflake(applicationId),
+            party = party?.toApi(),
+            assets = assets?.toApi(),
+            secrets = secrets?.toApi(),
+            timestamps = timestamps?.toApi(),
+        )
+        is DomainActivityStreaming -> ApiActivity(
+            type = type.value,
+            name = name,
+            createdAt = createdAt,
+            id = id,
+            url = url,
+            state = state,
+            details = details,
+            assets = assets.toApi()
+        )
+        is DomainActivityListening -> ApiActivity(
+            type = type.value,
+            name = name,
+            createdAt = createdAt,
+            id = id,
+            flags = flags,
+            state = state,
+            details = details,
+            syncId = syncId,
+            party = party.toApi(),
+            assets = assets.toApi(),
+            metadata = metadata?.toApi(),
+            timestamps = timestamps.toApi(),
+        )
+        is DomainActivityCustom -> ApiActivity(
+            type = type.value,
+            name = name,
+            createdAt = createdAt,
+            state = state,
+            emoji = emoji?.toApi()
+        )
         else -> {
             throw IllegalArgumentException("Cannot convert an unknown activity type to an api model!")
         }
