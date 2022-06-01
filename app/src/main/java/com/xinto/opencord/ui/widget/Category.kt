@@ -5,8 +5,6 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -40,7 +38,6 @@ fun WidgetCategory(
             verticalAlignment = Alignment.CenterVertically
         ) {
             CompositionLocalProvider(
-                LocalContentAlpha provides ContentAlpha.medium,
                 LocalTextStyle provides MaterialTheme.typography.labelMedium
             ) {
                 Box(

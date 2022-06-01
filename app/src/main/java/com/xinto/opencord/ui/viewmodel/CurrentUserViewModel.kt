@@ -17,6 +17,7 @@ import com.xinto.opencord.gateway.dto.UpdatePresence
 import com.xinto.opencord.gateway.event.ReadyEvent
 import com.xinto.opencord.gateway.event.SessionsReplaceEvent
 import com.xinto.opencord.gateway.event.UserSettingsUpdateEvent
+import com.xinto.opencord.gateway.event.UserUpdateEvent
 import com.xinto.opencord.gateway.onEvent
 import com.xinto.partialgen.PartialValue
 import kotlinx.coroutines.launch
@@ -121,6 +122,12 @@ class CurrentUserViewModel(
             avatarUrl = domainUser.avatarUrl
             username = domainUser.username
             discriminator = domainUser.formattedDiscriminator
+        }
+        gateway.onEvent<UserUpdateEvent> {
+            val data = it.data.toDomain() as DomainUserPrivate
+            avatarUrl = data.avatarUrl
+            username = data.username
+            discriminator = data.formattedDiscriminator
         }
         gateway.onEvent<UserSettingsUpdateEvent> {
             val mergedData = userSettings?.merge(it.data.toDomain())
