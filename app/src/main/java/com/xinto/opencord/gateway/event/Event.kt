@@ -2,17 +2,14 @@ package com.xinto.opencord.gateway.event
 
 import com.xinto.opencord.gateway.dto.MessageDeleteData
 import com.xinto.opencord.gateway.dto.Ready
-import com.xinto.opencord.gateway.dto.ReplaceSessionsData
 import com.xinto.opencord.gateway.dto.SessionData
 import com.xinto.opencord.gateway.io.EventName
 import com.xinto.opencord.rest.dto.*
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.descriptors.listSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.serializer
 
 interface Event
 
@@ -28,6 +25,11 @@ class EventDeserializationStrategy(
             EventName.Ready -> {
                 ReadyEvent(
                     data = decoder.decodeSerializableValue(Ready.serializer())
+                )
+            }
+            EventName.UserUpdate -> {
+                UserUpdateEvent(
+                    data = decoder.decodeSerializableValue(ApiUser.serializer())
                 )
             }
             EventName.GuildMemberChunk -> {
