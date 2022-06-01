@@ -28,7 +28,6 @@ import java.util.zip.InflaterOutputStream
 import kotlin.coroutines.CoroutineContext
 
 interface DiscordGateway : CoroutineScope {
-
     sealed interface State {
         object Started : State
         object Connected : State
@@ -37,17 +36,15 @@ interface DiscordGateway : CoroutineScope {
     }
 
     val events: SharedFlow<Event>
-
     val state: SharedFlow<State>
 
     suspend fun connect()
-
     suspend fun disconnect()
 
     fun getSessionId(): String
 
     suspend fun requestGuildMembers(guildId: ULong)
-
+    suspend fun updatePresence(presence: UpdatePresence)
 }
 
 class DiscordGatewayImpl(
@@ -104,17 +101,6 @@ class DiscordGatewayImpl(
         logger.debug("Gateway", "Disconnecting")
         webSocketSession.close()
         _state.emit(DiscordGateway.State.Disconnected)
-    }
-
-    override suspend fun requestGuildMembers(guildId: ULong) {
-        sendSerializedData(
-            OutgoingPayload(
-                opCode = OpCode.RequestGuildMembers,
-                data = RequestGuildMembers(
-                    guildId = ApiSnowflake(guildId)
-                )
-            )
-        )
     }
 
     override fun getSessionId(): String {
@@ -248,6 +234,22 @@ class DiscordGatewayImpl(
         val json = json.encodeToString(data)
         logger.debug("Gateway", "Outbound: $json")
         webSocketSession.send(Frame.Text(json))
+    }
+
+    override suspend fun requestGuildMembers(guildId: ULong) {
+        sendPayload(
+            opCode = OpCode.RequestGuildMembers,
+            data = RequestGuildMembers(
+                guildId = ApiSnowflake(guildId)
+            )
+        )
+    }
+
+    override suspend fun updatePresence(presence: UpdatePresence) {
+        sendPayload(
+            opCode = OpCode.PresenceUpdate,
+            data = presence,
+        )
     }
 }
 

@@ -5,6 +5,7 @@ import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.event.MessageCreateEvent
 import com.xinto.opencord.gateway.event.MessageDeleteEvent
 import com.xinto.opencord.gateway.event.MessageUpdateEvent
+import com.xinto.opencord.gateway.event.UserSettingsUpdateEvent
 import com.xinto.opencord.gateway.onEvent
 import com.xinto.opencord.rest.body.MessageBody
 import com.xinto.opencord.rest.dto.*
@@ -170,6 +171,10 @@ class DiscordApiServiceImpl(
             val data = it.data
             val channelId = data.channelId.value
             cachedChannelMessages[channelId]?.remove(data.messageId)
+        }
+
+        gateway.onEvent<UserSettingsUpdateEvent> {
+            cachedUserSettings = cachedUserSettings?.merge(it.data)
         }
     }
 

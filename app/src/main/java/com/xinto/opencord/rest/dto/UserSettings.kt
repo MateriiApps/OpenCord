@@ -142,7 +142,7 @@ data class ApiCustomStatus(
     val text: String,
 
     @SerialName("expires_at")
-    val expiresAt: String, // timestamp
+    val expiresAt: String?, // timestamp
 
     @SerialName("emoji_id")
     val emojiId: ApiSnowflake?,

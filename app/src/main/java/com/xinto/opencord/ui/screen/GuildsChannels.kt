@@ -30,6 +30,7 @@ import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainChannel
+import com.xinto.opencord.domain.model.DomainCustomStatus
 import com.xinto.opencord.domain.model.DomainGuild
 import com.xinto.opencord.domain.model.DomainUserStatus
 import com.xinto.opencord.ui.component.OCAsyncImage
@@ -171,9 +172,11 @@ private fun CurrentUserItem(
     onSettingsClick: () -> Unit,
     viewModel: CurrentUserViewModel = getViewModel()
 ) {
+    var showStatusSheet by remember { mutableStateOf(false) }
+
     Surface(
         modifier = modifier,
-        onClick = { /*TODO*/ },
+        onClick = { showStatusSheet = true },
         shape = MaterialTheme.shapes.medium,
         tonalElevation = 1.dp
     ) {
@@ -198,6 +201,12 @@ private fun CurrentUserItem(
 
             }
         }
+    }
+
+    if (showStatusSheet) {
+        CurrentUserSheet(
+            onClose = { showStatusSheet = false },
+        )
     }
 }
 
@@ -255,7 +264,7 @@ private fun CurrentUserItemLoaded(
     discriminator: String,
     status: DomainUserStatus?,
     isStreaming: Boolean,
-    customStatus: String?,
+    customStatus: DomainCustomStatus?,
 ) {
     WidgetCurrentUser(
         avatar = {
@@ -278,7 +287,7 @@ private fun CurrentUserItemLoaded(
         },
         username = { Text(username) },
         discriminator = { Text(discriminator) },
-        customStatus = customStatus?.ifNotNullComposable { Text(it) },
+        customStatus = customStatus?.ifNotNullComposable { Text(it.text) },
         buttons = {
             IconButton(onClick = onSettingsClick) {
                 Icon(
@@ -286,7 +295,7 @@ private fun CurrentUserItemLoaded(
                     contentDescription = "Open settings"
                 )
             }
-        }
+        },
     )
 }
 

@@ -30,7 +30,7 @@ public sealed class PartialValue<out T> {
 
     internal class Serializer<T>(
         private val valueSerializer: KSerializer<T>
-    ): KSerializer<PartialValue<T?>> {
+    ) : KSerializer<PartialValue<T?>> {
 
         override val descriptor: SerialDescriptor
             get() = valueSerializer.descriptor
