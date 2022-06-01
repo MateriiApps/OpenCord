@@ -1,5 +1,6 @@
 package com.xinto.opencord.ui.widget
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -12,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.Placeholder
@@ -26,6 +28,7 @@ import com.xinto.opencord.ui.component.OCAsyncImage
 @Composable
 fun WidgetChatMessage(
     modifier: Modifier = Modifier,
+    mentioned: Boolean = false,
     reply: (@Composable () -> Unit)? = null,
     avatar: (@Composable () -> Unit)? = null,
     author: (@Composable () -> Unit)? = null,
@@ -33,7 +36,9 @@ fun WidgetChatMessage(
     attachments: (@Composable () -> Unit)? = null,
     embeds: (@Composable () -> Unit)? = null,
 ) {
-    Box(modifier = modifier) {
+    val background = if (mentioned) MaterialTheme.colorScheme.primary else Color.Unspecified
+
+    Box(modifier = modifier.background(background)) {
         Column(
             modifier = Modifier
                 .height(IntrinsicSize.Min)

@@ -150,7 +150,9 @@ fun ApiMessage.toDomain(): DomainMessage {
                 attachments = domainAttachments,
                 embeds = domainEmbeds,
                 isReply = type == ApiMessageType.Reply,
-                referencedMessage = domainReferencedMessage as? DomainMessageRegular
+                referencedMessage = domainReferencedMessage as? DomainMessageRegular,
+                mentionEveryone = mentionEveryone,
+                mentions = mentions.map { it.toDomain() },
             )
         }
         ApiMessageType.GuildMemberJoin -> {
