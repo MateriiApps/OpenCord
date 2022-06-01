@@ -49,10 +49,10 @@ data class DomainFriendSources(
 
 data class DomainGuildFolder(
     // Null id means all the guildIds are outside of a folder
-    val id: ULong? = null,
+    val id: ULong?,
     val guildIds: List<ULong>,
-    val name: String? = null,
-//    val color: Any? = null,
+    val name: String?,
+//    val color: Any?,
 )
 
 data class DomainCustomStatus(
