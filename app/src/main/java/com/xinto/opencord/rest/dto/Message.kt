@@ -44,6 +44,16 @@ data class ApiMessage(
 
     @SerialName("referenced_message")
     val referencedMessage: ApiMessage? = null,
+
+    @SerialName("mention_everyone")
+    val mentionEveryone: Boolean,
+
+    // TODO: add mention role support
+//    @SerialName("mention_roles")
+//    val mentionRoles: List<ApiRole>,
+
+    @SerialName("mentions")
+    val mentions: List<ApiUser>,
 )
 
 @Serializable(ApiMessageType.Serializer::class)
