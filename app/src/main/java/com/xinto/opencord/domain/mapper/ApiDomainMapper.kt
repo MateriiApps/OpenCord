@@ -216,8 +216,6 @@ fun ApiUser.toDomain(): DomainUser {
             mfaEnabled = mfaEnabled!!,
             verified = verified!!,
             premium = premium,
-            mobile = mobile!!,
-            desktop = desktop!!,
             purchasedFlags = purchasedFlags!!,
         )
         else -> DomainUserPublic(

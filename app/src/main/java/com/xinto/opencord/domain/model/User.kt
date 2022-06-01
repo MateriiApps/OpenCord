@@ -55,7 +55,5 @@ data class DomainUserReadyEvent(
     val mfaEnabled: Boolean,
     val verified: Boolean,
     val premium: Boolean,
-    val mobile: Boolean,
-    val desktop: Boolean,
     val purchasedFlags: Int, // TODO: implement bitfield
 ) : DomainUser()
