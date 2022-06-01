@@ -34,6 +34,8 @@ import com.xinto.opencord.domain.model.DomainGuild
 import com.xinto.opencord.domain.model.DomainUserStatus
 import com.xinto.opencord.ui.component.OCAsyncImage
 import com.xinto.opencord.ui.component.OCBadgeBox
+import com.xinto.opencord.ui.util.ContentAlpha
+import com.xinto.opencord.ui.util.ProvideContentAlpha
 import com.xinto.opencord.ui.viewmodel.ChannelsViewModel
 import com.xinto.opencord.ui.viewmodel.CurrentUserViewModel
 import com.xinto.opencord.ui.viewmodel.GuildsViewModel
@@ -602,32 +604,35 @@ private fun ChannelsListLoaded(
         for ((category, categoryChannels) in channels) {
             //TODO put this in remember
             val collapsed = collapsedCategories.contains(category?.id)
+
             if (category != null) {
                 item {
-                    val iconRotation by animateFloatAsState(
-                        targetValue = if (collapsed) -90f else 0f,
-                        animationSpec = spring(
-                            dampingRatio = Spring.DampingRatioMediumBouncy,
-                            stiffness = Spring.StiffnessLow
-                        )
-                    )
-                    WidgetCategory(
-                        modifier = Modifier.padding(
-                            top = 12.dp,
-                            bottom = 4.dp
-                        ),
-                        title = { Text(category.capsName) },
-                        icon = {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_keyboard_arrow_down),
-                                contentDescription = "Collapse category",
-                                modifier = Modifier.rotate(iconRotation)
+                    ProvideContentAlpha(ContentAlpha.medium) {
+                        val iconRotation by animateFloatAsState(
+                            targetValue = if (collapsed) -90f else 0f,
+                            animationSpec = spring(
+                                dampingRatio = Spring.DampingRatioMediumBouncy,
+                                stiffness = Spring.StiffnessLow
                             )
-                        },
-                        onClick = {
-                            onCategoryClick(category.id)
-                        },
-                    )
+                        )
+                        WidgetCategory(
+                            modifier = Modifier.padding(
+                                top = 12.dp,
+                                bottom = 4.dp
+                            ),
+                            title = { Text(category.capsName) },
+                            icon = {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_keyboard_arrow_down),
+                                    contentDescription = "Collapse category",
+                                    modifier = Modifier.rotate(iconRotation)
+                                )
+                            },
+                            onClick = {
+                                onCategoryClick(category.id)
+                            },
+                        )
+                    }
                 }
             }
 
