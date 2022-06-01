@@ -73,10 +73,4 @@ data class ApiUser(
 
     @SerialName("premium")
     val premium: Boolean? = null,
-
-    @SerialName("mobile")
-    val mobile: Boolean? =null,
-
-    @SerialName("desktop")
-    val desktop: Boolean? = null,
 )
