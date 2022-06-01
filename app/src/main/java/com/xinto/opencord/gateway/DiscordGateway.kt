@@ -179,7 +179,9 @@ class DiscordGatewayImpl(
                     logger.debug("Gateway", "Invalid Session, canResume: $canResume")
                 }
                 OpCode.HeartbeatAck -> {
-                    logger.debug("Gateway", "Heartbeat Acked!")
+                    if (!BuildConfig.DEBUG) {
+                        logger.debug("Gateway", "Heartbeat Acked!")
+                    }
                 }
                 else -> {}
             }
