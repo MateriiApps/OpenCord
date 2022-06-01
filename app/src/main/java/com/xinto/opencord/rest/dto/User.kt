@@ -21,8 +21,8 @@ data class ApiUser(
     val bot: Boolean = false,
 
     // Not yet public feature
-//    @SerialName("pronouns")
-//    val pronouns: String? = null,
+    @SerialName("pronouns")
+    val pronouns: String? = null,
 
     @SerialName("bio")
     val bio: String? = null,
@@ -68,15 +68,15 @@ data class ApiUser(
 
     /* Only present on the "user" field of the READY event */
 
-//    @SerialName("purchased_flags")
-//    val purchasedFlags: Int? = null,
+    @SerialName("purchased_flags")
+    val purchasedFlags: Int? = null,
 
     @SerialName("premium")
     val premium: Boolean? = null,
 
-//    @SerialName("mobile")
-//    val mobile: Boolean? =null,
+    @SerialName("mobile")
+    val mobile: Boolean? =null,
 
-//    @SerialName("desktop")
-//    val desktop: Boolean? = null,
+    @SerialName("desktop")
+    val desktop: Boolean? = null,
 )
