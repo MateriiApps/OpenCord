@@ -1,12 +1,16 @@
 package com.xinto.opencord.di
 
+import com.xinto.opencord.BuildConfig
 import com.xinto.opencord.domain.manager.AccountManager
-import com.xinto.opencord.domain.provider.TelemetryProvider
 import com.xinto.opencord.domain.provider.PropertyProvider
+import com.xinto.opencord.domain.provider.TelemetryProvider
+import com.xinto.opencord.util.Logger
 import io.ktor.client.*
+import io.ktor.client.engine.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.plugins.logging.*
 import io.ktor.client.plugins.websocket.*
 import io.ktor.client.request.*
 import io.ktor.http.*
@@ -30,10 +34,22 @@ val httpModule = module {
         }
     }
 
+    fun <T : HttpClientEngineConfig> HttpClientConfig<T>.installLogging(loggerDI: Logger) {
+        install(Logging) {
+            level = LogLevel.BODY
+            logger = object : io.ktor.client.plugins.logging.Logger {
+                override fun log(message: String) {
+                    loggerDI.debug("HTTP", message)
+                }
+            }
+        }
+    }
+
     fun provideAuthClient(
         json: Json,
+        logger: Logger,
         telemetryProvider: TelemetryProvider,
-        propertyProvider: PropertyProvider
+        propertyProvider: PropertyProvider,
     ): HttpClient {
         return HttpClient(CIO) {
             defaultRequest {
@@ -61,11 +77,14 @@ val httpModule = module {
             install(ContentNegotiation) {
                 json(json)
             }
+            if (BuildConfig.DEBUG)
+                installLogging(logger)
         }
     }
 
     fun provideApiClient(
         json: Json,
+        logger: Logger,
         accountManager: AccountManager,
         telemetryProvider: TelemetryProvider,
         propertyProvider: PropertyProvider
@@ -97,6 +116,8 @@ val httpModule = module {
             install(ContentNegotiation) {
                 json(json)
             }
+            if (BuildConfig.DEBUG)
+                installLogging(logger)
         }
     }
 
@@ -109,7 +130,7 @@ val httpModule = module {
     }
 
     single { provideJson() }
-    single(named("auth")) { provideAuthClient(get(), get(), get()) }
-    single(named("api")) { provideApiClient(get(), get(), get(), get()) }
+    single(named("auth")) { provideAuthClient(get(), get(), get(), get()) }
+    single(named("api")) { provideApiClient(get(), get(), get(), get(), get()) }
     single(named("gateway")) { provideGatewayClient() }
 }
