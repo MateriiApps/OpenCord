@@ -151,13 +151,15 @@ class DiscordGatewayImpl(
             when (opCode) {
                 OpCode.Dispatch -> {
                     try {
-                        json.decodeFromJsonElement(EventDeserializationStrategy(eventName!!), data!!)
-                            .let { decodedEvent ->
-                                if (decodedEvent is ReadyEvent) {
-                                    sessionId = decodedEvent.data.sessionId
-                                }
-                                _events.emit(decodedEvent)
+                        json.decodeFromJsonElement(
+                            EventDeserializationStrategy(eventName!!),
+                            data!!
+                        ).let { decodedEvent ->
+                            if (decodedEvent is ReadyEvent) {
+                                sessionId = decodedEvent.data.sessionId
                             }
+                            _events.emit(decodedEvent)
+                        }
                     } catch (e: Exception) {
 //                        e.printStackTrace()
                     }
@@ -179,9 +181,7 @@ class DiscordGatewayImpl(
                     logger.debug("Gateway", "Invalid Session, canResume: $canResume")
                 }
                 OpCode.HeartbeatAck -> {
-                    if (!BuildConfig.DEBUG) {
-                        logger.debug("Gateway", "Heartbeat Acked!")
-                    }
+                    logger.info("Gateway", "Heartbeat Acked!")
                 }
                 else -> {}
             }
