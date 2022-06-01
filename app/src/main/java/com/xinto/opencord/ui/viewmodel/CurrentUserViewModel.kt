@@ -16,7 +16,9 @@ import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.event.ReadyEvent
 import com.xinto.opencord.gateway.event.SessionsReplaceEvent
 import com.xinto.opencord.gateway.event.UserSettingsUpdateEvent
+import com.xinto.opencord.gateway.event.UserUpdateEvent
 import com.xinto.opencord.gateway.onEvent
+import com.xinto.opencord.rest.service.DiscordCdnServiceImpl
 import kotlinx.coroutines.launch
 
 class CurrentUserViewModel(
@@ -56,6 +58,13 @@ class CurrentUserViewModel(
             avatarUrl = domainUser.avatarUrl
             username = domainUser.username
             discriminator = domainUser.formattedDiscriminator
+        }
+        gateway.onEvent<UserUpdateEvent> {
+            val data = it.data
+            avatarUrl =
+                DiscordCdnServiceImpl.getUserAvatarUrl(data.id.value.toString(), data.avatar!!)
+            username = data.username
+            discriminator = "#${data.discriminator}"
         }
         gateway.onEvent<UserSettingsUpdateEvent> {
             val mergedData = userSettings?.merge(it.data.toDomain())
