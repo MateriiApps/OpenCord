@@ -198,8 +198,8 @@ fun ApiUser.toDomain(): DomainUser {
             avatarUrl = avatarUrl,
             bot = bot,
             bio = bio,
-            pronouns = pronouns,
             flags = (publicFlags ?: 0) or (privateFlags ?: 0),
+            pronouns = pronouns,
             mfaEnabled = mfaEnabled!!,
             verified = verified!!,
             email = email!!,
@@ -213,6 +213,7 @@ fun ApiUser.toDomain(): DomainUser {
             avatarUrl = avatarUrl,
             bot = bot,
             bio = bio,
+            flags = privateFlags ?: 0,
             mfaEnabled = mfaEnabled!!,
             verified = verified!!,
             premium = premium,
@@ -225,8 +226,8 @@ fun ApiUser.toDomain(): DomainUser {
             avatarUrl = avatarUrl,
             bot = bot,
             bio = bio,
-            pronouns = pronouns,
             flags = (publicFlags ?: 0) or (privateFlags ?: 0),
+            pronouns = pronouns,
         )
     }
 }

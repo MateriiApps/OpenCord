@@ -7,6 +7,7 @@ sealed class DomainUser : Mentionable {
     abstract val avatarUrl: String
     abstract val bot: Boolean
     abstract val bio: String?
+    abstract val flags: Int // TODO: implement bitfield
 
     override val formattedMention: String
         get() = "<@$id>"
@@ -25,8 +26,8 @@ data class DomainUserPublic(
     override val avatarUrl: String,
     override val bot: Boolean,
     override val bio: String?,
+    override val flags: Int,
     val pronouns: String?,
-    val flags: Int, // TODO: implement bitfield
 ) : DomainUser()
 
 data class DomainUserPrivate(
@@ -36,8 +37,8 @@ data class DomainUserPrivate(
     override val avatarUrl: String,
     override val bot: Boolean,
     override val bio: String?,
+    override val flags: Int,
     val pronouns: String?,
-    val flags: Int,
     val mfaEnabled: Boolean,
     val verified: Boolean,
     val email: String,
@@ -52,6 +53,7 @@ data class DomainUserReadyEvent(
     override val avatarUrl: String,
     override val bot: Boolean,
     override val bio: String?,
+    override val flags: Int,
     val mfaEnabled: Boolean,
     val verified: Boolean,
     val premium: Boolean,
