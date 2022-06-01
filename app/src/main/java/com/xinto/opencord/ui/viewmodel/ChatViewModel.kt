@@ -55,7 +55,7 @@ class ChatViewModel(
             try {
                 state = State.Loading
                 messages.clear()
-                cacheManager.retriveMessages(persistentChannelId)
+                cacheManager.retrieveMessages(persistentChannelId)
                     .collectIndexed { index, value ->
                         when (value) {
                             is Event.Create -> {

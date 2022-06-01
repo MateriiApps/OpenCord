@@ -30,7 +30,7 @@ interface CacheManager {
 
     fun getActivities(): List<DomainActivity>
 
-    fun retriveMessages(channelId: ULong): Flow<Event<DomainMessage>>
+    fun retrieveMessages(channelId: ULong): Flow<Event<DomainMessage>>
 }
 
 class CacheManagerImpl(
@@ -62,7 +62,7 @@ class CacheManagerImpl(
             ?: throw IllegalStateException("Current session is not cached!")
     }
 
-    override fun retriveMessages(channelId: ULong): Flow<Event<DomainMessage>> {
+    override fun retrieveMessages(channelId: ULong): Flow<Event<DomainMessage>> {
         return events
             .onSubscription {
                 repository.getChannelMessages(channelId).forEach {
