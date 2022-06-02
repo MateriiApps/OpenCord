@@ -37,7 +37,7 @@ fun WidgetChatMessage(
     Box(modifier = modifier) {
         Column(
             modifier = Modifier
-                .height(IntrinsicSize.Min)
+                .wrapContentHeight()
                 .padding(8.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
