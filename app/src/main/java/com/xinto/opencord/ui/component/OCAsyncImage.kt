@@ -25,6 +25,7 @@ fun OCAsyncImage(
     url: String?,
     modifier: Modifier = Modifier,
     size: Size = Size.ORIGINAL,
+    loadingEnabled: Boolean = true,
     alignment: Alignment = Alignment.Center,
     contentScale: ContentScale = ContentScale.Fit,
     alpha: Float = DefaultAlpha,
@@ -42,12 +43,14 @@ fun OCAsyncImage(
             .build(),
         contentDescription = null,
         loading = {
-            Box(
-                modifier = Modifier
-                    .shimmer()
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.onSurface.copy(alpha))
-            )
+            if (loadingEnabled) {
+                Box(
+                    modifier = Modifier
+                        .shimmer()
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.onSurface.copy(alpha))
+                )
+            }
         },
         success = {
             SubcomposeAsyncImageContent()
