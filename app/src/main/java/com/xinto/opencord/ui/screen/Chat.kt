@@ -319,8 +319,7 @@ private fun ChatScreenLoaded(
                             }
                         )
                     }
-                    else -> {/* ignore */
-                    }
+                    else -> {}
                 }
                 if (showBottomDialog) {
                     MessageActionMenu(
