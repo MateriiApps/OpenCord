@@ -15,13 +15,13 @@ class PersistentDataManagerImpl(
     persistentPrefs: SharedPreferences
 ) : BasePreferenceManager(persistentPrefs), PersistentDataManager {
     override var persistentGuildId: Long
-        get() = getLong(CURRENT_GUILD_ID_KEY, CURRENT_GUILD_ID_DEFALT).toLong()
+        get() = getLong(CURRENT_GUILD_ID_KEY, CURRENT_GUILD_ID_DEFAULT).toLong()
         set(value) {
             putLong(CURRENT_GUILD_ID_KEY, value.toLong())
         }
 
     override var persistentChannelId: Long
-        get() = getLong(CURRENT_CHANNEL_ID_KEY, CURRENT_CHANNEL_ID_DEFALT).toLong()
+        get() = getLong(CURRENT_CHANNEL_ID_KEY, CURRENT_CHANNEL_ID_DEFAULT).toLong()
         set(value) {
             putLong(CURRENT_CHANNEL_ID_KEY, value.toLong())
         }
@@ -46,10 +46,10 @@ class PersistentDataManagerImpl(
 
     companion object {
         const val CURRENT_GUILD_ID_KEY = "current_guild_id"
-        const val CURRENT_GUILD_ID_DEFALT = 0L
+        const val CURRENT_GUILD_ID_DEFAULT = 0L
 
         const val CURRENT_CHANNEL_ID_KEY = "current_channel_id"
-        const val CURRENT_CHANNEL_ID_DEFALT = 0L
+        const val CURRENT_CHANNEL_ID_DEFAULT = 0L
 
         const val COLLAPSED_CATEGORIES_ID_KEY = "collapsed_categories"
     }
