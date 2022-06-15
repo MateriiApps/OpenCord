@@ -223,7 +223,7 @@ private fun ChatScreenLoaded(
             modifier = Modifier.weight(1f),
             reverseLayout = true,
         ) {
-            items(messages, key = { it.id.toLong() }) { message ->
+            items(messages, key = { it.id }) { message ->
                 var showBottomDialog by rememberSaveable { mutableStateOf(false) }
                 when (message) {
                     is DomainMessageRegular -> {

@@ -15,15 +15,15 @@ class PersistentDataManagerImpl(
     persistentPrefs: SharedPreferences
 ) : BasePreferenceManager(persistentPrefs), PersistentDataManager {
     override var persistentGuildId: Long
-        get() = getLong(CURRENT_GUILD_ID_KEY, CURRENT_GUILD_ID_DEFAULT).toLong()
+        get() = getLong(CURRENT_GUILD_ID_KEY, CURRENT_GUILD_ID_DEFAULT)
         set(value) {
-            putLong(CURRENT_GUILD_ID_KEY, value.toLong())
+            putLong(CURRENT_GUILD_ID_KEY, value)
         }
 
     override var persistentChannelId: Long
-        get() = getLong(CURRENT_CHANNEL_ID_KEY, CURRENT_CHANNEL_ID_DEFAULT).toLong()
+        get() = getLong(CURRENT_CHANNEL_ID_KEY, CURRENT_CHANNEL_ID_DEFAULT)
         set(value) {
-            putLong(CURRENT_CHANNEL_ID_KEY, value.toLong())
+            putLong(CURRENT_CHANNEL_ID_KEY, value)
         }
 
     override var collapsedCategories: List<Long>
