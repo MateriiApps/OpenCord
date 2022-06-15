@@ -43,7 +43,7 @@ interface DiscordGateway : CoroutineScope {
 
     fun getSessionId(): String
 
-    suspend fun requestGuildMembers(guildId: ULong)
+    suspend fun requestGuildMembers(guildId: Long)
     suspend fun updatePresence(presence: UpdatePresence)
 }
 
@@ -236,7 +236,7 @@ class DiscordGatewayImpl(
         webSocketSession.send(Frame.Text(json))
     }
 
-    override suspend fun requestGuildMembers(guildId: ULong) {
+    override suspend fun requestGuildMembers(guildId: Long) {
         sendPayload(
             opCode = OpCode.RequestGuildMembers,
             data = RequestGuildMembers(

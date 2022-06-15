@@ -355,8 +355,8 @@ private fun GuildsListLoading(
 
 @Composable
 private fun GuildsListLoaded(
-    onGuildSelect: (ULong) -> Unit,
-    selectedGuildId: ULong,
+    onGuildSelect: (Long) -> Unit,
+    selectedGuildId: Long,
     guilds: List<DomainGuild>,
     modifier: Modifier = Modifier
 ) {
@@ -527,14 +527,14 @@ private fun ChannelsListLoading(
 
 @Composable
 private fun ChannelsListLoaded(
-    onChannelSelect: (ULong) -> Unit,
-    onCategoryClick: (ULong) -> Unit,
-    selectedChannelId: ULong,
+    onChannelSelect: (Long) -> Unit,
+    onCategoryClick: (Long) -> Unit,
+    selectedChannelId: Long,
     bannerUrl: String?,
     boostLevel: Int,
     guildName: String,
     channels: Map<DomainChannel.Category?, List<DomainChannel>>,
-    collapsedCategories: List<ULong>,
+    collapsedCategories: List<Long>,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(

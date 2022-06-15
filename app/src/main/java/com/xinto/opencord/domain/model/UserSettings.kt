@@ -8,7 +8,7 @@ import kotlinx.datetime.Instant
 data class DomainUserSettings(
     val locale: String,
     val showCurrentGame: Boolean,
-//    val restrictedGuilds: List<ULong>
+//    val restrictedGuilds: List<Long>
 //    val defaultGuildsRestricted: Boolean,
     val inlineAttachmentMedia: Boolean,
     val inlineEmbedMedia: Boolean,
@@ -23,7 +23,7 @@ data class DomainUserSettings(
     val disableGamesTab: Boolean,
     val theme: DomainThemeSetting,
     val developerMode: Boolean,
-    val guildPositions: List<ULong>,
+    val guildPositions: List<Long>,
     val detectPlatformAccounts: Boolean,
     val status: DomainUserStatus,
     val afkTimeout: Int,
@@ -49,8 +49,8 @@ data class DomainFriendSources(
 
 data class DomainGuildFolder(
     // Null id means all the guildIds are outside of a folder
-    val id: ULong?,
-    val guildIds: List<ULong>,
+    val id: Long?,
+    val guildIds: List<Long>,
     val name: String?,
 //    val color: Any?,
 )
@@ -58,7 +58,7 @@ data class DomainGuildFolder(
 data class DomainCustomStatus(
     val text: String,
     val expiresAt: Instant?,
-    val emojiId: ULong?,
+    val emojiId: Long?,
     val emojiName: String?
 )
 

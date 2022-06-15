@@ -1,7 +1,7 @@
 package com.xinto.opencord.domain.model
 
 sealed class DomainUser : Mentionable {
-    abstract val id: ULong
+    abstract val id: Long
     abstract val username: String
     abstract val discriminator: String
     abstract val avatarUrl: String
@@ -20,7 +20,7 @@ sealed class DomainUser : Mentionable {
 }
 
 data class DomainUserPublic(
-    override val id: ULong,
+    override val id: Long,
     override val username: String,
     override val discriminator: String,
     override val avatarUrl: String,
@@ -31,7 +31,7 @@ data class DomainUserPublic(
 ) : DomainUser()
 
 data class DomainUserPrivate(
-    override val id: ULong,
+    override val id: Long,
     override val username: String,
     override val discriminator: String,
     override val avatarUrl: String,
@@ -47,7 +47,7 @@ data class DomainUserPrivate(
 ) : DomainUser()
 
 data class DomainUserReadyEvent(
-    override val id: ULong,
+    override val id: Long,
     override val username: String,
     override val discriminator: String,
     override val avatarUrl: String,
