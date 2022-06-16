@@ -1,5 +1,6 @@
 package com.xinto.opencord.ui.screen
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.ContentAlpha
@@ -17,8 +18,8 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import com.hcaptcha.sdk.HCaptcha
 import com.xinto.opencord.R
+import com.xinto.opencord.ui.hCaptcha
 import com.xinto.opencord.ui.viewmodel.LoginViewModel
 import org.koin.androidx.compose.getViewModel
 
@@ -102,14 +103,14 @@ fun LoginScreen(
     }
 
     if (viewModel.showCaptcha) {
-        HCaptcha
-            .getClient(context)
-            .verifyWithHCaptcha(viewModel.captchaSiteKey)
+        context.hCaptcha
+            .verifyWithHCaptcha()
             .addOnSuccessListener {
                 viewModel.login(it.tokenResult)
             }
             .addOnFailureListener {
-                //TODO
+                //TODO do more than just showing a toast i guess
+                Toast.makeText(context, "Captcha failed, try again", Toast.LENGTH_LONG).show()
             }
     }
 
