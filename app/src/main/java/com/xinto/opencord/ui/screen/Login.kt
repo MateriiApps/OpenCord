@@ -18,15 +18,17 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import com.hcaptcha.sdk.HCaptcha
 import com.xinto.opencord.R
-import com.xinto.opencord.ui.hCaptcha
 import com.xinto.opencord.ui.viewmodel.LoginViewModel
+import org.koin.androidx.compose.get
 import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun LoginScreen(
     onBackClick: () -> Unit,
-    viewModel: LoginViewModel = getViewModel()
+    viewModel: LoginViewModel = getViewModel(),
+    hCaptcha: HCaptcha = get()
 ) {
     val context = LocalContext.current
     Scaffold(
@@ -103,8 +105,7 @@ fun LoginScreen(
     }
 
     if (viewModel.showCaptcha) {
-        context.hCaptcha
-            .verifyWithHCaptcha()
+        hCaptcha.verifyWithHCaptcha()
             .addOnSuccessListener {
                 viewModel.login(it.tokenResult)
             }

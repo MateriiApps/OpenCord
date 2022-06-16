@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 class LoginViewModel(
     private val repository: DiscordAuthRepository,
     private val activityManager: ActivityManager,
-    private val accountManager: AccountManager,
+    private val accountManager: AccountManager
 ) : ViewModel() {
 
     lateinit var captchaSiteKey: String

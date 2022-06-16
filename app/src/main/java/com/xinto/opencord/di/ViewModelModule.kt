@@ -24,7 +24,7 @@ val viewModelModule = module {
     fun provideLoginViewModel(
         repository: DiscordAuthRepository,
         activityManager: ActivityManager,
-        accountManager: AccountManager,
+        accountManager: AccountManager
     ): LoginViewModel {
         return LoginViewModel(
             repository = repository,
