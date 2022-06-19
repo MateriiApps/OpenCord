@@ -113,7 +113,7 @@ class CacheManagerImpl(
         gateway.onEvent<MessageUpdateEvent> {
             //horror
             val messageId = it.data.id.getOrNull()?.value!!
-            val localEntityMessage = messagesDao.getMessageById(messageId.toLong())
+            val localEntityMessage = messagesDao.getMessageById(messageId)
             val localApiMessage = localEntityMessage?.toApi()
             val mergedApiMessage = localApiMessage?.merge(it.data)
             val mergedEntityMessage = mergedApiMessage?.toEntity()
@@ -126,7 +126,7 @@ class CacheManagerImpl(
         }
         gateway.onEvent<MessageDeleteEvent> {
             val messageId = it.data.messageId.value
-            val localEntityMessage = messagesDao.getMessageById(messageId.toLong())
+            val localEntityMessage = messagesDao.getMessageById(messageId)
             val localDomainMessage = localEntityMessage?.toDomain()
             if (localEntityMessage != null && localDomainMessage != null) {
                 messagesDao.delete(localEntityMessage)
