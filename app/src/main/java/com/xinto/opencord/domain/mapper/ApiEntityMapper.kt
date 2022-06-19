@@ -81,3 +81,16 @@ fun ApiEmbedField.toEntity(): EntityEmbedField {
 fun ApiMessageType.toEntity(): EntityMessageType {
     return EntityMessageType.fromValue(value) ?: EntityMessageType.Default
 }
+
+fun ApiChannel.toEntity(): EntityChannel {
+    return EntityChannel(
+        id = id.value.toLong(),
+        guildId = guildId?.value?.toLong(),
+        name = name,
+        type = type,
+        position = position,
+        parentId = parentId?.value?.toLong(),
+        nsfw = nsfw,
+        permissions = permissions.value,
+    )
+}

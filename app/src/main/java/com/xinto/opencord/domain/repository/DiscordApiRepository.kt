@@ -6,13 +6,14 @@ import com.xinto.opencord.domain.mapper.toDomain
 import com.xinto.opencord.domain.mapper.toEntity
 import com.xinto.opencord.domain.model.*
 import com.xinto.opencord.rest.body.MessageBody
+import com.xinto.opencord.rest.dto.ApiChannel
 import com.xinto.opencord.rest.dto.ApiMessage
 import com.xinto.opencord.rest.service.DiscordApiService
 
 interface DiscordApiRepository {
     suspend fun getMeGuilds(): List<DomainMeGuild>
     suspend fun getGuild(guildId: ULong): DomainGuild
-    suspend fun getGuildChannels(guildId: ULong): Map<ULong, DomainChannel>
+    suspend fun getGuildChannels(guildId: ULong): List<DomainChannel>
 
     suspend fun getChannel(channelId: ULong): DomainChannel
     suspend fun getChannelMessages(channelId: ULong): List<DomainMessage>
@@ -32,6 +33,7 @@ class DiscordApiRepositoryImpl(
 ) : DiscordApiRepository {
 
     private val messagesDao = database.messagesDao()
+    private val channelsDao = database.channelsDao()
 
     override suspend fun getMeGuilds(): List<DomainMeGuild> {
         return service.getMeGuilds().map { it.toDomain() }
@@ -41,10 +43,17 @@ class DiscordApiRepositoryImpl(
         return service.getGuild(guildId).toDomain()
     }
 
-    override suspend fun getGuildChannels(guildId: ULong): Map<ULong, DomainChannel> {
-        return service.getGuildChannels(guildId)
-            .toList().associate {
-                it.first.value to it.second.toDomain()
+    override suspend fun getGuildChannels(guildId: ULong): List<DomainChannel> {
+        return channelsDao.getAllByGuildId(guildId.toLong())
+            .map { it.toDomain() }
+            .ifEmpty {
+                service.getGuildChannels(guildId)
+                    .also {
+                        val entityChannels = it.map(ApiChannel::toEntity)
+
+                        channelsDao.insertAll(entityChannels)
+                    }
+                    .map { it.toDomain() }
             }
     }
 

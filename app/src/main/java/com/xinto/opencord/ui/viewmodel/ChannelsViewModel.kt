@@ -2,6 +2,8 @@ package com.xinto.opencord.ui.viewmodel
 
 import androidx.compose.runtime.*
 import androidx.lifecycle.viewModelScope
+import com.xinto.opencord.domain.manager.CacheManager
+import com.xinto.opencord.domain.manager.Event
 import com.xinto.opencord.domain.manager.PersistentDataManager
 import com.xinto.opencord.domain.mapper.toDomain
 import com.xinto.opencord.domain.model.DomainChannel
@@ -14,12 +16,17 @@ import com.xinto.opencord.gateway.event.GuildUpdateEvent
 import com.xinto.opencord.gateway.onEvent
 import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
 import com.xinto.opencord.util.getSortedChannels
+import kotlinx.coroutines.flow.collectIndexed
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class ChannelsViewModel(
     gateway: DiscordGateway,
     persistentDataManager: PersistentDataManager,
-    private val repository: DiscordApiRepository
+    private val repository: DiscordApiRepository,
+    private val cacheManager: CacheManager,
 ) : BasePersistenceViewModel(persistentDataManager) {
 
     sealed interface State {
@@ -47,14 +54,29 @@ class ChannelsViewModel(
         viewModelScope.launch {
             try {
                 state = State.Loading
-                val guildChannels = repository.getGuildChannels(persistentGuildId)
                 val guild = repository.getGuild(persistentGuildId)
-                channels.clear()
-                channels.putAll(guildChannels)
                 guildName = guild.name
                 guildBannerUrl = guild.bannerUrl
                 guildBoostLevel = guild.premiumTier
-                state = State.Loaded
+                channels.clear()
+                cacheManager.subscribeToChannels(persistentGuildId)
+                    .onStart {
+                        state = State.Loaded
+                    }
+                    .onEach { value ->
+                        when (value) {
+                            is Event.Create -> {
+                                channels[value.model.id] = value.model
+                            }
+                            is Event.Update -> {
+                                //should be using the replace method but it's Api24+
+                                channels[value.model.id] = value.model
+                            }
+                            is Event.Delete -> {
+                                channels.remove(value.model.id)
+                            }
+                        }
+                    }.launchIn(this)
             } catch (e: Exception) {
                 state = State.Error
                 e.printStackTrace()

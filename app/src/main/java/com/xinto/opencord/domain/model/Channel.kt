@@ -1,6 +1,8 @@
 package com.xinto.opencord.domain.model
 
-sealed class DomainChannel : Comparable<DomainChannel>, Mentionable {
+import com.xinto.opencord.domain.model.base.DomainModel
+
+sealed class DomainChannel : DomainModel, Comparable<DomainChannel>, Mentionable {
     abstract val id: ULong
     abstract val guildId: ULong?
     abstract val name: String

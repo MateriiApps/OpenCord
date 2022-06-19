@@ -13,7 +13,7 @@ import kotlinx.coroutines.withContext
 interface DiscordApiService {
     suspend fun getMeGuilds(): List<ApiMeGuild>
     suspend fun getGuild(guildId: ULong): ApiGuild
-    suspend fun getGuildChannels(guildId: ULong): Map<ApiSnowflake, ApiChannel>
+    suspend fun getGuildChannels(guildId: ULong): List<ApiChannel>
 
     suspend fun getChannel(channelId: ULong): ApiChannel
     suspend fun getChannelMessages(channelId: ULong): List<ApiMessage>
@@ -36,7 +36,6 @@ class DiscordApiServiceImpl(
     private val cachedGuildById = mutableMapOf<ULong, ApiGuild>()
     private val cachedChannelById = mutableMapOf<ULong, ApiChannel>()
 
-    private val cachedGuildChannels = mutableMapOf<ULong, MutableMap<ApiSnowflake, ApiChannel>>()
     private val cachedChannelPins = mutableMapOf<ULong, MutableMap<ApiSnowflake, ApiMessage>>()
 
     private var cachedUserSettings: ApiUserSettings? = null
@@ -63,14 +62,10 @@ class DiscordApiServiceImpl(
         }
     }
 
-    override suspend fun getGuildChannels(guildId: ULong): Map<ApiSnowflake, ApiChannel> {
+    override suspend fun getGuildChannels(guildId: ULong): List<ApiChannel> {
         return withContext(Dispatchers.IO) {
-            if (cachedGuildChannels[guildId] == null) {
-                val url = getGuildChannelsUrl(guildId)
-                val response: List<ApiChannel> = client.get(url).body()
-                cachedGuildChannels[guildId] = response.associateBy { it.id }.toMutableMap()
-            }
-            cachedGuildChannels[guildId]!!
+            val url = getGuildChannelsUrl(guildId)
+            client.get(url).body()
         }
     }
 

@@ -5,6 +5,7 @@ import com.xinto.opencord.domain.mapper.toApi
 import com.xinto.opencord.domain.mapper.toDomain
 import com.xinto.opencord.domain.mapper.toEntity
 import com.xinto.opencord.domain.model.DomainActivity
+import com.xinto.opencord.domain.model.DomainChannel
 import com.xinto.opencord.domain.model.DomainMessage
 import com.xinto.opencord.domain.model.base.DomainModel
 import com.xinto.opencord.domain.repository.DiscordApiRepository
@@ -31,6 +32,7 @@ interface CacheManager {
     fun getActivities(): List<DomainActivity>
 
     fun retrieveMessages(channelId: ULong): Flow<Event<DomainMessage>>
+    fun subscribeToChannels(guildId: ULong): Flow<Event<DomainChannel>>
 }
 
 class CacheManagerImpl(
@@ -43,6 +45,7 @@ class CacheManagerImpl(
     private var _activities: List<DomainActivity>? = null
 
     private val messagesDao = database.messagesDao()
+    private val channelsDao = database.channelsDao()
 
     private val events = MutableSharedFlow<Event<DomainModel>>()
 
@@ -71,6 +74,17 @@ class CacheManagerImpl(
             }
             .filterIsInstance<Event<DomainMessage>>()
             .filter { it.model.channelId == channelId }
+    }
+
+    override fun subscribeToChannels(guildId: ULong): Flow<Event<DomainChannel>> {
+        return events
+            .onSubscription {
+                repository.getGuildChannels(guildId).forEach {
+                    emit(Event.Create(it))
+                }
+            }
+            .filterIsInstance<Event<DomainChannel>>()
+            .filter { it.model.guildId == guildId }
     }
 
     private fun handleSessions(sessions: List<SessionData>) {
@@ -117,6 +131,37 @@ class CacheManagerImpl(
             if (localEntityMessage != null && localDomainMessage != null) {
                 messagesDao.delete(localEntityMessage)
                 events.emit(Event.Delete(localDomainMessage))
+            }
+        }
+        gateway.onEvent<ChannelCreateEvent> {
+            val entityChannel = it.data.toEntity()
+            val domainChannel = it.data.toDomain()
+
+            if (channelsDao.getAll().isNotEmpty()) {
+                channelsDao.insert(entityChannel)
+                events.emit(Event.Create(domainChannel))
+            }
+        }
+        gateway.onEvent<ChannelUpdateEvent> {
+            val entityChannel = it.data.toEntity()
+            val domainChannel = it.data.toDomain()
+
+            val localEntityChannel = channelsDao.getById(entityChannel.id)
+
+            if (localEntityChannel != null) {
+                channelsDao.update(entityChannel)
+                events.emit(Event.Update(domainChannel))
+            }
+        }
+        gateway.onEvent<ChannelDeleteEvent> {
+            val entityChannel = it.data.toEntity()
+            val domainChannel = it.data.toDomain()
+
+            val localEntityChannel = channelsDao.getById(entityChannel.id)
+
+            if (localEntityChannel != null) {
+                channelsDao.delete(entityChannel)
+                events.emit(Event.Delete(domainChannel))
             }
         }
     }

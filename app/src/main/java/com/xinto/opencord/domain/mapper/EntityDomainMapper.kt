@@ -116,3 +116,43 @@ fun EntityEmbedField.toDomain(): DomainEmbedField {
     )
 }
 
+fun EntityChannel.toDomain(): DomainChannel {
+    val permissions = DomainPermission.values().filter {
+        (permissions and it.flags) == it.flags
+    }
+    return when (type) {
+        2 -> DomainChannel.VoiceChannel(
+            id = id.toULong(),
+            guildId = guildId?.toULong(),
+            name = name,
+            position = position,
+            parentId = parentId?.toULong(),
+            permissions = permissions
+        )
+        4 -> DomainChannel.Category(
+            id = id.toULong(),
+            guildId = guildId?.toULong(),
+            name = name,
+            position = position,
+            permissions = permissions
+        )
+        5 -> DomainChannel.AnnouncementChannel(
+            id = id.toULong(),
+            guildId = guildId?.toULong(),
+            name = name,
+            position = position,
+            parentId = parentId?.toULong(),
+            permissions = permissions,
+            nsfw = nsfw
+        )
+        else -> DomainChannel.TextChannel(
+            id = id.toULong(),
+            guildId = guildId?.toULong(),
+            name = name,
+            position = position,
+            parentId = parentId?.toULong(),
+            permissions = permissions,
+            nsfw = nsfw
+        )
+    }
+}
