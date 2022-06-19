@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 @Entity
 data class EntityUser(
     @PrimaryKey
-    @ColumnInfo(name = "user_id", index = true)
+    @ColumnInfo(name = "id", index = true)
     val id: Long,
 
     @ColumnInfo(name = "username")
@@ -20,5 +20,44 @@ data class EntityUser(
     val avatar: String?,
 
     @ColumnInfo(name = "bot")
-    val bot: Boolean = false,
+    val bot: Boolean,
+
+    @ColumnInfo(name = "pronouns")
+    val pronouns: String?,
+
+    @ColumnInfo(name = "bio")
+    val bio: String?,
+    
+    @ColumnInfo(name = "banner")
+    val banner: String?,
+    
+    @ColumnInfo(name = "accent_color")
+    val accentColor: String?,
+
+    @ColumnInfo(name = "public_flags")
+    val publicFlags: Int?,
+    
+    @ColumnInfo(name = "flags")
+    val privateFlags: Int?,
+
+    @ColumnInfo(name = "verified")
+    val verified: Boolean?,
+
+    @ColumnInfo(name = "email")
+    val email: String?,
+
+    @ColumnInfo(name = "phone")
+    val phone: String?,
+
+    @ColumnInfo(name = "mfa_enabled")
+    val mfaEnabled: Boolean?,
+
+    @ColumnInfo(name = "locale")
+    val locale: String?,
+    
+    @ColumnInfo(name = "purchased_flags")
+    val purchasedFlags: Int?,
+
+    @ColumnInfo(name = "premium")
+    val premium: Boolean?,
 )

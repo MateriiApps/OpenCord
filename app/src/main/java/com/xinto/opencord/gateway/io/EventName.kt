@@ -13,6 +13,7 @@ import kotlinx.serialization.encoding.Encoder
 @GetterGen
 enum class EventName(val eventName: String) {
     Ready("READY"),
+    UserUpdate("USER_UPDATE"),
     GuildCreate("GUILD_CREATE"),
     GuildUpdate("GUILD_UPDATE"),
     GuildDelete("GUILD_DELETE"),

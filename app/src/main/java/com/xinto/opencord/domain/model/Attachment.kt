@@ -4,14 +4,14 @@ import com.xinto.opencord.domain.model.base.DomainModel
 
 sealed interface DomainAttachment : DomainModel {
 
-    val id: ULong
+    val id: Long
     val filename: String
     val size: Int
     val url: String
     val proxyUrl: String
 
     data class Picture(
-        override val id: ULong,
+        override val id: Long,
         override val filename: String,
         override val size: Int,
         override val url: String,
@@ -21,7 +21,7 @@ sealed interface DomainAttachment : DomainModel {
     ) : DomainAttachment
 
     data class Video(
-        override val id: ULong,
+        override val id: Long,
         override val filename: String,
         override val size: Int,
         override val url: String,
@@ -31,7 +31,7 @@ sealed interface DomainAttachment : DomainModel {
     ) : DomainAttachment
 
     data class File(
-        override val id: ULong,
+        override val id: Long,
         override val filename: String,
         override val size: Int,
         override val url: String,

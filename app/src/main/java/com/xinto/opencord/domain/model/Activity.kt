@@ -29,7 +29,7 @@ data class DomainActivityGame(
     val id: String?,
     val state: String,
     val details: String,
-    val applicationId: ULong,
+    val applicationId: Long,
     val party: DomainActivityParty?,
     val assets: DomainActivityAssets?,
     val secrets: DomainActivitySecrets?,
@@ -86,7 +86,7 @@ data class DomainActivityUnknown(
 // TODO: use a partial emoji instead
 data class DomainActivityEmoji(
     val name: String?,
-    val id: ULong?,
+    val id: Long?,
     val animated: Boolean?,
 )
 

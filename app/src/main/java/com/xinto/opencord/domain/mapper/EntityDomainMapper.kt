@@ -9,7 +9,7 @@ fun EntityAttachment.toDomain(): DomainAttachment {
     return if (contentType.isNotEmpty()) {
         when (contentType) {
             "video/mp4" -> DomainAttachment.Video(
-                id = id.toULong(),
+                id = id,
                 filename = filename,
                 size = size,
                 url = url,
@@ -18,7 +18,7 @@ fun EntityAttachment.toDomain(): DomainAttachment {
                 height = height ?: 100
             )
             else -> DomainAttachment.Picture(
-                id = id.toULong(),
+                id = id,
                 filename = filename,
                 size = size,
                 url = url,
@@ -29,7 +29,7 @@ fun EntityAttachment.toDomain(): DomainAttachment {
         }
     } else {
         DomainAttachment.File(
-            id = id.toULong(),
+            id = id,
             filename = filename,
             size = size,
             url = url,
@@ -39,8 +39,8 @@ fun EntityAttachment.toDomain(): DomainAttachment {
 }
 
 fun EntityMessageFull.toDomain(): DomainMessage {
-    val domainId = message.id.toULong()
-    val domainChannelId = message.channelId.toULong()
+    val domainId = message.id
+    val domainChannelId = message.channelId
     val domainContent = message.content
     val domainAuthor = message.author.toDomain()
     val domainTimestamp = message.timestamp
@@ -75,16 +75,50 @@ fun EntityMessageFull.toDomain(): DomainMessage {
     }
 }
 fun EntityUser.toDomain(): DomainUser {
-    val avatarUrl = avatar?.let { avatar ->
-        DiscordCdnServiceImpl.getUserAvatarUrl(id.toString(), avatar)
-    } ?: DiscordCdnServiceImpl.getDefaultAvatarUrl(discriminator.toInt().rem(5))
-    return DomainUser(
-        id = id.toULong(),
-        username = username,
-        discriminator = discriminator,
-        avatarUrl = avatarUrl,
-        bot = bot,
-    )
+    val avatarUrl = avatar
+        ?.let { DiscordCdnServiceImpl.getUserAvatarUrl(id.toString(), it) }
+        ?: DiscordCdnServiceImpl.getDefaultAvatarUrl(discriminator.toInt().rem(5))
+
+    return when {
+        locale != null -> DomainUserPrivate(
+            id = id,
+            username = username,
+            discriminator = discriminator,
+            avatarUrl = avatarUrl,
+            bot = bot,
+            bio = bio,
+            flags = (publicFlags ?: 0) or (privateFlags ?: 0),
+            pronouns = pronouns,
+            mfaEnabled = mfaEnabled!!,
+            verified = verified!!,
+            email = email!!,
+            phone = phone,
+            locale = locale,
+        )
+        premium != null -> DomainUserReadyEvent(
+            id = id,
+            username = username,
+            discriminator = discriminator,
+            avatarUrl = avatarUrl,
+            bot = bot,
+            bio = bio,
+            flags = privateFlags ?: 0,
+            mfaEnabled = mfaEnabled!!,
+            verified = verified!!,
+            premium = premium,
+            purchasedFlags = purchasedFlags!!,
+        )
+        else -> DomainUserPublic(
+            id = id,
+            username = username,
+            discriminator = discriminator,
+            avatarUrl = avatarUrl,
+            bot = bot,
+            bio = bio,
+            flags = (publicFlags ?: 0) or (privateFlags ?: 0),
+            pronouns = pronouns,
+        )
+    }
 }
 
 fun EntityEmbed.toDomain(): DomainEmbed {
@@ -122,35 +156,35 @@ fun EntityChannel.toDomain(): DomainChannel {
     }
     return when (type) {
         2 -> DomainChannel.VoiceChannel(
-            id = id.toULong(),
-            guildId = guildId?.toULong(),
+            id = id,
+            guildId = guildId,
             name = name,
             position = position,
-            parentId = parentId?.toULong(),
+            parentId = parentId,
             permissions = permissions
         )
         4 -> DomainChannel.Category(
-            id = id.toULong(),
-            guildId = guildId?.toULong(),
+            id = id,
+            guildId = guildId,
             name = name,
             position = position,
             permissions = permissions
         )
         5 -> DomainChannel.AnnouncementChannel(
-            id = id.toULong(),
-            guildId = guildId?.toULong(),
+            id = id,
+            guildId = guildId,
             name = name,
             position = position,
-            parentId = parentId?.toULong(),
+            parentId = parentId,
             permissions = permissions,
             nsfw = nsfw
         )
         else -> DomainChannel.TextChannel(
-            id = id.toULong(),
-            guildId = guildId?.toULong(),
+            id = id,
+            guildId = guildId,
             name = name,
             position = position,
-            parentId = parentId?.toULong(),
+            parentId = parentId,
             permissions = permissions,
             nsfw = nsfw
         )

@@ -31,8 +31,8 @@ interface CacheManager {
 
     fun getActivities(): List<DomainActivity>
 
-    fun retrieveMessages(channelId: ULong): Flow<Event<DomainMessage>>
-    fun subscribeToChannels(guildId: ULong): Flow<Event<DomainChannel>>
+    fun retrieveMessages(channelId: Long): Flow<Event<DomainMessage>>
+    fun subscribeToChannels(guildId: Long): Flow<Event<DomainChannel>>
 }
 
 class CacheManagerImpl(
@@ -65,7 +65,7 @@ class CacheManagerImpl(
             ?: throw IllegalStateException("Current session is not cached!")
     }
 
-    override fun retrieveMessages(channelId: ULong): Flow<Event<DomainMessage>> {
+    override fun retrieveMessages(channelId: Long): Flow<Event<DomainMessage>> {
         return events
             .onSubscription {
                 repository.getChannelMessages(channelId).forEach {
@@ -76,7 +76,7 @@ class CacheManagerImpl(
             .filter { it.model.channelId == channelId }
     }
 
-    override fun subscribeToChannels(guildId: ULong): Flow<Event<DomainChannel>> {
+    override fun subscribeToChannels(guildId: Long): Flow<Event<DomainChannel>> {
         return events
             .onSubscription {
                 repository.getGuildChannels(guildId).forEach {

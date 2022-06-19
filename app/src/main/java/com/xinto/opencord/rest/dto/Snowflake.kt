@@ -4,15 +4,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @JvmInline
-value class ApiSnowflake(val value: ULong) {
-
-    constructor(value: String) : this(value.toULong().coerceIn(validRange))
-
+value class ApiSnowflake(val value: Long) {
+    constructor(value: String) : this(value.toLong())
     override fun toString(): String = value.toString()
 
     companion object {
         val validRange = ULong.MIN_VALUE..Long.MAX_VALUE.toULong()
     }
 }
-
-fun ApiSnowflake(value: Long) = ApiSnowflake(value.toULong())

@@ -12,19 +12,19 @@ import com.xinto.opencord.rest.service.DiscordApiService
 
 interface DiscordApiRepository {
     suspend fun getMeGuilds(): List<DomainMeGuild>
-    suspend fun getGuild(guildId: ULong): DomainGuild
-    suspend fun getGuildChannels(guildId: ULong): List<DomainChannel>
+    suspend fun getGuild(guildId: Long): DomainGuild
+    suspend fun getGuildChannels(guildId: Long): List<DomainChannel>
 
-    suspend fun getChannel(channelId: ULong): DomainChannel
-    suspend fun getChannelMessages(channelId: ULong): List<DomainMessage>
-    suspend fun getChannelPins(channelId: ULong): Map<ULong, DomainMessage>
+    suspend fun getChannel(channelId: Long): DomainChannel
+    suspend fun getChannelMessages(channelId: Long): List<DomainMessage>
+    suspend fun getChannelPins(channelId: Long): Map<Long, DomainMessage>
 
-    suspend fun postChannelMessage(channelId: ULong, body: MessageBody)
+    suspend fun postChannelMessage(channelId: Long, body: MessageBody)
 
     suspend fun getUserSettings(): DomainUserSettings
     suspend fun updateUserSettings(settings: DomainUserSettingsPartial): DomainUserSettings
 
-    suspend fun startTyping(channelId: ULong)
+    suspend fun startTyping(channelId: Long)
 }
 
 class DiscordApiRepositoryImpl(
@@ -39,12 +39,12 @@ class DiscordApiRepositoryImpl(
         return service.getMeGuilds().map { it.toDomain() }
     }
 
-    override suspend fun getGuild(guildId: ULong): DomainGuild {
+    override suspend fun getGuild(guildId: Long): DomainGuild {
         return service.getGuild(guildId).toDomain()
     }
 
-    override suspend fun getGuildChannels(guildId: ULong): List<DomainChannel> {
-        return channelsDao.getAllByGuildId(guildId.toLong())
+    override suspend fun getGuildChannels(guildId: Long): List<DomainChannel> {
+        return channelsDao.getAllByGuildId(guildId)
             .map { it.toDomain() }
             .ifEmpty {
                 service.getGuildChannels(guildId)
@@ -57,12 +57,12 @@ class DiscordApiRepositoryImpl(
             }
     }
 
-    override suspend fun getChannel(channelId: ULong): DomainChannel {
+    override suspend fun getChannel(channelId: Long): DomainChannel {
         return service.getChannel(channelId).toDomain()
     }
 
-    override suspend fun getChannelMessages(channelId: ULong): List<DomainMessage> {
-        return messagesDao.getMessagesByChannelId(channelId.toLong())
+    override suspend fun getChannelMessages(channelId: Long): List<DomainMessage> {
+        return messagesDao.getMessagesByChannelId(channelId)
             .map { it.toDomain() }
             .ifEmpty {
                 service.getChannelMessages(channelId)
@@ -74,14 +74,14 @@ class DiscordApiRepositoryImpl(
             }
     }
 
-    override suspend fun getChannelPins(channelId: ULong): Map<ULong, DomainMessage> {
+    override suspend fun getChannelPins(channelId: Long): Map<Long, DomainMessage> {
         return service.getChannelPins(channelId)
             .toList().associate {
                 it.first.value to it.second.toDomain()
             }
     }
 
-    override suspend fun postChannelMessage(channelId: ULong, body: MessageBody) {
+    override suspend fun postChannelMessage(channelId: Long, body: MessageBody) {
         service.postChannelMessage(channelId, body)
     }
 
@@ -93,7 +93,7 @@ class DiscordApiRepositoryImpl(
         return service.updateUserSettings(settings.toApi()).toDomain()
     }
 
-    override suspend fun startTyping(channelId: ULong) {
+    override suspend fun startTyping(channelId: Long) {
         service.startTyping(channelId)
     }
 }

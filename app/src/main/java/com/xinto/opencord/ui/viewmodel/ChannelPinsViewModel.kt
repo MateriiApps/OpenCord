@@ -24,7 +24,7 @@ class ChannelPinsViewModel(
 
     var state by mutableStateOf<State>(State.Loading)
 
-    val pins = mutableStateMapOf<ULong, DomainMessage>()
+    val pins = mutableStateMapOf<Long, DomainMessage>()
 
     fun load() {
         viewModelScope.launch {

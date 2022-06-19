@@ -13,6 +13,7 @@ sealed class Dependencies {
         const val ktorClientWebsockets = "io.ktor:ktor-client-websockets:$version"
         const val ktorClientContentNegotiation = "io.ktor:ktor-client-content-negotiation:$version"
         const val ktorSerializationJson = "io.ktor:ktor-serialization-kotlinx-json:$version"
+        const val ktorClientLogging = "io.ktor:ktor-client-logging:$version"
 
         override fun invoke(scope: DependencyHandlerScope) {
             scope {
@@ -21,6 +22,7 @@ sealed class Dependencies {
                 implementation(ktorClientWebsockets)
                 implementation(ktorClientContentNegotiation)
                 implementation(ktorSerializationJson)
+                implementation(ktorClientLogging)
             }
         }
     }

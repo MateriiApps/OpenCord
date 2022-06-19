@@ -3,14 +3,14 @@ package com.xinto.opencord.domain.model
 import com.xinto.opencord.domain.model.base.DomainModel
 import com.xinto.opencord.util.SimpleAstParser
 import com.xinto.opencord.util.Timestamp
-import com.xinto.partialgen.Partial
+import com.xinto.partialgen.Partialable
 import kotlinx.datetime.Instant
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
 sealed class DomainMessage : DomainModel {
-    abstract val id: ULong
-    abstract val channelId: ULong
+    abstract val id: Long
+    abstract val channelId: Long
     abstract val timestamp: Instant
     abstract val content: String
     abstract val author: DomainUser
@@ -18,10 +18,10 @@ sealed class DomainMessage : DomainModel {
     val formattedTimestamp by lazy { Timestamp.getFormattedTimestamp(timestamp) }
 }
 
-@Partial
+@Partialable
 data class DomainMessageRegular(
-    override val id: ULong,
-    override val channelId: ULong,
+    override val id: Long,
+    override val channelId: Long,
     override val timestamp: Instant,
     override val content: String,
     override val author: DomainUser,
@@ -38,8 +38,8 @@ data class DomainMessageRegular(
 }
 
 data class DomainMessageMemberJoin(
-    override val id: ULong,
-    override val channelId: ULong,
+    override val id: Long,
+    override val channelId: Long,
     override val timestamp: Instant,
     override val content: String,
     override val author: DomainUser

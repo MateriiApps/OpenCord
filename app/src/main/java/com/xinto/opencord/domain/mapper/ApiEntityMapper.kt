@@ -4,8 +4,8 @@ import com.xinto.opencord.db.entity.*
 import com.xinto.opencord.rest.dto.*
 
 fun ApiMessage.toEntity(): EntityMessageFull {
-    val entityId = id.value.toLong()
-    val entityChannelId = channelId.value.toLong()
+    val entityId = id.value
+    val entityChannelId = channelId.value
     val entityAuthor = author.toEntity()
     val entityAttachments = attachments.map { it.toEntity() }
     val entityEmbeds = embeds.map { it.toEntity() }
@@ -30,17 +30,30 @@ fun ApiMessage.toEntity(): EntityMessageFull {
 
 fun ApiUser.toEntity(): EntityUser {
     return EntityUser(
-        id = id.value.toLong(),
+        id = id.value,
         username = username,
         discriminator = discriminator,
         avatar = avatar,
         bot = bot,
+        pronouns = pronouns,
+        bio = bio,
+        banner = banner,
+        accentColor = accentColor,
+        publicFlags = publicFlags,
+        privateFlags = privateFlags,
+        verified = verified,
+        email = email,
+        phone = phone,
+        mfaEnabled = mfaEnabled,
+        locale = locale,
+        purchasedFlags = purchasedFlags,
+        premium = premium
     )
 }
 
 fun ApiAttachment.toEntity(): EntityAttachment {
     return EntityAttachment(
-        id = id.value.toLong(),
+        id = id.value,
         filename = filename,
         size = size,
         url = url,
@@ -84,12 +97,12 @@ fun ApiMessageType.toEntity(): EntityMessageType {
 
 fun ApiChannel.toEntity(): EntityChannel {
     return EntityChannel(
-        id = id.value.toLong(),
-        guildId = guildId?.value?.toLong(),
+        id = id.value,
+        guildId = guildId?.value,
         name = name,
         type = type,
         position = position,
-        parentId = parentId?.value?.toLong(),
+        parentId = parentId?.value,
         nsfw = nsfw,
         permissions = permissions.value,
     )

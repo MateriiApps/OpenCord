@@ -12,19 +12,19 @@ import kotlinx.coroutines.withContext
 
 interface DiscordApiService {
     suspend fun getMeGuilds(): List<ApiMeGuild>
-    suspend fun getGuild(guildId: ULong): ApiGuild
-    suspend fun getGuildChannels(guildId: ULong): List<ApiChannel>
+    suspend fun getGuild(guildId: Long): ApiGuild
+    suspend fun getGuildChannels(guildId: Long): List<ApiChannel>
 
-    suspend fun getChannel(channelId: ULong): ApiChannel
-    suspend fun getChannelMessages(channelId: ULong): List<ApiMessage>
-    suspend fun getChannelPins(channelId: ULong): Map<ApiSnowflake, ApiMessage>
+    suspend fun getChannel(channelId: Long): ApiChannel
+    suspend fun getChannelMessages(channelId: Long): List<ApiMessage>
+    suspend fun getChannelPins(channelId: Long): Map<ApiSnowflake, ApiMessage>
 
-    suspend fun postChannelMessage(channelId: ULong, body: MessageBody)
+    suspend fun postChannelMessage(channelId: Long, body: MessageBody)
 
     suspend fun getUserSettings(): ApiUserSettings
     suspend fun updateUserSettings(settings: ApiUserSettingsPartial): ApiUserSettings
 
-    suspend fun startTyping(channelId: ULong)
+    suspend fun startTyping(channelId: Long)
 }
 
 class DiscordApiServiceImpl(
@@ -33,10 +33,10 @@ class DiscordApiServiceImpl(
 ) : DiscordApiService {
     private val cachedMeGuilds = mutableListOf<ApiMeGuild>()
 
-    private val cachedGuildById = mutableMapOf<ULong, ApiGuild>()
-    private val cachedChannelById = mutableMapOf<ULong, ApiChannel>()
+    private val cachedGuildById = mutableMapOf<Long, ApiGuild>()
+    private val cachedChannelById = mutableMapOf<Long, ApiChannel>()
 
-    private val cachedChannelPins = mutableMapOf<ULong, MutableMap<ApiSnowflake, ApiMessage>>()
+    private val cachedChannelPins = mutableMapOf<Long, MutableMap<ApiSnowflake, ApiMessage>>()
 
     private var cachedUserSettings: ApiUserSettings? = null
 
@@ -51,7 +51,7 @@ class DiscordApiServiceImpl(
         }
     }
 
-    override suspend fun getGuild(guildId: ULong): ApiGuild {
+    override suspend fun getGuild(guildId: Long): ApiGuild {
         return withContext(Dispatchers.IO) {
             if (cachedGuildById[guildId] == null) {
                 val url = getGuildUrl(guildId)
@@ -62,14 +62,14 @@ class DiscordApiServiceImpl(
         }
     }
 
-    override suspend fun getGuildChannels(guildId: ULong): List<ApiChannel> {
+    override suspend fun getGuildChannels(guildId: Long): List<ApiChannel> {
         return withContext(Dispatchers.IO) {
             val url = getGuildChannelsUrl(guildId)
             client.get(url).body()
         }
     }
 
-    override suspend fun getChannel(channelId: ULong): ApiChannel {
+    override suspend fun getChannel(channelId: Long): ApiChannel {
         return withContext(Dispatchers.IO) {
             if (cachedChannelById[channelId] == null) {
                 val url = getChannelUrl(channelId)
@@ -79,14 +79,14 @@ class DiscordApiServiceImpl(
         }
     }
 
-    override suspend fun getChannelMessages(channelId: ULong): List<ApiMessage> {
+    override suspend fun getChannelMessages(channelId: Long): List<ApiMessage> {
         return withContext(Dispatchers.IO) {
             val url = getChannelMessagesUrl(channelId)
             client.get(url).body()
         }
     }
 
-    override suspend fun getChannelPins(channelId: ULong): Map<ApiSnowflake, ApiMessage> {
+    override suspend fun getChannelPins(channelId: Long): Map<ApiSnowflake, ApiMessage> {
         return withContext(Dispatchers.IO) {
             if (cachedChannelPins[channelId] == null) {
                 val url = getChannelPinsUrl(channelId)
@@ -97,7 +97,7 @@ class DiscordApiServiceImpl(
         }
     }
 
-    override suspend fun postChannelMessage(channelId: ULong, body: MessageBody) {
+    override suspend fun postChannelMessage(channelId: Long, body: MessageBody) {
         withContext(Dispatchers.IO) {
             val url = getChannelMessagesUrl(channelId)
             client.post(url) {
@@ -125,7 +125,7 @@ class DiscordApiServiceImpl(
         }
     }
 
-    override suspend fun startTyping(channelId: ULong) {
+    override suspend fun startTyping(channelId: Long) {
         withContext(Dispatchers.IO) {
             val url = getTypingUrl(channelId)
             client.post(url)
@@ -139,25 +139,25 @@ class DiscordApiServiceImpl(
             return "$BASE/users/@me/guilds"
         }
 
-        fun getGuildUrl(guildId: ULong): String {
+        fun getGuildUrl(guildId: Long): String {
             return "$BASE/guilds/$guildId"
         }
 
-        fun getGuildChannelsUrl(guildId: ULong): String {
+        fun getGuildChannelsUrl(guildId: Long): String {
             val guildUrl = getGuildUrl(guildId)
             return "$guildUrl/channels"
         }
 
-        fun getChannelUrl(channelId: ULong): String {
+        fun getChannelUrl(channelId: Long): String {
             return "$BASE/channels/$channelId"
         }
 
-        fun getChannelMessagesUrl(channelId: ULong): String {
+        fun getChannelMessagesUrl(channelId: Long): String {
             val channelUrl = getChannelUrl(channelId)
             return "$channelUrl/messages"
         }
 
-        fun getChannelPinsUrl(channelId: ULong): String {
+        fun getChannelPinsUrl(channelId: Long): String {
             val channelUrl = getChannelUrl(channelId)
             return "$channelUrl/pins"
         }
@@ -166,7 +166,7 @@ class DiscordApiServiceImpl(
             return "$BASE/users/@me/settings"
         }
 
-        fun getTypingUrl(channelId: ULong): String {
+        fun getTypingUrl(channelId: Long): String {
             val channelUrl = getChannelUrl(channelId)
             return "$channelUrl/typing"
         }
