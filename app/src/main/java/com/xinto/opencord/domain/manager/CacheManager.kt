@@ -105,21 +105,19 @@ class CacheManagerImpl(
             val entityMessage = it.data.toEntity()
             val domainMessage = it.data.toDomain()
 
-            if (messagesDao.getAllMessages().isNotEmpty()) {
-                messagesDao.insert(entityMessage)
-                events.emit(Event.Create(domainMessage))
-            }
+            messagesDao.insert(entityMessage)
+            events.emit(Event.Create(domainMessage))
         }
         gateway.onEvent<MessageUpdateEvent> {
-            //horror
             val messageId = it.data.id.getOrNull()?.value!!
             val localEntityMessage = messagesDao.getMessageById(messageId)
-            val localApiMessage = localEntityMessage?.toApi()
-            val mergedApiMessage = localApiMessage?.merge(it.data)
-            val mergedEntityMessage = mergedApiMessage?.toEntity()
-            val mergedDomainMessage = localApiMessage?.toDomain()
 
-            if (mergedEntityMessage != null && mergedDomainMessage != null) {
+            if (localEntityMessage != null) {
+                val localApiMessage = localEntityMessage.toApi()
+                val mergedApiMessage = localApiMessage.merge(it.data)
+                val mergedEntityMessage = mergedApiMessage.toEntity()
+                val mergedDomainMessage = localApiMessage.toDomain()
+
                 messagesDao.update(mergedEntityMessage)
                 events.emit(Event.Update(mergedDomainMessage))
             }
@@ -127,8 +125,10 @@ class CacheManagerImpl(
         gateway.onEvent<MessageDeleteEvent> {
             val messageId = it.data.messageId.value
             val localEntityMessage = messagesDao.getMessageById(messageId)
-            val localDomainMessage = localEntityMessage?.toDomain()
-            if (localEntityMessage != null && localDomainMessage != null) {
+
+            if (localEntityMessage != null) {
+                val localDomainMessage = localEntityMessage.toDomain()
+
                 messagesDao.delete(localEntityMessage)
                 events.emit(Event.Delete(localDomainMessage))
             }
@@ -137,29 +137,29 @@ class CacheManagerImpl(
             val entityChannel = it.data.toEntity()
             val domainChannel = it.data.toDomain()
 
-            if (channelsDao.getAll().isNotEmpty()) {
-                channelsDao.insert(entityChannel)
-                events.emit(Event.Create(domainChannel))
-            }
+            channelsDao.insert(entityChannel)
+            events.emit(Event.Create(domainChannel))
         }
         gateway.onEvent<ChannelUpdateEvent> {
-            val entityChannel = it.data.toEntity()
-            val domainChannel = it.data.toDomain()
-
-            val localEntityChannel = channelsDao.getById(entityChannel.id)
+            val channelId = it.data.id.value
+            val localEntityChannel = channelsDao.getById(channelId)
 
             if (localEntityChannel != null) {
+                val entityChannel = it.data.toEntity()
+                val domainChannel = it.data.toDomain()
+
                 channelsDao.update(entityChannel)
                 events.emit(Event.Update(domainChannel))
             }
         }
         gateway.onEvent<ChannelDeleteEvent> {
-            val entityChannel = it.data.toEntity()
-            val domainChannel = it.data.toDomain()
-
-            val localEntityChannel = channelsDao.getById(entityChannel.id)
+            val channelId = it.data.id.value
+            val localEntityChannel = channelsDao.getById(channelId)
 
             if (localEntityChannel != null) {
+                val entityChannel = it.data.toEntity()
+                val domainChannel = it.data.toDomain()
+
                 channelsDao.delete(entityChannel)
                 events.emit(Event.Delete(domainChannel))
             }
