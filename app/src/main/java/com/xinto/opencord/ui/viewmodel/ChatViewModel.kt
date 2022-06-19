@@ -18,7 +18,7 @@ import com.xinto.opencord.rest.body.MessageBody
 import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
 import com.xinto.opencord.util.throttle
 import com.xinto.partialgen.getOrNull
-import kotlinx.coroutines.flow.collectIndexed
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class ChatViewModel(
@@ -56,12 +56,10 @@ class ChatViewModel(
                 state = State.Loading
                 messages.clear()
                 cacheManager.subscribeToMessages(persistentChannelId)
-                    .collectIndexed { index, value ->
+                    .onEach { value ->
+                        state = State.Loaded
                         when (value) {
                             is Event.Create -> {
-                                if (index == 0) {
-                                    state = State.Loaded
-                                }
                                 messages[value.model.id] = value.model
                             }
                             is Event.Update -> {
@@ -72,8 +70,10 @@ class ChatViewModel(
                                 messages.remove(value.model.id)
                             }
                         }
-
                     }
+                    .onEmpty {
+                        state = State.Loaded
+                    }.launchIn(this)
                 val channel = repository.getChannel(persistentChannelId)
                 channelName = channel.name
             } catch (e: Exception) {

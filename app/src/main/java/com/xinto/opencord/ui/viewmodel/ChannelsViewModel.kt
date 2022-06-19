@@ -16,10 +16,7 @@ import com.xinto.opencord.gateway.event.GuildUpdateEvent
 import com.xinto.opencord.gateway.onEvent
 import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
 import com.xinto.opencord.util.getSortedChannels
-import kotlinx.coroutines.flow.collectIndexed
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class ChannelsViewModel(
@@ -60,10 +57,8 @@ class ChannelsViewModel(
                 guildBoostLevel = guild.premiumTier
                 channels.clear()
                 cacheManager.subscribeToChannels(persistentGuildId)
-                    .onStart {
-                        state = State.Loaded
-                    }
                     .onEach { value ->
+                        state = State.Loaded
                         when (value) {
                             is Event.Create -> {
                                 channels[value.model.id] = value.model
@@ -76,6 +71,9 @@ class ChannelsViewModel(
                                 channels.remove(value.model.id)
                             }
                         }
+                    }
+                    .onEmpty {
+                        state = State.Loaded
                     }.launchIn(this)
             } catch (e: Exception) {
                 state = State.Error
