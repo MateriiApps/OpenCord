@@ -16,7 +16,6 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.util.*
-import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.koin.core.qualifier.named
@@ -51,16 +50,14 @@ val httpModule = module {
         telemetryProvider: TelemetryProvider,
         propertyProvider: PropertyProvider,
     ): HttpClient {
+        val superProperties = json.encodeToString(propertyProvider.xSuperProperties).encodeBase64()
         return HttpClient(CIO) {
             defaultRequest {
                 header(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                 header(HttpHeaders.UserAgent, telemetryProvider.userAgent)
                 header(HttpHeaders.AcceptLanguage, "en-US")
                 header(HttpHeaders.XDiscordLocale, "en-US")
-                header(
-                    HttpHeaders.XSuperProperties,
-                    json.encodeToString(propertyProvider.xSuperProperties).encodeBase64()
-                )
+                header(HttpHeaders.XSuperProperties, superProperties)
             }
             install(HttpRequestRetry) {
                 maxRetries = 5
@@ -89,6 +86,7 @@ val httpModule = module {
         telemetryProvider: TelemetryProvider,
         propertyProvider: PropertyProvider
     ): HttpClient {
+        val superProperties = json.encodeToString(propertyProvider.xSuperProperties).encodeBase64()
         return HttpClient(CIO) {
             defaultRequest {
                 header(HttpHeaders.ContentType, ContentType.Application.Json.toString())
@@ -96,10 +94,7 @@ val httpModule = module {
                 header(HttpHeaders.UserAgent, telemetryProvider.userAgent)
                 header(HttpHeaders.AcceptLanguage, "en-US")
                 header(HttpHeaders.XDiscordLocale, "en-US")
-                header(
-                    HttpHeaders.XSuperProperties,
-                    json.encodeToString(propertyProvider.xSuperProperties).encodeBase64()
-                )
+                header(HttpHeaders.XSuperProperties, superProperties)
             }
             install(HttpRequestRetry) {
                 maxRetries = 5
