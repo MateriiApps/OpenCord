@@ -37,7 +37,11 @@ fun WidgetChatMessage(
     attachments: (@Composable () -> Unit)? = null,
     embeds: (@Composable () -> Unit)? = null,
 ) {
-    val background = if (mentioned) MaterialTheme.colorScheme.primary else Color.Unspecified
+    val background = if (mentioned) {
+        MaterialTheme.colorScheme.secondaryContainer
+    } else {
+        Color.Unspecified
+    }
 
     Box(modifier = modifier.background(background)) {
         Column(

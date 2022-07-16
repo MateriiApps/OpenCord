@@ -198,7 +198,7 @@ private fun ChatScreenLoading(
 @Composable
 private fun ChatScreenLoaded(
     messages: List<DomainMessage>,
-    currentUserId: ULong?,
+    currentUserId: Long?,
     channelName: String,
     userMessage: String,
     sendEnabled: Boolean,

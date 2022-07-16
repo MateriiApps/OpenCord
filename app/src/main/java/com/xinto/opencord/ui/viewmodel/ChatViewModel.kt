@@ -43,7 +43,7 @@ class ChatViewModel(
         private set
     var sendEnabled by mutableStateOf(true)
         private set
-    var currentUserId by mutableStateOf<ULong?>(null)
+    var currentUserId by mutableStateOf<Long?>(null)
         private set
 
     val startTyping = throttle(9500, viewModelScope) {
