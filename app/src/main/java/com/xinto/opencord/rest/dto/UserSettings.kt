@@ -1,11 +1,11 @@
 package com.xinto.opencord.rest.dto
 
-import com.xinto.partialgen.Partial
+import com.xinto.partialgen.Partialable
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 // TODO: check what the commented out parts are
-@Partial
+@Partialable
 @Serializable
 data class ApiUserSettings(
     @SerialName("locale")
@@ -131,18 +131,15 @@ data class ApiGuildFolder(
 
     @SerialName("name")
     val name: String? = null,
-
-//    @SerialName("color")
-//    val color: Any? = null,
 )
 
 @Serializable
 data class ApiCustomStatus(
     @SerialName("text")
-    val text: String,
+    val text: String?,
 
     @SerialName("expires_at")
-    val expiresAt: String, // timestamp
+    val expiresAt: String?,
 
     @SerialName("emoji_id")
     val emojiId: ApiSnowflake?,

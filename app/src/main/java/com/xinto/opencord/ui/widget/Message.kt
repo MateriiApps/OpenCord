@@ -8,7 +8,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,6 +23,8 @@ import androidx.compose.ui.unit.sp
 import com.xinto.opencord.BuildConfig
 import com.xinto.opencord.R
 import com.xinto.opencord.ui.component.OCAsyncImage
+import com.xinto.opencord.ui.util.ContentAlpha
+import com.xinto.opencord.ui.util.ProvideContentAlpha
 
 @Composable
 fun WidgetChatMessage(
@@ -210,9 +211,7 @@ fun WidgetMessageAuthor(
                     }
             )
         }
-        CompositionLocalProvider(
-            LocalContentColor provides LocalContentColor.current.copy(alpha = 0.7f)
-        ) {
+        ProvideContentAlpha(ContentAlpha.low) {
             Text("·")
             ProvideTextStyle(MaterialTheme.typography.labelSmall) {
                 Text(timestamp)

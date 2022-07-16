@@ -188,16 +188,50 @@ fun ApiMessagePartial.toDomain(): DomainMessageRegularPartial {
 }
 
 fun ApiUser.toDomain(): DomainUser {
-    val avatarUrl = avatar?.let { avatar ->
-        DiscordCdnServiceImpl.getUserAvatarUrl(id.toString(), avatar)
-    } ?: DiscordCdnServiceImpl.getDefaultAvatarUrl(discriminator.toInt().rem(5))
-    return DomainUser(
-        id = id.value,
-        username = username,
-        discriminator = discriminator,
-        avatarUrl = avatarUrl,
-        bot = bot,
-    )
+    val avatarUrl = avatar
+        ?.let { DiscordCdnServiceImpl.getUserAvatarUrl(id.toString(), it) }
+        ?: DiscordCdnServiceImpl.getDefaultAvatarUrl(discriminator.toInt().rem(5))
+
+    return when {
+        locale != null -> DomainUserPrivate(
+            id = id.value,
+            username = username,
+            discriminator = discriminator,
+            avatarUrl = avatarUrl,
+            bot = bot,
+            bio = bio,
+            flags = (publicFlags ?: 0) or (privateFlags ?: 0),
+            pronouns = pronouns,
+            mfaEnabled = mfaEnabled!!,
+            verified = verified!!,
+            email = email!!,
+            phone = phone,
+            locale = locale,
+        )
+        premium != null -> DomainUserReadyEvent(
+            id = id.value,
+            username = username,
+            discriminator = discriminator,
+            avatarUrl = avatarUrl,
+            bot = bot,
+            bio = bio,
+            flags = privateFlags ?: 0,
+            mfaEnabled = mfaEnabled!!,
+            verified = verified!!,
+            premium = premium,
+            purchasedFlags = purchasedFlags!!,
+        )
+        else -> DomainUserPublic(
+            id = id.value,
+            username = username,
+            discriminator = discriminator,
+            avatarUrl = avatarUrl,
+            bot = bot,
+            bio = bio,
+            flags = (publicFlags ?: 0) or (privateFlags ?: 0),
+            pronouns = pronouns,
+        )
+    }
 }
 
 fun ApiPermissions.toDomain(): List<DomainPermission> {
@@ -339,7 +373,7 @@ fun ApiGuildFolder.toDomain(): DomainGuildFolder {
 fun ApiCustomStatus.toDomain(): DomainCustomStatus {
     return DomainCustomStatus(
         text = text,
-        expiresAt = Instant.DISTANT_FUTURE,
+        expiresAt = expiresAt?.let { Instant.parse(it) },
         emojiId = emojiId?.value,
         emojiName = emojiName,
     )
@@ -373,7 +407,7 @@ fun ApiActivity.toDomain(): DomainActivity {
             createdAt = createdAt ?: 0,
             id = id!!,
             flags = flags!!,
-            state  = state!!,
+            state = state!!,
             details = details!!,
             syncId = syncId!!,
             party = party!!.toDomain(),
@@ -384,7 +418,7 @@ fun ApiActivity.toDomain(): DomainActivity {
         ActivityType.Custom -> DomainActivityCustom(
             name = name,
             createdAt = createdAt ?: 0,
-            state = state!!,
+            status = state,
             emoji = emoji?.toDomain()
         )
         else -> DomainActivityUnknown(

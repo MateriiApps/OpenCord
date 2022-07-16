@@ -30,10 +30,13 @@ import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainChannel
+import com.xinto.opencord.domain.model.DomainCustomStatus
 import com.xinto.opencord.domain.model.DomainGuild
 import com.xinto.opencord.domain.model.DomainUserStatus
 import com.xinto.opencord.ui.component.OCAsyncImage
 import com.xinto.opencord.ui.component.OCBadgeBox
+import com.xinto.opencord.ui.util.ContentAlpha
+import com.xinto.opencord.ui.util.ProvideContentAlpha
 import com.xinto.opencord.ui.viewmodel.ChannelsViewModel
 import com.xinto.opencord.ui.viewmodel.CurrentUserViewModel
 import com.xinto.opencord.ui.viewmodel.GuildsViewModel
@@ -169,9 +172,11 @@ private fun CurrentUserItem(
     onSettingsClick: () -> Unit,
     viewModel: CurrentUserViewModel = getViewModel()
 ) {
+    var showStatusSheet by remember { mutableStateOf(false) }
+
     Surface(
         modifier = modifier,
-        onClick = { /*TODO*/ },
+        onClick = { showStatusSheet = true },
         shape = MaterialTheme.shapes.medium,
         tonalElevation = 1.dp
     ) {
@@ -196,6 +201,12 @@ private fun CurrentUserItem(
 
             }
         }
+    }
+
+    if (showStatusSheet) {
+        CurrentUserSheet(
+            onClose = { showStatusSheet = false },
+        )
     }
 }
 
@@ -253,7 +264,7 @@ private fun CurrentUserItemLoaded(
     discriminator: String,
     status: DomainUserStatus?,
     isStreaming: Boolean,
-    customStatus: String?,
+    customStatus: DomainCustomStatus?,
 ) {
     WidgetCurrentUser(
         avatar = {
@@ -276,7 +287,7 @@ private fun CurrentUserItemLoaded(
         },
         username = { Text(username) },
         discriminator = { Text(discriminator) },
-        customStatus = customStatus?.ifNotNullComposable { Text(it) },
+        customStatus = customStatus?.text?.ifNotNullComposable { Text(it) },
         buttons = {
             IconButton(onClick = onSettingsClick) {
                 Icon(
@@ -284,7 +295,7 @@ private fun CurrentUserItemLoaded(
                     contentDescription = "Open settings"
                 )
             }
-        }
+        },
     )
 }
 
@@ -344,8 +355,8 @@ private fun GuildsListLoading(
 
 @Composable
 private fun GuildsListLoaded(
-    onGuildSelect: (ULong) -> Unit,
-    selectedGuildId: ULong,
+    onGuildSelect: (Long) -> Unit,
+    selectedGuildId: Long,
     guilds: List<DomainGuild>,
     modifier: Modifier = Modifier
 ) {
@@ -516,14 +527,14 @@ private fun ChannelsListLoading(
 
 @Composable
 private fun ChannelsListLoaded(
-    onChannelSelect: (ULong) -> Unit,
-    onCategoryClick: (ULong) -> Unit,
-    selectedChannelId: ULong,
+    onChannelSelect: (Long) -> Unit,
+    onCategoryClick: (Long) -> Unit,
+    selectedChannelId: Long,
     bannerUrl: String?,
     boostLevel: Int,
     guildName: String,
     channels: Map<DomainChannel.Category?, List<DomainChannel>>,
-    collapsedCategories: List<ULong>,
+    collapsedCategories: List<Long>,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -602,32 +613,35 @@ private fun ChannelsListLoaded(
         for ((category, categoryChannels) in channels) {
             //TODO put this in remember
             val collapsed = collapsedCategories.contains(category?.id)
+
             if (category != null) {
                 item {
-                    val iconRotation by animateFloatAsState(
-                        targetValue = if (collapsed) -90f else 0f,
-                        animationSpec = spring(
-                            dampingRatio = Spring.DampingRatioMediumBouncy,
-                            stiffness = Spring.StiffnessLow
-                        )
-                    )
-                    WidgetCategory(
-                        modifier = Modifier.padding(
-                            top = 12.dp,
-                            bottom = 4.dp
-                        ),
-                        title = { Text(category.capsName) },
-                        icon = {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_keyboard_arrow_down),
-                                contentDescription = "Collapse category",
-                                modifier = Modifier.rotate(iconRotation)
+                    ProvideContentAlpha(ContentAlpha.medium) {
+                        val iconRotation by animateFloatAsState(
+                            targetValue = if (collapsed) -90f else 0f,
+                            animationSpec = spring(
+                                dampingRatio = Spring.DampingRatioMediumBouncy,
+                                stiffness = Spring.StiffnessLow
                             )
-                        },
-                        onClick = {
-                            onCategoryClick(category.id)
-                        },
-                    )
+                        )
+                        WidgetCategory(
+                            modifier = Modifier.padding(
+                                top = 12.dp,
+                                bottom = 4.dp
+                            ),
+                            title = { Text(category.capsName) },
+                            icon = {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_keyboard_arrow_down),
+                                    contentDescription = "Collapse category",
+                                    modifier = Modifier.rotate(iconRotation)
+                                )
+                            },
+                            onClick = {
+                                onCategoryClick(category.id)
+                            },
+                        )
+                    }
                 }
             }
 

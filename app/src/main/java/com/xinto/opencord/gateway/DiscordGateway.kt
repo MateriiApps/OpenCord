@@ -28,7 +28,6 @@ import java.util.zip.InflaterOutputStream
 import kotlin.coroutines.CoroutineContext
 
 interface DiscordGateway : CoroutineScope {
-
     sealed interface State {
         object Started : State
         object Connected : State
@@ -37,17 +36,15 @@ interface DiscordGateway : CoroutineScope {
     }
 
     val events: SharedFlow<Event>
-
     val state: SharedFlow<State>
 
     suspend fun connect()
-
     suspend fun disconnect()
 
     fun getSessionId(): String
 
-    suspend fun requestGuildMembers(guildId: ULong)
-
+    suspend fun requestGuildMembers(guildId: Long)
+    suspend fun updatePresence(presence: UpdatePresence)
 }
 
 class DiscordGatewayImpl(
@@ -106,17 +103,6 @@ class DiscordGatewayImpl(
         _state.emit(DiscordGateway.State.Disconnected)
     }
 
-    override suspend fun requestGuildMembers(guildId: ULong) {
-        sendSerializedData(
-            OutgoingPayload(
-                opCode = OpCode.RequestGuildMembers,
-                data = RequestGuildMembers(
-                    guildId = ApiSnowflake(guildId)
-                )
-            )
-        )
-    }
-
     override fun getSessionId(): String {
         return sessionId
     }
@@ -134,7 +120,7 @@ class DiscordGatewayImpl(
                 else -> null
             }
             jsonString?.let { str ->
-                logger.debug("Gateway", str)
+                logger.debug("Gateway", "Inbound: $str")
                 try {
                     json.decodeFromString<IncomingPayload>(str)
                 } catch (e: Exception) {
@@ -151,13 +137,15 @@ class DiscordGatewayImpl(
             when (opCode) {
                 OpCode.Dispatch -> {
                     try {
-                        json.decodeFromJsonElement(EventDeserializationStrategy(eventName!!), data!!)
-                            .let { decodedEvent ->
-                                if (decodedEvent is ReadyEvent) {
-                                    sessionId = decodedEvent.data.sessionId
-                                }
-                                _events.emit(decodedEvent)
+                        json.decodeFromJsonElement(
+                            EventDeserializationStrategy(eventName!!),
+                            data!!
+                        ).let { decodedEvent ->
+                            if (decodedEvent is ReadyEvent) {
+                                sessionId = decodedEvent.data.sessionId
                             }
+                            _events.emit(decodedEvent)
+                        }
                     } catch (e: Exception) {
 //                        e.printStackTrace()
                     }
@@ -179,7 +167,7 @@ class DiscordGatewayImpl(
                     logger.debug("Gateway", "Invalid Session, canResume: $canResume")
                 }
                 OpCode.HeartbeatAck -> {
-                    logger.debug("Gateway", "Heartbeat Acked!")
+                    logger.info("Gateway", "Heartbeat Acked!")
                 }
                 else -> {}
             }
@@ -244,7 +232,24 @@ class DiscordGatewayImpl(
 
     private suspend inline fun <reified T> sendSerializedData(data: T) {
         val json = json.encodeToString(data)
+        logger.debug("Gateway", "Outbound: $json")
         webSocketSession.send(Frame.Text(json))
+    }
+
+    override suspend fun requestGuildMembers(guildId: Long) {
+        sendPayload(
+            opCode = OpCode.RequestGuildMembers,
+            data = RequestGuildMembers(
+                guildId = ApiSnowflake(guildId)
+            )
+        )
+    }
+
+    override suspend fun updatePresence(presence: UpdatePresence) {
+        sendPayload(
+            opCode = OpCode.PresenceUpdate,
+            data = presence,
+        )
     }
 }
 

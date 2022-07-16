@@ -1,14 +1,14 @@
 package com.xinto.opencord.domain.model
 
 import com.xinto.enumgetter.GetterGen
-import com.xinto.partialgen.Partial
+import com.xinto.partialgen.Partialable
 import kotlinx.datetime.Instant
 
-@Partial
+@Partialable
 data class DomainUserSettings(
     val locale: String,
     val showCurrentGame: Boolean,
-//    val restrictedGuilds: List<ULong>
+//    val restrictedGuilds: List<Long>
 //    val defaultGuildsRestricted: Boolean,
     val inlineAttachmentMedia: Boolean,
     val inlineEmbedMedia: Boolean,
@@ -23,7 +23,7 @@ data class DomainUserSettings(
     val disableGamesTab: Boolean,
     val theme: DomainThemeSetting,
     val developerMode: Boolean,
-    val guildPositions: List<ULong>,
+    val guildPositions: List<Long>,
     val detectPlatformAccounts: Boolean,
     val status: DomainUserStatus,
     val afkTimeout: Int,
@@ -48,17 +48,16 @@ data class DomainFriendSources(
 )
 
 data class DomainGuildFolder(
-    // Null id means all the guildIds are outside of a folder
-    val id: ULong? = null,
-    val guildIds: List<ULong>,
-    val name: String? = null,
-//    val color: Any? = null,
+    /** null means it is outside a folder */
+    val id: Long?,
+    val guildIds: List<Long>,
+    val name: String?,
 )
 
 data class DomainCustomStatus(
-    val text: String,
+    val text: String?,
     val expiresAt: Instant?,
-    val emojiId: ULong?,
+    val emojiId: Long?,
     val emojiName: String?
 )
 

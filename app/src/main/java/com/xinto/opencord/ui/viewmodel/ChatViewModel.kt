@@ -36,7 +36,7 @@ class ChatViewModel(
     var state by mutableStateOf<State>(State.Unselected)
         private set
 
-    val messages = mutableStateMapOf<ULong, DomainMessage>()
+    val messages = mutableStateMapOf<Long, DomainMessage>()
     var channelName by mutableStateOf("")
         private set
     var userMessage by mutableStateOf("")
@@ -124,7 +124,7 @@ class ChatViewModel(
             messages.remove(event.data.messageId.value)
         }
 
-        if (persistentChannelId != 0UL) {
+        if (persistentChannelId != 0L) {
             load()
         }
     }
