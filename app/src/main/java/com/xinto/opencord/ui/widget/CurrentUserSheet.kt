@@ -63,13 +63,14 @@ fun CurrentUserSheet(
 
             ProvideTextStyle(MaterialTheme.typography.labelLarge) {
                 if (viewModel.userCustomStatus != null) {
-                    // Custom status
+                    // Custom status canceller
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 25.dp, vertical = 12.dp)
                     ) {
-                        Text(viewModel.userCustomStatus!!.text)
+                        // TODO: draw status emoji here
+                        Text(viewModel.userCustomStatus!!.text ?: "")
                         Icon(
                             painter = painterResource(R.drawable.ic_cancel),
                             contentDescription = "Clear status",
