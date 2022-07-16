@@ -371,7 +371,7 @@ fun ApiGuildFolder.toDomain(): DomainGuildFolder {
 fun ApiCustomStatus.toDomain(): DomainCustomStatus {
     return DomainCustomStatus(
         text = text,
-        expiresAt = Instant.DISTANT_FUTURE,
+        expiresAt = expiresAt?.let { Instant.parse(it) },
         emojiId = emojiId?.value,
         emojiName = emojiName,
     )
@@ -416,7 +416,7 @@ fun ApiActivity.toDomain(): DomainActivity {
         ActivityType.Custom -> DomainActivityCustom(
             name = name,
             createdAt = createdAt ?: 0,
-            state = state!!,
+            status = state,
             emoji = emoji?.toDomain()
         )
         else -> DomainActivityUnknown(

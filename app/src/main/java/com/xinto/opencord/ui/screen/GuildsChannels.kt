@@ -287,7 +287,7 @@ private fun CurrentUserItemLoaded(
         },
         username = { Text(username) },
         discriminator = { Text(discriminator) },
-        customStatus = customStatus?.ifNotNullComposable { Text(it.text) },
+        customStatus = customStatus?.text?.ifNotNullComposable { Text(it) },
         buttons = {
             IconButton(onClick = onSettingsClick) {
                 Icon(

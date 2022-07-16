@@ -93,7 +93,7 @@ class CurrentUserViewModel(
             if (status != null) {
                 activities += DomainActivityCustom(
                     name = "Custom Status",
-                    state = status.text,
+                    status = status.text,
                     createdAt = currentMillis,
                     emoji = if (status.emojiId == null || status.emojiName == null) null else {
                         DomainActivityEmoji(

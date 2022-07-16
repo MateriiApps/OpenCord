@@ -68,7 +68,7 @@ fun DomainGuildFolder.toApi(): ApiGuildFolder {
 fun DomainCustomStatus.toApi(): ApiCustomStatus {
     return ApiCustomStatus(
         text = text,
-        expiresAt = "", // TODO: fix this here
+        expiresAt = null, // TODO: make timestamp serializer
         emojiId = emojiId?.let { ApiSnowflake(it) },
         emojiName = emojiName,
     )
@@ -117,7 +117,7 @@ fun DomainActivity.toApi(): ApiActivity {
             type = type.value,
             name = name,
             createdAt = createdAt,
-            state = state,
+            state = status,
             emoji = emoji?.toApi()
         )
         else -> {

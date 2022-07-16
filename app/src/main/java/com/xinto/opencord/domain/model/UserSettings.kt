@@ -48,15 +48,14 @@ data class DomainFriendSources(
 )
 
 data class DomainGuildFolder(
-    // Null id means all the guildIds are outside of a folder
+    /** null means it is outside a folder */
     val id: Long?,
     val guildIds: List<Long>,
     val name: String?,
-//    val color: Any?,
 )
 
 data class DomainCustomStatus(
-    val text: String,
+    val text: String?,
     val expiresAt: Instant?,
     val emojiId: Long?,
     val emojiName: String?

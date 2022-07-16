@@ -131,18 +131,15 @@ data class ApiGuildFolder(
 
     @SerialName("name")
     val name: String? = null,
-
-//    @SerialName("color")
-//    val color: Any? = null,
 )
 
 @Serializable
 data class ApiCustomStatus(
     @SerialName("text")
-    val text: String,
+    val text: String?,
 
     @SerialName("expires_at")
-    val expiresAt: String?, // timestamp
+    val expiresAt: String?,
 
     @SerialName("emoji_id")
     val emojiId: ApiSnowflake?,

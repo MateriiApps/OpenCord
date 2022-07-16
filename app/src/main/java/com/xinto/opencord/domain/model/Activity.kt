@@ -68,7 +68,7 @@ data class DomainActivityListening(
 data class DomainActivityCustom(
     override val name: String,
     override val createdAt: Long,
-    val state: String,
+    val status: String?,
     val emoji: DomainActivityEmoji?,
 ) : DomainActivity {
     override val type = ActivityType.Custom
