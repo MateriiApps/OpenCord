@@ -91,18 +91,17 @@ android {
         kotlinCompilerExtensionVersion = Dependencies.Compose.version
     }
 
-    // TODO: fix this
-//    androidComponents {
-//        onVariants(selector().withBuildType("release")) {
-//            packagingOptions.resources {
-//                // Debug metadata
-//                excludes += "/**/*.version"
-//                excludes += "/kotlin-tooling-metadata.json"
-//                // Kotlin debugging (https://github.com/Kotlin/kotlinx.coroutines/issues/2274)
-//                excludes += "/DebugProbesKt.bin"
-//            }
-//        }
-//    }
+    androidComponents {
+        onVariants(selector().withBuildType("release")) {
+            it.packaging.resources.excludes.apply {
+                // Debug metadata
+                add("/**/*.version")
+                add("/kotlin-tooling-metadata.json")
+                // Kotlin debugging (https://github.com/Kotlin/kotlinx.coroutines/issues/2274)
+                add("/DebugProbesKt.bin")
+            }
+        }
+    }
 
     packagingOptions {
         resources {
