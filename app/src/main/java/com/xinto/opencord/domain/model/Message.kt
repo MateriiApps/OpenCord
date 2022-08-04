@@ -28,7 +28,10 @@ data class DomainMessageRegular(
     val attachments: List<DomainAttachment>,
     val embeds: List<DomainEmbed>,
     val isReply: Boolean,
-    val referencedMessage: DomainMessageRegular?
+    val referencedMessage: DomainMessageRegular?,
+    val mentionEveryone: Boolean,
+//    val mentionedRoles: List<DomainRole>,
+    val mentions: List<DomainUser>,
 ): DomainMessage(), KoinComponent {
     private val parser: SimpleAstParser = get()
 

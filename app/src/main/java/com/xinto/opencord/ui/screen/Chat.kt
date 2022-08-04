@@ -99,6 +99,7 @@ fun ChatScreen(
                 is ChatViewModel.State.Loaded -> {
                     ChatScreenLoaded(
                         messages = sortedMessages,
+                        currentUserId = viewModel.currentUserId,
                         channelName = viewModel.channelName,
                         userMessage = viewModel.userMessage,
                         sendEnabled = viewModel.sendEnabled,
@@ -143,7 +144,7 @@ private fun ChatScreenLoading(
                 state = rememberScrollState(),
                 enabled = false
             )
-        )
+    )
     {
         repeat(10) {
             WidgetChatMessage(
@@ -159,7 +160,7 @@ private fun ChatScreenLoading(
                 },
                 author = {
                     //TODO use WidgetMessageAuthor
-                    val width = remember { (30..100).random().dp  }
+                    val width = remember { (30..100).random().dp }
                     Box(
                         modifier = Modifier
                             .shimmer(shimmer)
@@ -197,6 +198,7 @@ private fun ChatScreenLoading(
 @Composable
 private fun ChatScreenLoaded(
     messages: List<DomainMessage>,
+    currentUserId: Long?,
     channelName: String,
     userMessage: String,
     sendEnabled: Boolean,
@@ -225,6 +227,16 @@ private fun ChatScreenLoaded(
         ) {
             items(messages, key = { it.id }) { message ->
                 var showBottomDialog by rememberSaveable { mutableStateOf(false) }
+                val mentioned by remember {
+                    derivedStateOf {
+                        if (message !is DomainMessageRegular) false
+                        else {
+                            message.mentions.any { it.id == currentUserId }
+                                    || message.mentionEveryone
+                        }
+                    }
+                }
+
                 when (message) {
                     is DomainMessageRegular -> {
                         WidgetChatMessage(
@@ -235,6 +247,7 @@ private fun ChatScreenLoaded(
                                     onClick = {},
                                     onLongClick = { showBottomDialog = true }
                                 ),
+                            mentioned = mentioned,
                             reply = message.isReply.ifComposable {
                                 val referencedMessage = message.referencedMessage
                                 if (referencedMessage != null) {
