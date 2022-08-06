@@ -8,8 +8,7 @@ import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -19,16 +18,15 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.hcaptcha.sdk.HCaptcha
+import com.hcaptcha.sdk.HCaptchaError
 import com.xinto.opencord.R
 import com.xinto.opencord.ui.viewmodel.LoginViewModel
-import org.koin.androidx.compose.get
 import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun LoginScreen(
     onBackClick: () -> Unit,
     viewModel: LoginViewModel = getViewModel(),
-    hCaptcha: HCaptcha = get()
 ) {
     val context = LocalContext.current
     Scaffold(
@@ -105,14 +103,18 @@ fun LoginScreen(
     }
 
     if (viewModel.showCaptcha) {
-        hCaptcha.verifyWithHCaptcha()
-            .addOnSuccessListener {
-                viewModel.login(it.tokenResult)
+        HCaptcha(
+            onSuccess = {
+                viewModel.login(it)
+            },
+            onFailure = { error, code ->
+                Toast.makeText(
+                    context,
+                    "Captcha failed for: ${error.message}, code $code. Try again",
+                    Toast.LENGTH_LONG
+                ).show()
             }
-            .addOnFailureListener {
-                //TODO do more than just showing a toast i guess
-                Toast.makeText(context, "Captcha failed, try again", Toast.LENGTH_LONG).show()
-            }
+        )
     }
 
     if (viewModel.showMfa) {
@@ -172,5 +174,25 @@ private fun LoginAppBar(
                 modifier = Modifier.fillMaxWidth()
             )
         }
+    }
+}
+
+@Composable
+fun HCaptcha(
+    onSuccess: (token: String) -> Unit,
+    onFailure: (HCaptchaError, code: Int) -> Unit,
+) {
+    val context = LocalContext.current
+    val hcaptcha = remember {
+        HCaptcha.getClient(context)
+    }
+    LaunchedEffect(Unit) {
+        hcaptcha.verifyWithHCaptcha()
+            .addOnSuccessListener {
+                onSuccess(it.tokenResult)
+            }
+            .addOnFailureListener {
+                onFailure(it.hCaptchaError, it.statusCode)
+            }
     }
 }
