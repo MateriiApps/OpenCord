@@ -32,7 +32,7 @@ fun ChannelPinsScreen(
     modifier: Modifier = Modifier,
     viewModel: ChannelPinsViewModel = getViewModel()
 ) {
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarScrollState())
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     Scaffold(
         modifier = modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
