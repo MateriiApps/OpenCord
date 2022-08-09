@@ -87,7 +87,23 @@
     - [ ] Guild
     - [ ] Tag 
 - [ ] Direct Messages
-- [ ] User Settings
+- [ ] Voice Activity
+  - [ ] Communication 
+  - [ ] Mute
+  - [ ] Deafen
+  - [ ] Screenshare
+  - [ ] Chat
+- [ ] Logged-in User
+  - [x] Status
+    - [x] Text
+    - [x] Indicator
+      - [x] Online
+      - [x] Idle
+      - [x] DND
+      - [x] Offline
+  - [ ] Settings
+  - [ ] Mentions
+- [ ] Logged-in User Settings
   - [ ] Avatar
   - [ ] Bio
   - [ ] Banner
@@ -95,13 +111,7 @@
   - [ ] Tag
   - [ ] Status
     - [ ] Text
-    - [x] Indicator
-- [ ] Voice Activity
-  - [ ] Communication 
-  - [ ] Mute
-  - [ ] Deafen
-  - [ ] Screenshare
-  - [ ] Chat
+    - [x] Indicator 
 
 ## App
 - [ ] Multiplatform
