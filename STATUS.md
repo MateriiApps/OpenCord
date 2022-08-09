@@ -18,9 +18,11 @@
     - [ ] Reactions
     - [ ] Sender
       - [ ] Avatar
+        - [ ] Guild
+        - [x] User
       - [ ] Name
-        - [ ] Nickname
-        - [x] Username
+        - [ ] Guild
+        - [x] User
     - [ ] Slash commands
   - [ ] Sending
     - [x] Text
@@ -56,6 +58,8 @@
     - [x] Announcement
     - [x] Voice
     - [ ] Thread
+    - [ ] Forum
+    - [ ] Rules
   - [ ] Category
     - [x] Collapse/Expand
   - [ ] Unread indicator
@@ -79,8 +83,8 @@
   - [ ] Banner
   - [ ] Connections
   - [ ] Name
-    - [ ] Nickname
-    - [ ] Username
+    - [ ] User
+    - [ ] Guild
     - [ ] Tag 
 - [ ] Direct Messages
 - [ ] User Settings
@@ -98,3 +102,12 @@
   - [ ] Deafen
   - [ ] Screenshare
   - [ ] Chat
+
+## App
+- [ ] Multiplatform
+  - [x] Android
+  - [ ] Windows
+  - [ ] Linux
+  - [ ] macOS
+- [ ] Plugins
+- [ ] Themes
