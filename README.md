@@ -15,10 +15,12 @@ project is to reimagine the Discord experience on mobile devices.
 
 Status of OpenCord
 ------------------
-- [ ] Full (or at least most essential) Discord feature implementation (for more information see [status](/STATUS.md))
+- [ ] Full (or at least most essential) Discord feature implementation
 - [ ] Theme support
 - [ ] Plugin support
 - [ ] Multiplatform support (Windows, macOS, Linux, Android)
+
+#### for more information see [status](/STATUS.md)
 
 Building
 --------
