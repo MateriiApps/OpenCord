@@ -32,16 +32,16 @@ class ChannelsViewModel(
     var state by mutableStateOf<State>(State.Unselected)
         private set
 
-    val channels = mutableStateMapOf<ULong, DomainChannel>()
+    val channels = mutableStateMapOf<Long, DomainChannel>()
     var guildName by mutableStateOf("")
         private set
     var guildBannerUrl by mutableStateOf<String?>(null)
         private set
     var guildBoostLevel by mutableStateOf(0)
 
-    var selectedChannelId by mutableStateOf(0UL)
+    var selectedChannelId by mutableStateOf(0L)
         private set
-    val collapsedCategories = mutableStateListOf<ULong>()
+    val collapsedCategories = mutableStateListOf<Long>()
 
     fun load() {
         viewModelScope.launch {
@@ -62,12 +62,12 @@ class ChannelsViewModel(
         }
     }
 
-    fun selectChannel(channelId: ULong) {
+    fun selectChannel(channelId: Long) {
         selectedChannelId = channelId
         persistentChannelId = channelId
     }
 
-    fun toggleCategory(categoryId: ULong) {
+    fun toggleCategory(categoryId: Long) {
         if (persistentCollapsedCategories.contains(categoryId))
             addPersistentCollapseCategory(categoryId)
         else {
@@ -83,10 +83,10 @@ class ChannelsViewModel(
     }
 
     init {
-        if (persistentGuildId != 0UL) {
+        if (persistentGuildId != 0L) {
             load()
         }
-        if (persistentChannelId != 0UL) {
+        if (persistentChannelId != 0L) {
             selectedChannelId = persistentChannelId
         }
         collapsedCategories.addAll(persistentDataManager.collapsedCategories)

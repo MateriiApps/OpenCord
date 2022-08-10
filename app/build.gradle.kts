@@ -29,6 +29,7 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -44,8 +45,12 @@ android {
 
             buildConfigField("String", "URL_API", "\"https://discord.com/api/v9\"")
             buildConfigField("String", "URL_CDN", "\"https://cdn.discordapp.com\"")
-            buildConfigField("String", "URL_GATEWAY", "\"wss://gateway.discord.gg/?v=9&encoding=json&compress=zlib-stream\"")
             buildConfigField("String", "CAPTCHA_KEY", "\"f5561ba9-8f1e-40ca-9b5b-a0b3f719ef34\"")
+            buildConfigField(
+                "String",
+                "URL_GATEWAY",
+                "\"wss://gateway.discord.gg/?v=9&encoding=json&compress=zlib-stream\""
+            )
         }
 
         create("fosscord") {
@@ -56,8 +61,12 @@ android {
 
             buildConfigField("String", "URL_API", "\"https://api.fosscord.com/api/v9\"")
             buildConfigField("String", "URL_CDN", "\"https://cdn.fosscord.com\"")
-            buildConfigField("String", "URL_GATEWAY", "\"wss://gateway.fosscord.com/?v=9&encoding=json&compress=zlib-stream\"")
             buildConfigField("String", "CAPTCHA_KEY", "\"\"") //TODO
+            buildConfigField(
+                "String",
+                "URL_GATEWAY",
+                "\"wss://gateway.fosscord.com/?v=9&encoding=json&compress=zlib-stream\""
+            )
         }
     }
 
@@ -84,9 +93,34 @@ android {
         kotlinCompilerExtensionVersion = Dependencies.Compose.version
     }
 
+    androidComponents {
+        onVariants(selector().withBuildType("release")) {
+            it.packaging.resources.excludes.apply {
+                // Debug metadata
+                add("/**/*.version")
+                add("/kotlin-tooling-metadata.json")
+                // Kotlin debugging (https://github.com/Kotlin/kotlinx.coroutines/issues/2274)
+                add("/DebugProbesKt.bin")
+            }
+        }
+    }
+
     packagingOptions {
         resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            // Lombok
+            excludes += "/AUTHORS"
+            excludes += "/latestchanges.html"
+            excludes += "/release-timestamp.txt"
+            excludes += "/changelog.txt"
+            excludes += "/README.md"
+            excludes += "/lombok/**"
+            excludes += "/**/*.lombok"
+
+            // Reflection symbol list (https://stackoverflow.com/a/41073782/13964629)
+            excludes += "/**/*.kotlin_builtins"
+
+            // okhttp3 is used by some lib (no cookies so publicsuffixes.gz can be dropped)
+            excludes += "/okhttp3/**"
         }
     }
 
@@ -96,10 +130,6 @@ android {
                 kotlin.srcDir("build/generated/ksp/$name/kotlin")
             }
         }
-    }
-
-    kotlin {
-
     }
 }
 
