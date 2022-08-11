@@ -64,7 +64,7 @@ fun GuildsChannelsScreen(
             GuildsList(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .width(80.dp),
+                    .width(72.dp),
                 onGuildSelect = onGuildSelect,
                 viewModel = guildsViewModel
             )
