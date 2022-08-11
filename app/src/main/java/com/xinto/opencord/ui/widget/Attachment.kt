@@ -27,8 +27,7 @@ fun WidgetAttachmentPicture(
     OCAsyncImage(
         url = url,
         size = Size(width, height),
-        loadingEnabled = false,
-        modifier = modifier.clip(MaterialTheme.shapes.extraSmall),
+        modifier = modifier.clip(MaterialTheme.shapes.small),
         contentScale = ContentScale.Fit,
     )
 }

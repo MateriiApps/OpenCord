@@ -120,10 +120,12 @@ sealed class Dependencies {
         const val version = "0.25.1"
 
         const val systemUiController = "com.google.accompanist:accompanist-systemuicontroller:$version"
+        const val placeholder = "com.google.accompanist:accompanist-placeholder:$version"
 
         override fun invoke(scope: DependencyHandlerScope) {
             scope {
                 implementation(systemUiController)
+                implementation(placeholder)
             }
         }
     }
