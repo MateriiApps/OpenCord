@@ -12,6 +12,7 @@ import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.event.MessageCreateEvent
 import com.xinto.opencord.gateway.event.MessageDeleteEvent
 import com.xinto.opencord.gateway.event.MessageUpdateEvent
+import com.xinto.opencord.gateway.event.ReadyEvent
 import com.xinto.opencord.gateway.onEvent
 import com.xinto.opencord.rest.body.MessageBody
 import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
@@ -35,12 +36,14 @@ class ChatViewModel(
     var state by mutableStateOf<State>(State.Unselected)
         private set
 
-    val messages = mutableStateMapOf<ULong, DomainMessage>()
+    val messages = mutableStateMapOf<Long, DomainMessage>()
     var channelName by mutableStateOf("")
         private set
     var userMessage by mutableStateOf("")
         private set
     var sendEnabled by mutableStateOf(true)
+        private set
+    var currentUserId by mutableStateOf<Long?>(null)
         private set
 
     val startTyping = throttle(9500, viewModelScope) {
@@ -89,6 +92,10 @@ class ChatViewModel(
     }
 
     init {
+        gateway.onEvent<ReadyEvent> {
+            currentUserId = it.data.user.id.value
+        }
+
         gateway.onEvent<MessageCreateEvent>(
             filterPredicate = { it.data.channelId.value == persistentChannelId }
         ) { event ->
@@ -117,9 +124,8 @@ class ChatViewModel(
             messages.remove(event.data.messageId.value)
         }
 
-        if (persistentChannelId != 0UL) {
+        if (persistentChannelId != 0L) {
             load()
         }
     }
-
 }

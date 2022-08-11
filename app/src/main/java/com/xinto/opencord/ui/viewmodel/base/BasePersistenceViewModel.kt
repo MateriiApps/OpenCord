@@ -26,11 +26,11 @@ abstract class BasePersistenceViewModel(
             persistentDataManager.collapsedCategories = value
         }
 
-    protected fun addPersistentCollapseCategory(id: ULong) {
+    protected fun addPersistentCollapseCategory(id: Long) {
         persistentDataManager.addCollapsedCategory(id)
     }
 
-    protected fun removePersistentCollapseCategory(id: ULong) {
+    protected fun removePersistentCollapseCategory(id: Long) {
         persistentDataManager.removeCollapsedCategory(id)
     }
 }

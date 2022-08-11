@@ -8,8 +8,8 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
 sealed class DomainMessage {
-    abstract val id: ULong
-    abstract val channelId: ULong
+    abstract val id: Long
+    abstract val channelId: Long
     abstract val timestamp: Instant
     abstract val content: String
     abstract val author: DomainUser
@@ -19,8 +19,8 @@ sealed class DomainMessage {
 
 @Partialable
 data class DomainMessageRegular(
-    override val id: ULong,
-    override val channelId: ULong,
+    override val id: Long,
+    override val channelId: Long,
     override val timestamp: Instant,
     override val content: String,
     override val author: DomainUser,
@@ -28,7 +28,10 @@ data class DomainMessageRegular(
     val attachments: List<DomainAttachment>,
     val embeds: List<DomainEmbed>,
     val isReply: Boolean,
-    val referencedMessage: DomainMessageRegular?
+    val referencedMessage: DomainMessageRegular?,
+    val mentionEveryone: Boolean,
+//    val mentionedRoles: List<DomainRole>,
+    val mentions: List<DomainUser>,
 ): DomainMessage(), KoinComponent {
     private val parser: SimpleAstParser = get()
 
@@ -37,8 +40,8 @@ data class DomainMessageRegular(
 }
 
 data class DomainMessageMemberJoin(
-    override val id: ULong,
-    override val channelId: ULong,
+    override val id: Long,
+    override val channelId: Long,
     override val timestamp: Instant,
     override val content: String,
     override val author: DomainUser
