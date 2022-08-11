@@ -3,18 +3,18 @@ plugins {
     id("kotlin-android")
     id("kotlin-parcelize")
     kotlin("plugin.serialization")
-    id("com.google.devtools.ksp") version "1.6.20-1.0.5"
+    id("com.google.devtools.ksp") version "1.7.10-1.0.6"
 }
 
 android {
-    compileSdk = 32
+    compileSdk = 33
 
     flavorDimensions.add("api")
 
     defaultConfig {
         applicationId = "com.xinto.opencord"
         minSdk = 21
-        targetSdk = 32
+        targetSdk = 33
         versionCode = 1
         versionName = "0.0.1"
 
@@ -88,7 +88,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = Dependencies.Compose.version
+        kotlinCompilerExtensionVersion = Dependencies.Compose.compilerVersion
     }
 
     androidComponents {
