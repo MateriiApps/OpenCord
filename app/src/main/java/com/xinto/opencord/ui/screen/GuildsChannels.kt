@@ -64,14 +64,14 @@ fun GuildsChannelsScreen(
             GuildsList(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .weight(1f),
+                    .width(72.dp),
                 onGuildSelect = onGuildSelect,
                 viewModel = guildsViewModel
             )
             ChannelsList(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .weight(3.5f),
+                    .weight(1f),
                 onChannelSelect = onChannelSelect,
                 viewModel = channelsViewModel
             )
@@ -398,6 +398,7 @@ private fun GuildsListLoaded(
 
         items(guilds) { guild ->
             WidgetGuildListItem(
+                modifier = Modifier.fillParentMaxWidth(),
                 selected = selectedGuildId == guild.id,
                 showIndicator = true,
                 onClick = {
