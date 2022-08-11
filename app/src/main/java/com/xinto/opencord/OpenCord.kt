@@ -22,6 +22,7 @@ class OpenCord : Application() {
                 viewModelModule,
                 loggerModule,
                 providerModule,
+                hcaptchaModule
             )
         }
     }

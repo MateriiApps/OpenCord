@@ -21,7 +21,9 @@ import com.hcaptcha.sdk.HCaptcha
 import com.hcaptcha.sdk.HCaptchaError
 import com.xinto.opencord.R
 import com.xinto.opencord.ui.viewmodel.LoginViewModel
+import org.koin.androidx.compose.get
 import org.koin.androidx.compose.getViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun LoginScreen(
@@ -183,10 +185,7 @@ fun HCaptcha(
     onFailure: (HCaptchaError, code: Int) -> Unit,
 ) {
     val context = LocalContext.current
-    val hcaptcha = remember {
-        HCaptcha.getClient(context)
-    }
-    LaunchedEffect(Unit) {
+    val hcaptcha: HCaptcha = get { parametersOf(context) }
         hcaptcha.verifyWithHCaptcha()
             .addOnSuccessListener {
                 onSuccess(it.tokenResult)
@@ -194,5 +193,4 @@ fun HCaptcha(
             .addOnFailureListener {
                 onFailure(it.hCaptchaError, it.statusCode)
             }
-    }
 }

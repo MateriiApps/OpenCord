@@ -7,21 +7,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.SideEffect
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.hcaptcha.sdk.HCaptcha
-import com.hcaptcha.sdk.HCaptchaConfig
-import com.xinto.opencord.BuildConfig
 import com.xinto.opencord.ui.screen.LoginRootScreen
 import com.xinto.opencord.ui.theme.OpenCordTheme
+import org.koin.android.ext.android.get
+import org.koin.core.parameter.parametersOf
 
 class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val config = HCaptchaConfig.builder()
-            .siteKey(BuildConfig.CAPTCHA_KEY) // doubt this will ever change
-            .resetOnTimeout(true)
-            .build()
-        HCaptcha.getClient(this).setup(config)
-
+        get<HCaptcha> { parametersOf(this) } //load client at start
         setContent {
             OpenCordTheme {
                 val systemUiController = rememberSystemUiController()
