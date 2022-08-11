@@ -20,6 +20,8 @@ Status of OpenCord
 - [ ] Plugin support
 - [ ] Multiplatform support (Windows, macOS, Linux, Android)
 
+#### for more information see [status](/STATUS.md)
+
 Building
 --------
 ### Build the project
