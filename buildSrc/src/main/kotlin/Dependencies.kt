@@ -87,14 +87,15 @@ sealed class Dependencies {
     }
 
     object Compose : Dependencies() {
-        const val version = "1.2.0"
+        const val version = "1.2.1"
+        const val compilerVersion = "1.3.0"
 
         const val activity = "androidx.activity:activity-compose:1.5.1"
         const val animation = "androidx.compose.animation:animation:$version"
-        const val compiler = "androidx.compose.compiler:compiler:$version"
+        const val compiler = "androidx.compose.compiler:compiler:$compilerVersion"
         const val foundation = "androidx.compose.foundation:foundation:$version"
         const val material = "androidx.compose.material:material:$version"
-        const val material3 = "androidx.compose.material3:material3:1.0.0-alpha15"
+        const val material3 = "androidx.compose.material3:material3:1.0.0-alpha16"
         const val runtime = "androidx.compose.runtime:runtime:$version"
         const val ui = "androidx.compose.ui:ui:$version"
         const val uiText = "androidx.compose.ui:ui-text:$version"
@@ -116,7 +117,7 @@ sealed class Dependencies {
     }
 
     object Accompanist : Dependencies() {
-        const val version = "0.25.0"
+        const val version = "0.25.1"
 
         const val systemUiController = "com.google.accompanist:accompanist-systemuicontroller:$version"
 
@@ -208,7 +209,7 @@ sealed class Dependencies {
     }
 
     object KSP : Dependencies() {
-        const val version = "1.7.0-1.0.6"
+        const val version = "1.7.10-1.0.6"
 
         const val ksp = "com.google.devtools.ksp:symbol-processing-api:$version"
 
