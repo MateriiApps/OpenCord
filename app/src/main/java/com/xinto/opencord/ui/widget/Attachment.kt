@@ -42,7 +42,7 @@ fun WidgetAttachmentVideo(
         ExoPlayer.Builder(context)
             .build()
             .apply {
-                addMediaItem(MediaItem.fromUri(url))
+                setMediaItem(MediaItem.fromUri(url))
                 prepare()
             }
     }
@@ -57,7 +57,9 @@ fun WidgetAttachmentVideo(
                         FrameLayout.LayoutParams.MATCH_PARENT,
                         FrameLayout.LayoutParams.WRAP_CONTENT,
                     )
-                    controllerShowTimeoutMs = 1000
+                    setShowNextButton(false)
+                    setShowPreviousButton(false)
+                    controllerShowTimeoutMs = 2000
                 }
             },
         )
