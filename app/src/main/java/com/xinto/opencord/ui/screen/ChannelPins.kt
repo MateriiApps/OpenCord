@@ -195,7 +195,7 @@ private fun ChannelPinsLoaded(
                         )
                     }
                 }
-                else -> {/* ignore */}
+                else -> {}
             }
         }
     }

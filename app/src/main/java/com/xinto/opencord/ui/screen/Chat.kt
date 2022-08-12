@@ -320,7 +320,7 @@ private fun ChatScreenLoaded(
                                         is DomainAttachment.Picture -> {
                                             WidgetAttachmentPicture(
                                                 modifier = Modifier
-                                                    .heightIn(max = 350.dp),
+                                                    .heightIn(max = 400.dp),
                                                 url = attachment.proxyUrl,
                                                 width = attachment.width,
                                                 height = attachment.height
@@ -332,8 +332,7 @@ private fun ChatScreenLoaded(
                             }
                         )
                     }
-                    else -> {/* ignore */
-                    }
+                    else -> {}
                 }
                 if (showBottomDialog) {
                     MessageActionMenu(
