@@ -326,6 +326,9 @@ private fun ChatScreenLoaded(
                                                 height = attachment.height
                                             )
                                         }
+                                        is DomainAttachment.Video -> {
+                                            WidgetAttachmentVideo(url = attachment.url)
+                                        }
                                         else -> {}
                                     }
                                 }

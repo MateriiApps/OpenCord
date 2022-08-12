@@ -1,6 +1,6 @@
 package com.xinto.opencord.ui.widget
 
-import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -14,7 +14,7 @@ import coil.size.Size
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
-import com.google.android.exoplayer2.ui.PlayerView
+import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.xinto.opencord.ui.component.OCAsyncImage
 
 @Composable
@@ -38,33 +38,28 @@ fun WidgetAttachmentVideo(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-
     val exoPlayer = remember {
-        val exo = ExoPlayer.Builder(context)
+        ExoPlayer.Builder(context)
             .build()
-
-        exo.addMediaItem(MediaItem.fromUri(url))
-
-        return@remember exo
+            .apply {
+                addMediaItem(MediaItem.fromUri(url))
+                prepare()
+            }
     }
-
-    val exoPlayerView = remember {
-        PlayerView(context).apply {
-            //useController = false
-            player = exoPlayer
-            layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-            )
-            useArtwork = true
-            resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH
-        }
-    }
-
     DisposableEffect(
         AndroidView(
             modifier = modifier,
-            factory = { exoPlayerView },
+            factory = {
+                StyledPlayerView(it).apply {
+                    player = exoPlayer
+                    resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH
+                    layoutParams = FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.MATCH_PARENT,
+                        FrameLayout.LayoutParams.WRAP_CONTENT,
+                    )
+                    controllerShowTimeoutMs = 1000
+                }
+            },
         )
     ) {
         onDispose {
