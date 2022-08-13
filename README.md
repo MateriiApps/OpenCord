@@ -1,5 +1,6 @@
 # OpenCord
 [![Discord](https://img.shields.io/discord/885879572447522817.svg?color=blue&label=OpenCord&logo=discord&style=for-the-badge)](https://discord.gg/3y6vbneMsW)
+[![Crowdin](https://badges.crowdin.net/opencord/localized.svg)](https://crowdin.com/project/opencord)
 
 An open-source reimplementation of the Discord Android app.
 
