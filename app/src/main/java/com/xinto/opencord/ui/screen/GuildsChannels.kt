@@ -248,7 +248,7 @@ private fun CurrentUserItemLoading(
             IconButton(onClick = onSettingsClick) {
                 Icon(
                     painter = painterResource(R.drawable.ic_settings),
-                    contentDescription = "Open settings"
+                    contentDescription = stringResource(R.string.settings_open)
                 )
             }
         },
@@ -292,7 +292,7 @@ private fun CurrentUserItemLoaded(
             IconButton(onClick = onSettingsClick) {
                 Icon(
                     painter = painterResource(R.drawable.ic_settings),
-                    contentDescription = "Open settings"
+                    contentDescription = stringResource(R.string.settings_open)
                 )
             }
         },
@@ -326,7 +326,7 @@ private fun GuildsListLoading(
                         .size(32.dp)
                         .align(Alignment.Center),
                     painter = painterResource(R.drawable.ic_discord_logo),
-                    contentDescription = "Home",
+                    contentDescription = stringResource(R.string.guilds_home),
                 )
             }
         }
@@ -379,7 +379,7 @@ private fun GuildsListLoaded(
                             .size(32.dp)
                             .align(Alignment.Center),
                         painter = painterResource(R.drawable.ic_discord_logo),
-                        contentDescription = "Home",
+                        contentDescription = stringResource(R.string.guilds_home),
                     )
                 }
             }
@@ -592,7 +592,7 @@ private fun ChannelsListLoaded(
                     if (boostIcon != null) {
                         Icon(
                             painter = painterResource(id = boostIcon),
-                            contentDescription = "Server boost level icon",
+                            contentDescription = stringResource(R.string.guild_boost_level),
                             modifier = Modifier.size(20.dp),
                             tint = Color.Unspecified,
                         )
@@ -634,7 +634,7 @@ private fun ChannelsListLoaded(
                             icon = {
                                 Icon(
                                     painter = painterResource(R.drawable.ic_keyboard_arrow_down),
-                                    contentDescription = "Collapse category",
+                                    contentDescription = stringResource(R.string.channels_collapse_category),
                                     modifier = Modifier.rotate(iconRotation)
                                 )
                             },
