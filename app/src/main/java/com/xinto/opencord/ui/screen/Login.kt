@@ -160,7 +160,7 @@ private fun LoginAppBar(
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.ArrowBack,
-                        contentDescription = "Back"
+                        contentDescription = stringResource(R.string.navigation_back)
                     )
                 }
             },
