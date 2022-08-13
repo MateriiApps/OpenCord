@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="navigation_back">Back</string>
+    <string name="login_landing_title">Welcome to OpenCord!</string>
+    <string name="login_landing_subtitle">Join over 0 people who use OpenCord as an alternative to the stock Discord app.</string>
+    <string name="login_login_title">Welcome back!</string>
+    <string name="login_login_subtitle">We\'re so excited to see you again!</string>
+    <string name="login_action_login">Login</string>
+    <string name="login_action_register">Register</string>
+    <string name="login_field_username">Email or Phone Number</string>
+    <string name="login_field_password">Password</string>
+    <string name="login_mfa_title">2FA Required!</string>
+    <string name="login_mfa_code">2FA or Backup Code</string>
+    <string name="login_mfa_confirm">Confirm</string>
+    <string name="login_mfa_cancel">Cancel</string>
+    <string name="chat_title">#%1$s</string>
+    <string name="chat_unselected_message">Please select a channel.</string>
+    <string name="chat_input_hint">Message #%1$s</string>
+    <string name="chat_loading_error">An error occurred while loading the chat.</string>
+    <string name="channel_unselected_message">Please select a guild.</string>
+    <string name="channels_collapse_category">Collapse category</string>
+    <string name="pins_title">Pinned Messages</string>
+    <string name="pins_loading_error">An error occurred while loading pinned messages.</string>
+    <string name="settings_title">Settings</string>
+    <string name="settings_open">Open settings</string>
+    <string name="timestamp_tomorrow">Tomorrow at %1$s</string>
+    <string name="timestamp_today">Today at %1$s</string>
+    <string name="timestamp_yesterday">Yesterday at %1$s</string>
+    <string name="message_reply_unknown">Unknown message.</string>
+    <string name="guilds_home">Home</string>
+    <string name="guild_boost_level">Server boost level</string>
+    <string name="current_user_set_status">Set a custom status</string>
+    <string name="current_user_clear_status">Clear status</string>
+    <string name="accounts_open">Open account switcher</string>
+</resources>
