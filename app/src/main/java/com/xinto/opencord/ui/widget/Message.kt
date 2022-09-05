@@ -43,11 +43,18 @@ fun WidgetChatMessage(
         Color.Unspecified
     }
 
+    val isMerged = avatar == null && author == null
+
     Box(modifier = modifier.background(background)) {
         Column(
             modifier = Modifier
                 .wrapContentHeight()
-                .padding(8.dp),
+                .padding(
+                    start = 8.dp,
+                    top = if(!isMerged) 16.dp else 1.dp,
+                    end = 8.dp,
+                    bottom = 1.dp
+                ),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             if (reply != null) {
@@ -78,6 +85,8 @@ fun WidgetChatMessage(
                     ) {
                         avatar()
                     }
+                } else {
+                    Spacer(modifier = Modifier.width(40.dp))
                 }
                 Column(
                     modifier = Modifier.weight(1f),

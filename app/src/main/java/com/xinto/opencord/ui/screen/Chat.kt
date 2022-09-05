@@ -4,7 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -225,7 +225,7 @@ private fun ChatScreenLoaded(
             modifier = Modifier.weight(1f),
             reverseLayout = true,
         ) {
-            items(messages, key = { it.id }) { message ->
+            itemsIndexed(messages, key = { _, m -> m.id }) { i, message ->
                 var showBottomDialog by rememberSaveable { mutableStateOf(false) }
                 val mentioned by remember {
                     derivedStateOf {
@@ -239,6 +239,17 @@ private fun ChatScreenLoaded(
 
                 when (message) {
                     is DomainMessageRegular -> {
+                        val prevMessage = if (i == messages.lastIndex) null else messages[i + 1]
+                        val canMerge = prevMessage != null
+                                && prevMessage is DomainMessageRegular
+                                && message.author.id == prevMessage.author.id
+                                && message.attachments.isEmpty()
+                                && prevMessage.attachments.isEmpty()
+                                && message.embeds.isEmpty()
+                                && prevMessage.embeds.isEmpty()
+                                && !message.isReply
+                                && !prevMessage.isReply
+
                         WidgetChatMessage(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -273,10 +284,10 @@ private fun ChatScreenLoaded(
                                     }
                                 }
                             },
-                            avatar = {
+                            avatar = if (canMerge) null else { ->
                                 WidgetMessageAvatar(url = message.author.avatarUrl)
                             },
-                            author = {
+                            author = if (canMerge) null else { ->
                                 WidgetMessageAuthor(
                                     author = message.author.username,
                                     timestamp = message.formattedTimestamp,
