@@ -36,14 +36,13 @@ fun WidgetChatMessage(
     content: (@Composable () -> Unit)? = null,
     attachments: (@Composable () -> Unit)? = null,
     embeds: (@Composable () -> Unit)? = null,
+    isMerged: Boolean = false
 ) {
     val background = if (mentioned) {
         MaterialTheme.colorScheme.secondaryContainer
     } else {
         Color.Unspecified
     }
-
-    val isMerged = avatar == null && author == null
 
     Box(modifier = modifier.background(background)) {
         Column(

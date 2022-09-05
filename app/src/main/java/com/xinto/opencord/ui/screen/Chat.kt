@@ -33,6 +33,8 @@ import com.xinto.opencord.util.ifComposable
 import com.xinto.opencord.util.ifNotEmptyComposable
 import com.xinto.opencord.util.ifNotNullComposable
 import com.xinto.simpleast.render
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -243,6 +245,7 @@ private fun ChatScreenLoaded(
                         val canMerge = prevMessage != null
                                 && prevMessage is DomainMessageRegular
                                 && message.author.id == prevMessage.author.id
+                                && message.timestamp.minus(prevMessage.timestamp).inWholeMinutes < 1
                                 && message.attachments.isEmpty()
                                 && prevMessage.attachments.isEmpty()
                                 && message.embeds.isEmpty()
@@ -340,7 +343,8 @@ private fun ChatScreenLoaded(
                                         else -> {}
                                     }
                                 }
-                            }
+                            },
+                            isMerged = canMerge
                         )
                     }
                     else -> {}
