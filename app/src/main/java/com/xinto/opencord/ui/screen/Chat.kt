@@ -245,7 +245,7 @@ private fun ChatScreenLoaded(
                         val canMerge = prevMessage != null
                                 && prevMessage is DomainMessageRegular
                                 && message.author.id == prevMessage.author.id
-                                && message.timestamp.minus(prevMessage.timestamp).inWholeMinutes < 1
+                                && (message.timestamp - prevMessage.timestamp).inWholeMinutes < 1
                                 && message.attachments.isEmpty()
                                 && prevMessage.attachments.isEmpty()
                                 && message.embeds.isEmpty()
