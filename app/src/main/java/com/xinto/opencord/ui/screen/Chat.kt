@@ -239,7 +239,7 @@ private fun ChatScreenLoaded(
 
                 when (message) {
                     is DomainMessageRegular -> {
-                        val prevMessage = if (i == messages.lastIndex) null else messages[i + 1]
+                        val prevMessage = messages.getOrNull(i + 1)
                         val canMerge = prevMessage != null
                                 && prevMessage is DomainMessageRegular
                                 && message.author.id == prevMessage.author.id
