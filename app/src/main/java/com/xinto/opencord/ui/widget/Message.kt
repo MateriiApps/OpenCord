@@ -78,12 +78,16 @@ fun WidgetChatMessage(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.Top
             ) {
-                if (avatar != null) Box(
-                    modifier = Modifier.size(40.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    avatar()
-                } else Spacer(modifier = Modifier.width(40.dp))
+                if (avatar != null) {
+                    Box(
+                        modifier = Modifier.size(40.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        avatar()
+                    }
+                } else {
+                    Spacer(modifier = Modifier.width(40.dp))
+                }
                 Column(
                     modifier = Modifier.weight(1f),
                     verticalArrangement = Arrangement.spacedBy(4.dp),
