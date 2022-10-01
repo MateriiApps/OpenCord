@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="navigation_back">Back</string>
-    <string name="login_landing_title">Welcome to OpenCord!</string>
+    <string name="navigation_back">返回</string>
+    <string name="login_landing_title">欢迎来到 OpenCord！</string>
     <string name="login_landing_subtitle">Join over 0 people who use OpenCord as an alternative to the stock Discord app.</string>
     <string name="login_login_title">Welcome back!</string>
     <string name="login_login_subtitle">We\'re so excited to see you again!</string>
-    <string name="login_action_login">Login</string>
-    <string name="login_action_register">Register</string>
-    <string name="login_field_username">Email or Phone Number</string>
-    <string name="login_field_password">Password</string>
+    <string name="login_action_login">登录</string>
+    <string name="login_action_register">注册</string>
+    <string name="login_field_username">邮箱或手机号码</string>
+    <string name="login_field_password">密码</string>
     <string name="login_mfa_title">2FA Required!</string>
     <string name="login_mfa_code">2FA or Backup Code</string>
     <string name="login_mfa_confirm">Confirm</string>
