@@ -1,0 +1,46 @@
+<resources>
+    <string name="navigation_back">Kembali</string>
+
+    <string name="login_landing_title">Selamat datang di OpenCord!</string>
+    <string name="login_landing_subtitle">Bergabunglah dengan lebih dari 0 orang yang menggunakan OpenCord sebagai alternatif dari aplikasi saham Discord.</string>
+    <string name="login_login_title">Selamat datang kembali!</string>
+    <string name="login_login_subtitle">Kami sangat senang melihat Anda lagi!</string>
+    <string name="login_action_login">Masuk</string>
+    <string name="login_action_register">Gabung</string>
+    <string name="login_field_username">Email atau nomor telepon</string>
+    <string name="login_field_password">Kata sandi</string>
+    <string name="login_mfa_title">2FA diperlukan!</string>
+    <string name="login_mfa_code">2FA atau kode cadangan</string>
+    <string name="login_mfa_confirm">Konfirmasi</string>
+    <string name="login_mfa_cancel">Batal</string>
+
+    <string name="chat_title">#%1$s</string>
+    <string name="chat_unselected_message">Silakan pilih saluran.</string>
+    <string name="chat_input_hint">Pesan #%1$s</string>
+    <string name="chat_loading_error">Terjadi kesalahan saat memuat obrolan.</string>
+
+    <string name="channel_unselected_message">Silakan pilih server.</string>
+
+    <string name="channels_collapse_category">Ciutkan kategori</string>
+
+    <string name="pins_title">Pesan yang disematkan</string>
+    <string name="pins_loading_error">Terjadi kesalahan saat memuat pesan yang disematkan.</string>
+
+    <string name="settings_title">Setelan</string>
+    <string name="settings_open">Buka setelan</string>
+
+    <string name="timestamp_tomorrow">Besok di %1$s</string>
+    <string name="timestamp_today">Hari ini di %1$s</string>
+    <string name="timestamp_yesterday">Kemarin di %1$s</string>
+
+    <string name="message_reply_unknown">Pesan tidak dikenal.</string>
+
+    <string name="guilds_home">Rumah</string>
+
+    <string name="guild_boost_level">Tingkat peningkatan server</string>
+
+    <string name="current_user_set_status">Tetapkan status khusus</string>
+    <string name="current_user_clear_status">Hapus status</string>
+
+    <string name="accounts_open">Buka pengalih akun</string>
+</resources>
