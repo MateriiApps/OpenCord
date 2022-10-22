@@ -24,8 +24,8 @@
     <string name="settings_title">Nastavení</string>
     <string name="settings_open">Otevřít nastavení</string>
     <string name="timestamp_tomorrow">Zítra v %1$s</string>
-    <string name="timestamp_today">Včera v %1$s</string>
-    <string name="timestamp_yesterday">Předevčírem v %1$s</string>
+    <string name="timestamp_today">Dneska v %1$s</string>
+    <string name="timestamp_yesterday">Včera v %1$s</string>
     <string name="message_reply_unknown">Neznámý server.</string>
     <string name="guilds_home">Domů</string>
     <string name="guild_boost_level">Úroveň boostu serveru</string>
