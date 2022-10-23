@@ -1,6 +1,7 @@
 package com.xinto.opencord.ui.viewmodel
 
 import androidx.compose.runtime.*
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xinto.opencord.domain.manager.PersistentDataManager
 import com.xinto.opencord.domain.mapper.toDomain
@@ -8,6 +9,8 @@ import com.xinto.opencord.domain.model.DomainMessage
 import com.xinto.opencord.domain.model.DomainMessageRegular
 import com.xinto.opencord.domain.model.merge
 import com.xinto.opencord.domain.repository.DiscordApiRepository
+import com.xinto.opencord.domain.store.ListEvent
+import com.xinto.opencord.domain.store.MessageStore
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.event.MessageCreateEvent
 import com.xinto.opencord.gateway.event.MessageDeleteEvent
@@ -18,13 +21,16 @@ import com.xinto.opencord.rest.body.MessageBody
 import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
 import com.xinto.opencord.util.throttle
 import com.xinto.partialgen.getOrNull
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class ChatViewModel(
-    gateway: DiscordGateway,
-    persistentDataManager: PersistentDataManager,
+    private val channelId: Long,
+
+    private val messageStore: MessageStore,
     private val repository: DiscordApiRepository
-) : BasePersistenceViewModel(persistentDataManager) {
+) : ViewModel() {
 
     sealed interface State {
         object Unselected : State
@@ -46,25 +52,26 @@ class ChatViewModel(
     var currentUserId by mutableStateOf<Long?>(null)
         private set
 
-    val startTyping = throttle(9500, viewModelScope) {
-        repository.startTyping(persistentChannelId)
-    }
-
-    fun load() {
-        viewModelScope.launch {
-            try {
-                state = State.Loading
-                val channelMessages = repository.getChannelMessages(persistentChannelId)
-                val channel = repository.getChannel(persistentChannelId)
-                messages.clear()
-                messages.putAll(channelMessages)
-                channelName = channel.name
-                state = State.Loaded
-            } catch (e: Exception) {
-                state = State.Error
-                e.printStackTrace()
+    private val job = viewModelScope.launch {
+        messageStore.observe(channelId).collect {
+            when (it) {
+                is ListEvent.Add -> {
+                    messages[it.data.id] = it.data
+                }
+                is ListEvent.Update -> {
+                    if (messages[it.data.id] != null) {
+                        messages[it.data.id] = it.data
+                    }
+                }
+                is ListEvent.Remove -> {
+                    messages.remove(it.data.id)
+                }
             }
         }
+    }
+
+    val startTyping = throttle(9500, viewModelScope) {
+        repository.startTyping(channelId)
     }
 
     fun sendMessage() {
@@ -73,7 +80,7 @@ class ChatViewModel(
             val message = userMessage
             userMessage = ""
             repository.postChannelMessage(
-                channelId = persistentChannelId,
+                channelId = channelId,
                 MessageBody(
                     content = message
                 )
@@ -91,41 +98,8 @@ class ChatViewModel(
         return messages.values.sortedByDescending { it.id }
     }
 
-    init {
-        gateway.onEvent<ReadyEvent> {
-            currentUserId = it.data.user.id.value
-        }
-
-        gateway.onEvent<MessageCreateEvent>(
-            filterPredicate = { it.data.channelId.value == persistentChannelId }
-        ) { event ->
-            val domainData = event.data.toDomain()
-            messages[domainData.id] = domainData
-        }
-
-        gateway.onEvent<MessageUpdateEvent>(
-            filterPredicate = { it.data.channelId.getOrNull()!!.value == persistentChannelId }
-        ) { event ->
-            val domainPartialData = event.data.toDomain()
-            val id = domainPartialData.id.getOrNull()!!
-            val mergedData = messages[id]?.let {
-                if (it is DomainMessageRegular) {
-                    it.merge(domainPartialData)
-                } else null
-            }
-            if (mergedData != null) {
-                messages[id] = mergedData
-            }
-        }
-
-        gateway.onEvent<MessageDeleteEvent>(
-            filterPredicate = { it.data.channelId.value == persistentChannelId }
-        ) { event ->
-            messages.remove(event.data.messageId.value)
-        }
-
-        if (persistentChannelId != 0L) {
-            load()
-        }
+    override fun onCleared() {
+        job.cancel()
     }
+
 }
