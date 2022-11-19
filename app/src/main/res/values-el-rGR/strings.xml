@@ -5,7 +5,7 @@
     <string name="login_landing_subtitle">Γίνετε ένας από τα 0 άτομα που χρησιμοποιούν το OpenCord ώς μια εναλλακτική έναντι της κανονικής εφαρμογής Discord.</string>
     <string name="login_login_title">Καλωσήρθατε πίσω!</string>
     <string name="login_login_subtitle">Ήμαστε πολύ ενθουσιασμένοι που σας βλέπουμε ξανά!</string>
-    <string name="login_action_login">Σύνδεση</string>
+    <string name="login_action_login">Είσοδος</string>
     <string name="login_action_register">Εγγραφή</string>
     <string name="login_field_username">Ηλεκτρονικό ταχυδρομείο ή Αριθμός τηλεφώνου</string>
     <string name="login_field_password">Κωδικός πρόσβασης</string>
