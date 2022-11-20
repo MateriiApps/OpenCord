@@ -1,16 +1,30 @@
 package com.xinto.opencord.db.entity.message
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.Index
-import androidx.room.PrimaryKey
+import androidx.room.*
+import com.xinto.opencord.db.entity.channel.EntityChannel
+import com.xinto.opencord.db.entity.user.EntityUser
 import com.xinto.opencord.rest.dto.ApiMessageType
 
 @Entity(
     tableName = "messages",
     indices = [
-        Index(value = ["channel_id"]),
+        Index("channel_id"),
+        Index("author_id"),
     ],
+    foreignKeys = [
+        ForeignKey(
+            entity = EntityUser::class,
+            parentColumns = ["id"],
+            childColumns = ["author_id"],
+            onDelete = ForeignKey.CASCADE,
+        ),
+        ForeignKey(
+            entity = EntityChannel::class,
+            parentColumns = ["id"],
+            childColumns = ["channel_id"],
+            onDelete = ForeignKey.CASCADE,
+        ),
+    ]
 )
 data class EntityMessage(
     // -------- Message data -------- //

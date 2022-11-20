@@ -16,7 +16,6 @@ class OpenCord : Application() {
                 gatewayModule,
                 httpModule,
                 managerModule,
-                repositoryModule,
                 serviceModule,
                 simpleAstModule,
                 viewModelModule,

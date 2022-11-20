@@ -1,4 +1,4 @@
-package com.xinto.opencord.domain.store
+package com.xinto.opencord.store
 
 sealed interface Event<out T> {
     val data: T?

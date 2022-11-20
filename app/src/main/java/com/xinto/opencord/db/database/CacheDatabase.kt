@@ -4,25 +4,33 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.xinto.opencord.db.Converters
+import com.xinto.opencord.db.dao.ChannelsDao
+import com.xinto.opencord.db.dao.GuildsDao
 import com.xinto.opencord.db.dao.MessagesDao
 import com.xinto.opencord.db.dao.UsersDao
+import com.xinto.opencord.db.entity.channel.EntityChannel
+import com.xinto.opencord.db.entity.guild.EntityGuild
 import com.xinto.opencord.db.entity.message.EntityAttachment
 import com.xinto.opencord.db.entity.message.EntityEmbed
 import com.xinto.opencord.db.entity.message.EntityMessage
-import com.xinto.opencord.db.entity.message.EntityUser
+import com.xinto.opencord.db.entity.user.EntityUser
 
 @Database(
     version = 1,
     entities = [
-        EntityMessage::class,
+        EntityChannel::class,
+        EntityGuild::class,
         EntityAttachment::class,
         EntityEmbed::class,
+        EntityMessage::class,
         EntityUser::class,
     ],
     exportSchema = false,
 )
 @TypeConverters(Converters::class)
 abstract class CacheDatabase : RoomDatabase() {
+    abstract fun channels(): ChannelsDao
+    abstract fun guilds(): GuildsDao
     abstract fun messages(): MessagesDao
     abstract fun users(): UsersDao
 }

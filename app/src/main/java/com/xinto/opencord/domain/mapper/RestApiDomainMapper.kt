@@ -121,18 +121,6 @@ fun ApiGuildMemberChunk.toDomain(): DomainGuildMemberChunk {
     )
 }
 
-fun ApiMeGuild.toDomain(): DomainMeGuild {
-    val iconUrl = icon?.let { icon ->
-        DiscordCdnServiceImpl.getGuildIconUrl(id.toString(), icon)
-    }
-    return DomainMeGuild(
-        id = id.value,
-        name = name,
-        iconUrl = iconUrl,
-        permissions = permissions.toDomain()
-    )
-}
-
 fun ApiMessage.toDomain(): DomainMessage {
     val domainAuthor = author.toDomain()
     return when (type) {

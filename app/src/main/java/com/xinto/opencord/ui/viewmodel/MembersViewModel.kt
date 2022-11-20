@@ -4,7 +4,6 @@ import androidx.compose.runtime.mutableStateListOf
 import com.xinto.opencord.domain.manager.PersistentDataManager
 import com.xinto.opencord.domain.mapper.toDomain
 import com.xinto.opencord.domain.model.DomainGuildMember
-import com.xinto.opencord.domain.repository.DiscordApiRepository
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.event.GuildMemberChunkEvent
 import com.xinto.opencord.gateway.onEvent
@@ -14,7 +13,6 @@ import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
 class MembersViewModel(
     persistentDataManager: PersistentDataManager,
     private val gateway: DiscordGateway,
-    private val repository: DiscordApiRepository,
 ) : BasePersistenceViewModel(persistentDataManager) {
 
     val members = mutableStateListOf<DomainGuildMember>()

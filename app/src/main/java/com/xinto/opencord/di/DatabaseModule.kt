@@ -8,10 +8,15 @@ import org.koin.dsl.module
 
 val databaseModule = module {
     fun provideCacheDatabase(context: Context): CacheDatabase {
+        val dbFile = context.cacheDir.resolve("cache.db")
+
+        // TODO: remove this
+        dbFile.delete()
+
         return Room.databaseBuilder(
             context,
             CacheDatabase::class.java,
-            context.cacheDir.resolve("cache").absolutePath,
+            dbFile.absolutePath,
         ).build()
     }
 

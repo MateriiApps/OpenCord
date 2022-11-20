@@ -5,17 +5,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xinto.opencord.domain.manager.PersistentDataManager
 import com.xinto.opencord.domain.model.DomainMessage
-import com.xinto.opencord.domain.repository.DiscordApiRepository
-import com.xinto.opencord.domain.store.Event
-import com.xinto.opencord.domain.store.MessageStore
 import com.xinto.opencord.rest.body.MessageBody
+import com.xinto.opencord.rest.service.DiscordApiService
+import com.xinto.opencord.store.ChannelStore
+import com.xinto.opencord.store.Event
+import com.xinto.opencord.store.MessageStore
 import com.xinto.opencord.util.throttle
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class ChatViewModel(
     private val messageStore: MessageStore,
-    private val repository: DiscordApiRepository,
+    private val channelStore: ChannelStore,
+    private val api: DiscordApiService,
     private val persistentDataManager: PersistentDataManager,
 ) : ViewModel() {
 
@@ -42,7 +44,7 @@ class ChatViewModel(
     private var job: Job? = null
 
     val startTyping = throttle(9500, viewModelScope) {
-        repository.startTyping(persistentDataManager.persistentChannelId)
+        api.startTyping(persistentDataManager.persistentChannelId)
     }
 
     fun load() {
@@ -50,7 +52,7 @@ class ChatViewModel(
             state = State.Loading
 
             try {
-                val channel = repository.getChannel(persistentDataManager.persistentChannelId)
+                val channel = channelStore.fetchChannel(persistentDataManager.persistentChannelId)
                 val channelMessages =
                     messageStore.fetchMessages(persistentDataManager.persistentChannelId)
 
@@ -90,7 +92,7 @@ class ChatViewModel(
             sendEnabled = false
             val message = userMessage
             userMessage = ""
-            repository.postChannelMessage(
+            api.postChannelMessage(
                 channelId = persistentDataManager.persistentChannelId,
                 MessageBody(
                     content = message

@@ -11,7 +11,6 @@ import com.xinto.opencord.domain.manager.CacheManager
 import com.xinto.opencord.domain.mapper.toApi
 import com.xinto.opencord.domain.mapper.toDomain
 import com.xinto.opencord.domain.model.*
-import com.xinto.opencord.domain.repository.DiscordApiRepository
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.dto.UpdatePresence
 import com.xinto.opencord.gateway.event.ReadyEvent
@@ -19,12 +18,13 @@ import com.xinto.opencord.gateway.event.SessionsReplaceEvent
 import com.xinto.opencord.gateway.event.UserSettingsUpdateEvent
 import com.xinto.opencord.gateway.event.UserUpdateEvent
 import com.xinto.opencord.gateway.onEvent
+import com.xinto.opencord.rest.service.DiscordApiService
 import com.xinto.partialgen.PartialValue
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 
 class CurrentUserViewModel(
-    val repository: DiscordApiRepository,
+    val api: DiscordApiService,
     val gateway: DiscordGateway,
     val cache: CacheManager,
 ) : ViewModel() {
@@ -74,7 +74,7 @@ class CurrentUserViewModel(
             )
 
             val settings = DomainUserSettingsPartial(status = PartialValue.Value(status))
-            repository.updateUserSettings(settings)
+            api.updateUserSettings(settings.toApi())
         }
     }
 
@@ -83,7 +83,7 @@ class CurrentUserViewModel(
             val settings = DomainUserSettingsPartial(
                 customStatus = PartialValue.Value(status)
             )
-            repository.updateUserSettings(settings)
+            api.updateUserSettings(settings.toApi())
 
             val currentMillis = Clock.System.now().toEpochMilliseconds()
             val activities = cache.getActivities()
@@ -142,7 +142,7 @@ class CurrentUserViewModel(
 
         viewModelScope.launch {
             try {
-                val settings = repository.getUserSettings()
+                val settings = api.getUserSettings().toDomain()
                 userSettings = settings
                 userStatus = settings.status
                 userCustomStatus = settings.customStatus

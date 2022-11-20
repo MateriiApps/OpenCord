@@ -9,6 +9,7 @@ import com.google.devtools.ksp.validate
 import com.xinto.ksputil.*
 import java.io.OutputStream
 
+// FIXME: List<x>? = null breaks codegen
 internal class PartialProcessor(val codeGenerator: CodeGenerator) : SymbolProcessor {
 
     override fun process(resolver: Resolver): List<KSAnnotated> {

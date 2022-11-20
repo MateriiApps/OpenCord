@@ -1,13 +1,12 @@
 package com.xinto.opencord.domain.mapper
 
+import com.xinto.opencord.db.entity.channel.EntityChannel
+import com.xinto.opencord.db.entity.guild.EntityGuild
 import com.xinto.opencord.db.entity.message.EntityAttachment
 import com.xinto.opencord.db.entity.message.EntityEmbed
 import com.xinto.opencord.db.entity.message.EntityMessage
-import com.xinto.opencord.db.entity.message.EntityUser
-import com.xinto.opencord.rest.dto.ApiAttachment
-import com.xinto.opencord.rest.dto.ApiEmbed
-import com.xinto.opencord.rest.dto.ApiMessage
-import com.xinto.opencord.rest.dto.ApiUser
+import com.xinto.opencord.db.entity.user.EntityUser
+import com.xinto.opencord.rest.dto.*
 
 fun ApiMessage.toEntity(): EntityMessage {
     return EntityMessage(
@@ -64,5 +63,31 @@ fun ApiUser.toEntity(): EntityUser {
         bio = bio,
         bannerUrl = banner,
         publicFlags = publicFlags ?: 0,
+    )
+}
+
+fun ApiChannel.toEntity(): EntityChannel {
+    return EntityChannel(
+        id = id.value,
+        guildId = guildId?.value
+            ?: throw Error("cannot convert an ApiChannel to EntityChannel without guild id"),
+        name = name,
+        type = type,
+        position = position,
+        parentId = parentId?.value,
+        nsfw = nsfw,
+        permissions = permissions.value,
+    )
+}
+
+fun ApiGuild.toEntity(): EntityGuild {
+    return EntityGuild(
+        id = id.value,
+        name = name,
+        icon = icon,
+        bannerUrl = banner,
+        permissions = permissions.value,
+        premiumTier = premiumTier,
+        premiumSubscriptionCount = premiumSubscriptionCount,
     )
 }

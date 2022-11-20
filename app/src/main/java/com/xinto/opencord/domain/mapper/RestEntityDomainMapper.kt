@@ -1,12 +1,15 @@
 package com.xinto.opencord.domain.mapper
 
 import androidx.compose.ui.graphics.Color
+import com.xinto.opencord.db.entity.channel.EntityChannel
+import com.xinto.opencord.db.entity.guild.EntityGuild
 import com.xinto.opencord.db.entity.message.EntityAttachment
 import com.xinto.opencord.db.entity.message.EntityEmbed
 import com.xinto.opencord.db.entity.message.EntityMessage
-import com.xinto.opencord.db.entity.message.EntityUser
+import com.xinto.opencord.db.entity.user.EntityUser
 import com.xinto.opencord.domain.model.*
 import com.xinto.opencord.rest.dto.ApiMessageType
+import com.xinto.opencord.rest.dto.ApiPermissions
 import com.xinto.opencord.rest.service.DiscordCdnServiceImpl
 import kotlinx.datetime.Instant
 
@@ -104,5 +107,55 @@ fun EntityUser.toDomain(): DomainUser {
         bio = bio,
         flags = publicFlags,
         pronouns = pronouns,
+    )
+}
+
+fun EntityChannel.toDomain(): DomainChannel {
+    return when (type) {
+        2 -> DomainChannel.VoiceChannel(
+            id = id,
+            guildId = guildId,
+            name = name,
+            position = position,
+            parentId = parentId,
+            permissions = ApiPermissions(permissions).toDomain()
+        )
+        4 -> DomainChannel.Category(
+            id = id,
+            guildId = guildId,
+            name = name,
+            position = position,
+            permissions = ApiPermissions(permissions).toDomain()
+        )
+        5 -> DomainChannel.AnnouncementChannel(
+            id = id,
+            guildId = guildId,
+            name = name,
+            position = position,
+            parentId = parentId,
+            permissions = ApiPermissions(permissions).toDomain(),
+            nsfw = nsfw
+        )
+        else -> DomainChannel.TextChannel(
+            id = id,
+            guildId = guildId,
+            name = name,
+            position = position,
+            parentId = parentId,
+            permissions = ApiPermissions(permissions).toDomain(),
+            nsfw = nsfw
+        )
+    }
+}
+
+fun EntityGuild.toDomain(): DomainGuild {
+    return DomainGuild(
+        id = id,
+        name = name,
+        iconUrl = icon,
+        bannerUrl = bannerUrl,
+        permissions = ApiPermissions(permissions).toDomain(),
+        premiumTier = premiumTier,
+        premiumSubscriptionCount = premiumSubscriptionCount ?: 0,
     )
 }

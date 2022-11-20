@@ -1,5 +1,6 @@
 package com.xinto.opencord.gateway.event
 
+import com.xinto.opencord.gateway.dto.GuildDeleteData
 import com.xinto.opencord.rest.dto.ApiGuild
 
 data class GuildCreateEvent(
@@ -10,3 +11,6 @@ data class GuildUpdateEvent(
     val data: ApiGuild
 ): Event
 
+data class GuildDeleteEvent(
+    val data: GuildDeleteData
+) : Event

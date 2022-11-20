@@ -1,4 +1,4 @@
-package com.xinto.opencord.domain.store
+package com.xinto.opencord.store
 
 import com.xinto.opencord.db.database.CacheDatabase
 import com.xinto.opencord.db.entity.message.EntityMessage
@@ -38,8 +38,7 @@ class MessageStoreImpl(
 
     override fun observeChannel(channelId: Long): Flow<Event<DomainMessage>> {
         return events.filter {
-            // Deletes should be passed through for future features like message link embeds
-            it is Event.Remove || it.data?.channelId == channelId
+            it.data?.channelId == channelId
         }
     }
 
@@ -88,8 +87,11 @@ class MessageStoreImpl(
             if (cachedMessages.size >= 50) {
                 cachedMessages.map(::constructDomainMessage)
             } else {
-                val messages = api.getChannelMessages(channelId, 50, before, after, around).values
+                val messages = api.getChannelMessages(channelId, 50, before, after, around)
 
+                cache.users().apply {
+                    insertUsers(*messages.map { it.author.toEntity() }.toTypedArray())
+                }
                 cache.messages().apply {
                     val entityMessages = messages.map { it.toEntity() }
                     insertMessages(*entityMessages.toTypedArray())
@@ -106,9 +108,6 @@ class MessageStoreImpl(
                             )
                         }
                     }.toTypedArray())
-                }
-                cache.users().apply {
-                    insertUsers(*messages.map { it.author.toEntity() }.toTypedArray())
                 }
 
                 messages.map { it.toDomain() }

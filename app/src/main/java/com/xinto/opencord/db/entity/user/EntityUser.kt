@@ -1,4 +1,4 @@
-package com.xinto.opencord.db.entity.message
+package com.xinto.opencord.db.entity.user
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.xinto.opencord.domain.manager.PersistentDataManager
 import com.xinto.opencord.domain.mapper.toDomain
 import com.xinto.opencord.domain.model.DomainGuild
-import com.xinto.opencord.domain.repository.DiscordApiRepository
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.event.GuildCreateEvent
 import com.xinto.opencord.gateway.event.ReadyEvent
@@ -16,7 +15,6 @@ import kotlinx.coroutines.launch
 class GuildsViewModel(
     gateway: DiscordGateway,
     persistentDataManager: PersistentDataManager,
-    private val repository: DiscordApiRepository
 ) : BasePersistenceViewModel(persistentDataManager) {
 
     sealed interface State {

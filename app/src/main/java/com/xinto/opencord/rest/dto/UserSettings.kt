@@ -4,7 +4,6 @@ import com.xinto.partialgen.Partialable
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-// TODO: check what the commented out parts are
 @Partialable
 @Serializable
 data class ApiUserSettings(
@@ -14,11 +13,13 @@ data class ApiUserSettings(
     @SerialName("show_current_game")
     val showCurrentGame: Boolean,
 
-//    @SerialName("restricted_guilds")
-//    val restrictedGuilds: List<ApiSnowflake>
+    // servers with dms turned off
+    @SerialName("restricted_guilds")
+    val restrictedGuilds: List<ApiSnowflake>,
 
-//    @SerialName("default_guilds_restricted")
-//    val defaultGuildsRestricted: Boolean,
+    // turn off dms from servers automatically upon joining
+    @SerialName("default_guilds_restricted")
+    val defaultGuildsRestricted: Boolean,
 
     @SerialName("inline_attachment_media")
     val inlineAttachmentMedia: Boolean,
@@ -59,11 +60,6 @@ data class ApiUserSettings(
 
     @SerialName("developer_mode")
     val developerMode: Boolean,
-
-    // TODO: check if this is even valid anymore
-    // FIXME: List<x>? = null breaks in partialgen
-//    @SerialName("guild_positions")
-//    val guildPositions: List<ApiSnowflake>? = null,
 
     @SerialName("detect_platform_accounts")
     val detectPlatformAccounts: Boolean,

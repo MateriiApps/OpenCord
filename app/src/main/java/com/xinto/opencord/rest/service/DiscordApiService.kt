@@ -14,19 +14,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 interface DiscordApiService {
-    suspend fun getMeGuilds(): List<ApiMeGuild>
-    suspend fun getGuild(guildId: Long): ApiGuild
-    suspend fun getGuildChannels(guildId: Long): Map<ApiSnowflake, ApiChannel>
-
-    suspend fun getChannel(channelId: Long): ApiChannel
-    suspend fun getChannelPins(channelId: Long): Map<ApiSnowflake, ApiMessage>
+    suspend fun getChannelPins(channelId: Long): List<ApiMessage>
     suspend fun getChannelMessages(
         channelId: Long,
         limit: Long,
         before: Long? = null,
         after: Long? = null,
         around: Long? = null,
-    ): Map<ApiSnowflake, ApiMessage>
+    ): List<ApiMessage>
 
     suspend fun postChannelMessage(channelId: Long, body: MessageBody)
 
@@ -37,89 +32,26 @@ interface DiscordApiService {
 }
 
 class DiscordApiServiceImpl(
-    gateway: DiscordGateway,
     private val client: HttpClient
 ) : DiscordApiService {
-    private val cachedMeGuilds = mutableListOf<ApiMeGuild>()
-
-    private val cachedGuildById = mutableMapOf<Long, ApiGuild>()
-    private val cachedChannelById = mutableMapOf<Long, ApiChannel>()
-
-    private val cachedGuildChannels = mutableMapOf<Long, MutableMap<ApiSnowflake, ApiChannel>>()
-
-    //    private val cachedChannelMessages = mutableMapOf<Long, MutableMap<ApiSnowflake, ApiMessage>>()
-    private val cachedChannelPins = mutableMapOf<Long, MutableMap<ApiSnowflake, ApiMessage>>()
-
-    private var cachedUserSettings: ApiUserSettings? = null
-
-    override suspend fun getMeGuilds(): List<ApiMeGuild> {
-        return withContext(Dispatchers.IO) {
-            if (cachedMeGuilds.isEmpty()) {
-                val url = getMeGuildsUrl()
-                val response: List<ApiMeGuild> = client.get(url).body()
-                cachedMeGuilds.addAll(response)
-            }
-            cachedMeGuilds
-        }
-    }
-
-    override suspend fun getGuild(guildId: Long): ApiGuild {
-        return withContext(Dispatchers.IO) {
-            if (cachedGuildById[guildId] == null) {
-                val url = getGuildUrl(guildId)
-                val response: ApiGuild = client.get(url).body()
-                cachedGuildById[guildId] = response
-            }
-            cachedGuildById[guildId]!!
-        }
-    }
-
-    override suspend fun getGuildChannels(guildId: Long): Map<ApiSnowflake, ApiChannel> {
-        return withContext(Dispatchers.IO) {
-            if (cachedGuildChannels[guildId] == null) {
-                val url = getGuildChannelsUrl(guildId)
-                val response: List<ApiChannel> = client.get(url).body()
-                cachedGuildChannels[guildId] = response.associateBy { it.id }.toMutableMap()
-            }
-            cachedGuildChannels[guildId]!!
-        }
-    }
-
-    override suspend fun getChannel(channelId: Long): ApiChannel {
-        return withContext(Dispatchers.IO) {
-            if (cachedChannelById[channelId] == null) {
-                val url = getChannelUrl(channelId)
-                cachedChannelById[channelId] = client.get(url).body()
-            }
-            cachedChannelById[channelId]!!
-        }
-    }
-
     override suspend fun getChannelMessages(
         channelId: Long,
         limit: Long,
         before: Long?,
         after: Long?,
         around: Long?,
-    ): Map<ApiSnowflake, ApiMessage> {
+    ): List<ApiMessage> {
         return withContext(Dispatchers.IO) {
-            val messages = client
+            client
                 .get(getChannelMessagesUrl(channelId, before, after, around))
-                .body<List<ApiMessage>>()
-
-            // TODO: remove this map
-            messages.associateBy { it.id }.toMutableMap()
+                .body()
         }
     }
 
-    override suspend fun getChannelPins(channelId: Long): Map<ApiSnowflake, ApiMessage> {
+    override suspend fun getChannelPins(channelId: Long): List<ApiMessage> {
         return withContext(Dispatchers.IO) {
-            if (cachedChannelPins[channelId] == null) {
-                val url = getChannelPinsUrl(channelId)
-                val response: List<ApiMessage> = client.get(url).body()
-                cachedChannelPins[channelId] = response.associateBy { it.id }.toMutableMap()
-            }
-            cachedChannelPins[channelId]!!
+            val url = getChannelPinsUrl(channelId)
+            client.get(url).body()
         }
     }
 
@@ -134,10 +66,7 @@ class DiscordApiServiceImpl(
 
     override suspend fun getUserSettings(): ApiUserSettings {
         return withContext(Dispatchers.IO) {
-            if (cachedUserSettings == null) {
-                cachedUserSettings = client.get(getUserSettingsUrl()).body()
-            }
-            cachedUserSettings!!
+            client.get(getUserSettingsUrl()).body()
         }
     }
 
@@ -145,9 +74,7 @@ class DiscordApiServiceImpl(
         return withContext(Dispatchers.IO) {
             client.patch(getUserSettingsUrl()) {
                 setBody(settings)
-            }.body<ApiUserSettings>().also {
-                cachedUserSettings = it
-            }
+            }.body()
         }
     }
 
@@ -159,26 +86,14 @@ class DiscordApiServiceImpl(
     }
 
     init {
-        gateway.onEvent<UserSettingsUpdateEvent> {
-            cachedUserSettings = cachedUserSettings?.merge(it.data)
-        }
+        // TODO: move this to user settings store
+//        gateway.onEvent<UserSettingsUpdateEvent> {
+//            cachedUserSettings = cachedUserSettings?.merge(it.data)
+//        }
     }
 
     private companion object {
         const val BASE = BuildConfig.URL_API
-
-        fun getMeGuildsUrl(): String {
-            return "$BASE/users/@me/guilds"
-        }
-
-        fun getGuildUrl(guildId: Long): String {
-            return "$BASE/guilds/$guildId"
-        }
-
-        fun getGuildChannelsUrl(guildId: Long): String {
-            val guildUrl = getGuildUrl(guildId)
-            return "$guildUrl/channels"
-        }
 
         fun getChannelUrl(channelId: Long): String {
             return "$BASE/channels/$channelId"
