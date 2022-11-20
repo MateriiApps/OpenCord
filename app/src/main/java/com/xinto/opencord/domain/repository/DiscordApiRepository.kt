@@ -47,7 +47,7 @@ class DiscordApiRepositoryImpl(
     }
 
     override suspend fun getChannelMessages(channelId: Long): Map<Long, DomainMessage> {
-        return service.getChannelMessages(channelId)
+        return service.getChannelMessages(channelId, 50)
             .toList().associate {
                 it.first.value to it.second.toDomain()
             }

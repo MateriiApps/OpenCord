@@ -4,8 +4,10 @@ import androidx.compose.ui.graphics.Color
 import com.xinto.opencord.db.entity.message.EntityAttachment
 import com.xinto.opencord.db.entity.message.EntityEmbed
 import com.xinto.opencord.db.entity.message.EntityMessage
+import com.xinto.opencord.db.entity.message.EntityUser
 import com.xinto.opencord.domain.model.*
 import com.xinto.opencord.rest.dto.ApiMessageType
+import com.xinto.opencord.rest.service.DiscordCdnServiceImpl
 import kotlinx.datetime.Instant
 
 fun EntityMessage.toDomain(
@@ -82,8 +84,25 @@ fun EntityEmbed.toDomain(): DomainEmbed {
         title = title,
         description = description,
         url = url,
-        color = Color(color),
+        color = color?.let { Color(it) },
         author = authorName?.let { DomainEmbedAuthor(it) },
         fields = fields?.map { it.toDomain() }
+    )
+}
+
+fun EntityUser.toDomain(): DomainUser {
+    val avatarUrl = avatarHash
+        ?.let { DiscordCdnServiceImpl.getUserAvatarUrl(id.toString(), it) }
+        ?: DiscordCdnServiceImpl.getDefaultAvatarUrl(discriminator.toInt().rem(5))
+
+    return DomainUserPublic(
+        id = id,
+        username = username,
+        discriminator = discriminator,
+        avatarUrl = avatarUrl,
+        bot = bot,
+        bio = bio,
+        flags = publicFlags,
+        pronouns = pronouns,
     )
 }

@@ -60,8 +60,10 @@ data class ApiUserSettings(
     @SerialName("developer_mode")
     val developerMode: Boolean,
 
-    @SerialName("guild_positions")
-    val guildPositions: List<ApiSnowflake>,
+    // TODO: check if this is even valid anymore
+    // FIXME: List<x>? = null breaks in partialgen
+//    @SerialName("guild_positions")
+//    val guildPositions: List<ApiSnowflake>? = null,
 
     @SerialName("detect_platform_accounts")
     val detectPlatformAccounts: Boolean,

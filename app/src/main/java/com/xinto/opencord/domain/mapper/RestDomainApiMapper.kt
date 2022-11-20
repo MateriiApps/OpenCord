@@ -6,9 +6,9 @@ import com.xinto.partialgen.mapToPartial
 
 fun DomainUserSettingsPartial.toApi(): ApiUserSettingsPartial {
     val apiPartialTheme = theme.mapToPartial { it.value }
-    val apiPartialGuildPositions = guildPositions.mapToPartial { guildPositions ->
-        guildPositions.map { ApiSnowflake(it) }
-    }
+//    val apiPartialGuildPositions = guildPositions.mapToPartial { guildPositions ->
+//        guildPositions.map { ApiSnowflake(it) }
+//    }
     val apiPartialStatus = status.mapToPartial { it.value }
     val apiPartialFriendSourceFlags = friendSourceFlags.mapToPartial { it.toApi() }
     val apiPartialGuildFolders = guildFolders.mapToPartial { guildFolders ->
@@ -30,7 +30,7 @@ fun DomainUserSettingsPartial.toApi(): ApiUserSettingsPartial {
         disableGamesTab = disableGamesTab,
         theme = apiPartialTheme,
         developerMode = developerMode,
-        guildPositions = apiPartialGuildPositions,
+//        guildPositions = apiPartialGuildPositions,
         detectPlatformAccounts = detectPlatformAccounts,
         status = apiPartialStatus,
         afkTimeout = afkTimeout,

@@ -34,8 +34,22 @@ interface MessagesDao {
     @Query("SELECT * FROM messages WHERE channel_id = :channelId AND id >= :aroundId - ROUND(:limit / 2, 0) ORDER BY id ASC LIMIT :limit")
     fun getMessagesAround(channelId: Long, limit: Int, aroundId: Long): List<EntityMessage>
 
+
+    @Insert(
+        onConflict = OnConflictStrategy.REPLACE,
+        entity = EntityAttachment::class
+    )
+    fun insertAttachments(vararg attachments: EntityAttachment)
+
     @Query("SELECT * FROM attachments WHERE id = :messageId")
     fun getAttachments(messageId: Long): List<EntityAttachment>
+
+
+    @Insert(
+        onConflict = OnConflictStrategy.REPLACE,
+        entity = EntityEmbed::class
+    )
+    fun insertEmbeds(vararg embeds: EntityEmbed)
 
     @Query("SELECT * FROM embeds WHERE message_id = :messageId ORDER BY embed_index ASC")
     fun getEmbeds(messageId: Long): List<EntityEmbed>

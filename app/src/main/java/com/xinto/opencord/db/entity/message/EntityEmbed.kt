@@ -32,7 +32,7 @@ data class EntityEmbed(
     val messageId: Long,
 
     @ColumnInfo(name = "title")
-    val title: String,
+    val title: String?,
 
     @ColumnInfo(name = "description")
     val description: String?,
@@ -41,7 +41,7 @@ data class EntityEmbed(
     val url: String?,
 
     @ColumnInfo(name = "color")
-    val color: Int,
+    val color: Int?,
 
     @ColumnInfo(name = "timestamp")
     val timestamp: Long?,

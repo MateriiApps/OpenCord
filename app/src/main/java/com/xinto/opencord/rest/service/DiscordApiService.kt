@@ -22,6 +22,7 @@ interface DiscordApiService {
     suspend fun getChannelPins(channelId: Long): Map<ApiSnowflake, ApiMessage>
     suspend fun getChannelMessages(
         channelId: Long,
+        limit: Long,
         before: Long? = null,
         after: Long? = null,
         around: Long? = null,
@@ -96,6 +97,7 @@ class DiscordApiServiceImpl(
 
     override suspend fun getChannelMessages(
         channelId: Long,
+        limit: Long,
         before: Long?,
         after: Long?,
         around: Long?,
@@ -157,30 +159,6 @@ class DiscordApiServiceImpl(
     }
 
     init {
-//        gateway.onEvent<MessageCreateEvent> {
-//            val data = it.data
-//            val channelId = data.channelId.value
-//            cachedChannelMessages[channelId]?.put(data.id, data)
-//        }
-//
-//        gateway.onEvent<MessageUpdateEvent> {
-//            val partialData = it.data
-//            val id = partialData.id.getOrNull()!!
-//            val channelId = partialData.channelId.getOrNull()!!.value
-//            val mergedData = cachedChannelMessages[channelId]?.get(id).let { message ->
-//                message?.merge(partialData)
-//            }
-//            if (mergedData != null) {
-//                cachedChannelMessages[channelId]?.put(id, mergedData)
-//            }
-//        }
-//
-//        gateway.onEvent<MessageDeleteEvent> {
-//            val data = it.data
-//            val channelId = data.channelId.value
-//            cachedChannelMessages[channelId]?.remove(data.messageId)
-//        }
-
         gateway.onEvent<UserSettingsUpdateEvent> {
             cachedUserSettings = cachedUserSettings?.merge(it.data)
         }
@@ -222,7 +200,7 @@ class DiscordApiServiceImpl(
                 limit?.let { append("limit", limit.toString()) }
             }
 
-            return "$channelUrl/messages${parameters.build().formUrlEncode()}"
+            return channelUrl + parameters.build().formUrlEncode()
         }
 
         fun getChannelPinsUrl(channelId: Long): String {

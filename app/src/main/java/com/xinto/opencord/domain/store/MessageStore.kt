@@ -5,15 +5,18 @@ import com.xinto.opencord.db.entity.message.EntityMessage
 import com.xinto.opencord.domain.mapper.toDomain
 import com.xinto.opencord.domain.mapper.toEntity
 import com.xinto.opencord.domain.model.DomainMessage
+import com.xinto.opencord.domain.model.DomainUser
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.event.MessageCreateEvent
 import com.xinto.opencord.gateway.event.MessageDeleteEvent
 import com.xinto.opencord.gateway.event.MessageUpdateEvent
 import com.xinto.opencord.gateway.onEvent
 import com.xinto.opencord.rest.service.DiscordApiService
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.withContext
 
 interface MessageStore {
     fun observeChannel(channelId: Long): Flow<Event<DomainMessage>>
@@ -40,7 +43,10 @@ class MessageStoreImpl(
         }
     }
 
-    private fun constructDomainMessage(message: EntityMessage): DomainMessage {
+    private fun constructDomainMessage(
+        message: EntityMessage,
+        cachedUsers: MutableMap<Long, DomainUser> = mutableMapOf()
+    ): DomainMessage {
         val attachments = if (!message.hasAttachments) null else {
             cache.messages().getAttachments(message.id)
         }
@@ -53,9 +59,13 @@ class MessageStoreImpl(
             cache.messages().getEmbeds(message.id)
         }
 
+        val author = cachedUsers.computeIfAbsent(message.authorId) {
+            cache.users().getUser(message.authorId).toDomain()
+        }
+
         return message.toDomain(
-            author = null, // TODO
-            referencedMessage = referencedMessage?.let { constructDomainMessage(it) },
+            author = author,
+            referencedMessage = referencedMessage?.let { constructDomainMessage(it, cachedUsers) },
             embeds = embeds?.map { it.toDomain() },
             attachments = attachments?.map { it.toDomain() },
         )
@@ -67,21 +77,42 @@ class MessageStoreImpl(
         before: Long?,
         around: Long?,
     ): List<DomainMessage> {
-        val cachedMessages = when {
-            after != null -> cache.messages().getMessagesAfter(channelId, 50, after)
-            before != null -> cache.messages().getMessagesBefore(channelId, 50, before)
-            around != null -> cache.messages().getMessagesAround(channelId, 50, around)
-            else -> throw IllegalArgumentException("after, before, around cannot all be null")
-        }
+        return withContext(Dispatchers.IO) {
+            val cachedMessages = when {
+                after != null -> cache.messages().getMessagesAfter(channelId, 50, after)
+                before != null -> cache.messages().getMessagesBefore(channelId, 50, before)
+                around != null -> cache.messages().getMessagesAround(channelId, 50, around)
+                else -> cache.messages().getMessagesLast(channelId, 50)
+            }
 
-        return if (cachedMessages.size >= 50) {
-            cachedMessages.map(::constructDomainMessage)
-        } else {
-            val messages = api.getChannelMessages(channelId, before, after, around).values
-            val entityMessages = messages.map { it.toEntity() }
+            if (cachedMessages.size >= 50) {
+                cachedMessages.map(::constructDomainMessage)
+            } else {
+                val messages = api.getChannelMessages(channelId, 50, before, after, around).values
 
-            cache.messages().insertMessages(*entityMessages.toTypedArray())
-            messages.map { it.toDomain() }
+                cache.messages().apply {
+                    val entityMessages = messages.map { it.toEntity() }
+                    insertMessages(*entityMessages.toTypedArray())
+                    insertAttachments(*messages.flatMap { msg ->
+                        msg.attachments.map {
+                            it.toEntity(msg.id.value)
+                        }
+                    }.toTypedArray())
+                    insertEmbeds(*messages.flatMap { msg ->
+                        msg.embeds.mapIndexed { index, embed ->
+                            embed.toEntity(
+                                messageId = msg.id.value,
+                                embedIndex = index,
+                            )
+                        }
+                    }.toTypedArray())
+                }
+                cache.users().apply {
+                    insertUsers(*messages.map { it.author.toEntity() }.toTypedArray())
+                }
+
+                messages.map { it.toDomain() }
+            }
         }
     }
 
