@@ -4,13 +4,15 @@ import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.Dependencies
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
-import com.google.devtools.ksp.symbol.*
+import com.google.devtools.ksp.symbol.ClassKind
+import com.google.devtools.ksp.symbol.KSAnnotated
+import com.google.devtools.ksp.symbol.KSClassDeclaration
+import com.google.devtools.ksp.symbol.KSVisitorVoid
 import com.google.devtools.ksp.validate
 import com.xinto.ksputil.*
 import java.io.OutputStream
 
 class GetterGenProcessor(val codeGenerator: CodeGenerator) : SymbolProcessor {
-
     override fun process(resolver: Resolver): List<KSAnnotated> {
         val symbols = resolver.getSymbolsWithAnnotation(GETTERGEN_ANNOTATION_IDENTIFIER)
         val ret = symbols.filter { !it.validate() }.toList()
@@ -23,23 +25,33 @@ class GetterGenProcessor(val codeGenerator: CodeGenerator) : SymbolProcessor {
     }
 
     inner class PartialVisitor : KSVisitorVoid() {
-
         override fun visitClassDeclaration(classDeclaration: KSClassDeclaration, data: Unit) {
             if (classDeclaration.classKind != ClassKind.ENUM_CLASS)
                 return
 
             val constructorParams = classDeclaration.primaryConstructor?.parameters
                 ?: return
+
             val enumFields = classDeclaration.declarations
                 .filter { it is KSClassDeclaration && it.classKind == ClassKind.ENUM_ENTRY }
                 .map { Pair(it.simpleName.getShortName(), it.resolveImport()) }
-            
+
+            val companionName = classDeclaration.declarations.firstNotNullOfOrNull {
+                if (it is KSClassDeclaration && it.isCompanionObject) {
+                    it.simpleName.getShortName()
+                } else {
+                    null
+                }
+            }
+
             val packageName = classDeclaration.packageName.asString()
             val classShortName = classDeclaration.qualifiedName?.getShortName() ?: "<ERROR>"
             val classQualifiedName = classDeclaration.qualifiedName?.asString() ?: "<ERROR>"
+            if (companionName == null)
+                throw Error("No companion object definition at ${classDeclaration.location.toConsoleString()}")
 
             val imports = mutableListOf(classQualifiedName)
-            
+
             val transformedConstructorParams = constructorParams.map { parameter ->
                 val name = parameter.name?.asString() ?: "<ERROR>"
                 val type = parameter.type.sourceType().let { (type, import) ->
@@ -54,7 +66,7 @@ class GetterGenProcessor(val codeGenerator: CodeGenerator) : SymbolProcessor {
                 if (import != null) {
                     imports.add(import)
                 }
-                
+
                 type
             }.toList()
 
@@ -77,14 +89,16 @@ class GetterGenProcessor(val codeGenerator: CodeGenerator) : SymbolProcessor {
 
                 file.writeGetterFunction(
                     className = classShortName,
+                    companionName = companionName,
                     constructorParams = transformedConstructorParams,
                     enumFields = transformedEnumFields
                 )
             }
         }
-        
+
         private fun OutputStream.writeGetterFunction(
             className: String,
+            companionName: String,
             constructorParams: List<Pair<String, String>>,
             enumFields: List<String>,
         ) {
@@ -99,7 +113,7 @@ class GetterGenProcessor(val codeGenerator: CodeGenerator) : SymbolProcessor {
 
             appendTextSpaced("fun")
             appendText(className)
-            appendText(".Companion.")
+            appendText(".$companionName.")
             appendText(functionName)
             appendText("(")
             appendText(functionParams)
@@ -134,5 +148,4 @@ class GetterGenProcessor(val codeGenerator: CodeGenerator) : SymbolProcessor {
     companion object {
         const val GETTERGEN_ANNOTATION_IDENTIFIER = "com.xinto.enumgetter.GetterGen"
     }
-
 }
