@@ -257,6 +257,7 @@ inline fun <reified E : Event> DiscordGateway.onEvent(
     noinline filterPredicate: suspend (E) -> Boolean = { true },
     crossinline block: suspend (E) -> Unit
 ) {
+    // TODO: encapsulate entire thing in launch instead
     events.buffer(Channel.UNLIMITED)
         .filterIsInstance<E>()
         .filter(filterPredicate)

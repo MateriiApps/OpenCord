@@ -2,17 +2,14 @@ package com.xinto.opencord.rest.service
 
 import com.xinto.opencord.BuildConfig
 import com.xinto.opencord.gateway.DiscordGateway
-import com.xinto.opencord.gateway.event.MessageCreateEvent
-import com.xinto.opencord.gateway.event.MessageDeleteEvent
-import com.xinto.opencord.gateway.event.MessageUpdateEvent
 import com.xinto.opencord.gateway.event.UserSettingsUpdateEvent
 import com.xinto.opencord.gateway.onEvent
 import com.xinto.opencord.rest.body.MessageBody
 import com.xinto.opencord.rest.dto.*
-import com.xinto.partialgen.getOrNull
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
+import io.ktor.http.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -22,8 +19,13 @@ interface DiscordApiService {
     suspend fun getGuildChannels(guildId: Long): Map<ApiSnowflake, ApiChannel>
 
     suspend fun getChannel(channelId: Long): ApiChannel
-    suspend fun getChannelMessages(channelId: Long): Map<ApiSnowflake, ApiMessage>
     suspend fun getChannelPins(channelId: Long): Map<ApiSnowflake, ApiMessage>
+    suspend fun getChannelMessages(
+        channelId: Long,
+        before: Long? = null,
+        after: Long? = null,
+        around: Long? = null,
+    ): Map<ApiSnowflake, ApiMessage>
 
     suspend fun postChannelMessage(channelId: Long, body: MessageBody)
 
@@ -43,7 +45,8 @@ class DiscordApiServiceImpl(
     private val cachedChannelById = mutableMapOf<Long, ApiChannel>()
 
     private val cachedGuildChannels = mutableMapOf<Long, MutableMap<ApiSnowflake, ApiChannel>>()
-    private val cachedChannelMessages = mutableMapOf<Long, MutableMap<ApiSnowflake, ApiMessage>>()
+
+    //    private val cachedChannelMessages = mutableMapOf<Long, MutableMap<ApiSnowflake, ApiMessage>>()
     private val cachedChannelPins = mutableMapOf<Long, MutableMap<ApiSnowflake, ApiMessage>>()
 
     private var cachedUserSettings: ApiUserSettings? = null
@@ -91,14 +94,19 @@ class DiscordApiServiceImpl(
         }
     }
 
-    override suspend fun getChannelMessages(channelId: Long): Map<ApiSnowflake, ApiMessage> {
+    override suspend fun getChannelMessages(
+        channelId: Long,
+        before: Long?,
+        after: Long?,
+        around: Long?,
+    ): Map<ApiSnowflake, ApiMessage> {
         return withContext(Dispatchers.IO) {
-            if (cachedChannelMessages[channelId] == null) {
-                val url = getChannelMessagesUrl(channelId)
-                val response: List<ApiMessage> = client.get(url).body()
-                cachedChannelMessages[channelId] = response.associateBy { it.id }.toMutableMap()
-            }
-            cachedChannelMessages[channelId]!!
+            val messages = client
+                .get(getChannelMessagesUrl(channelId, before, after, around))
+                .body<List<ApiMessage>>()
+
+            // TODO: remove this map
+            messages.associateBy { it.id }.toMutableMap()
         }
     }
 
@@ -149,29 +157,29 @@ class DiscordApiServiceImpl(
     }
 
     init {
-        gateway.onEvent<MessageCreateEvent> {
-            val data = it.data
-            val channelId = data.channelId.value
-            cachedChannelMessages[channelId]?.put(data.id, data)
-        }
-
-        gateway.onEvent<MessageUpdateEvent> {
-            val partialData = it.data
-            val id = partialData.id.getOrNull()!!
-            val channelId = partialData.channelId.getOrNull()!!.value
-            val mergedData = cachedChannelMessages[channelId]?.get(id).let { message ->
-                message?.merge(partialData)
-            }
-            if (mergedData != null) {
-                cachedChannelMessages[channelId]?.put(id, mergedData)
-            }
-        }
-
-        gateway.onEvent<MessageDeleteEvent> {
-            val data = it.data
-            val channelId = data.channelId.value
-            cachedChannelMessages[channelId]?.remove(data.messageId)
-        }
+//        gateway.onEvent<MessageCreateEvent> {
+//            val data = it.data
+//            val channelId = data.channelId.value
+//            cachedChannelMessages[channelId]?.put(data.id, data)
+//        }
+//
+//        gateway.onEvent<MessageUpdateEvent> {
+//            val partialData = it.data
+//            val id = partialData.id.getOrNull()!!
+//            val channelId = partialData.channelId.getOrNull()!!.value
+//            val mergedData = cachedChannelMessages[channelId]?.get(id).let { message ->
+//                message?.merge(partialData)
+//            }
+//            if (mergedData != null) {
+//                cachedChannelMessages[channelId]?.put(id, mergedData)
+//            }
+//        }
+//
+//        gateway.onEvent<MessageDeleteEvent> {
+//            val data = it.data
+//            val channelId = data.channelId.value
+//            cachedChannelMessages[channelId]?.remove(data.messageId)
+//        }
 
         gateway.onEvent<UserSettingsUpdateEvent> {
             cachedUserSettings = cachedUserSettings?.merge(it.data)
@@ -198,9 +206,23 @@ class DiscordApiServiceImpl(
             return "$BASE/channels/$channelId"
         }
 
-        fun getChannelMessagesUrl(channelId: Long): String {
-            val channelUrl = getChannelUrl(channelId)
-            return "$channelUrl/messages"
+        fun getChannelMessagesUrl(
+            channelId: Long,
+            limit: Long? = null,
+            before: Long? = null,
+            after: Long? = null,
+            around: Long? = null,
+        ): String {
+            val channelUrl = getChannelUrl(channelId) + "/messages"
+
+            val parameters = ParametersBuilder(4).apply {
+                before?.let { append("before", it.toString()) }
+                after?.let { append("after", it.toString()) }
+                around?.let { append("around", it.toString()) }
+                limit?.let { append("limit", limit.toString()) }
+            }
+
+            return "$channelUrl/messages${parameters.build().formUrlEncode()}"
         }
 
         fun getChannelPinsUrl(channelId: Long): String {

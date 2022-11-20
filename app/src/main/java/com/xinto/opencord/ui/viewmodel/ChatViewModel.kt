@@ -4,32 +4,19 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xinto.opencord.domain.manager.PersistentDataManager
-import com.xinto.opencord.domain.mapper.toDomain
 import com.xinto.opencord.domain.model.DomainMessage
-import com.xinto.opencord.domain.model.DomainMessageRegular
-import com.xinto.opencord.domain.model.merge
 import com.xinto.opencord.domain.repository.DiscordApiRepository
-import com.xinto.opencord.domain.store.ListEvent
+import com.xinto.opencord.domain.store.Event
 import com.xinto.opencord.domain.store.MessageStore
-import com.xinto.opencord.gateway.DiscordGateway
-import com.xinto.opencord.gateway.event.MessageCreateEvent
-import com.xinto.opencord.gateway.event.MessageDeleteEvent
-import com.xinto.opencord.gateway.event.MessageUpdateEvent
-import com.xinto.opencord.gateway.event.ReadyEvent
-import com.xinto.opencord.gateway.onEvent
 import com.xinto.opencord.rest.body.MessageBody
-import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
 import com.xinto.opencord.util.throttle
-import com.xinto.partialgen.getOrNull
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class ChatViewModel(
-    private val channelId: Long,
-
     private val messageStore: MessageStore,
-    private val repository: DiscordApiRepository
+    private val repository: DiscordApiRepository,
+    private val persistentDataManager: PersistentDataManager,
 ) : ViewModel() {
 
     sealed interface State {
@@ -52,26 +39,50 @@ class ChatViewModel(
     var currentUserId by mutableStateOf<Long?>(null)
         private set
 
-    private val job = viewModelScope.launch {
-        messageStore.observe(channelId).collect {
-            when (it) {
-                is ListEvent.Add -> {
-                    messages[it.data.id] = it.data
-                }
-                is ListEvent.Update -> {
-                    if (messages[it.data.id] != null) {
+    private var job: Job? = null
+
+    val startTyping = throttle(9500, viewModelScope) {
+        repository.startTyping(persistentDataManager.persistentChannelId)
+    }
+
+    fun load() {
+        viewModelScope.launch {
+            state = State.Loading
+
+            try {
+                val channel = repository.getChannel(persistentDataManager.persistentChannelId)
+                val channelMessages =
+                    messageStore.fetchMessages(persistentDataManager.persistentChannelId)
+
+                channelName = channel.name
+                messages.clear()
+                messages.putAll(channelMessages.associateBy { it.id })
+                state = State.Loaded
+            } catch (t: Throwable) {
+                t.printStackTrace()
+                state = State.Error
+            }
+        }
+
+        job = viewModelScope.launch {
+            messageStore.observeChannel(persistentDataManager.persistentChannelId).collect {
+                when (it) {
+                    is Event.Add -> {
                         messages[it.data.id] = it.data
                     }
-                }
-                is ListEvent.Remove -> {
-                    messages.remove(it.data.id)
+                    is Event.Update -> {
+                        if (messages[it.data.id] != null) {
+                            messages[it.data.id] = it.data
+                        }
+                    }
+                    is Event.Remove -> {
+                        messages.remove(it.data?.id)
+                    }
                 }
             }
         }
-    }
 
-    val startTyping = throttle(9500, viewModelScope) {
-        repository.startTyping(channelId)
+        state = State.Loaded
     }
 
     fun sendMessage() {
@@ -80,7 +91,7 @@ class ChatViewModel(
             val message = userMessage
             userMessage = ""
             repository.postChannelMessage(
-                channelId = channelId,
+                channelId = persistentDataManager.persistentChannelId,
                 MessageBody(
                     content = message
                 )
@@ -99,7 +110,6 @@ class ChatViewModel(
     }
 
     override fun onCleared() {
-        job.cancel()
+        job?.cancel()
     }
-
 }

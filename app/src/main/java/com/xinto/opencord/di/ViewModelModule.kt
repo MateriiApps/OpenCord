@@ -6,6 +6,7 @@ import com.xinto.opencord.domain.manager.CacheManager
 import com.xinto.opencord.domain.manager.PersistentDataManager
 import com.xinto.opencord.domain.repository.DiscordApiRepository
 import com.xinto.opencord.domain.repository.DiscordAuthRepository
+import com.xinto.opencord.domain.store.MessageStore
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.ui.viewmodel.*
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -33,14 +34,13 @@ val viewModelModule = module {
         )
     }
 
-
     fun provideChatViewModel(
-        gateway: DiscordGateway,
+        messageStore: MessageStore,
         repository: DiscordApiRepository,
         persistentDataManager: PersistentDataManager
     ): ChatViewModel {
         return ChatViewModel(
-            gateway = gateway,
+            messageStore = messageStore,
             repository = repository,
             persistentDataManager = persistentDataManager
         )
