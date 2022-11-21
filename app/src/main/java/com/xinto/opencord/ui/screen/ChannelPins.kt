@@ -188,6 +188,9 @@ private fun ChannelPinsLoaded(
                                                 height = attachment.height
                                             )
                                         }
+                                        is DomainAttachment.Video -> {
+                                            WidgetAttachmentVideo(url = attachment.url)
+                                        }
                                         else -> {}
                                     }
                                 }
