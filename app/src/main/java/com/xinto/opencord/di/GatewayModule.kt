@@ -28,5 +28,5 @@ val gatewayModule = module {
         )
     }
 
-    single { provideGateway(get(named("gateway")), get(), get(), get(), get()) }
+    single { provideGateway(get(), get(), get(), get(), get()) }
 }
