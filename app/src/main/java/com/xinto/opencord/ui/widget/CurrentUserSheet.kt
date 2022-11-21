@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.xinto.bdc.BottomSheetDialog
 import com.xinto.opencord.R
@@ -73,7 +74,7 @@ fun CurrentUserSheet(
                         Text(viewModel.userCustomStatus!!.text ?: "")
                         Icon(
                             painter = painterResource(R.drawable.ic_cancel),
-                            contentDescription = "Clear status",
+                            contentDescription = stringResource(R.string.current_user_clear_status),
                             modifier = Modifier
                                 .align(Alignment.CenterEnd)
                                 .clickable {
@@ -97,7 +98,7 @@ fun CurrentUserSheet(
                             tint = Color.Unspecified,
                             modifier = Modifier.size(25.dp),
                         )
-                        Text("Set a custom status")
+                        Text(stringResource(R.string.current_user_set_status))
                     }
                 }
 
@@ -114,7 +115,7 @@ fun CurrentUserSheet(
                         contentDescription = null,
                         modifier = Modifier.size(25.dp),
                     )
-                    Text("Switch Accounts")
+                    Text(stringResource(R.string.accounts_open))
                 }
             }
         }

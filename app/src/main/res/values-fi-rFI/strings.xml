@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="navigation_back">Takaisin</string>
+    <string name="login_landing_title">Tervetuloa OpenCordiin!</string>
+    <string name="login_landing_subtitle">Liity yli 0 henkilöön, jotka käyttävät OpenCordia vaihtoehtona viralliselle Discord-sovellukselle.</string>
+    <string name="login_login_title">Tervetuloa takaisin!</string>
+    <string name="login_login_subtitle">Olemme erittäin innoissamme jälleennäkemisestäsi!</string>
+    <string name="login_action_login">Kirjaudu</string>
+    <string name="login_action_register">Rekisteröidy</string>
+    <string name="login_field_username">Sähköpostiosoite tai puhelinnumero</string>
+    <string name="login_field_password">Salasana</string>
+    <string name="login_mfa_title">Kaksivaiheinen tunnistautuminen vaaditaan!</string>
+    <string name="login_mfa_code">Kaksivaiheisen tunnistautumisen koodi tai varakoodi</string>
+    <string name="login_mfa_confirm">Vahvista</string>
+    <string name="login_mfa_cancel">Peruuta</string>
+    <string name="chat_title">#%1$s</string>
+    <string name="chat_unselected_message">Valitse kanava.</string>
+    <string name="chat_input_hint">Viesti kanavalle #%1$s</string>
+    <string name="chat_loading_error">Keskustelua ladattaessa tapahtui virhe.</string>
+    <string name="channel_unselected_message">Valitse kilta.</string>
+    <string name="channels_collapse_category">Supista kategoria</string>
+    <string name="pins_title">Kiinnitetyt viestit</string>
+    <string name="pins_loading_error">Kiinnitettyjä viestejä ladattaessa tapahtui virhe.</string>
+    <string name="settings_title">Asetukset</string>
+    <string name="settings_open">Avaa asetukset</string>
+    <string name="timestamp_tomorrow">Huomenna klo %1$s</string>
+    <string name="timestamp_today">Tänään klo %1$s</string>
+    <string name="timestamp_yesterday">Eilen klo %1$s</string>
+    <string name="message_reply_unknown">Tuntematon viesti.</string>
+    <string name="guilds_home">Koti</string>
+    <string name="guild_boost_level">Palvelimen boostaustaso</string>
+    <string name="current_user_set_status">Aseta oma tila</string>
+    <string name="current_user_clear_status">Tyhjennä tila</string>
+    <string name="accounts_open">Avaa tilin valitsin</string>
+</resources>

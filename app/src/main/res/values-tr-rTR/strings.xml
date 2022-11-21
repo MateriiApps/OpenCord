@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="navigation_back">Geri</string>
+    <string name="login_landing_title">OpenCord\'a Hoşgeldiniz!</string>
+    <string name="login_landing_subtitle">OpenCord\'u resmi Discord uygulamasına bir alternatif olarak kullanan 0 kişiye katılın.</string>
+    <string name="login_login_title">Tekrar Hoşgeldiniz!</string>
+    <string name="login_login_subtitle">Sizi tekrar görmek için çok heyecanlıyız!</string>
+    <string name="login_action_login">Giriş Yap</string>
+    <string name="login_action_register">Kayıt Ol</string>
+    <string name="login_field_username">E-posta veya Telefon Numarası</string>
+    <string name="login_field_password">Şifre</string>
+    <string name="login_mfa_title">2FA Gerekli!</string>
+    <string name="login_mfa_code">2FA veya Yedek Kodu</string>
+    <string name="login_mfa_confirm">Onay</string>
+    <string name="login_mfa_cancel">Vazgeç</string>
+    <string name="chat_title">#%1$s</string>
+    <string name="chat_unselected_message">Lütfen bir kanal seçin.</string>
+    <string name="chat_input_hint">#%1$s\'ya Mesaj Gönder</string>
+    <string name="chat_loading_error">Sohbet\'i yüklerken bir hata oluştu.</string>
+    <string name="channel_unselected_message">Lütfen bir sunucu seçin.</string>
+    <string name="channels_collapse_category">Kategoriyi daralt</string>
+    <string name="pins_title">Sabili Mesajlar</string>
+    <string name="pins_loading_error">Sabitlenmiş mesajları yüklerken bir hata oluştu.</string>
+    <string name="settings_title">Ayarlar</string>
+    <string name="settings_open">Ayarlar\'ı aç</string>
+    <string name="timestamp_tomorrow">Yarın %1$s\'da</string>
+    <string name="timestamp_today">Bugün %1$s\'de</string>
+    <string name="timestamp_yesterday">Dün %1$s\'de</string>
+    <string name="message_reply_unknown">Bilinmeyen mesaj.</string>
+    <string name="guilds_home">Ana Sayfa</string>
+    <string name="guild_boost_level">Sunucu takviye seviyesi</string>
+    <string name="current_user_set_status">Bir özel durum belirle</string>
+    <string name="current_user_clear_status">Durumu temizle</string>
+    <string name="accounts_open">Hesap değiştiricisini aç</string>
+</resources>

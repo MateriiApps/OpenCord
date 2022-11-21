@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="navigation_back">Zurück</string>
+    <string name="login_landing_title">Willkommen bei OpenCord!</string>
+    <string name="login_landing_subtitle">Trete über 0 Leuten bei, die OpenCord als Alternative zu Discord benutzen.</string>
+    <string name="login_login_title">Willkommen zurück!</string>
+    <string name="login_login_subtitle">Wir freuen uns dich wiederzusehen!</string>
+    <string name="login_action_login">Login</string>
+    <string name="login_action_register">Registrieren</string>
+    <string name="login_field_username">E-Mail oder Telefonnummer</string>
+    <string name="login_field_password">Passwort</string>
+    <string name="login_mfa_title">2FA erforderlich!</string>
+    <string name="login_mfa_code">2FA oder Backup Code</string>
+    <string name="login_mfa_confirm">Bestätigen</string>
+    <string name="login_mfa_cancel">Abbrechen</string>
+    <string name="chat_title">#%1$s</string>
+    <string name="chat_unselected_message">Bitte wähle einen Kanal aus.</string>
+    <string name="chat_input_hint">Schreibe #%1$s</string>
+    <string name="chat_loading_error">Ein Fehler ist während des Ladens des Chats aufgetreten.</string>
+    <string name="channel_unselected_message">Bitte wähle einen Kanal aus.</string>
+    <string name="channels_collapse_category">Kollaps Kategorie</string>
+    <string name="pins_title">Angepinnte Nachrichten</string>
+    <string name="pins_loading_error">Ein Fehler ist während des Ladens des Chats aufgetreten.</string>
+    <string name="settings_title">Einstellungen</string>
+    <string name="settings_open">Einstellungen öffnen</string>
+    <string name="timestamp_tomorrow">Morgen um %1$s</string>
+    <string name="timestamp_today">Heute um %1$s</string>
+    <string name="timestamp_yesterday">Gestern um %1$s</string>
+    <string name="message_reply_unknown">Unbekannte Nachricht.</string>
+    <string name="guilds_home">Menü</string>
+    <string name="guild_boost_level">Serverbooster Level</string>
+    <string name="current_user_set_status">Stelle einen Status ein</string>
+    <string name="current_user_clear_status">Status löschen</string>
+    <string name="accounts_open">Account Switcher öffnen</string>
+</resources>
