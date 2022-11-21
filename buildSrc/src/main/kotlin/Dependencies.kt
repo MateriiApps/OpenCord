@@ -198,7 +198,7 @@ sealed class Dependencies {
     }
 
     object HCaptcha : Dependencies() {
-        const val version = "3.3.1"
+        const val version = "3.3.5"
 
         const val hCaptchaSdk = "com.github.hcaptcha:hcaptcha-android-sdk:$version"
 

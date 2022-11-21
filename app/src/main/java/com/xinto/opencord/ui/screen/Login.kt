@@ -186,6 +186,7 @@ fun HCaptcha(
 ) {
     val context = LocalContext.current
     val hcaptcha: HCaptcha = get { parametersOf(context) }
+    DisposableEffect(hcaptcha) {
         hcaptcha.verifyWithHCaptcha()
             .addOnSuccessListener {
                 onSuccess(it.tokenResult)
@@ -193,4 +194,6 @@ fun HCaptcha(
             .addOnFailureListener {
                 onFailure(it.hCaptchaError, it.statusCode)
             }
+        onDispose {}
+    }
 }
