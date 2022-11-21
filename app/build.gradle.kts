@@ -148,10 +148,10 @@ dependencies {
     Dependencies.HCaptcha(this)
     Dependencies.AndroidxCore(this)
     Dependencies.AndroidxPreferences(this)
+    Dependencies.AndroidxMedia3(this)
     Dependencies.Material(this)
     Dependencies.Compose(this)
     Dependencies.Accompanist(this)
     Dependencies.Shimmer(this)
     Dependencies.Coil(this)
-    Dependencies.ExoPlayer(this)
 }

@@ -168,18 +168,18 @@ sealed class Dependencies {
         }
     }
 
-    object ExoPlayer : Dependencies() {
-        const val version = "2.18.1"
+    object AndroidxMedia3 : Dependencies() {
+        const val version = "1.0.0-beta02"
 
-        const val exoplayerCore = "com.google.android.exoplayer:exoplayer-core:$version"
-        const val exoplayerDash = "com.google.android.exoplayer:exoplayer-dash:$version"
-        const val exoplayerUi = "com.google.android.exoplayer:exoplayer-ui:$version"
+        const val media3exo = "androidx.media3:media3-exoplayer:$version"
+        const val media3exoDash = "androidx.media3:media3-exoplayer-dash:$version"
+        const val media3Ui = "androidx.media3:media3-ui:$version"
 
         override fun invoke(scope: DependencyHandlerScope) {
             scope {
-                implementation(exoplayerCore)
-                implementation(exoplayerDash)
-                implementation(exoplayerUi)
+                implementation(media3exo)
+                implementation(media3exoDash)
+                implementation(media3Ui)
             }
         }
     }
