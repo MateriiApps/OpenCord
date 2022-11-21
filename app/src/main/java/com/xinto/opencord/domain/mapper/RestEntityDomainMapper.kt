@@ -118,14 +118,12 @@ fun EntityChannel.toDomain(): DomainChannel {
             name = name,
             position = position,
             parentId = parentId,
-            permissions = ApiPermissions(permissions).toDomain()
         )
         4 -> DomainChannel.Category(
             id = id,
             guildId = guildId,
             name = name,
             position = position,
-            permissions = ApiPermissions(permissions).toDomain()
         )
         5 -> DomainChannel.AnnouncementChannel(
             id = id,
@@ -133,7 +131,6 @@ fun EntityChannel.toDomain(): DomainChannel {
             name = name,
             position = position,
             parentId = parentId,
-            permissions = ApiPermissions(permissions).toDomain(),
             nsfw = nsfw
         )
         else -> DomainChannel.TextChannel(
@@ -142,7 +139,6 @@ fun EntityChannel.toDomain(): DomainChannel {
             name = name,
             position = position,
             parentId = parentId,
-            permissions = ApiPermissions(permissions).toDomain(),
             nsfw = nsfw
         )
     }
@@ -154,7 +150,6 @@ fun EntityGuild.toDomain(): DomainGuild {
         name = name,
         iconUrl = icon,
         bannerUrl = bannerUrl,
-        permissions = ApiPermissions(permissions).toDomain(),
         premiumTier = premiumTier,
         premiumSubscriptionCount = premiumSubscriptionCount ?: 0,
     )

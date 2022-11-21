@@ -5,7 +5,6 @@ data class DomainGuild(
     val name: String,
     val iconUrl: String?,
     val bannerUrl: String?,
-    val permissions: List<DomainPermission>,
     val premiumTier: Int,
     val premiumSubscriptionCount: Int,
 ) {

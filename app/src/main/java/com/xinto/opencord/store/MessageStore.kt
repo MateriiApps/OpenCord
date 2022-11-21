@@ -24,8 +24,8 @@ interface MessageStore {
     suspend fun fetchMessages(
         channelId: Long,
         after: Long? = null,
-        before: Long? = null,
         around: Long? = null,
+        before: Long? = null,
     ): List<DomainMessage>
 }
 
@@ -59,7 +59,7 @@ class MessageStoreImpl(
         }
 
         val author = cachedUsers.computeIfAbsent(message.authorId) {
-            cache.users().getUser(message.authorId).toDomain()
+            cache.users().getUser(message.authorId)!!.toDomain()
         }
 
         return message.toDomain(
@@ -73,33 +73,47 @@ class MessageStoreImpl(
     override suspend fun fetchMessages(
         channelId: Long,
         after: Long?,
-        before: Long?,
         around: Long?,
+        before: Long?,
     ): List<DomainMessage> {
         return withContext(Dispatchers.IO) {
             val cachedMessages = when {
                 after != null -> cache.messages().getMessagesAfter(channelId, 50, after)
-                before != null -> cache.messages().getMessagesBefore(channelId, 50, before)
                 around != null -> cache.messages().getMessagesAround(channelId, 50, around)
+                before != null -> cache.messages().getMessagesBefore(channelId, 50, before)
                 else -> cache.messages().getMessagesLast(channelId, 50)
             }
+            println("channel $channelId $cachedMessages")
 
             if (cachedMessages.size >= 50) {
                 cachedMessages.map(::constructDomainMessage)
             } else {
-                val messages = api.getChannelMessages(channelId, 50, before, after, around)
+                val messages = api.getChannelMessages(
+                    channelId = channelId,
+                    limit = 50,
+                    before = before,
+                    around = around,
+                    after = after,
+                )
 
                 cache.users().apply {
-                    insertUsers(*messages.map { it.author.toEntity() }.toTypedArray())
+                    val users = messages
+                        .distinctBy { it.author.id }
+                        .map { it.author.toEntity() }
+                        .toTypedArray()
+
+                    insertUsers(*users)
                 }
                 cache.messages().apply {
                     val entityMessages = messages.map { it.toEntity() }
                     insertMessages(*entityMessages.toTypedArray())
+
                     insertAttachments(*messages.flatMap { msg ->
                         msg.attachments.map {
                             it.toEntity(msg.id.value)
                         }
                     }.toTypedArray())
+
                     insertEmbeds(*messages.flatMap { msg ->
                         msg.embeds.mapIndexed { index, embed ->
                             embed.toEntity(
@@ -118,6 +132,8 @@ class MessageStoreImpl(
     init {
         gateway.onEvent<MessageCreateEvent> {
             events.emit(Event.Add(it.data.toDomain()))
+
+            cache.users().insertUsers(it.data.author.toEntity())
             cache.messages().insertMessages(it.data.toEntity())
         }
 

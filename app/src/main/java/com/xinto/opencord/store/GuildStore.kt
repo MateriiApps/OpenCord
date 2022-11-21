@@ -7,15 +7,17 @@ import com.xinto.opencord.domain.model.DomainGuild
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.event.*
 import com.xinto.opencord.gateway.onEvent
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.withContext
 
 interface GuildStore {
     fun observeGuild(guildId: Long): Flow<Event<DomainGuild>>
     fun observeGuilds(): Flow<Event<DomainGuild>>
 
-    suspend fun fetchGuild(guildId: Long): DomainGuild
+    suspend fun fetchGuild(guildId: Long): DomainGuild?
 }
 
 class GuildStoreImpl(
@@ -34,8 +36,10 @@ class GuildStoreImpl(
         return events
     }
 
-    override suspend fun fetchGuild(guildId: Long): DomainGuild {
-        return cache.guilds().getGuild(guildId).toDomain()
+    override suspend fun fetchGuild(guildId: Long): DomainGuild? {
+        return withContext(Dispatchers.IO) {
+            cache.guilds().getGuild(guildId)?.toDomain()
+        }
     }
 
     init {

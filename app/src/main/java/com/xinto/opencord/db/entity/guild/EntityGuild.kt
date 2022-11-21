@@ -20,9 +20,6 @@ data class EntityGuild(
     @ColumnInfo(name = "banner_url")
     val bannerUrl: String? = null,
 
-    @ColumnInfo(name = "permissions")
-    val permissions: Long,
-
     @ColumnInfo(name = "premium_tier")
     val premiumTier: Int,
 

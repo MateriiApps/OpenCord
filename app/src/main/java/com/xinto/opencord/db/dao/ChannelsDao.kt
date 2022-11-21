@@ -21,7 +21,7 @@ interface ChannelsDao {
     fun deleteUnknownChannels(guildId: Long, vararg knownIds: Long)
 
     @Query("SELECT * FROM channels WHERE id = :channelId LIMIT 1")
-    fun getChannel(channelId: Long): EntityChannel
+    fun getChannel(channelId: Long): EntityChannel?
 
     @Query("SELECT * FROM channels WHERE guild_id = :guildId")
     fun getChannels(guildId: Long): List<EntityChannel>

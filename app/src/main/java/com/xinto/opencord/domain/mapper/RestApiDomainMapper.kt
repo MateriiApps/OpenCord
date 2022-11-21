@@ -41,7 +41,6 @@ fun ApiAttachment.toDomain(): DomainAttachment {
 }
 
 fun ApiChannel.toDomain(): DomainChannel {
-    val permissions = permissions.toDomain()
     return when (type) {
         2 -> DomainChannel.VoiceChannel(
             id = id.value,
@@ -49,14 +48,12 @@ fun ApiChannel.toDomain(): DomainChannel {
             name = name,
             position = position,
             parentId = parentId?.value,
-            permissions = permissions
         )
         4 -> DomainChannel.Category(
             id = id.value,
             guildId = guildId?.value,
             name = name,
             position = position,
-            permissions = permissions
         )
         5 -> DomainChannel.AnnouncementChannel(
             id = id.value,
@@ -64,7 +61,6 @@ fun ApiChannel.toDomain(): DomainChannel {
             name = name,
             position = position,
             parentId = parentId?.value,
-            permissions = permissions,
             nsfw = nsfw
         )
         else -> DomainChannel.TextChannel(
@@ -73,7 +69,6 @@ fun ApiChannel.toDomain(): DomainChannel {
             name = name,
             position = position,
             parentId = parentId?.value,
-            permissions = permissions,
             nsfw = nsfw
         )
     }
@@ -91,7 +86,6 @@ fun ApiGuild.toDomain(): DomainGuild {
         name = name,
         iconUrl = iconUrl,
         bannerUrl = bannerUrl,
-        permissions = permissions.toDomain(),
         premiumTier = premiumTier,
         premiumSubscriptionCount = premiumSubscriptionCount ?: 0,
     )

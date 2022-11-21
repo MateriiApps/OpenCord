@@ -66,17 +66,15 @@ fun ApiUser.toEntity(): EntityUser {
     )
 }
 
-fun ApiChannel.toEntity(): EntityChannel {
+fun ApiChannel.toEntity(guildId: Long): EntityChannel {
     return EntityChannel(
         id = id.value,
-        guildId = guildId?.value
-            ?: throw Error("cannot convert an ApiChannel to EntityChannel without guild id"),
+        guildId = this.guildId?.value ?: guildId,
         name = name,
         type = type,
         position = position,
         parentId = parentId?.value,
         nsfw = nsfw,
-        permissions = permissions.value,
     )
 }
 
@@ -86,7 +84,6 @@ fun ApiGuild.toEntity(): EntityGuild {
         name = name,
         icon = icon,
         bannerUrl = banner,
-        permissions = permissions.value,
         premiumTier = premiumTier,
         premiumSubscriptionCount = premiumSubscriptionCount,
     )

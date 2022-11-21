@@ -21,7 +21,7 @@ interface GuildsDao {
     fun deleteUnknownGuilds(vararg knownIds: Long)
 
     @Query("SELECT * FROM guilds WHERE id = :guildId LIMIT 1")
-    fun getGuild(guildId: Long): EntityGuild
+    fun getGuild(guildId: Long): EntityGuild?
 
     @Query("SELECT * FROM guilds WHERE id IN(:guildIds)")
     fun getGuilds(guildIds: List<Long>): List<EntityGuild>

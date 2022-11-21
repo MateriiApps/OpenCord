@@ -6,6 +6,7 @@ import com.xinto.opencord.gateway.event.UserSettingsUpdateEvent
 import com.xinto.opencord.gateway.onEvent
 import com.xinto.opencord.rest.body.MessageBody
 import com.xinto.opencord.rest.dto.*
+import com.xinto.opencord.util.queryParameters
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -17,10 +18,10 @@ interface DiscordApiService {
     suspend fun getChannelPins(channelId: Long): List<ApiMessage>
     suspend fun getChannelMessages(
         channelId: Long,
-        limit: Long,
+        limit: Long = 50,
         before: Long? = null,
-        after: Long? = null,
         around: Long? = null,
+        after: Long? = null,
     ): List<ApiMessage>
 
     suspend fun postChannelMessage(channelId: Long, body: MessageBody)
@@ -38,13 +39,19 @@ class DiscordApiServiceImpl(
         channelId: Long,
         limit: Long,
         before: Long?,
-        after: Long?,
         around: Long?,
+        after: Long?,
     ): List<ApiMessage> {
         return withContext(Dispatchers.IO) {
-            client
-                .get(getChannelMessagesUrl(channelId, before, after, around))
-                .body()
+            val url = getChannelMessagesUrl(
+                channelId = channelId,
+                limit = limit,
+                before = before,
+                around = around,
+                after = after,
+            )
+
+            client.get(url).body()
         }
     }
 
@@ -103,19 +110,15 @@ class DiscordApiServiceImpl(
             channelId: Long,
             limit: Long? = null,
             before: Long? = null,
-            after: Long? = null,
             around: Long? = null,
+            after: Long? = null,
         ): String {
-            val channelUrl = getChannelUrl(channelId) + "/messages"
-
-            val parameters = ParametersBuilder(4).apply {
+            return getChannelUrl(channelId) + "/messages" + queryParameters {
                 before?.let { append("before", it.toString()) }
-                after?.let { append("after", it.toString()) }
                 around?.let { append("around", it.toString()) }
+                after?.let { append("after", it.toString()) }
                 limit?.let { append("limit", limit.toString()) }
             }
-
-            return channelUrl + parameters.build().formUrlEncode()
         }
 
         fun getChannelPinsUrl(channelId: Long): String {

@@ -53,6 +53,7 @@ class ChatViewModel(
 
             try {
                 val channel = channelStore.fetchChannel(persistentDataManager.persistentChannelId)
+                    ?: return@launch
                 val channelMessages =
                     messageStore.fetchMessages(persistentDataManager.persistentChannelId)
 

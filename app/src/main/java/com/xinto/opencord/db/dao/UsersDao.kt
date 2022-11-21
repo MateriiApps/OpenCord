@@ -15,5 +15,5 @@ interface UsersDao {
     fun insertUsers(vararg users: EntityUser)
 
     @Query("SELECT * FROM users WHERE id = :userId LIMIT 1")
-    fun getUser(userId: Long): EntityUser
+    fun getUser(userId: Long): EntityUser?
 }

@@ -49,7 +49,7 @@ class ChannelsViewModel(
             state = State.Loading
             withContext(Dispatchers.IO) {
                 try {
-                    val guild = guildStore.fetchGuild(persistentGuildId)
+                    val guild = guildStore.fetchGuild(persistentGuildId) ?: return@withContext
                     val guildChannels = channelStore.fetchChannels(persistentGuildId)
                         .associateBy { it.id }
 

@@ -20,7 +20,7 @@ interface MessagesDao {
     fun deleteMessages(vararg messageIds: Long)
 
     @Query("SELECT * FROM messages WHERE id = :id LIMIT 1")
-    fun getMessage(id: Long): EntityMessage
+    fun getMessage(id: Long): EntityMessage?
 
     @Query("SELECT * FROM messages WHERE channel_id = :channelId ORDER BY id DESC LIMIT :limit")
     fun getMessagesLast(channelId: Long, limit: Int): List<EntityMessage>

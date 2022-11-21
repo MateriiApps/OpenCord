@@ -16,12 +16,12 @@ import com.xinto.opencord.db.entity.guild.EntityGuild
             childColumns = ["guild_id"],
             onDelete = ForeignKey.CASCADE,
         ),
-        ForeignKey(
-            entity = EntityChannel::class,
-            parentColumns = ["id"],
-            childColumns = ["parent_id"],
-            onDelete = ForeignKey.SET_NULL,
-        ),
+//        ForeignKey(
+//            entity = EntityChannel::class,
+//            parentColumns = ["id"],
+//            childColumns = ["parent_id"],
+//            onDelete = ForeignKey.SET_NULL,
+//        ),
     ]
 )
 data class EntityChannel(
@@ -45,7 +45,4 @@ data class EntityChannel(
 
     @ColumnInfo(name = "nsfw")
     val nsfw: Boolean,
-
-    @ColumnInfo(name = "permissions")
-    val permissions: Long,
 )

@@ -25,7 +25,4 @@ data class ApiChannel(
 
     @SerialName("nsfw")
     val nsfw: Boolean = false,
-
-    @SerialName("permissions")
-    val permissions: ApiPermissions = ApiPermissions(0)
 )
