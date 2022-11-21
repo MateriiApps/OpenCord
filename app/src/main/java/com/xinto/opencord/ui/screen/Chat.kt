@@ -327,7 +327,11 @@ private fun ChatScreenLoaded(
                                             )
                                         }
                                         is DomainAttachment.Video -> {
-                                            WidgetAttachmentVideo(url = attachment.url)
+                                            WidgetAttachmentVideo(
+                                                url = attachment.url,
+                                                modifier = Modifier.fillMaxWidth()
+                                                    .aspectRatio(attachment.width.toFloat() / attachment.height.toFloat())
+                                            )
                                         }
                                         else -> {}
                                     }
