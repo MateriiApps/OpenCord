@@ -130,11 +130,25 @@ class MessageStoreImpl(
     }
 
     init {
-        gateway.onEvent<MessageCreateEvent> {
-            events.emit(Event.Add(it.data.toDomain()))
+        gateway.onEvent<MessageCreateEvent> { event ->
+            events.emit(Event.Add(event.data.toDomain()))
 
-            cache.users().insertUsers(it.data.author.toEntity())
-            cache.messages().insertMessages(it.data.toEntity())
+            cache.users().insertUsers(event.data.author.toEntity())
+
+            cache.messages().apply {
+                insertMessages(event.data.toEntity())
+
+                insertAttachments(*event.data.attachments.map {
+                    it.toEntity(event.data.id.value)
+                }.toTypedArray())
+
+                insertEmbeds(*event.data.embeds.mapIndexed { i, it ->
+                    it.toEntity(
+                        messageId = event.data.id.value,
+                        embedIndex = i,
+                    )
+                }.toTypedArray())
+            }
         }
 
         gateway.onEvent<MessageUpdateEvent> {
