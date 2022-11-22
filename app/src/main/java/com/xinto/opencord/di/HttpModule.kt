@@ -20,6 +20,7 @@ val HttpHeaders.XDiscordLocale: String
     get() = "X-Discord-Locale"
 
 val httpModule = module {
+
     fun provideJson(): Json {
         return Json {
             ignoreUnknownKeys = true
