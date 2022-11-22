@@ -1,5 +1,7 @@
 package com.xinto.opencord.di
 
+import com.xinto.opencord.domain.manager.AccountManager
+import com.xinto.opencord.domain.provider.TelemetryProvider
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.rest.service.DiscordApiService
 import com.xinto.opencord.rest.service.DiscordApiServiceImpl
@@ -21,14 +23,18 @@ val serviceModule = module {
 
     fun provideDiscordApiService(
         gateway: DiscordGateway,
-        client: HttpClient
+        client: HttpClient,
+        accountManager: AccountManager,
+        telemetryProvider: TelemetryProvider,
     ): DiscordApiService {
         return DiscordApiServiceImpl(
             gateway = gateway,
-            client = client
+            client = client,
+            accountManager = accountManager,
+            telemetryProvider = telemetryProvider,
         )
     }
 
-    single { provideDiscordAuthService(get(named("auth"))) }
-    single { provideDiscordApiService(get(), get(named("api"))) }
+    single { provideDiscordAuthService(get()) }
+    single { provideDiscordApiService(get(), get(), get(), get()) }
 }

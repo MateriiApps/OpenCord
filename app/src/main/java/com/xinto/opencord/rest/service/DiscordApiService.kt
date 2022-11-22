@@ -1,6 +1,8 @@
 package com.xinto.opencord.rest.service
 
 import com.xinto.opencord.BuildConfig
+import com.xinto.opencord.domain.manager.AccountManager
+import com.xinto.opencord.domain.provider.TelemetryProvider
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.event.MessageCreateEvent
 import com.xinto.opencord.gateway.event.MessageDeleteEvent
@@ -13,6 +15,8 @@ import com.xinto.partialgen.getOrNull
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
+import io.ktor.client.statement.*
+import io.ktor.http.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -35,7 +39,9 @@ interface DiscordApiService {
 
 class DiscordApiServiceImpl(
     gateway: DiscordGateway,
-    private val client: HttpClient
+    private val client: HttpClient,
+    private val accountManager: AccountManager,
+    private val telemetryProvider: TelemetryProvider
 ) : DiscordApiService {
     private val cachedMeGuilds = mutableListOf<ApiMeGuild>()
 
@@ -52,7 +58,7 @@ class DiscordApiServiceImpl(
         return withContext(Dispatchers.IO) {
             if (cachedMeGuilds.isEmpty()) {
                 val url = getMeGuildsUrl()
-                val response: List<ApiMeGuild> = client.get(url).body()
+                val response: List<ApiMeGuild> = authedGet(url).body()
                 cachedMeGuilds.addAll(response)
             }
             cachedMeGuilds
@@ -63,7 +69,7 @@ class DiscordApiServiceImpl(
         return withContext(Dispatchers.IO) {
             if (cachedGuildById[guildId] == null) {
                 val url = getGuildUrl(guildId)
-                val response: ApiGuild = client.get(url).body()
+                val response: ApiGuild = authedGet(url).body()
                 cachedGuildById[guildId] = response
             }
             cachedGuildById[guildId]!!
@@ -74,7 +80,7 @@ class DiscordApiServiceImpl(
         return withContext(Dispatchers.IO) {
             if (cachedGuildChannels[guildId] == null) {
                 val url = getGuildChannelsUrl(guildId)
-                val response: List<ApiChannel> = client.get(url).body()
+                val response: List<ApiChannel> = authedGet(url).body()
                 cachedGuildChannels[guildId] = response.associateBy { it.id }.toMutableMap()
             }
             cachedGuildChannels[guildId]!!
@@ -85,7 +91,7 @@ class DiscordApiServiceImpl(
         return withContext(Dispatchers.IO) {
             if (cachedChannelById[channelId] == null) {
                 val url = getChannelUrl(channelId)
-                cachedChannelById[channelId] = client.get(url).body()
+                cachedChannelById[channelId] = authedGet(url).body()
             }
             cachedChannelById[channelId]!!
         }
@@ -95,7 +101,7 @@ class DiscordApiServiceImpl(
         return withContext(Dispatchers.IO) {
             if (cachedChannelMessages[channelId] == null) {
                 val url = getChannelMessagesUrl(channelId)
-                val response: List<ApiMessage> = client.get(url).body()
+                val response: List<ApiMessage> = authedGet(url).body()
                 cachedChannelMessages[channelId] = response.associateBy { it.id }.toMutableMap()
             }
             cachedChannelMessages[channelId]!!
@@ -106,7 +112,7 @@ class DiscordApiServiceImpl(
         return withContext(Dispatchers.IO) {
             if (cachedChannelPins[channelId] == null) {
                 val url = getChannelPinsUrl(channelId)
-                val response: List<ApiMessage> = client.get(url).body()
+                val response: List<ApiMessage> = authedGet(url).body()
                 cachedChannelPins[channelId] = response.associateBy { it.id }.toMutableMap()
             }
             cachedChannelPins[channelId]!!
@@ -116,7 +122,7 @@ class DiscordApiServiceImpl(
     override suspend fun postChannelMessage(channelId: Long, body: MessageBody) {
         withContext(Dispatchers.IO) {
             val url = getChannelMessagesUrl(channelId)
-            client.post(url) {
+            authedPost(url) {
                 setBody(body)
             }
         }
@@ -125,7 +131,7 @@ class DiscordApiServiceImpl(
     override suspend fun getUserSettings(): ApiUserSettings {
         return withContext(Dispatchers.IO) {
             if (cachedUserSettings == null) {
-                cachedUserSettings = client.get(getUserSettingsUrl()).body()
+                cachedUserSettings = authedGet(getUserSettingsUrl()).body()
             }
             cachedUserSettings!!
         }
@@ -133,7 +139,7 @@ class DiscordApiServiceImpl(
 
     override suspend fun updateUserSettings(settings: ApiUserSettingsPartial): ApiUserSettings {
         return withContext(Dispatchers.IO) {
-            client.patch(getUserSettingsUrl()) {
+            authedPatch(getUserSettingsUrl()) {
                 setBody(settings)
             }.body<ApiUserSettings>().also {
                 cachedUserSettings = it
@@ -146,6 +152,41 @@ class DiscordApiServiceImpl(
             val url = getTypingUrl(channelId)
             client.post(url)
         }
+    }
+
+    private suspend inline fun authedGet(
+        url: String,
+        httpRequestBuilder: HttpRequestBuilder.() -> Unit = {}
+    ): HttpResponse {
+        return client.get(url) {
+            authedHttpRequest()
+            httpRequestBuilder()
+        }
+    }
+    
+    private suspend inline fun authedPost(
+        url: String,
+        httpRequestBuilder: HttpRequestBuilder.() -> Unit = {}
+    ): HttpResponse {
+        return client.post(url) {
+            authedHttpRequest()
+            httpRequestBuilder()
+        }
+    }
+    
+    private suspend inline fun authedPatch(
+        url: String,
+        httpRequestBuilder: HttpRequestBuilder.() -> Unit = {}
+    ): HttpResponse {
+        return client.patch(url) {
+            authedHttpRequest()
+            httpRequestBuilder()
+        }
+    }
+    
+    private fun HttpRequestBuilder.authedHttpRequest() {
+        header(HttpHeaders.Authorization, accountManager.currentAccountToken!!)
+        header(HttpHeaders.UserAgent, telemetryProvider.userAgent)
     }
 
     init {
