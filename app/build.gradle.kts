@@ -71,6 +71,9 @@ android {
     }
 
     compileOptions {
+        // Use java.time.* on Android <= 8
+        isCoreLibraryDesugaringEnabled = true
+
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
@@ -143,6 +146,9 @@ dependencies {
 
     implementation(project(":enumgetter"))
     ksp(project(":enumgetter"))
+
+    // Use java.time.* on Android <= 8
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
 
     Dependencies.Koin(this)
     Dependencies.Ktor(this)
