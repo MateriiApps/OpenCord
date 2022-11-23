@@ -1,5 +1,6 @@
 package com.xinto.opencord.gateway
 
+import android.util.Log
 import com.xinto.opencord.BuildConfig
 import com.xinto.opencord.domain.manager.AccountManager
 import com.xinto.opencord.domain.provider.PropertyProvider
@@ -40,8 +41,6 @@ interface DiscordGateway : CoroutineScope {
 
     suspend fun connect()
     suspend fun disconnect()
-
-    fun getSessionId(): String
 
     suspend fun requestGuildMembers(guildId: Long)
     suspend fun updatePresence(presence: UpdatePresence)
@@ -103,10 +102,6 @@ class DiscordGatewayImpl(
         _state.emit(DiscordGateway.State.Disconnected)
     }
 
-    override fun getSessionId(): String {
-        return sessionId
-    }
-
     private suspend fun listenToSocket() {
         webSocketSession.incoming.receiveAsFlow().buffer(Channel.UNLIMITED).map { frame ->
             val jsonString = when (frame) {
@@ -124,7 +119,7 @@ class DiscordGatewayImpl(
                 try {
                     json.decodeFromString<IncomingPayload>(str)
                 } catch (e: Exception) {
-//                    e.printStackTrace()
+                    logger.error("Gateway", "Failed to decode payload", e)
                     null
                 }
             }
@@ -147,7 +142,7 @@ class DiscordGatewayImpl(
                             _events.emit(decodedEvent)
                         }
                     } catch (e: Exception) {
-//                        e.printStackTrace()
+                        logger.error("Gateway", "Failed to decode event data", e)
                     }
                 }
                 OpCode.Heartbeat -> {}
@@ -257,7 +252,6 @@ inline fun <reified E : Event> DiscordGateway.onEvent(
     noinline filterPredicate: suspend (E) -> Boolean = { true },
     crossinline block: suspend (E) -> Unit
 ) {
-    // TODO: encapsulate entire thing in launch instead
     events.buffer(Channel.UNLIMITED)
         .filterIsInstance<E>()
         .filter(filterPredicate)

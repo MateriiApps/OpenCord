@@ -40,7 +40,36 @@ val storeModule = module {
         )
     }
 
+    fun provideUserSettingsStore(
+        gateway: DiscordGateway,
+        api: DiscordApiService,
+    ): UserSettingsStore {
+        return UserSettingsStoreImpl(
+            gateway = gateway,
+            api = api,
+        )
+    }
+
+    fun provideCurrentUserStore(
+        gateway: DiscordGateway,
+    ): CurrentUserStore {
+        return CurrentUserStoreImpl(
+            gateway = gateway,
+        )
+    }
+
+    fun provideSessionStore(
+        gateway: DiscordGateway,
+    ): SessionStore {
+        return SessionStoreImpl(
+            gateway = gateway,
+        )
+    }
+
     singleOf(::provideMessageStore)
     singleOf(::provideChannelStore)
     singleOf(::provideGuildStore)
+    singleOf(::provideUserSettingsStore)
+    singleOf(::provideCurrentUserStore)
+    singleOf(::provideSessionStore)
 }

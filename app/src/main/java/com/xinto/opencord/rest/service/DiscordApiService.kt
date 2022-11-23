@@ -3,9 +3,6 @@ package com.xinto.opencord.rest.service
 import com.xinto.opencord.BuildConfig
 import com.xinto.opencord.domain.manager.AccountManager
 import com.xinto.opencord.domain.provider.TelemetryProvider
-import com.xinto.opencord.gateway.DiscordGateway
-import com.xinto.opencord.gateway.event.UserSettingsUpdateEvent
-import com.xinto.opencord.gateway.onEvent
 import com.xinto.opencord.rest.body.MessageBody
 import com.xinto.opencord.rest.dto.*
 import com.xinto.opencord.util.queryParameters
@@ -29,7 +26,6 @@ interface DiscordApiService {
 
     suspend fun postChannelMessage(channelId: Long, body: MessageBody)
 
-    suspend fun getUserSettings(): ApiUserSettings
     suspend fun updateUserSettings(settings: ApiUserSettingsPartial): ApiUserSettings
 
     suspend fun startTyping(channelId: Long)
@@ -73,12 +69,6 @@ class DiscordApiServiceImpl(
             authedPost(url) {
                 setBody(body)
             }
-        }
-    }
-
-    override suspend fun getUserSettings(): ApiUserSettings {
-        return withContext(Dispatchers.IO) {
-            authedGet(getUserSettingsUrl()).body()
         }
     }
 
@@ -130,13 +120,6 @@ class DiscordApiServiceImpl(
     private fun HttpRequestBuilder.authedHttpRequest() {
         header(HttpHeaders.Authorization, accountManager.currentAccountToken!!)
         header(HttpHeaders.UserAgent, telemetryProvider.userAgent)
-    }
-
-    init {
-        // TODO: move this to user settings store
-//        gateway.onEvent<UserSettingsUpdateEvent> {
-//            cachedUserSettings = cachedUserSettings?.merge(it.data)
-//        }
     }
 
     private companion object {

@@ -2,14 +2,11 @@ package com.xinto.opencord.di
 
 import com.xinto.opencord.domain.manager.AccountManager
 import com.xinto.opencord.domain.manager.ActivityManager
-import com.xinto.opencord.domain.manager.CacheManager
 import com.xinto.opencord.domain.manager.PersistentDataManager
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.rest.service.DiscordApiService
 import com.xinto.opencord.rest.service.DiscordAuthService
-import com.xinto.opencord.store.ChannelStore
-import com.xinto.opencord.store.GuildStore
-import com.xinto.opencord.store.MessageStore
+import com.xinto.opencord.store.*
 import com.xinto.opencord.ui.viewmodel.*
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
@@ -83,13 +80,13 @@ val viewModelModule = module {
 
     fun provideCurrentUserViewModel(
         gateway: DiscordGateway,
-        api: DiscordApiService,
-        cache: CacheManager,
+        sessionStore: SessionStore,
+        userSettingsStore: UserSettingsStore,
     ): CurrentUserViewModel {
         return CurrentUserViewModel(
             gateway = gateway,
-            api = api,
-            cache = cache,
+            sessionStore = sessionStore,
+            userSettingsStore = userSettingsStore,
         )
     }
 
