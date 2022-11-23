@@ -45,6 +45,7 @@ android {
 
             buildConfigField("String", "URL_API", "\"https://discord.com/api/v9\"")
             buildConfigField("String", "URL_CDN", "\"https://cdn.discordapp.com\"")
+            buildConfigField("String", "CAPTCHA_KEY", "\"f5561ba9-8f1e-40ca-9b5b-a0b3f719ef34\"")
             buildConfigField(
                 "String",
                 "URL_GATEWAY",
@@ -60,6 +61,7 @@ android {
 
             buildConfigField("String", "URL_API", "\"https://api.fosscord.com/api/v9\"")
             buildConfigField("String", "URL_CDN", "\"https://cdn.fosscord.com\"")
+            buildConfigField("String", "CAPTCHA_KEY", "\"\"") //TODO
             buildConfigField(
                 "String",
                 "URL_GATEWAY",
@@ -148,11 +150,11 @@ dependencies {
     Dependencies.HCaptcha(this)
     Dependencies.AndroidxCore(this)
     Dependencies.AndroidxPreferences(this)
+    Dependencies.AndroidxMedia3(this)
     Dependencies.AndroidxRoom(this)
     Dependencies.Material(this)
     Dependencies.Compose(this)
     Dependencies.Accompanist(this)
     Dependencies.Shimmer(this)
     Dependencies.Coil(this)
-    Dependencies.ExoPlayer(this)
 }

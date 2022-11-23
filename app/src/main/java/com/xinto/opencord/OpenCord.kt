@@ -23,6 +23,7 @@ class OpenCord : Application() {
                 providerModule,
                 databaseModule,
                 storeModule,
+                hcaptchaModule,
             )
         }
     }

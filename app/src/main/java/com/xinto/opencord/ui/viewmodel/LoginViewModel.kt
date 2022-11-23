@@ -17,11 +17,9 @@ import kotlinx.coroutines.launch
 class LoginViewModel(
     private val api: DiscordAuthService,
     private val activityManager: ActivityManager,
-    private val accountManager: AccountManager,
+    private val accountManager: AccountManager
 ) : ViewModel() {
 
-    lateinit var captchaSiteKey: String
-        private set
     lateinit var mfaTicket: String
         private set
 
@@ -80,7 +78,6 @@ class LoginViewModel(
                         showMfa = true
                     }
                     is DomainLogin.Captcha -> {
-                        captchaSiteKey = response.captchaSiteKey
                         showCaptcha = true
                     }
                     is DomainLogin.Error -> {
@@ -115,7 +112,6 @@ class LoginViewModel(
                         accountManager.currentAccountToken = response.token
                     }
                     is DomainLogin.Captcha -> {
-                        captchaSiteKey = response.captchaSiteKey
                         showCaptcha = true
                     }
                     is DomainLogin.Error -> {

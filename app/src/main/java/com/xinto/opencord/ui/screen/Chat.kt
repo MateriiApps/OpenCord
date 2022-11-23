@@ -338,6 +338,13 @@ private fun ChatScreenLoaded(
                                                 height = attachment.height
                                             )
                                         }
+                                        is DomainAttachment.Video -> {
+                                            WidgetAttachmentVideo(
+                                                url = attachment.url,
+                                                modifier = Modifier.fillMaxWidth()
+                                                    .aspectRatio(attachment.width.toFloat() / attachment.height.toFloat())
+                                            )
+                                        }
                                         else -> {}
                                     }
                                 }
