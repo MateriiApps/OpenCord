@@ -28,7 +28,7 @@ android {
         buildConfigField(
             "String",
             "URL_GATEWAY",
-            "\"wss://gateway.discord.gg/?v=9&encoding=json&compress=zlib-stream\""
+            "\"wss://gateway.discord.gg/?encoding=json&v=9&compress=zlib-stream\""
         )
     }
 
