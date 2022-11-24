@@ -19,27 +19,18 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: set up JDK 11
+      - name: Set up JDK 11
         uses: actions/setup-java@v2
         with:
           java-version: 11
           distribution: 'zulu'
           cache: 'gradle'
 
-      - name: Build Discord variant
-        run: ./gradlew assembleDiscordDebug
+      - name: Build OpenCord
+        run: ./gradlew app:assembleDebug
 
       - name: Upload Discord APK
         uses: actions/upload-artifact@v2
         with:
-          name: discord
-          path: app/build/outputs/apk/discord/debug/app-discord-debug.apk
-
-#      - name: Build Fosscord variant
-#        run: ./gradlew assembleFosscordDebug
-#
-#      - name: Upload Fosscord APK
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: fosscord
-#          path: app/build/outputs/apk/fosscord/debug/app-fosscord-debug.apk
+          name: opencord
+          path: app/build/outputs/apk/debug/app-debug.apk

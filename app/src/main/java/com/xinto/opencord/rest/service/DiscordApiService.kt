@@ -1,16 +1,12 @@
 package com.xinto.opencord.rest.service
 
 import com.xinto.opencord.BuildConfig
-import com.xinto.opencord.domain.manager.AccountManager
-import com.xinto.opencord.domain.provider.TelemetryProvider
 import com.xinto.opencord.rest.body.MessageBody
 import com.xinto.opencord.rest.dto.*
 import com.xinto.opencord.util.queryParameters
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
-import io.ktor.client.statement.*
-import io.ktor.http.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -33,8 +29,6 @@ interface DiscordApiService {
 
 class DiscordApiServiceImpl(
     private val client: HttpClient,
-    private val accountManager: AccountManager,
-    private val telemetryProvider: TelemetryProvider
 ) : DiscordApiService {
     override suspend fun getChannelMessages(
         channelId: Long,
@@ -52,21 +46,21 @@ class DiscordApiServiceImpl(
                 after = after,
             )
 
-            authedGet(url).body()
+            client.get(url).body()
         }
     }
 
     override suspend fun getChannelPins(channelId: Long): List<ApiMessage> {
         return withContext(Dispatchers.IO) {
             val url = getChannelPinsUrl(channelId)
-            authedGet(url).body()
+            client.get(url).body()
         }
     }
 
     override suspend fun postChannelMessage(channelId: Long, body: MessageBody) {
         withContext(Dispatchers.IO) {
             val url = getChannelMessagesUrl(channelId)
-            authedPost(url) {
+            client.post(url) {
                 setBody(body)
             }
         }
@@ -74,7 +68,7 @@ class DiscordApiServiceImpl(
 
     override suspend fun updateUserSettings(settings: ApiUserSettingsPartial): ApiUserSettings {
         return withContext(Dispatchers.IO) {
-            authedPatch(getUserSettingsUrl()) {
+            client.patch(getUserSettingsUrl()) {
                 setBody(settings)
             }.body()
         }
@@ -85,41 +79,6 @@ class DiscordApiServiceImpl(
             val url = getTypingUrl(channelId)
             client.post(url)
         }
-    }
-
-    private suspend inline fun authedGet(
-        url: String,
-        httpRequestBuilder: HttpRequestBuilder.() -> Unit = {}
-    ): HttpResponse {
-        return client.get(url) {
-            authedHttpRequest()
-            httpRequestBuilder()
-        }
-    }
-    
-    private suspend inline fun authedPost(
-        url: String,
-        httpRequestBuilder: HttpRequestBuilder.() -> Unit = {}
-    ): HttpResponse {
-        return client.post(url) {
-            authedHttpRequest()
-            httpRequestBuilder()
-        }
-    }
-    
-    private suspend inline fun authedPatch(
-        url: String,
-        httpRequestBuilder: HttpRequestBuilder.() -> Unit = {}
-    ): HttpResponse {
-        return client.patch(url) {
-            authedHttpRequest()
-            httpRequestBuilder()
-        }
-    }
-    
-    private fun HttpRequestBuilder.authedHttpRequest() {
-        header(HttpHeaders.Authorization, accountManager.currentAccountToken!!)
-        header(HttpHeaders.UserAgent, telemetryProvider.userAgent)
     }
 
     private companion object {

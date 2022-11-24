@@ -9,8 +9,6 @@ plugins {
 android {
     compileSdk = 33
 
-    flavorDimensions.add("api")
-
     defaultConfig {
         applicationId = "com.xinto.opencord"
         minSdk = 21
@@ -24,6 +22,14 @@ android {
 
         buildConfigField("int", "DISCORD_VERSION_CODE", "124012")
         buildConfigField("String", "DISCORD_VERSION_NAME", "\"124.12 - Stable\"")
+        buildConfigField("String", "URL_API", "\"https://discord.com/api/v9\"")
+        buildConfigField("String", "URL_CDN", "\"https://cdn.discordapp.com\"")
+        buildConfigField("String", "CAPTCHA_KEY", "\"f5561ba9-8f1e-40ca-9b5b-a0b3f719ef34\"")
+        buildConfigField(
+            "String",
+            "URL_GATEWAY",
+            "\"wss://gateway.discord.gg/?v=9&encoding=json&compress=zlib-stream\""
+        )
     }
 
     buildTypes {
@@ -37,40 +43,10 @@ android {
         }
     }
 
-    productFlavors {
-        create("discord") {
-            dimension = "api"
-
-            isDefault = true
-
-            buildConfigField("String", "URL_API", "\"https://discord.com/api/v9\"")
-            buildConfigField("String", "URL_CDN", "\"https://cdn.discordapp.com\"")
-            buildConfigField("String", "CAPTCHA_KEY", "\"f5561ba9-8f1e-40ca-9b5b-a0b3f719ef34\"")
-            buildConfigField(
-                "String",
-                "URL_GATEWAY",
-                "\"wss://gateway.discord.gg/?v=9&encoding=json&compress=zlib-stream\""
-            )
-        }
-
-        create("fosscord") {
-            dimension = "api"
-
-            applicationIdSuffix = ".fosscord"
-            versionNameSuffix = "-fosscord"
-
-            buildConfigField("String", "URL_API", "\"https://api.fosscord.com/api/v9\"")
-            buildConfigField("String", "URL_CDN", "\"https://cdn.fosscord.com\"")
-            buildConfigField("String", "CAPTCHA_KEY", "\"\"") //TODO
-            buildConfigField(
-                "String",
-                "URL_GATEWAY",
-                "\"wss://gateway.fosscord.com/?v=9&encoding=json&compress=zlib-stream\""
-            )
-        }
-    }
-
     compileOptions {
+        // Use java.time.* on Android <= 8
+        isCoreLibraryDesugaringEnabled = true
+
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
@@ -78,10 +54,10 @@ android {
     kotlinOptions {
         jvmTarget = "11"
         freeCompilerArgs = freeCompilerArgs +
-                "-Xopt-in=androidx.compose.foundation.ExperimentalFoundationApi" +
-                "-Xopt-in=androidx.compose.animation.ExperimentalAnimationApi" +
-                "-Xopt-in=androidx.compose.material.ExperimentalMaterialApi" +
-                "-Xopt-in=androidx.compose.material3.ExperimentalMaterial3Api" +
+                "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi" +
+                "-opt-in=androidx.compose.animation.ExperimentalAnimationApi" +
+                "-opt-in=androidx.compose.material.ExperimentalMaterialApi" +
+                "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api" +
                 "-Xcontext-receivers"
     }
 
@@ -143,6 +119,10 @@ dependencies {
 
     implementation(project(":enumgetter"))
     ksp(project(":enumgetter"))
+
+    // Use java.time.* on Android <= 8
+    // https://developer.android.com/studio/write/java8-support#library-desugaring-versions
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
 
     Dependencies.Koin(this)
     Dependencies.Ktor(this)
