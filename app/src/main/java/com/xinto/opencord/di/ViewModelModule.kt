@@ -47,11 +47,11 @@ val viewModelModule = module {
     }
 
     fun provideGuildsViewModel(
-        gateway: DiscordGateway,
+        guildStore: GuildStore,
         persistentDataManager: PersistentDataManager
     ): GuildsViewModel {
         return GuildsViewModel(
-            gateway = gateway,
+            guildStore = guildStore,
             persistentDataManager = persistentDataManager
         )
     }

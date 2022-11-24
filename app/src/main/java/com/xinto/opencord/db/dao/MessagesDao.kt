@@ -4,21 +4,25 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.xinto.opencord.db.entity.message.EntityAttachment
-import com.xinto.opencord.db.entity.message.EntityEmbed
 import com.xinto.opencord.db.entity.message.EntityMessage
 
 @Dao
 interface MessagesDao {
+    // --------------- Inserts ---------------
     @Insert(
         onConflict = OnConflictStrategy.REPLACE,
         entity = EntityMessage::class,
     )
-    fun insertMessages(vararg message: EntityMessage)
+    fun insertMessages(messages: List<EntityMessage>)
 
-    @Query("DELETE FROM messages WHERE id IN(:messageIds)")
-    fun deleteMessages(vararg messageIds: Long)
+    // --------------- Deletes ---------------
+    @Query("DELETE FROM messages WHERE id = :messageId")
+    fun deleteMessage(messageId: Long)
 
+    @Query("DELETE FROM messages WHERE channel_id = channel_id")
+    fun deleteByChannel(channelId: Long)
+
+    // --------------- Queries ---------------
     @Query("SELECT * FROM messages WHERE id = :id LIMIT 1")
     fun getMessage(id: Long): EntityMessage?
 
@@ -33,24 +37,4 @@ interface MessagesDao {
 
     @Query("SELECT * FROM messages WHERE channel_id = :channelId AND id >= :aroundId - ROUND(:limit / 2, 0) ORDER BY id ASC LIMIT :limit")
     fun getMessagesAround(channelId: Long, limit: Int, aroundId: Long): List<EntityMessage>
-
-
-    @Insert(
-        onConflict = OnConflictStrategy.REPLACE,
-        entity = EntityAttachment::class
-    )
-    fun insertAttachments(vararg attachments: EntityAttachment)
-
-    @Query("SELECT * FROM attachments WHERE id = :messageId")
-    fun getAttachments(messageId: Long): List<EntityAttachment>
-
-
-    @Insert(
-        onConflict = OnConflictStrategy.REPLACE,
-        entity = EntityEmbed::class
-    )
-    fun insertEmbeds(vararg embeds: EntityEmbed)
-
-    @Query("SELECT * FROM embeds WHERE message_id = :messageId ORDER BY embed_index ASC")
-    fun getEmbeds(messageId: Long): List<EntityEmbed>
 }

@@ -1,19 +1,14 @@
 package com.xinto.opencord.db.entity.message
 
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.Index
+import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "attachments",
     indices = [
         Index(value = ["message_id"]),
-    ],
-    foreignKeys = [
-        ForeignKey(
-            entity = EntityMessage::class,
-            parentColumns = ["id"],
-            childColumns = ["message_id"],
-            onDelete = ForeignKey.CASCADE,
-        )
     ],
 )
 data class EntityAttachment(

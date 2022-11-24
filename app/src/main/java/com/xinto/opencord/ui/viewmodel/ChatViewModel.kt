@@ -74,9 +74,7 @@ class ChatViewModel(
                         messages[it.data.id] = it.data
                     }
                     is Event.Update -> {
-                        if (messages[it.data.id] != null) {
-                            messages[it.data.id] = it.data
-                        }
+                        messages[it.data.id] = it.data
                     }
                     is Event.Remove -> {
                         messages.remove(it.data?.id)

@@ -8,18 +8,21 @@ import com.xinto.opencord.db.entity.guild.EntityGuild
 
 @Dao
 interface GuildsDao {
+    // --------------- Inserts ---------------
     @Insert(
         onConflict = OnConflictStrategy.REPLACE,
         entity = EntityGuild::class,
     )
-    fun insertGuilds(vararg guilds: EntityGuild)
+    fun insertGuilds(guilds: List<EntityGuild>)
 
+    // --------------- Deletes ---------------
     @Query("DELETE FROM guilds WHERE id = :guildId")
     fun deleteGuild(guildId: Long)
 
-    @Query("DELETE FROM guilds WHERE id NOT IN(:knownIds)")
-    fun deleteUnknownGuilds(vararg knownIds: Long)
+    @Query("DELETE FROM guilds")
+    fun deleteAllGuilds()
 
+    // --------------- Queries ---------------
     @Query("SELECT * FROM guilds WHERE id = :guildId LIMIT 1")
     fun getGuild(guildId: Long): EntityGuild?
 

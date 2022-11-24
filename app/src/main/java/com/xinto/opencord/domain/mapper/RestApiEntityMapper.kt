@@ -12,7 +12,7 @@ fun ApiMessage.toEntity(): EntityMessage {
     return EntityMessage(
         id = id.value,
         channelId = channelId.value,
-        type = type,
+        type = type.value,
         timestamp = timestamp.toEpochMilliseconds(),
         content = content,
         authorId = author.id.value,

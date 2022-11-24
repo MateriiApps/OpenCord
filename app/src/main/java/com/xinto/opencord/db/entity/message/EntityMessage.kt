@@ -1,9 +1,9 @@
 package com.xinto.opencord.db.entity.message
 
-import androidx.room.*
-import com.xinto.opencord.db.entity.channel.EntityChannel
-import com.xinto.opencord.db.entity.user.EntityUser
-import com.xinto.opencord.rest.dto.ApiMessageType
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.Index
+import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "messages",
@@ -11,20 +11,6 @@ import com.xinto.opencord.rest.dto.ApiMessageType
         Index("channel_id"),
         Index("author_id"),
     ],
-    foreignKeys = [
-        ForeignKey(
-            entity = EntityUser::class,
-            parentColumns = ["id"],
-            childColumns = ["author_id"],
-            onDelete = ForeignKey.CASCADE,
-        ),
-        ForeignKey(
-            entity = EntityChannel::class,
-            parentColumns = ["id"],
-            childColumns = ["channel_id"],
-            onDelete = ForeignKey.CASCADE,
-        ),
-    ]
 )
 data class EntityMessage(
     // -------- Message data -------- //
@@ -35,7 +21,7 @@ data class EntityMessage(
     val channelId: Long,
 
     @ColumnInfo(name = "type")
-    val type: ApiMessageType,
+    val type: Int,
 
     @ColumnInfo(name = "timestamp")
     val timestamp: Long,

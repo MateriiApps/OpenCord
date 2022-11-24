@@ -46,3 +46,11 @@ data class DomainMessageMemberJoin(
     override val content: String,
     override val author: DomainUser
 ): DomainMessage()
+
+data class DomainMessageUnknown(
+    override val id: Long,
+    override val channelId: Long,
+    override val timestamp: Instant,
+    override val content: String,
+    override val author: DomainUser
+) : DomainMessage()

@@ -10,6 +10,7 @@ import com.xinto.opencord.db.entity.user.EntityUser
 import com.xinto.opencord.domain.model.*
 import com.xinto.opencord.rest.dto.ApiMessageType
 import com.xinto.opencord.rest.dto.ApiPermissions
+import com.xinto.opencord.rest.dto.fromValue
 import com.xinto.opencord.rest.service.DiscordCdnServiceImpl
 import kotlinx.datetime.Instant
 
@@ -19,7 +20,7 @@ fun EntityMessage.toDomain(
     embeds: List<DomainEmbed>?,
     attachments: List<DomainAttachment>?,
 ): DomainMessage {
-    return when (type) {
+    return when (val type = ApiMessageType.fromValue(type)) {
         ApiMessageType.Default, ApiMessageType.Reply -> {
             DomainMessageRegular(
                 id = id,
@@ -46,6 +47,13 @@ fun EntityMessage.toDomain(
                 author = author,
             )
         }
+        else -> DomainMessageUnknown(
+            id = id,
+            content = content,
+            channelId = channelId,
+            timestamp = Instant.fromEpochMilliseconds(timestamp),
+            author = author,
+        )
     }
 }
 

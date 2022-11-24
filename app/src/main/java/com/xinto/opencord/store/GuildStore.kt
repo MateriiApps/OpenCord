@@ -5,7 +5,10 @@ import com.xinto.opencord.domain.mapper.toDomain
 import com.xinto.opencord.domain.mapper.toEntity
 import com.xinto.opencord.domain.model.DomainGuild
 import com.xinto.opencord.gateway.DiscordGateway
-import com.xinto.opencord.gateway.event.*
+import com.xinto.opencord.gateway.event.GuildCreateEvent
+import com.xinto.opencord.gateway.event.GuildDeleteEvent
+import com.xinto.opencord.gateway.event.GuildUpdateEvent
+import com.xinto.opencord.gateway.event.ReadyEvent
 import com.xinto.opencord.gateway.onEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -46,15 +49,22 @@ class GuildStoreImpl(
         gateway.onEvent<ReadyEvent> { event ->
             val guilds = event.data.guilds.map { it.toEntity() }
 
-            cache.guilds().apply {
-                insertGuilds(*guilds.toTypedArray())
-                deleteUnknownGuilds(*guilds.map { it.id }.toLongArray())
+            for (guild in guilds) {
+                events.emit(Event.Add(guild.toDomain()))
+            }
+
+            cache.runInTransaction {
+                cache.guilds().apply {
+                    deleteAllGuilds()
+                    insertGuilds(guilds)
+                }
             }
         }
 
         gateway.onEvent<GuildCreateEvent> {
             events.emit(Event.Add(it.data.toDomain()))
-            cache.guilds().insertGuilds(it.data.toEntity())
+
+            cache.guilds().insertGuilds(listOf(it.data.toEntity()))
         }
 
         gateway.onEvent<GuildUpdateEvent> {
@@ -62,8 +72,14 @@ class GuildStoreImpl(
         }
 
         gateway.onEvent<GuildDeleteEvent> {
-            events.emit(Event.Remove(it.data.id.value))
-            cache.guilds().deleteGuild(it.data.id.value)
+            val guildId = it.data.id.value
+
+            events.emit(Event.Remove(guildId))
+
+            cache.runInTransaction {
+                cache.guilds().deleteGuild(guildId)
+                cache.channels().deleteChannelsByGuild(guildId)
+            }
         }
     }
 }

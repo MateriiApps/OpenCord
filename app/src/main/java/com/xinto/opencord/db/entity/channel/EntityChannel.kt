@@ -1,7 +1,9 @@
 package com.xinto.opencord.db.entity.channel
 
-import androidx.room.*
-import com.xinto.opencord.db.entity.guild.EntityGuild
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.Index
+import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "channels",
@@ -9,20 +11,6 @@ import com.xinto.opencord.db.entity.guild.EntityGuild
         Index("guild_id"),
         Index("parent_id"),
     ],
-    foreignKeys = [
-        ForeignKey(
-            entity = EntityGuild::class,
-            parentColumns = ["id"],
-            childColumns = ["guild_id"],
-            onDelete = ForeignKey.CASCADE,
-        ),
-//        ForeignKey(
-//            entity = EntityChannel::class,
-//            parentColumns = ["id"],
-//            childColumns = ["parent_id"],
-//            onDelete = ForeignKey.SET_NULL,
-//        ),
-    ]
 )
 data class EntityChannel(
     @PrimaryKey

@@ -146,6 +146,13 @@ fun ApiMessage.toDomain(): DomainMessage {
                 author = domainAuthor
             )
         }
+        else -> DomainMessageUnknown(
+            id = id.value,
+            content = content,
+            channelId = channelId.value,
+            timestamp = timestamp,
+            author = domainAuthor
+        )
     }
 }
 
@@ -254,9 +261,6 @@ fun ApiEmbedField.toDomain(): DomainEmbedField {
 
 fun ApiUserSettingsPartial.toDomain(): DomainUserSettingsPartial {
     val domainPartialTheme = theme.mapToPartial { DomainThemeSetting.fromValue(it)!! }
-//    val domainPartialGuildPositions = guildPositions.mapToPartial { guildPositions ->
-//        guildPositions.map { it.value }
-//    }
     val domainPartialStatus = status.mapToPartial { DomainUserStatus.fromValue(it)!! }
     val domainPartialFriendSourceFlags = friendSourceFlags.mapToPartial { it.toDomain() }
     val domainPartialGuildFolders = guildFolders.mapToPartial { guildFolders ->
@@ -278,7 +282,6 @@ fun ApiUserSettingsPartial.toDomain(): DomainUserSettingsPartial {
         disableGamesTab = disableGamesTab,
         theme = domainPartialTheme,
         developerMode = developerMode,
-//        guildPositions = domainPartialGuildPositions,
         detectPlatformAccounts = detectPlatformAccounts,
         status = domainPartialStatus,
         afkTimeout = afkTimeout,
@@ -317,7 +320,6 @@ fun ApiUserSettings.toDomain(): DomainUserSettings {
         disableGamesTab = disableGamesTab,
         theme = domainTheme,
         developerMode = developerMode,
-//        guildPositions = guildPositions.map { it.value },
         detectPlatformAccounts = detectPlatformAccounts,
         status = domainStatus,
         afkTimeout = afkTimeout,

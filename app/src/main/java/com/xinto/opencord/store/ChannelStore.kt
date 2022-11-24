@@ -11,7 +11,6 @@ import com.xinto.opencord.gateway.event.ChannelUpdateEvent
 import com.xinto.opencord.gateway.event.ReadyEvent
 import com.xinto.opencord.gateway.onEvent
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.filter
@@ -58,17 +57,18 @@ class ChannelStoreImpl(
 
     init {
         gateway.onEvent<ReadyEvent> { event ->
-            // TODO: add priorities to event listeners
-            // this avoids a foreign key fail when channels are inserted before guilds
-            delay(50)
+            val channels = event.data.guilds.flatMap { guild ->
+                guild.channels.map { it.toEntity(guild.id.value) }
+            }
 
-            for (guild in event.data.guilds) {
-                val guildId = guild.id.value
-                val channels = guild.channels.map { it.toEntity(guildId) }
+            for (channel in channels) {
+                events.emit(Event.Add(channel.toDomain()))
+            }
 
+            cache.runInTransaction {
                 cache.channels().apply {
-                    insertChannels(*channels.toTypedArray())
-                    deleteUnknownChannels(guildId, *channels.map { it.id }.toLongArray())
+                    deleteAllChannels()
+                    insertChannels(channels)
                 }
             }
         }
@@ -78,7 +78,7 @@ class ChannelStoreImpl(
                 ?: error("no guild id on channel create event")
 
             events.emit(Event.Add(it.data.toDomain()))
-            cache.channels().insertChannels(it.data.toEntity(guildId))
+            cache.channels().insertChannels(listOf(it.data.toEntity(guildId)))
         }
 
         gateway.onEvent<ChannelUpdateEvent> {
@@ -86,8 +86,14 @@ class ChannelStoreImpl(
         }
 
         gateway.onEvent<ChannelDeleteEvent> {
-            events.emit(Event.Remove(it.data.id.value))
-            cache.channels().deleteChannels(it.data.id.value)
+            val channelId = it.data.id.value
+
+            events.emit(Event.Remove(channelId))
+
+            cache.runInTransaction {
+                cache.channels().deleteChannel(channelId)
+                cache.messages().deleteByChannel(channelId)
+            }
         }
     }
 }

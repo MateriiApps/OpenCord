@@ -2,7 +2,6 @@ package com.xinto.opencord.db.entity.message
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.Index
 import com.xinto.opencord.rest.dto.ApiEmbedField
 
@@ -14,14 +13,6 @@ import com.xinto.opencord.rest.dto.ApiEmbedField
     primaryKeys = [
         "embed_index",
         "message_id",
-    ],
-    foreignKeys = [
-        ForeignKey(
-            entity = EntityMessage::class,
-            parentColumns = ["id"],
-            childColumns = ["message_id"],
-            onDelete = ForeignKey.CASCADE,
-        )
     ],
 )
 data class EntityEmbed(

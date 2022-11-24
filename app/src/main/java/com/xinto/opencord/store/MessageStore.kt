@@ -47,7 +47,7 @@ class MessageStoreImpl(
         cachedUsers: MutableMap<Long, DomainUser> = mutableMapOf()
     ): DomainMessage {
         val attachments = if (!message.hasAttachments) null else {
-            cache.messages().getAttachments(message.id)
+            cache.attachments().getAttachments(message.id)
         }
 
         val referencedMessage = message.referencedMessageId?.let {
@@ -55,7 +55,7 @@ class MessageStoreImpl(
         }
 
         val embeds = if (!message.hasEmbeds) null else {
-            cache.messages().getEmbeds(message.id)
+            cache.embeds().getEmbeds(message.id)
         }
 
         val author = cachedUsers.computeIfAbsent(message.authorId) {
@@ -83,7 +83,6 @@ class MessageStoreImpl(
                 before != null -> cache.messages().getMessagesBefore(channelId, 50, before)
                 else -> cache.messages().getMessagesLast(channelId, 50)
             }
-            println("channel $channelId $cachedMessages")
 
             if (cachedMessages.size >= 50) {
                 cachedMessages.map(::constructDomainMessage)
@@ -96,32 +95,31 @@ class MessageStoreImpl(
                     after = after,
                 )
 
-                cache.users().apply {
-                    val users = messages
-                        .distinctBy { it.author.id }
-                        .map { it.author.toEntity() }
-                        .toTypedArray()
+                cache.runInTransaction {
+                    cache.users().apply {
+                        val users = messages
+                            .distinctBy { it.author.id }
+                            .map { it.author.toEntity() }
 
-                    insertUsers(*users)
-                }
-                cache.messages().apply {
-                    val entityMessages = messages.map { it.toEntity() }
-                    insertMessages(*entityMessages.toTypedArray())
+                        insertUsers(users)
+                    }
 
-                    insertAttachments(*messages.flatMap { msg ->
+                    cache.messages().insertMessages(messages.map { it.toEntity() })
+
+                    cache.attachments().insertAttachments(messages.flatMap { msg ->
                         msg.attachments.map {
-                            it.toEntity(msg.id.value)
+                            it.toEntity(messageId = msg.id.value)
                         }
-                    }.toTypedArray())
+                    })
 
-                    insertEmbeds(*messages.flatMap { msg ->
-                        msg.embeds.mapIndexed { index, embed ->
+                    cache.embeds().insertEmbeds(messages.flatMap { msg ->
+                        msg.embeds.mapIndexed { i, embed ->
                             embed.toEntity(
                                 messageId = msg.id.value,
-                                embedIndex = index,
+                                embedIndex = i,
                             )
                         }
-                    }.toTypedArray())
+                    })
                 }
 
                 messages.map { it.toDomain() }
@@ -131,23 +129,24 @@ class MessageStoreImpl(
 
     init {
         gateway.onEvent<MessageCreateEvent> { event ->
-            events.emit(Event.Add(event.data.toDomain()))
+            val message = event.data
 
-            cache.users().insertUsers(event.data.author.toEntity())
+            events.emit(Event.Add(message.toDomain()))
 
-            cache.messages().apply {
-                insertMessages(event.data.toEntity())
-
-                insertAttachments(*event.data.attachments.map {
-                    it.toEntity(event.data.id.value)
-                }.toTypedArray())
-
-                insertEmbeds(*event.data.embeds.mapIndexed { i, it ->
-                    it.toEntity(
-                        messageId = event.data.id.value,
+            cache.runInTransaction {
+                cache.users().insertUsers(listOf(message.author.toEntity()))
+                cache.messages().insertMessages(listOf(message.toEntity()))
+                cache.attachments().insertAttachments(
+                    message.attachments.map {
+                        it.toEntity(message.id.value)
+                    }
+                )
+                cache.embeds().insertEmbeds(message.embeds.mapIndexed { i, embed ->
+                    embed.toEntity(
+                        messageId = message.id.value,
                         embedIndex = i,
                     )
-                }.toTypedArray())
+                })
             }
         }
 
@@ -156,8 +155,15 @@ class MessageStoreImpl(
         }
 
         gateway.onEvent<MessageDeleteEvent> {
-            events.emit(Event.Remove(it.data.messageId.value))
-            cache.messages().deleteMessages(it.data.messageId.value)
+            val messageId = it.data.messageId.value
+
+            events.emit(Event.Remove(messageId))
+
+            cache.runInTransaction {
+                cache.messages().deleteMessage(messageId)
+                cache.attachments().deleteAttachments(messageId)
+                cache.embeds().deleteEmbeds(messageId)
+            }
         }
     }
 }

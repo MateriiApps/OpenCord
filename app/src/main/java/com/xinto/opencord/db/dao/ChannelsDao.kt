@@ -8,18 +8,24 @@ import com.xinto.opencord.db.entity.channel.EntityChannel
 
 @Dao
 interface ChannelsDao {
+    // --------------- Inserts ---------------
     @Insert(
         onConflict = OnConflictStrategy.REPLACE,
         entity = EntityChannel::class,
     )
-    fun insertChannels(vararg channels: EntityChannel)
+    fun insertChannels(channels: List<EntityChannel>)
 
-    @Query("DELETE FROM channels WHERE id IN(:channelIds)")
-    fun deleteChannels(vararg channelIds: Long)
+    // --------------- Deletes ---------------
+    @Query("DELETE FROM channels WHERE id = :channelId")
+    fun deleteChannel(channelId: Long)
 
-    @Query("DELETE FROM channels WHERE guild_id = :guildId AND id NOT IN(:knownIds)")
-    fun deleteUnknownChannels(guildId: Long, vararg knownIds: Long)
+    @Query("DELETE FROM channels")
+    fun deleteAllChannels()
 
+    @Query("DELETE FROM channels WHERE guild_id = guild_id")
+    fun deleteChannelsByGuild(guildId: Long)
+
+    // --------------- Queries ---------------
     @Query("SELECT * FROM channels WHERE id = :channelId LIMIT 1")
     fun getChannel(channelId: Long): EntityChannel?
 
