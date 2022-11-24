@@ -40,9 +40,12 @@ android {
     kotlinOptions {
         jvmTarget = "11"
         freeCompilerArgs = freeCompilerArgs +
-                "-Xexplicit-api=strict" +
-                "-Xopt-in=androidx.compose.material.ExperimentalMaterialApi"
+                "-opt-in=androidx.compose.material.ExperimentalMaterialApi"
     }
+}
+
+kotlin {
+    explicitApi()
 }
 
 dependencies {
