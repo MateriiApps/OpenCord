@@ -19,7 +19,7 @@ interface MessagesDao {
     @Query("DELETE FROM messages WHERE id = :messageId")
     fun deleteMessage(messageId: Long)
 
-    @Query("DELETE FROM messages WHERE channel_id = channel_id")
+    @Query("DELETE FROM messages WHERE channel_id = :channelId")
     fun deleteByChannel(channelId: Long)
 
     // --------------- Queries ---------------

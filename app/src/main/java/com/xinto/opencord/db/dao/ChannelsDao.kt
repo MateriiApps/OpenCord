@@ -22,7 +22,7 @@ interface ChannelsDao {
     @Query("DELETE FROM channels")
     fun deleteAllChannels()
 
-    @Query("DELETE FROM channels WHERE guild_id = guild_id")
+    @Query("DELETE FROM channels WHERE guild_id = :guildId")
     fun deleteChannelsByGuild(guildId: Long)
 
     // --------------- Queries ---------------
