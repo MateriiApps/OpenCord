@@ -20,8 +20,8 @@ android {
             useSupportLibrary = true
         }
 
-        buildConfigField("int", "DISCORD_VERSION_CODE", "124012")
-        buildConfigField("String", "DISCORD_VERSION_NAME", "\"124.12 - Stable\"")
+        buildConfigField("int", "DISCORD_VERSION_CODE", "126021")
+        buildConfigField("String", "DISCORD_VERSION_NAME", "\"126.21 - Stable\"")
         buildConfigField("String", "URL_API", "\"https://discord.com/api/v9\"")
         buildConfigField("String", "URL_CDN", "\"https://cdn.discordapp.com\"")
         buildConfigField("String", "CAPTCHA_KEY", "\"f5561ba9-8f1e-40ca-9b5b-a0b3f719ef34\"")
