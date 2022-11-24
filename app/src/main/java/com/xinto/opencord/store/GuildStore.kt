@@ -35,9 +35,7 @@ class GuildStoreImpl(
         }
     }
 
-    override fun observeGuilds(): Flow<Event<DomainGuild>> {
-        return events
-    }
+    override fun observeGuilds() = events
 
     override suspend fun fetchGuild(guildId: Long): DomainGuild? {
         return withContext(Dispatchers.IO) {

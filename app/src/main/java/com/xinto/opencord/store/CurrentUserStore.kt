@@ -23,13 +23,8 @@ class CurrentUserStoreImpl(
     // TODO: implement db caching in refactor
     private var currentUser: DomainUser? = null
 
-    override fun observeCurrentUser(): Flow<DomainUser> {
-        return events
-    }
-
-    override suspend fun getCurrentUser(): DomainUser? {
-        return currentUser
-    }
+    override fun observeCurrentUser() = events
+    override suspend fun getCurrentUser() = currentUser
 
     init {
         gateway.onEvent<ReadyEvent> { event ->

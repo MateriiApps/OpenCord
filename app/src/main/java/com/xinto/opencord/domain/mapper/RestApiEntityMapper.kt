@@ -83,7 +83,7 @@ fun ApiGuild.toEntity(): EntityGuild {
         id = id.value,
         name = name,
         icon = icon,
-        bannerUrl = banner,
+        banner = banner,
         premiumTier = premiumTier,
         premiumSubscriptionCount = premiumSubscriptionCount,
     )

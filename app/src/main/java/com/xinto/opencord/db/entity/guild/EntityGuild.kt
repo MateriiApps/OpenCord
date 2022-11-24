@@ -17,8 +17,8 @@ data class EntityGuild(
     @ColumnInfo(name = "icon")
     val icon: String?,
 
-    @ColumnInfo(name = "banner_url")
-    val bannerUrl: String? = null,
+    @ColumnInfo(name = "banner")
+    val banner: String? = null,
 
     @ColumnInfo(name = "premium_tier")
     val premiumTier: Int,

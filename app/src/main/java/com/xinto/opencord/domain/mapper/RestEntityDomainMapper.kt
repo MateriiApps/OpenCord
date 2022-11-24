@@ -153,10 +153,17 @@ fun EntityChannel.toDomain(): DomainChannel {
 }
 
 fun EntityGuild.toDomain(): DomainGuild {
+    val iconUrl = icon?.let { icon ->
+        DiscordCdnServiceImpl.getGuildIconUrl(id.toString(), icon)
+    }
+    val bannerUrl = banner?.let { banner ->
+        DiscordCdnServiceImpl.getGuildBannerUrl(id.toString(), banner)
+    }
+
     return DomainGuild(
         id = id,
         name = name,
-        iconUrl = icon,
+        iconUrl = iconUrl,
         bannerUrl = bannerUrl,
         premiumTier = premiumTier,
         premiumSubscriptionCount = premiumSubscriptionCount ?: 0,

@@ -81,11 +81,13 @@ val viewModelModule = module {
     fun provideCurrentUserViewModel(
         gateway: DiscordGateway,
         sessionStore: SessionStore,
+        currentUserStore: CurrentUserStore,
         userSettingsStore: UserSettingsStore,
     ): CurrentUserViewModel {
         return CurrentUserViewModel(
             gateway = gateway,
             sessionStore = sessionStore,
+            currentUserStore = currentUserStore,
             userSettingsStore = userSettingsStore,
         )
     }

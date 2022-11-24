@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.withContext
 
 interface UserSettingsStore {
-    fun observeSettings(): Flow<DomainUserSettings>
+    fun observeUserSettings(): Flow<DomainUserSettings>
 
     suspend fun getUserSettings(): DomainUserSettings?
     suspend fun updateUserSettings(settings: DomainUserSettingsPartial): DomainUserSettings
@@ -31,13 +31,8 @@ class UserSettingsStoreImpl(
     // TODO: implement db caching in refactor
     private var userSettings: DomainUserSettings? = null
 
-    override fun observeSettings(): Flow<DomainUserSettings> {
-        return events
-    }
-
-    override suspend fun getUserSettings(): DomainUserSettings? {
-        return userSettings
-    }
+    override fun observeUserSettings() = events
+    override suspend fun getUserSettings() = userSettings
 
     override suspend fun updateUserSettings(settings: DomainUserSettingsPartial): DomainUserSettings {
         return withContext(Dispatchers.IO) {
@@ -60,6 +55,7 @@ class UserSettingsStoreImpl(
 
         gateway.onEvent<UserSettingsUpdateEvent> { event ->
             userSettings?.merge(event.data.toDomain())?.also {
+                userSettings = it
                 events.emit(it)
             }
         }

@@ -4,14 +4,14 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.viewModelScope
 import com.xinto.opencord.domain.manager.PersistentDataManager
 import com.xinto.opencord.domain.model.DomainChannel
-import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.store.ChannelStore
 import com.xinto.opencord.store.Event
 import com.xinto.opencord.store.GuildStore
 import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
 import com.xinto.opencord.util.getSortedChannels
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -42,8 +42,6 @@ class ChannelsViewModel(
         private set
     val collapsedCategories = mutableStateListOf<Long>()
 
-    var job: Job? = null
-
     fun load() {
         viewModelScope.launch {
             state = State.Loading
@@ -70,35 +68,32 @@ class ChannelsViewModel(
             }
         }
 
-        job = viewModelScope.launch {
-            guildStore.observeGuild(persistentGuildId).collect {
-                when (it) {
-                    is Event.Add -> {}
-                    is Event.Update -> {
-                        guildName = it.data.name
-                        guildBannerUrl = it.data.bannerUrl
-                        guildBoostLevel = it.data.premiumTier
-                    }
-                    is Event.Remove -> {
-                        state = State.Unselected
-                    }
+        guildStore.observeGuild(persistentGuildId).onEach {
+            when (it) {
+                is Event.Add,
+                is Event.Update -> {
+                    guildName = it.data!!.name
+                    guildBannerUrl = it.data!!.bannerUrl
+                    guildBoostLevel = it.data!!.premiumTier
+                }
+                is Event.Remove -> {
+                    state = State.Unselected
                 }
             }
+        }.launchIn(viewModelScope)
 
-            channelStore.observeChannels(persistentGuildId).collect {
-                when (it) {
-                    is Event.Add -> {
-                        channels[it.data.id] = it.data
-                    }
-                    is Event.Update -> {
-                        channels[it.data.id] = it.data
-                    }
-                    is Event.Remove -> {
-                        channels.remove(it.data?.id)
-                    }
+        channelStore.observeChannels(persistentGuildId).onEach {
+            state = State.Loaded
+            when (it) {
+                is Event.Add,
+                is Event.Update -> {
+                    channels[it.data!!.id] = it.data!!
+                }
+                is Event.Remove -> {
+                    channels.remove(it.data?.id)
                 }
             }
-        }
+        }.launchIn(viewModelScope)
     }
 
     fun selectChannel(channelId: Long) {

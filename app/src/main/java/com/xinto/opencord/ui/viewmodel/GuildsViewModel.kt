@@ -35,6 +35,8 @@ class GuildsViewModel(
     init {
         viewModelScope.launch {
             guildStore.observeGuilds().collect { event ->
+                state = State.Loaded
+
                 when (event) {
                     is Event.Add -> {
                         guilds[event.data.id] = event.data

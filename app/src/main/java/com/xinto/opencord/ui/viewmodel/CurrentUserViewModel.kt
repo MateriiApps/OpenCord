@@ -11,15 +11,19 @@ import com.xinto.opencord.domain.mapper.toApi
 import com.xinto.opencord.domain.model.*
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.dto.UpdatePresence
+import com.xinto.opencord.store.CurrentUserStore
 import com.xinto.opencord.store.SessionStore
 import com.xinto.opencord.store.UserSettingsStore
 import com.xinto.partialgen.PartialValue
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 
 class CurrentUserViewModel(
     private val gateway: DiscordGateway,
     private val sessionStore: SessionStore,
+    private val currentUserStore: CurrentUserStore,
     private val userSettingsStore: UserSettingsStore,
 ) : ViewModel() {
 
@@ -117,15 +121,20 @@ class CurrentUserViewModel(
     }
 
     init {
-        viewModelScope.launch {
-            userSettingsStore.observeSettings().collect { event ->
-                userStatus = event.status
-                userCustomStatus = event.customStatus
-            }
+        currentUserStore.observeCurrentUser().onEach { user ->
+            avatarUrl = user.avatarUrl
+            username = user.username
+            discriminator = user.discriminator
+            state = State.Loaded
+        }.launchIn(viewModelScope)
 
-            sessionStore.observeActivities().collect { event ->
-                isStreaming = event.any { it is DomainActivityStreaming }
-            }
-        }
+        userSettingsStore.observeUserSettings().onEach { event ->
+            userStatus = event.status
+            userCustomStatus = event.customStatus
+        }.launchIn(viewModelScope)
+
+        sessionStore.observeActivities().onEach { event ->
+            isStreaming = event.any { it is DomainActivityStreaming }
+        }.launchIn(viewModelScope)
     }
 }

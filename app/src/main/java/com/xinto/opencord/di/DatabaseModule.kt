@@ -11,18 +11,27 @@ import java.util.concurrent.Executors
 
 val databaseModule = module {
     fun provideCacheDatabase(context: Context, logger: Logger): CacheDatabase {
-        val db = Room.databaseBuilder(
-            context,
-            CacheDatabase::class.java,
-            context.cacheDir.resolve("cache.db").absolutePath,
-        )
+        val dbPath = context.cacheDir.resolve("cache.db").absolutePath
+
+        val db = Room
+            .databaseBuilder(context, CacheDatabase::class.java, dbPath)
+            .fallbackToDestructiveMigration()
 
         if (BuildConfig.DEBUG) {
+            val blacklist = arrayOf(
+                "BEGIN DEFERRED TRANSACTION",
+                "TRANSACTION SUCCESSFUL",
+                "END TRANSACTION"
+            )
+
             db.setQueryCallback(
                 { sql, args ->
-                    logger.debug("CacheDatabase", "SQL: $sql")
-                    if (args.isNotEmpty()) {
-                        logger.debug("CacheDatabase", "SQL args: $args")
+                    if (sql !in blacklist) {
+                        logger.debug("CacheDatabase", "SQL: $sql")
+
+                        if (args.isNotEmpty()) {
+                            logger.debug("CacheDatabase", "SQL args: $args")
+                        }
                     }
                 },
                 Executors.newSingleThreadExecutor()

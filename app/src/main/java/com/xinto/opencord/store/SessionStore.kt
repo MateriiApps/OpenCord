@@ -32,9 +32,7 @@ class SessionStoreImpl(
     private var _currentSession: SessionData? = null
     private var _activities: List<DomainActivity>? = null
 
-    override fun observeSessions(): Flow<List<SessionData>> {
-        return events
-    }
+    override fun observeSessions() = events
 
     override fun observeCurrentSession(): Flow<SessionData> {
         return events.map { event ->
@@ -43,17 +41,9 @@ class SessionStoreImpl(
         }
     }
 
-    override fun observeActivities(): Flow<List<DomainActivity>> {
-        return activityEvents
-    }
-
-    override fun getActivities(): List<DomainActivity>? {
-        return _activities
-    }
-
-    override fun getCurrentSession(): SessionData? {
-        return _currentSession
-    }
+    override fun observeActivities() = activityEvents
+    override fun getActivities() = _activities
+    override fun getCurrentSession() = _currentSession
 
     private suspend fun handleSessionsUpdate(sessions: List<SessionData>) {
         val newSessions = sessions
