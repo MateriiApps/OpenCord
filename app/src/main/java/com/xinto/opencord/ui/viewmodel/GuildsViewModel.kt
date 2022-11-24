@@ -7,7 +7,7 @@ import com.xinto.opencord.domain.model.DomainGuild
 import com.xinto.opencord.store.Event
 import com.xinto.opencord.store.GuildStore
 import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
-import kotlinx.coroutines.launch
+import com.xinto.opencord.util.collectIn
 
 class GuildsViewModel(
     guildStore: GuildStore,
@@ -33,20 +33,18 @@ class GuildsViewModel(
     }
 
     init {
-        viewModelScope.launch {
-            guildStore.observeGuilds().collect { event ->
-                state = State.Loaded
+        guildStore.observeGuilds().collectIn(viewModelScope) { event ->
+            state = State.Loaded
 
-                when (event) {
-                    is Event.Add -> {
-                        guilds[event.data.id] = event.data
-                    }
-                    is Event.Update -> {
-                        guilds[event.data.id] = event.data
-                    }
-                    is Event.Remove -> {
-                        guilds.remove(event.data?.id)
-                    }
+            when (event) {
+                is Event.Add -> {
+                    guilds[event.data.id] = event.data
+                }
+                is Event.Update -> {
+                    guilds[event.data.id] = event.data
+                }
+                is Event.Remove -> {
+                    guilds.remove(event.data?.id)
                 }
             }
         }

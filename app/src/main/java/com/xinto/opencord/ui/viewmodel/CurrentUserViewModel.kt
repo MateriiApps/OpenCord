@@ -14,9 +14,8 @@ import com.xinto.opencord.gateway.dto.UpdatePresence
 import com.xinto.opencord.store.CurrentUserStore
 import com.xinto.opencord.store.SessionStore
 import com.xinto.opencord.store.UserSettingsStore
+import com.xinto.opencord.util.collectIn
 import com.xinto.partialgen.PartialValue
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 
@@ -121,20 +120,20 @@ class CurrentUserViewModel(
     }
 
     init {
-        currentUserStore.observeCurrentUser().onEach { user ->
+        currentUserStore.observeCurrentUser().collectIn(viewModelScope) { user ->
             avatarUrl = user.avatarUrl
             username = user.username
             discriminator = user.discriminator
             state = State.Loaded
-        }.launchIn(viewModelScope)
+        }
 
-        userSettingsStore.observeUserSettings().onEach { event ->
+        userSettingsStore.observeUserSettings().collectIn(viewModelScope) { event ->
             userStatus = event.status
             userCustomStatus = event.customStatus
-        }.launchIn(viewModelScope)
+        }
 
-        sessionStore.observeActivities().onEach { event ->
+        sessionStore.observeActivities().collectIn(viewModelScope) { event ->
             isStreaming = event.any { it is DomainActivityStreaming }
-        }.launchIn(viewModelScope)
+        }
     }
 }

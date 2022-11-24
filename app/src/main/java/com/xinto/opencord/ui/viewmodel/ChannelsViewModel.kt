@@ -8,10 +8,9 @@ import com.xinto.opencord.store.ChannelStore
 import com.xinto.opencord.store.Event
 import com.xinto.opencord.store.GuildStore
 import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
+import com.xinto.opencord.util.collectIn
 import com.xinto.opencord.util.getSortedChannels
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -68,7 +67,7 @@ class ChannelsViewModel(
             }
         }
 
-        guildStore.observeGuild(persistentGuildId).onEach {
+        guildStore.observeGuild(persistentGuildId).collectIn(viewModelScope) {
             when (it) {
                 is Event.Add,
                 is Event.Update -> {
@@ -80,9 +79,9 @@ class ChannelsViewModel(
                     state = State.Unselected
                 }
             }
-        }.launchIn(viewModelScope)
+        }
 
-        channelStore.observeChannels(persistentGuildId).onEach {
+        channelStore.observeChannels(persistentGuildId).collectIn(viewModelScope) {
             state = State.Loaded
             when (it) {
                 is Event.Add,
@@ -93,7 +92,7 @@ class ChannelsViewModel(
                     channels.remove(it.data?.id)
                 }
             }
-        }.launchIn(viewModelScope)
+        }
     }
 
     fun selectChannel(channelId: Long) {
