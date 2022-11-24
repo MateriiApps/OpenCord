@@ -150,7 +150,7 @@ class DiscordApiServiceImpl(
     override suspend fun startTyping(channelId: Long) {
         withContext(Dispatchers.IO) {
             val url = getTypingUrl(channelId)
-            client.post(url)
+            authedPost(url)
         }
     }
 
