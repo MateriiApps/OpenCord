@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.xinto.opencord.domain.manager.PersistentDataManager
 import com.xinto.opencord.domain.model.DomainChannel
 import com.xinto.opencord.store.ChannelStore
-import com.xinto.opencord.store.Event
 import com.xinto.opencord.store.GuildStore
+import com.xinto.opencord.store.fold
 import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
 import com.xinto.opencord.util.collectIn
 import com.xinto.opencord.util.getSortedChannels
@@ -67,31 +67,31 @@ class ChannelsViewModel(
             }
         }
 
-        guildStore.observeGuild(persistentGuildId).collectIn(viewModelScope) {
-            when (it) {
-                is Event.Add,
-                is Event.Update -> {
-                    guildName = it.data!!.name
-                    guildBannerUrl = it.data!!.bannerUrl
-                    guildBoostLevel = it.data!!.premiumTier
-                }
-                is Event.Remove -> {
+        guildStore.observeGuild(persistentGuildId).collectIn(viewModelScope) { event ->
+            event.fold(
+                onAdd = {
+                    guildName = it.name
+                    guildBannerUrl = it.bannerUrl
+                    guildBoostLevel = it.premiumTier
+                },
+                onUpdate = {
+                    guildName = it.name
+                    guildBannerUrl = it.bannerUrl
+                    guildBoostLevel = it.premiumTier
+                },
+                onRemove = {
                     state = State.Unselected
-                }
-            }
+                },
+            )
         }
 
-        channelStore.observeChannels(persistentGuildId).collectIn(viewModelScope) {
+        channelStore.observeChannels(persistentGuildId).collectIn(viewModelScope) { event ->
             state = State.Loaded
-            when (it) {
-                is Event.Add,
-                is Event.Update -> {
-                    channels[it.data!!.id] = it.data!!
-                }
-                is Event.Remove -> {
-                    channels.remove(it.data?.id)
-                }
-            }
+            event.fold(
+                onAdd = { channels[it.id] = it },
+                onUpdate = { channels[it.id] = it },
+                onRemove = { channels.remove(it) },
+            )
         }
     }
 

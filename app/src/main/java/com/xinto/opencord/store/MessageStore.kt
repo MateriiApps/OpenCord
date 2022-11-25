@@ -12,6 +12,7 @@ import com.xinto.opencord.gateway.event.MessageDeleteEvent
 import com.xinto.opencord.gateway.event.MessageUpdateEvent
 import com.xinto.opencord.gateway.onEvent
 import com.xinto.opencord.rest.service.DiscordApiService
+import com.xinto.partialgen.getOrNull
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -44,8 +45,8 @@ class MessageStoreImpl(
 
     private fun constructDomainMessage(
         message: EntityMessage,
-        cachedUsers: MutableMap<Long, DomainUser> = mutableMapOf()
-    ): DomainMessage {
+        cachedUsers: MutableMap<Long, DomainUser?> = mutableMapOf()
+    ): DomainMessage? {
         val attachments = if (!message.hasAttachments) null else {
             cache.attachments().getAttachments(message.id)
         }
@@ -59,8 +60,8 @@ class MessageStoreImpl(
         }
 
         val author = cachedUsers.computeIfAbsent(message.authorId) {
-            cache.users().getUser(message.authorId)!!.toDomain()
-        }
+            cache.users().getUser(message.authorId)?.toDomain()
+        } ?: return null
 
         return message.toDomain(
             author = author,
@@ -85,7 +86,7 @@ class MessageStoreImpl(
             }
 
             if (cachedMessages.size >= 50) {
-                cachedMessages.map(::constructDomainMessage)
+                cachedMessages.mapNotNull(::constructDomainMessage)
             } else {
                 val messages = api.getChannelMessages(
                     channelId = channelId,
@@ -150,8 +151,14 @@ class MessageStoreImpl(
             }
         }
 
-        gateway.onEvent<MessageUpdateEvent> {
-            // TODO: logic for update
+        gateway.onEvent<MessageUpdateEvent> { event ->
+            val message = event.data.id.getOrNull()?.value
+                ?.let { cache.messages().getMessage(it) }
+                ?.let { constructDomainMessage(it) }
+                ?: return@onEvent
+
+            val newMessage = message.
+
         }
 
         gateway.onEvent<MessageDeleteEvent> {

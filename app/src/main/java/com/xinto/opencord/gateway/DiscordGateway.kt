@@ -1,6 +1,5 @@
 package com.xinto.opencord.gateway
 
-import android.util.Log
 import com.xinto.opencord.BuildConfig
 import com.xinto.opencord.domain.manager.AccountManager
 import com.xinto.opencord.domain.provider.PropertyProvider

@@ -66,7 +66,8 @@ class GuildStoreImpl(
         }
 
         gateway.onEvent<GuildUpdateEvent> {
-            // TODO: logic for guild update
+            events.emit(Event.Update(it.data.toDomain()))
+            cache.guilds().insertGuilds(listOf(it.data.toEntity()))
         }
 
         gateway.onEvent<GuildDeleteEvent> {

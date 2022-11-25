@@ -32,13 +32,13 @@ class ChannelStoreImpl(
 
     override fun observeChannel(channelId: Long): Flow<Event<DomainChannel>> {
         return events.filter {
-            it.data?.id == channelId
+            it.data?.id == channelId || it is Event.Remove
         }
     }
 
     override fun observeChannels(guildId: Long): Flow<Event<DomainChannel>> {
         return events.filter {
-            it.data?.guildId == guildId
+            it.data?.guildId == guildId || it is Event.Remove
         }
     }
 
@@ -82,7 +82,11 @@ class ChannelStoreImpl(
         }
 
         gateway.onEvent<ChannelUpdateEvent> {
-            // TODO: logic for channel update
+            val guildId = it.data.guildId?.value
+                ?: error("no guild id on channel update event")
+
+            events.emit(Event.Update(it.data.toDomain()))
+            cache.channels().insertChannels(listOf(it.data.toEntity(guildId)))
         }
 
         gateway.onEvent<ChannelDeleteEvent> {

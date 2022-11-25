@@ -4,8 +4,8 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.viewModelScope
 import com.xinto.opencord.domain.manager.PersistentDataManager
 import com.xinto.opencord.domain.model.DomainGuild
-import com.xinto.opencord.store.Event
 import com.xinto.opencord.store.GuildStore
+import com.xinto.opencord.store.fold
 import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
 import com.xinto.opencord.util.collectIn
 
@@ -35,18 +35,11 @@ class GuildsViewModel(
     init {
         guildStore.observeGuilds().collectIn(viewModelScope) { event ->
             state = State.Loaded
-
-            when (event) {
-                is Event.Add -> {
-                    guilds[event.data.id] = event.data
-                }
-                is Event.Update -> {
-                    guilds[event.data.id] = event.data
-                }
-                is Event.Remove -> {
-                    guilds.remove(event.data?.id)
-                }
-            }
+            event.fold(
+                onAdd = { guilds[it.id] = it },
+                onUpdate = { guilds[it.id] = it },
+                onRemove = { guilds.remove(it) },
+            )
         }
 
         if (persistentGuildId != 0L) {

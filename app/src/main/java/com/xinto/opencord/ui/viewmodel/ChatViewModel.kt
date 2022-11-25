@@ -8,8 +8,9 @@ import com.xinto.opencord.domain.model.DomainMessage
 import com.xinto.opencord.rest.body.MessageBody
 import com.xinto.opencord.rest.service.DiscordApiService
 import com.xinto.opencord.store.ChannelStore
-import com.xinto.opencord.store.Event
 import com.xinto.opencord.store.MessageStore
+import com.xinto.opencord.store.fold
+import com.xinto.opencord.util.collectIn
 import com.xinto.opencord.util.throttle
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -67,23 +68,15 @@ class ChatViewModel(
             }
         }
 
-        job = viewModelScope.launch {
-            messageStore.observeChannel(persistentDataManager.persistentChannelId).collect {
-                when (it) {
-                    is Event.Add -> {
-                        messages[it.data.id] = it.data
-                    }
-                    is Event.Update -> {
-                        messages[it.data.id] = it.data
-                    }
-                    is Event.Remove -> {
-                        messages.remove(it.data?.id)
-                    }
-                }
+        job = messageStore
+            .observeChannel(persistentDataManager.persistentChannelId)
+            .collectIn(viewModelScope) { event ->
+                event.fold(
+                    onAdd = { messages[it.id] = it },
+                    onUpdate = { messages[it.id] = it },
+                    onRemove = { messages.remove(it) },
+                )
             }
-        }
-
-        state = State.Loaded
     }
 
     fun sendMessage() {
