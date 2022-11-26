@@ -4,10 +4,10 @@ import org.gradle.kotlin.dsl.DependencyHandlerScope
 sealed class Dependencies {
 
     object Ktor : Dependencies() {
-        const val version = "2.0.3"
+        const val version = "2.1.3"
 
         const val ktorClientCore = "io.ktor:ktor-client-core:$version"
-        const val ktorClientCio = "io.ktor:ktor-client-cio:$version"
+        const val ktorClientOkHttp = "io.ktor:ktor-client-okhttp:$version"
         const val ktorClientWebsockets = "io.ktor:ktor-client-websockets:$version"
         const val ktorClientContentNegotiation = "io.ktor:ktor-client-content-negotiation:$version"
         const val ktorSerializationJson = "io.ktor:ktor-serialization-kotlinx-json:$version"
@@ -16,7 +16,7 @@ sealed class Dependencies {
         override fun invoke(scope: DependencyHandlerScope) {
             scope {
                 implementation(ktorClientCore)
-                implementation(ktorClientCio)
+                implementation(ktorClientOkHttp)
                 implementation(ktorClientWebsockets)
                 implementation(ktorClientContentNegotiation)
                 implementation(ktorSerializationJson)
