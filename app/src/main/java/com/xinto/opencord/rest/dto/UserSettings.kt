@@ -1,11 +1,11 @@
 package com.xinto.opencord.rest.dto
 
-import com.xinto.partialgen.Partialable
+import com.github.materiapps.partial.Partialize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 // TODO: check what the commented out parts are
-@Partialable
+@Partialize
 @Serializable
 data class ApiUserSettings(
     @SerialName("locale")

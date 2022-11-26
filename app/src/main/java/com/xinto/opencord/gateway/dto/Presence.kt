@@ -1,7 +1,6 @@
 package com.xinto.opencord.gateway.dto
 
 import com.xinto.opencord.rest.dto.ApiActivity
-import com.xinto.partialgen.PartialValue
 import kotlinx.serialization.Serializable
 
 @Serializable

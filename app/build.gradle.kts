@@ -1,3 +1,5 @@
+import android.annotation.SuppressLint
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -109,13 +111,17 @@ android {
     }
 }
 
+repositories {
+    mavenLocal()
+}
+
 dependencies {
+    implementation("io.github.materiapps:partial:1.0.0")
+    ksp("io.github.materiapps:partial-ksp:1.0.0")
+
     implementation(project(":bottom-dialog-compose"))
     implementation(project(":overlapping-panels-compose"))
     implementation(project(":simpleast-compose"))
-
-    implementation(project(":partialgen"))
-    ksp(project(":partialgen"))
 
     implementation(project(":enumgetter"))
     ksp(project(":enumgetter"))
