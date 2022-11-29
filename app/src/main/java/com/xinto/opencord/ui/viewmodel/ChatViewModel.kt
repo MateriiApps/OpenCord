@@ -17,7 +17,7 @@ import com.xinto.opencord.gateway.onEvent
 import com.xinto.opencord.rest.body.MessageBody
 import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
 import com.xinto.opencord.util.throttle
-import com.xinto.partialgen.getOrNull
+import com.github.materiiapps.partial.getOrNull
 import kotlinx.coroutines.launch
 
 class ChatViewModel(

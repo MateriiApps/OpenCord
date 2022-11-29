@@ -1,10 +1,10 @@
 package com.xinto.opencord.domain.mapper
 
 import androidx.compose.ui.graphics.Color
+import com.github.materiiapps.partial.map
 import com.xinto.opencord.domain.model.*
 import com.xinto.opencord.rest.dto.*
 import com.xinto.opencord.rest.service.DiscordCdnServiceImpl
-import com.xinto.partialgen.mapToPartial
 import kotlinx.datetime.Instant
 
 fun ApiAttachment.toDomain(): DomainAttachment {
@@ -168,17 +168,17 @@ fun ApiMessage.toDomain(): DomainMessage {
 }
 
 fun ApiMessagePartial.toDomain(): DomainMessageRegularPartial {
-    val domainAuthor = author.mapToPartial { it.toDomain() }
-    val domainAttachments = attachments.mapToPartial { attachments ->
+    val domainAuthor = author.map { it.toDomain() }
+    val domainAttachments = attachments.map { attachments ->
         attachments.map { it.toDomain() }
     }
-    val domainEmbeds = embeds.mapToPartial { embeds ->
+    val domainEmbeds = embeds.map { embeds ->
         embeds.map { it.toDomain() }
     }
     return DomainMessageRegularPartial(
-        id = id.mapToPartial { it.value },
+        id = id.map { it.value },
         content = content,
-        channelId = channelId.mapToPartial { it.value },
+        channelId = channelId.map { it.value },
         author = domainAuthor,
         timestamp = timestamp,
         editedTimestamp = editedTimestamp,
@@ -271,16 +271,16 @@ fun ApiEmbedField.toDomain(): DomainEmbedField {
 }
 
 fun ApiUserSettingsPartial.toDomain(): DomainUserSettingsPartial {
-    val domainPartialTheme = theme.mapToPartial { DomainThemeSetting.fromValue(it)!! }
-    val domainPartialGuildPositions = guildPositions.mapToPartial { guildPositions ->
+    val domainPartialTheme = theme.map { DomainThemeSetting.fromValue(it)!! }
+    val domainPartialGuildPositions = guildPositions.map { guildPositions ->
         guildPositions.map { it.value }
     }
-    val domainPartialStatus = status.mapToPartial { DomainUserStatus.fromValue(it)!! }
-    val domainPartialFriendSourceFlags = friendSourceFlags.mapToPartial { it.toDomain() }
-    val domainPartialGuildFolders = guildFolders.mapToPartial { guildFolders ->
+    val domainPartialStatus = status.map { DomainUserStatus.fromValue(it)!! }
+    val domainPartialFriendSourceFlags = friendSourceFlags.map { it.toDomain() }
+    val domainPartialGuildFolders = guildFolders.map { guildFolders ->
         guildFolders.map { it.toDomain() }
     }
-    val domainPartialCustomStatus = customStatus.mapToPartial { it?.toDomain() }
+    val domainPartialCustomStatus = customStatus.map { it?.toDomain() }
     return DomainUserSettingsPartial(
         locale = locale,
         showCurrentGame = showCurrentGame,

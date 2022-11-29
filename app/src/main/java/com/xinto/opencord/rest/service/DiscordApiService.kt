@@ -1,5 +1,6 @@
 package com.xinto.opencord.rest.service
 
+import com.github.materiiapps.partial.getOrNull
 import com.xinto.opencord.BuildConfig
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.event.MessageCreateEvent
@@ -9,7 +10,6 @@ import com.xinto.opencord.gateway.event.UserSettingsUpdateEvent
 import com.xinto.opencord.gateway.onEvent
 import com.xinto.opencord.rest.body.MessageBody
 import com.xinto.opencord.rest.dto.*
-import com.xinto.partialgen.getOrNull
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*

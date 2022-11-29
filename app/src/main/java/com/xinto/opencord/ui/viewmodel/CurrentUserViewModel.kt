@@ -19,7 +19,7 @@ import com.xinto.opencord.gateway.event.SessionsReplaceEvent
 import com.xinto.opencord.gateway.event.UserSettingsUpdateEvent
 import com.xinto.opencord.gateway.event.UserUpdateEvent
 import com.xinto.opencord.gateway.onEvent
-import com.xinto.partialgen.PartialValue
+import com.github.materiiapps.partial.Partial
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 
@@ -73,7 +73,7 @@ class CurrentUserViewModel(
                 )
             )
 
-            val settings = DomainUserSettingsPartial(status = PartialValue.Value(status))
+            val settings = DomainUserSettingsPartial(status = Partial.Value(status))
             repository.updateUserSettings(settings)
         }
     }
@@ -81,7 +81,7 @@ class CurrentUserViewModel(
     fun setCustomStatus(status: DomainCustomStatus?) {
         viewModelScope.launch {
             val settings = DomainUserSettingsPartial(
-                customStatus = PartialValue.Value(status)
+                customStatus = Partial.Value(status)
             )
             repository.updateUserSettings(settings)
 
