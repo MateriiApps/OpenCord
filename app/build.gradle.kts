@@ -111,13 +111,9 @@ android {
     }
 }
 
-repositories {
-    mavenLocal()
-}
-
 dependencies {
-    implementation("io.github.materiapps:partial:1.0.0")
-    ksp("io.github.materiapps:partial-ksp:1.0.0")
+    implementation("io.github.materiiapps:partial:1.0.0")
+    ksp("io.github.materiiapps:partial-ksp:1.0.0")
 
     implementation(project(":bottom-dialog-compose"))
     implementation(project(":overlapping-panels-compose"))

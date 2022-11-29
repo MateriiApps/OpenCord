@@ -1,6 +1,6 @@
 package com.xinto.opencord.rest.dto
 
-import com.github.materiapps.partial.Partialize
+import com.github.materiiapps.partial.Partialize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

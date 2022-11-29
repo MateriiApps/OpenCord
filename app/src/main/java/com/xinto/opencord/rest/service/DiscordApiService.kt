@@ -1,6 +1,6 @@
 package com.xinto.opencord.rest.service
 
-import com.github.materiapps.partial.getOrNull
+import com.github.materiiapps.partial.getOrNull
 import com.xinto.opencord.BuildConfig
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.event.MessageCreateEvent

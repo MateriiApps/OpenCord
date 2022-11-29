@@ -1,6 +1,6 @@
 package com.xinto.opencord.domain.model
 
-import com.github.materiapps.partial.Partialize
+import com.github.materiiapps.partial.Partialize
 import com.xinto.opencord.util.SimpleAstParser
 import com.xinto.opencord.util.Timestamp
 import kotlinx.datetime.Instant

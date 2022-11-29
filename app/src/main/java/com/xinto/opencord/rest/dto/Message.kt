@@ -1,6 +1,6 @@
 package com.xinto.opencord.rest.dto
 
-import com.github.materiapps.partial.Partialize
+import com.github.materiiapps.partial.Partialize
 import com.xinto.enumgetter.GetterGen
 import kotlinx.datetime.Instant
 import kotlinx.serialization.KSerializer

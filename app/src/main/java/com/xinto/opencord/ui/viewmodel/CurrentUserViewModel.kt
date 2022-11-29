@@ -19,7 +19,7 @@ import com.xinto.opencord.gateway.event.SessionsReplaceEvent
 import com.xinto.opencord.gateway.event.UserSettingsUpdateEvent
 import com.xinto.opencord.gateway.event.UserUpdateEvent
 import com.xinto.opencord.gateway.onEvent
-import com.github.materiapps.partial.Partial
+import com.github.materiiapps.partial.Partial
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 

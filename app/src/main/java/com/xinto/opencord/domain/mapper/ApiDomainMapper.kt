@@ -1,7 +1,7 @@
 package com.xinto.opencord.domain.mapper
 
 import androidx.compose.ui.graphics.Color
-import com.github.materiapps.partial.map
+import com.github.materiiapps.partial.map
 import com.xinto.opencord.domain.model.*
 import com.xinto.opencord.rest.dto.*
 import com.xinto.opencord.rest.service.DiscordCdnServiceImpl

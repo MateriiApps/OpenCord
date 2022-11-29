@@ -1,6 +1,6 @@
 package com.xinto.opencord.domain.mapper
 
-import com.github.materiapps.partial.map
+import com.github.materiiapps.partial.map
 import com.xinto.opencord.domain.model.*
 import com.xinto.opencord.rest.dto.*
 
