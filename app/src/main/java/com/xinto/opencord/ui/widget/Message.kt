@@ -203,12 +203,13 @@ fun WidgetMessageAuthor(
     author: String,
     timestamp: String,
     edited: Boolean,
+    isBot: Boolean,
     modifier: Modifier = Modifier,
     onAuthorClick: (() -> Unit)? = null,
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(2.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         ProvideTextStyle(MaterialTheme.typography.labelLarge) {
@@ -223,6 +224,19 @@ fun WidgetMessageAuthor(
                         onAuthorClick?.invoke()
                     }
             )
+        }
+        if (isBot) {
+            ProvideTextStyle(MaterialTheme.typography.labelSmall) {
+                Surface(
+                    color = MaterialTheme.colorScheme.primary,
+                    shape = MaterialTheme.shapes.extraSmall,
+                ) {
+                    Text(
+                        "BOT",
+                        modifier = Modifier.padding(horizontal = 4.dp)
+                    )
+                }
+            }
         }
         ProvideContentAlpha(ContentAlpha.low) {
             Text("·")

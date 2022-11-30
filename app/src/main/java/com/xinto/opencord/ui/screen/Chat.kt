@@ -159,7 +159,6 @@ private fun ChatScreenLoading(
                     )
                 },
                 author = {
-                    //TODO use WidgetMessageAuthor
                     val width = remember { (30..100).random().dp }
                     Box(
                         modifier = Modifier
@@ -293,6 +292,7 @@ private fun ChatScreenLoaded(
                                     author = message.author.username,
                                     timestamp = message.formattedTimestamp,
                                     edited = message.isEdited,
+                                    isBot = message.author.bot,
                                     onAuthorClick = {
                                         onUserMessageUpdate("$userMessage${message.author.formattedMention} ")
                                     },
