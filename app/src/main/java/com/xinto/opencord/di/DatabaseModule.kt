@@ -38,12 +38,7 @@ val databaseModule = module {
             )
         }
 
-        return db.build().apply {
-            messages().clear()
-            embeds().clear()
-            attachments().clear()
-            users().deleteUnusedUsers()
-        }
+        return db.build()
     }
 
     singleOf(::provideCacheDatabase)
