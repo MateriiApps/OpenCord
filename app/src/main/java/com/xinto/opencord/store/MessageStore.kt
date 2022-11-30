@@ -1,7 +1,6 @@
 package com.xinto.opencord.store
 
 import androidx.room.withTransaction
-import com.github.materiiapps.partial.getOrNull
 import com.xinto.opencord.db.database.CacheDatabase
 import com.xinto.opencord.db.entity.message.EntityMessage
 import com.xinto.opencord.domain.mapper.toDomain
@@ -42,7 +41,7 @@ class MessageStoreImpl(
         return events.filter { event ->
             event.fold(
                 onAdd = { it.id == channelId },
-                onUpdate = { false }, // FIXME: guhhhhh
+                onUpdate = { it.id == channelId },
                 onRemove = { it == channelId },
             )
         }

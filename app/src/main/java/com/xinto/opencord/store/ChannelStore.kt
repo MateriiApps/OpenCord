@@ -31,14 +31,22 @@ class ChannelStoreImpl(
     private val events = MutableSharedFlow<Event<DomainChannel>>()
 
     override fun observeChannel(channelId: Long): Flow<Event<DomainChannel>> {
-        return events.filter {
-            it.data?.id == channelId || it is Event.Remove
+        return events.filter { event ->
+            event.fold(
+                onAdd = { it.id == channelId },
+                onUpdate = { it.id == channelId },
+                onRemove = { it == channelId }
+            )
         }
     }
 
     override fun observeChannels(guildId: Long): Flow<Event<DomainChannel>> {
-        return events.filter {
-            it.data?.guildId == guildId || it is Event.Remove
+        return events.filter { event ->
+            event.fold(
+                onAdd = { it.guildId == guildId },
+                onUpdate = { it.guildId == guildId },
+                onRemove = { it == guildId }
+            )
         }
     }
 

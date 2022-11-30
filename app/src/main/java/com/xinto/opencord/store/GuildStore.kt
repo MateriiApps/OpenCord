@@ -30,8 +30,12 @@ class GuildStoreImpl(
     private val events = MutableSharedFlow<Event<DomainGuild>>()
 
     override fun observeGuild(guildId: Long): Flow<Event<DomainGuild>> {
-        return events.filter {
-            it.data?.id == guildId
+        return events.filter { event ->
+            event.fold(
+                onAdd = { it.id == guildId },
+                onUpdate = { it.id == guildId },
+                onRemove = { it == guildId }
+            )
         }
     }
 
