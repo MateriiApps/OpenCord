@@ -19,6 +19,9 @@ interface AttachmentsDao {
     @Query("DELETE FROM attachments WHERE message_id = :messageId")
     fun deleteAttachments(messageId: Long)
 
+    @Query("DELETE FROM attachments")
+    fun clear()
+
     // --------------- Queries ---------------
     @Query("SELECT * FROM attachments WHERE id = :messageId")
     fun getAttachments(messageId: Long): List<EntityAttachment>

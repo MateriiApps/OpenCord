@@ -22,6 +22,9 @@ interface MessagesDao {
     @Query("DELETE FROM messages WHERE channel_id = :channelId")
     fun deleteByChannel(channelId: Long)
 
+    @Query("DELETE FROM messages")
+    fun clear()
+
     // --------------- Queries ---------------
     @Query("SELECT * FROM messages WHERE id = :id LIMIT 1")
     fun getMessage(id: Long): EntityMessage?

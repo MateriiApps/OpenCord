@@ -20,7 +20,7 @@ interface GuildsDao {
     fun deleteGuild(guildId: Long)
 
     @Query("DELETE FROM guilds")
-    fun deleteAllGuilds()
+    fun clear()
 
     // --------------- Queries ---------------
     @Query("SELECT * FROM guilds WHERE id = :guildId LIMIT 1")

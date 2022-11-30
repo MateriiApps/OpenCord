@@ -22,6 +22,9 @@ interface EmbedsDao {
     @Query("DELETE FROM embeds WHERE message_id = :messageId AND embed_index >= :embedCount")
     fun deleteTrailingEmbeds(messageId: Long, embedCount: Int)
 
+    @Query("DELETE FROM embeds")
+    fun clear()
+
     // --------------- Queries ---------------
     @Query("SELECT * FROM embeds WHERE message_id = :messageId ORDER BY embed_index ASC")
     fun getEmbeds(messageId: Long): List<EntityEmbed>

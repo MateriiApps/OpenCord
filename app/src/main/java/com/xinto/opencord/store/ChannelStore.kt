@@ -75,7 +75,7 @@ class ChannelStoreImpl(
 
             cache.runInTransaction {
                 cache.channels().apply {
-                    deleteAllChannels()
+                    clear()
                     insertChannels(channels)
                 }
             }

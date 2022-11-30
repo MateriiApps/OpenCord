@@ -16,6 +16,8 @@ interface UsersDao {
     fun insertUsers(users: List<EntityUser>)
 
     // --------------- Deletes ---------------
+    @Query("DELETE FROM USERS WHERE id NOT IN(SELECT author_id FROM MESSAGES)")
+    fun deleteUnusedUsers()
 
     // --------------- Queries ---------------
     @Query("SELECT * FROM users WHERE id = :userId LIMIT 1")

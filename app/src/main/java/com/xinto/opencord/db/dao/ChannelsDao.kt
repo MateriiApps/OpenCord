@@ -19,11 +19,11 @@ interface ChannelsDao {
     @Query("DELETE FROM channels WHERE id = :channelId")
     fun deleteChannel(channelId: Long)
 
-    @Query("DELETE FROM channels")
-    fun deleteAllChannels()
-
     @Query("DELETE FROM channels WHERE guild_id = :guildId")
     fun deleteChannelsByGuild(guildId: Long)
+
+    @Query("DELETE FROM channels")
+    fun clear()
 
     // --------------- Queries ---------------
     @Query("SELECT * FROM channels WHERE id = :channelId LIMIT 1")

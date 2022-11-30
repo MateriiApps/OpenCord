@@ -57,7 +57,7 @@ class GuildStoreImpl(
 
             cache.runInTransaction {
                 cache.guilds().apply {
-                    deleteAllGuilds()
+                    clear()
                     insertGuilds(guilds)
                 }
             }
