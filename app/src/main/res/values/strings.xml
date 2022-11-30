@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name" translatable="false">OpenCord</string>
 
     <string name="navigation_back">Back</string>
@@ -20,6 +20,7 @@
     <string name="chat_unselected_message">Please select a channel.</string>
     <string name="chat_input_hint">Message #%1$s</string>
     <string name="chat_loading_error">An error occurred while loading the chat.</string>
+    <string name="chat_bot_label">BOT</string>
 
     <string name="channel_unselected_message">Please select a guild.</string>
 
