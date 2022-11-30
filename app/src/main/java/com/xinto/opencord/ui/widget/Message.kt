@@ -203,7 +203,7 @@ fun WidgetMessageAvatar(
 fun WidgetMessageAuthor(
     author: String,
     timestamp: String,
-    edited: Boolean,
+    isEdited: Boolean,
     isBot: Boolean,
     modifier: Modifier = Modifier,
     onAuthorClick: (() -> Unit)? = null,
@@ -244,7 +244,7 @@ fun WidgetMessageAuthor(
             ProvideTextStyle(MaterialTheme.typography.labelSmall) {
                 Text(timestamp)
             }
-            if (edited) {
+            if (isEdited) {
                 Text("·")
                 Icon(
                     modifier = Modifier

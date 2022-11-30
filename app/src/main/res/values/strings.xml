@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+<resources>
     <string name="app_name" translatable="false">OpenCord</string>
 
     <string name="navigation_back">Back</string>

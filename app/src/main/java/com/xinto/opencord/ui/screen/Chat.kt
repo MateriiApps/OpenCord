@@ -291,7 +291,7 @@ private fun ChatScreenLoaded(
                                 WidgetMessageAuthor(
                                     author = message.author.username,
                                     timestamp = message.formattedTimestamp,
-                                    edited = message.isEdited,
+                                    isEdited = message.isEdited,
                                     isBot = message.author.bot,
                                     onAuthorClick = {
                                         onUserMessageUpdate("$userMessage${message.author.formattedMention} ")
