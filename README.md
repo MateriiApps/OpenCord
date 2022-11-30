@@ -55,5 +55,5 @@ use an alt account for your safety.
 ### Where download???!?!?!?!?
 
 Since there is no release version yet, use
-this [nightly link](https://nightly.link/materiapps/opencord/workflows/android/master/opencord.zip)
+this [nightly link](https://nightly.link/materiiapps/opencord/workflows/android/master/opencord.zip)
 to download OpenCord. Download, extract and install the APK contained within.

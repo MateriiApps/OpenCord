@@ -1,5 +1,6 @@
 package com.xinto.opencord.rest.service
 
+import com.github.materiiapps.partial.getOrNull
 import com.xinto.opencord.BuildConfig
 import com.xinto.opencord.rest.body.MessageBody
 import com.xinto.opencord.rest.dto.*

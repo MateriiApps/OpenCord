@@ -1,17 +1,17 @@
 package com.xinto.opencord.domain.mapper
 
+import com.github.materiiapps.partial.map
 import com.xinto.opencord.domain.model.*
 import com.xinto.opencord.rest.dto.*
-import com.xinto.partialgen.mapToPartial
 
 fun DomainUserSettingsPartial.toApi(): ApiUserSettingsPartial {
-    val apiPartialTheme = theme.mapToPartial { it.value }
-    val apiPartialStatus = status.mapToPartial { it.value }
-    val apiPartialFriendSourceFlags = friendSourceFlags.mapToPartial { it.toApi() }
-    val apiPartialGuildFolders = guildFolders.mapToPartial { guildFolders ->
+    val apiPartialTheme = theme.map { it.value }
+    val apiPartialStatus = status.map { it.value }
+    val apiPartialFriendSourceFlags = friendSourceFlags.map { it.toApi() }
+    val apiPartialGuildFolders = guildFolders.map { guildFolders ->
         guildFolders.map { it.toApi() }
     }
-    val apiPartialCustomStatus = customStatus.mapToPartial { it?.toApi() }
+    val apiPartialCustomStatus = customStatus.map { it?.toApi() }
     return ApiUserSettingsPartial(
         locale = locale,
         showCurrentGame = showCurrentGame,

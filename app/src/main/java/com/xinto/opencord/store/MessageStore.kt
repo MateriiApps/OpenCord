@@ -1,5 +1,6 @@
 package com.xinto.opencord.store
 
+import com.github.materiiapps.partial.getOrNull
 import com.xinto.opencord.db.database.CacheDatabase
 import com.xinto.opencord.db.entity.message.EntityMessage
 import com.xinto.opencord.domain.mapper.toDomain
@@ -12,7 +13,6 @@ import com.xinto.opencord.gateway.event.MessageDeleteEvent
 import com.xinto.opencord.gateway.event.MessageUpdateEvent
 import com.xinto.opencord.gateway.onEvent
 import com.xinto.opencord.rest.service.DiscordApiService
-import com.xinto.partialgen.getOrNull
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -157,8 +157,7 @@ class MessageStoreImpl(
                 ?.let { constructDomainMessage(it) }
                 ?: return@onEvent
 
-            val newMessage = message.
-
+            // TODO: message update logic
         }
 
         gateway.onEvent<MessageDeleteEvent> {

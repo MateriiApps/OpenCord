@@ -13,6 +13,7 @@ import com.xinto.opencord.store.fold
 import com.xinto.opencord.util.collectIn
 import com.xinto.opencord.util.throttle
 import kotlinx.coroutines.Job
+import com.github.materiiapps.partial.getOrNull
 import kotlinx.coroutines.launch
 
 class ChatViewModel(

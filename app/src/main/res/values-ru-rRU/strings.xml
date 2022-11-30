@@ -3,14 +3,14 @@
     <string name="navigation_back">Назад</string>
     <string name="login_landing_title">Добро пожаловать в OpenCord!</string>
     <string name="login_landing_subtitle">Присоединяйтесь к более чем 0 людям, которые используют OpenCord в качестве альтернативы стандартному приложению Discord.</string>
-    <string name="login_login_title">Добро пожаловать!</string>
+    <string name="login_login_title">С возвращением!</string>
     <string name="login_login_subtitle">Очень рады видеть вас снова!</string>
     <string name="login_action_login">Войти</string>
     <string name="login_action_register">Регистрация</string>
     <string name="login_field_username">Электронная почта или Номер телефона</string>
     <string name="login_field_password">Пароль</string>
     <string name="login_mfa_title">Требуется двухэтапная аутентификация!</string>
-    <string name="login_mfa_code">2FA или Резервный Код</string>
+    <string name="login_mfa_code">Резервный код или двухфакторной аутентификации</string>
     <string name="login_mfa_confirm">Подтвердить</string>
     <string name="login_mfa_cancel">Отмена</string>
     <string name="chat_title">#%1$s</string>
@@ -19,7 +19,7 @@
     <string name="chat_loading_error">Произошла ошибка при загрузке чата.</string>
     <string name="channel_unselected_message">Пожалуйста, выберите сервер.</string>
     <string name="channels_collapse_category">Свернуть категорию</string>
-    <string name="pins_title">Закреплённое сообщение</string>
+    <string name="pins_title">Закреплённые Сообщения</string>
     <string name="pins_loading_error">Произошла ошибка при загрузке закрепленных сообщений.</string>
     <string name="settings_title">Настройки</string>
     <string name="settings_open">Открыть настройки</string>
@@ -30,6 +30,6 @@
     <string name="guilds_home">Главная</string>
     <string name="guild_boost_level">Уровень буста сервера</string>
     <string name="current_user_set_status">Установить пользовательский статус</string>
-    <string name="current_user_clear_status">Отчистить статус</string>
-    <string name="accounts_open">Открыть переключатель учётных записей</string>
+    <string name="current_user_clear_status">Очистить статус</string>
+    <string name="accounts_open">Открыть переключение аккаунтов</string>
 </resources>

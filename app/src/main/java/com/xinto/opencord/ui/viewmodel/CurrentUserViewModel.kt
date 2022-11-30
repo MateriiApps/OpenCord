@@ -15,7 +15,7 @@ import com.xinto.opencord.store.CurrentUserStore
 import com.xinto.opencord.store.SessionStore
 import com.xinto.opencord.store.UserSettingsStore
 import com.xinto.opencord.util.collectIn
-import com.xinto.partialgen.PartialValue
+import com.github.materiiapps.partial.Partial
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 
@@ -70,7 +70,7 @@ class CurrentUserViewModel(
 
             userSettingsStore.updateUserSettings(
                 DomainUserSettingsPartial(
-                    status = PartialValue.Value(status)
+                    status = Partial.Value(status)
                 )
             )
         }
@@ -87,7 +87,7 @@ class CurrentUserViewModel(
 
             userSettingsStore.updateUserSettings(
                 DomainUserSettingsPartial(
-                    customStatus = PartialValue.Value(status)
+                    customStatus = Partial.Value(status)
                 )
             )
 
