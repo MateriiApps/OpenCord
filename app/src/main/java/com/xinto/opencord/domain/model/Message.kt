@@ -7,7 +7,6 @@ import kotlinx.datetime.Instant
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
-//@Partialize(parent = true)
 sealed class DomainMessage {
     abstract val id: Long
     abstract val channelId: Long

@@ -1,5 +1,6 @@
 package com.xinto.opencord.store
 
+import androidx.room.withTransaction
 import com.github.materiiapps.partial.getOrNull
 import com.xinto.opencord.db.database.CacheDatabase
 import com.xinto.opencord.db.entity.message.EntityMessage
@@ -38,37 +39,45 @@ class MessageStoreImpl(
     private val events = MutableSharedFlow<Event<DomainMessage>>()
 
     override fun observeChannel(channelId: Long): Flow<Event<DomainMessage>> {
-        return events.filter {
-            it.data?.channelId == channelId
+        return events.filter { event ->
+            event.fold(
+                onAdd = { it.id == channelId },
+                onUpdate = { false }, // FIXME: guhhhhh
+                onRemove = { it == channelId },
+            )
         }
     }
 
-    private fun constructDomainMessage(
+    private suspend fun constructDomainMessage(
         message: EntityMessage,
         cachedUsers: MutableMap<Long, DomainUser?> = mutableMapOf()
     ): DomainMessage? {
-        val attachments = if (!message.hasAttachments) null else {
-            cache.attachments().getAttachments(message.id)
+        return cache.withTransaction {
+            val attachments = if (!message.hasAttachments) null else {
+                cache.attachments().getAttachments(message.id)
+            }
+
+            val referencedMessage = message.referencedMessageId?.let {
+                cache.messages().getMessage(it)
+            }
+
+            val embeds = if (!message.hasEmbeds) null else {
+                cache.embeds().getEmbeds(message.id)
+            }
+
+            val author = cachedUsers.computeIfAbsent(message.authorId) {
+                cache.users().getUser(message.authorId)?.toDomain()
+            } ?: return@withTransaction null
+
+            message.toDomain(
+                author = author,
+                referencedMessage = referencedMessage?.let {
+                    constructDomainMessage(it, cachedUsers)
+                },
+                embeds = embeds?.map { it.toDomain() },
+                attachments = attachments?.map { it.toDomain() },
+            )
         }
-
-        val referencedMessage = message.referencedMessageId?.let {
-            cache.messages().getMessage(it)
-        }
-
-        val embeds = if (!message.hasEmbeds) null else {
-            cache.embeds().getEmbeds(message.id)
-        }
-
-        val author = cachedUsers.computeIfAbsent(message.authorId) {
-            cache.users().getUser(message.authorId)?.toDomain()
-        } ?: return null
-
-        return message.toDomain(
-            author = author,
-            referencedMessage = referencedMessage?.let { constructDomainMessage(it, cachedUsers) },
-            embeds = embeds?.map { it.toDomain() },
-            attachments = attachments?.map { it.toDomain() },
-        )
     }
 
     override suspend fun fetchMessages(
@@ -86,7 +95,7 @@ class MessageStoreImpl(
             }
 
             if (cachedMessages.size >= 50) {
-                cachedMessages.mapNotNull(::constructDomainMessage)
+                cachedMessages.mapNotNull { constructDomainMessage(it) }
             } else {
                 val messages = api.getChannelMessages(
                     channelId = channelId,
@@ -152,12 +161,7 @@ class MessageStoreImpl(
         }
 
         gateway.onEvent<MessageUpdateEvent> { event ->
-            val message = event.data.id.getOrNull()?.value
-                ?.let { cache.messages().getMessage(it) }
-                ?.let { constructDomainMessage(it) }
-                ?: return@onEvent
-
-            // TODO: message update logic
+            // TODO: figure out message updates + cache updating
         }
 
         gateway.onEvent<MessageDeleteEvent> {
