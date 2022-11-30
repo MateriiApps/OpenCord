@@ -228,7 +228,7 @@ fun WidgetMessageAuthor(
         if (isBot) {
             ProvideTextStyle(MaterialTheme.typography.labelSmall) {
                 Surface(
-                    color = MaterialTheme.colorScheme.primary,
+                    color = MaterialTheme.colorScheme.secondary,
                     shape = MaterialTheme.shapes.extraSmall,
                 ) {
                     Text(
