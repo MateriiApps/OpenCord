@@ -144,7 +144,8 @@ private fun ChannelPinsLoaded(
                                 WidgetMessageAuthor(
                                     author = message.author.username,
                                     timestamp = message.formattedTimestamp,
-                                    edited = message.isEdited
+                                    isEdited = message.isEdited,
+                                    isBot = message.author.bot,
                                 )
                             },
                             content = message.contentNodes.ifNotEmptyComposable { nodes ->

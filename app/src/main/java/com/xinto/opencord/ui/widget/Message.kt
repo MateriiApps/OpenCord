@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
@@ -202,13 +203,14 @@ fun WidgetMessageAvatar(
 fun WidgetMessageAuthor(
     author: String,
     timestamp: String,
-    edited: Boolean,
+    isEdited: Boolean,
+    isBot: Boolean,
     modifier: Modifier = Modifier,
     onAuthorClick: (() -> Unit)? = null,
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(2.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         ProvideTextStyle(MaterialTheme.typography.labelLarge) {
@@ -224,12 +226,25 @@ fun WidgetMessageAuthor(
                     }
             )
         }
+        if (isBot) {
+            ProvideTextStyle(MaterialTheme.typography.labelSmall) {
+                Surface(
+                    color = MaterialTheme.colorScheme.secondary,
+                    shape = MaterialTheme.shapes.extraSmall,
+                ) {
+                    Text(
+                        text = stringResource(R.string.chat_bot_label),
+                        modifier = Modifier.padding(horizontal = 4.dp)
+                    )
+                }
+            }
+        }
         ProvideContentAlpha(ContentAlpha.low) {
             Text("·")
             ProvideTextStyle(MaterialTheme.typography.labelSmall) {
                 Text(timestamp)
             }
-            if (edited) {
+            if (isEdited) {
                 Text("·")
                 Icon(
                     modifier = Modifier
