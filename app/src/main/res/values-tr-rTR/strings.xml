@@ -17,6 +17,7 @@
     <string name="chat_unselected_message">Lütfen bir kanal seçin.</string>
     <string name="chat_input_hint">#%1$s\'ya Mesaj Gönder</string>
     <string name="chat_loading_error">Sohbet\'i yüklerken bir hata oluştu.</string>
+    <string name="chat_bot_label">BOT</string>
     <string name="channel_unselected_message">Lütfen bir sunucu seçin.</string>
     <string name="channels_collapse_category">Kategoriyi daralt</string>
     <string name="pins_title">Sabili Mesajlar</string>

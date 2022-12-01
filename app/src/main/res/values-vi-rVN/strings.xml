@@ -17,6 +17,7 @@
     <string name="chat_unselected_message">Vui lòng chọn một channel.</string>
     <string name="chat_input_hint">Tin nhắn #%1$s</string>
     <string name="chat_loading_error">Một sự cố đã xảy ra khi tải cuộc trò chuyện.</string>
+    <string name="chat_bot_label">BOT</string>
     <string name="channel_unselected_message">Vui lòng chọn một server.</string>
     <string name="channels_collapse_category">Thu nhỏ mục</string>
     <string name="pins_title">Tin nhắn được ghim</string>

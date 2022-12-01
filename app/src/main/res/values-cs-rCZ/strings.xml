@@ -17,6 +17,7 @@
     <string name="chat_unselected_message">Prosím vyberte kanál.</string>
     <string name="chat_input_hint">Zpráva #%1$s</string>
     <string name="chat_loading_error">Došlo k chybě při načítání chatu.</string>
+    <string name="chat_bot_label">BOT</string>
     <string name="channel_unselected_message">Prosím vyberte server.</string>
     <string name="channels_collapse_category">Zavřít kategorii</string>
     <string name="pins_title">Připnuté zprávy</string>

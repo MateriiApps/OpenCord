@@ -17,6 +17,7 @@
     <string name="chat_unselected_message">Por favor, selecione um canal.</string>
     <string name="chat_input_hint">Mensagem #%1$s</string>
     <string name="chat_loading_error">Ocorreu um erro ao carregar o chat.</string>
+    <string name="chat_bot_label">BOT</string>
     <string name="channel_unselected_message">Por favor, selecione um servidor.</string>
     <string name="channels_collapse_category">Recolher categoria</string>
     <string name="pins_title">Mensagens fixadas</string>

@@ -17,6 +17,7 @@
     <string name="chat_unselected_message">Proszę wybrać kanał.</string>
     <string name="chat_input_hint">Wiadomość #%1$s</string>
     <string name="chat_loading_error">Wystąpił błąd podczas ładowania czatu.</string>
+    <string name="chat_bot_label">BOT</string>
     <string name="channel_unselected_message">Proszę wybrać serwer.</string>
     <string name="channels_collapse_category">Zwiń kategorię</string>
     <string name="pins_title">Przypięte wiadomości</string>

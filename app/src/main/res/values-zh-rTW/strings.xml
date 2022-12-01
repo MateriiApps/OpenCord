@@ -17,6 +17,7 @@
     <string name="chat_unselected_message">請選取一個頻道。</string>
     <string name="chat_input_hint">傳信息到 #%1$s</string>
     <string name="chat_loading_error">載入頻道內容時出現錯誤。</string>
+    <string name="chat_bot_label">BOT</string>
     <string name="channel_unselected_message">請選取一個伺服器。</string>
     <string name="channels_collapse_category">疊起類別</string>
     <string name="pins_title">已釘選的訊息</string>

@@ -17,6 +17,7 @@
     <string name="chat_unselected_message">Silahkan pilih sebuah saluran.</string>
     <string name="chat_input_hint">Pesan #%1$s</string>
     <string name="chat_loading_error">Terjadi kesalahan saat memuat obrolan.</string>
+    <string name="chat_bot_label">BOT</string>
     <string name="channel_unselected_message">Silahkan pilih sebuah server.</string>
     <string name="channels_collapse_category">Ciutkan kategori</string>
     <string name="pins_title">Pesan Tersemat</string>

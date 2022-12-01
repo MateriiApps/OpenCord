@@ -17,6 +17,7 @@
     <string name="chat_unselected_message">Παρακαλούμε επιλέξτε ένα κανάλι.</string>
     <string name="chat_input_hint">Στείλτε ένα μήνυμα στο κανάλι #%1$s</string>
     <string name="chat_loading_error">Υπήρξε ένα σφάλμα κατά τη φόρτωση της ομιλίας.</string>
+    <string name="chat_bot_label">BOT</string>
     <string name="channel_unselected_message">Παρακαλούμε επιλέξτε έναν διακομιστή.</string>
     <string name="channels_collapse_category">Σύμπτυξη κατηγορίας</string>
     <string name="pins_title">Καρφιτσωμένα μηνύματα</string>

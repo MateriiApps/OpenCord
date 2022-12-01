@@ -17,6 +17,7 @@
     <string name="chat_unselected_message">Sélecter un salon s.v.p.</string>
     <string name="chat_input_hint">Message #%1$s</string>
     <string name="chat_loading_error">Une erreur s\'est produite lors du chargement du chat.</string>
+    <string name="chat_bot_label">BOT</string>
     <string name="channel_unselected_message">Sélecter un serveur s.v.p.</string>
     <string name="channels_collapse_category">Réduire la catégorie</string>
     <string name="pins_title">Messages épinglés</string>

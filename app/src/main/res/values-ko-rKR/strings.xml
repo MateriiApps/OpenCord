@@ -17,6 +17,7 @@
     <string name="chat_unselected_message">채널을 선택해 주세요.</string>
     <string name="chat_input_hint">#%1$s에 메시지 보내기</string>
     <string name="chat_loading_error">대화를 불러오던 중 오류가 발생했어요.</string>
+    <string name="chat_bot_label">BOT</string>
     <string name="channel_unselected_message">서버를 선택해 주세요.</string>
     <string name="channels_collapse_category">카테고리 접기</string>
     <string name="pins_title">고정된 메시지</string>

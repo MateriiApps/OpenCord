@@ -17,6 +17,7 @@
     <string name="chat_unselected_message">Kérlek válassz egy csatornát.</string>
     <string name="chat_input_hint">Üzenj ide: #%1$s</string>
     <string name="chat_loading_error">Hiba történt az üzenetek betöltése közben.</string>
+    <string name="chat_bot_label">BOT</string>
     <string name="channel_unselected_message">Kérlek válassz egy szervert.</string>
     <string name="channels_collapse_category">Kategória összecsukása</string>
     <string name="pins_title">Kitűzött üzenetek</string>

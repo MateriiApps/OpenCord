@@ -17,6 +17,7 @@
     <string name="chat_unselected_message">チャンネルを選択してください。</string>
     <string name="chat_input_hint">メッセージ #%1$s</string>
     <string name="chat_loading_error">チャットの読み込み中にエラーが発生しました。</string>
+    <string name="chat_bot_label">BOT</string>
     <string name="channel_unselected_message">ギルドを選択してください。</string>
     <string name="channels_collapse_category">カテゴリを閉じる</string>
     <string name="pins_title">ピン留めしたメッセージ</string>

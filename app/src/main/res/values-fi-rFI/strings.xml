@@ -17,6 +17,7 @@
     <string name="chat_unselected_message">Valitse kanava.</string>
     <string name="chat_input_hint">Viesti kanavalle #%1$s</string>
     <string name="chat_loading_error">Keskustelua ladattaessa tapahtui virhe.</string>
+    <string name="chat_bot_label">BOT</string>
     <string name="channel_unselected_message">Valitse kilta.</string>
     <string name="channels_collapse_category">Supista kategoria</string>
     <string name="pins_title">Kiinnitetyt viestit</string>
