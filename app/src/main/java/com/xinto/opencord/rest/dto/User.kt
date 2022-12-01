@@ -38,7 +38,7 @@ data class ApiUser(
 //    val avatarDecoration: String? = null,
 
     @SerialName("accent_color")
-    val accentColor: String? = null,
+    val accentColor: Int? = null,
 
     // Not present on the "user" field of the READY event
     @SerialName("public_flags")
