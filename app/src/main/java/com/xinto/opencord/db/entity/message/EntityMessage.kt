@@ -8,8 +8,8 @@ import androidx.room.PrimaryKey
 @Entity(
     tableName = "messages",
     indices = [
-        Index("channel_id"),
-        Index("author_id"),
+        Index(value = ["channel_id"]),
+        Index(value = ["author_id"]),
     ],
 )
 data class EntityMessage(
