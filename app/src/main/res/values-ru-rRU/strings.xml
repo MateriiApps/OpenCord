@@ -17,7 +17,7 @@
     <string name="chat_unselected_message">Пожалуйста, выберите канал.</string>
     <string name="chat_input_hint">Сообщение #%1$s</string>
     <string name="chat_loading_error">Произошла ошибка при загрузке чата.</string>
-    <string name="chat_bot_label">BOT</string>
+    <string name="chat_bot_label">БОТ</string>
     <string name="channel_unselected_message">Пожалуйста, выберите сервер.</string>
     <string name="channels_collapse_category">Свернуть категорию</string>
     <string name="pins_title">Закреплённые Сообщения</string>
