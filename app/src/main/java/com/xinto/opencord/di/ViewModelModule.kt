@@ -70,11 +70,9 @@ val viewModelModule = module {
 
     fun provideMembersViewModel(
         persistentDataManager: PersistentDataManager,
-        gateway: DiscordGateway,
     ): MembersViewModel {
         return MembersViewModel(
             persistentDataManager = persistentDataManager,
-            gateway = gateway,
         )
     }
 
