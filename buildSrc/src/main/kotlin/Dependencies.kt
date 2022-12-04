@@ -210,18 +210,6 @@ sealed class Dependencies {
         }
     }
 
-    object KSP : Dependencies() {
-        const val version = "1.7.10-1.0.6"
-
-        const val ksp = "com.google.devtools.ksp:symbol-processing-api:$version"
-
-        override fun invoke(scope: DependencyHandlerScope) {
-            scope {
-                implementation(ksp)
-            }
-        }
-    }
-
     //TODO migrate to context receivers after upgrading to kotlin 1.6.20
     abstract operator fun invoke(scope: DependencyHandlerScope)
 

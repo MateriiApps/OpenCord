@@ -1,7 +1,7 @@
 package com.xinto.opencord.rest.dto
 
+import com.github.materiiapps.enumutil.ksp.FromValue
 import com.github.materiiapps.partial.Partialize
-import com.xinto.enumgetter.GetterGen
 import kotlinx.datetime.Instant
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
@@ -56,8 +56,8 @@ data class ApiMessage(
     val mentions: List<ApiUser>,
 )
 
+@FromValue
 @Serializable(ApiMessageType.Serializer::class)
-@GetterGen
 enum class ApiMessageType(val value: Int) {
     Default(0),
     GuildMemberJoin(7),
