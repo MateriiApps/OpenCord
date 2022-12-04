@@ -5,9 +5,9 @@
 
 An open-source Material You implementation of the Discord Android app. (WIP)
 
-|              Chat               |              Drawer               |
-|:-------------------------------:|:---------------------------------:|
-| ![](github/screenshot_chat.png) | ![](github/screenshot_drawer.png) |
+|                  Chat                   |                  Drawer                   |
+|:---------------------------------------:|:-----------------------------------------:|
+| ![](.github/assets/screenshot_chat.png) | ![](.github/assets/screenshot_drawer.png) |
 
 ## Why does this exist?
 
