@@ -41,7 +41,6 @@ fun ApiAttachment.toDomain(): DomainAttachment {
 }
 
 fun ApiChannel.toDomain(): DomainChannel {
-    val permissions = permissions.toDomain()
     return when (type) {
         2 -> DomainChannel.VoiceChannel(
             id = id.value,
@@ -49,14 +48,12 @@ fun ApiChannel.toDomain(): DomainChannel {
             name = name,
             position = position,
             parentId = parentId?.value,
-            permissions = permissions
         )
         4 -> DomainChannel.Category(
             id = id.value,
             guildId = guildId?.value,
             name = name,
             position = position,
-            permissions = permissions
         )
         5 -> DomainChannel.AnnouncementChannel(
             id = id.value,
@@ -64,7 +61,6 @@ fun ApiChannel.toDomain(): DomainChannel {
             name = name,
             position = position,
             parentId = parentId?.value,
-            permissions = permissions,
             nsfw = nsfw
         )
         else -> DomainChannel.TextChannel(
@@ -73,7 +69,6 @@ fun ApiChannel.toDomain(): DomainChannel {
             name = name,
             position = position,
             parentId = parentId?.value,
-            permissions = permissions,
             nsfw = nsfw
         )
     }
@@ -91,7 +86,6 @@ fun ApiGuild.toDomain(): DomainGuild {
         name = name,
         iconUrl = iconUrl,
         bannerUrl = bannerUrl,
-        permissions = permissions.toDomain(),
         premiumTier = premiumTier,
         premiumSubscriptionCount = premiumSubscriptionCount ?: 0,
     )
@@ -121,18 +115,6 @@ fun ApiGuildMemberChunk.toDomain(): DomainGuildMemberChunk {
     )
 }
 
-fun ApiMeGuild.toDomain(): DomainMeGuild {
-    val iconUrl = icon?.let { icon ->
-        DiscordCdnServiceImpl.getGuildIconUrl(id.toString(), icon)
-    }
-    return DomainMeGuild(
-        id = id.value,
-        name = name,
-        iconUrl = iconUrl,
-        permissions = permissions.toDomain()
-    )
-}
-
 fun ApiMessage.toDomain(): DomainMessage {
     val domainAuthor = author.toDomain()
     return when (type) {
@@ -146,6 +128,7 @@ fun ApiMessage.toDomain(): DomainMessage {
                 content = content,
                 author = domainAuthor,
                 timestamp = timestamp,
+                pinned = pinned,
                 editedTimestamp = editedTimestamp,
                 attachments = domainAttachments,
                 embeds = domainEmbeds,
@@ -161,9 +144,18 @@ fun ApiMessage.toDomain(): DomainMessage {
                 content = content,
                 channelId = channelId.value,
                 timestamp = timestamp,
+                pinned = pinned,
                 author = domainAuthor
             )
         }
+        else -> DomainMessageUnknown(
+            id = id.value,
+            content = content,
+            channelId = channelId.value,
+            timestamp = timestamp,
+            pinned = pinned,
+            author = domainAuthor
+        )
     }
 }
 
@@ -272,9 +264,6 @@ fun ApiEmbedField.toDomain(): DomainEmbedField {
 
 fun ApiUserSettingsPartial.toDomain(): DomainUserSettingsPartial {
     val domainPartialTheme = theme.map { DomainThemeSetting.fromValue(it)!! }
-    val domainPartialGuildPositions = guildPositions.map { guildPositions ->
-        guildPositions.map { it.value }
-    }
     val domainPartialStatus = status.map { DomainUserStatus.fromValue(it)!! }
     val domainPartialFriendSourceFlags = friendSourceFlags.map { it.toDomain() }
     val domainPartialGuildFolders = guildFolders.map { guildFolders ->
@@ -296,7 +285,6 @@ fun ApiUserSettingsPartial.toDomain(): DomainUserSettingsPartial {
         disableGamesTab = disableGamesTab,
         theme = domainPartialTheme,
         developerMode = developerMode,
-        guildPositions = domainPartialGuildPositions,
         detectPlatformAccounts = detectPlatformAccounts,
         status = domainPartialStatus,
         afkTimeout = afkTimeout,
@@ -335,7 +323,6 @@ fun ApiUserSettings.toDomain(): DomainUserSettings {
         disableGamesTab = disableGamesTab,
         theme = domainTheme,
         developerMode = developerMode,
-        guildPositions = guildPositions.map { it.value },
         detectPlatformAccounts = detectPlatformAccounts,
         status = domainStatus,
         afkTimeout = afkTimeout,

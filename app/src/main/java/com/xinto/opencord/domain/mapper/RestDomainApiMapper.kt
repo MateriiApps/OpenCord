@@ -6,9 +6,6 @@ import com.xinto.opencord.rest.dto.*
 
 fun DomainUserSettingsPartial.toApi(): ApiUserSettingsPartial {
     val apiPartialTheme = theme.map { it.value }
-    val apiPartialGuildPositions = guildPositions.map { guildPositions ->
-        guildPositions.map { ApiSnowflake(it) }
-    }
     val apiPartialStatus = status.map { it.value }
     val apiPartialFriendSourceFlags = friendSourceFlags.map { it.toApi() }
     val apiPartialGuildFolders = guildFolders.map { guildFolders ->
@@ -30,7 +27,6 @@ fun DomainUserSettingsPartial.toApi(): ApiUserSettingsPartial {
         disableGamesTab = disableGamesTab,
         theme = apiPartialTheme,
         developerMode = developerMode,
-        guildPositions = apiPartialGuildPositions,
         detectPlatformAccounts = detectPlatformAccounts,
         status = apiPartialStatus,
         afkTimeout = afkTimeout,

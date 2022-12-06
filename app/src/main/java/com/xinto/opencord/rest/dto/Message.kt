@@ -24,6 +24,9 @@ data class ApiMessage(
     @SerialName("timestamp")
     val timestamp: Instant,
 
+    @SerialName("pinned")
+    val pinned: Boolean,
+
     @SerialName("edited_timestamp")
     val editedTimestamp: Instant?,
 

@@ -3,23 +3,21 @@ package com.xinto.opencord.ui.viewmodel
 import androidx.compose.runtime.*
 import androidx.lifecycle.viewModelScope
 import com.xinto.opencord.domain.manager.PersistentDataManager
-import com.xinto.opencord.domain.mapper.toDomain
 import com.xinto.opencord.domain.model.DomainChannel
-import com.xinto.opencord.domain.repository.DiscordApiRepository
-import com.xinto.opencord.gateway.DiscordGateway
-import com.xinto.opencord.gateway.event.ChannelCreateEvent
-import com.xinto.opencord.gateway.event.ChannelDeleteEvent
-import com.xinto.opencord.gateway.event.ChannelUpdateEvent
-import com.xinto.opencord.gateway.event.GuildUpdateEvent
-import com.xinto.opencord.gateway.onEvent
+import com.xinto.opencord.store.ChannelStore
+import com.xinto.opencord.store.GuildStore
+import com.xinto.opencord.store.fold
 import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
+import com.xinto.opencord.util.collectIn
 import com.xinto.opencord.util.getSortedChannels
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ChannelsViewModel(
-    gateway: DiscordGateway,
     persistentDataManager: PersistentDataManager,
-    private val repository: DiscordApiRepository
+    private val channelStore: ChannelStore,
+    private val guildStore: GuildStore,
 ) : BasePersistenceViewModel(persistentDataManager) {
 
     sealed interface State {
@@ -45,20 +43,55 @@ class ChannelsViewModel(
 
     fun load() {
         viewModelScope.launch {
-            try {
-                state = State.Loading
-                val guildChannels = repository.getGuildChannels(persistentGuildId)
-                val guild = repository.getGuild(persistentGuildId)
-                channels.clear()
-                channels.putAll(guildChannels)
-                guildName = guild.name
-                guildBannerUrl = guild.bannerUrl
-                guildBoostLevel = guild.premiumTier
-                state = State.Loaded
-            } catch (e: Exception) {
-                state = State.Error
-                e.printStackTrace()
+            state = State.Loading
+            withContext(Dispatchers.IO) {
+                try {
+                    val guild = guildStore.fetchGuild(persistentGuildId) ?: return@withContext
+                    val guildChannels = channelStore.fetchChannels(persistentGuildId)
+                        .associateBy { it.id }
+
+                    withContext(Dispatchers.Main) {
+                        channels.clear()
+                        channels.putAll(guildChannels)
+                        guildName = guild.name
+                        guildBannerUrl = guild.bannerUrl
+                        guildBoostLevel = guild.premiumTier
+                        state = State.Loaded
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    withContext(Dispatchers.Main) {
+                        state = State.Error
+                    }
+                }
             }
+        }
+
+        guildStore.observeGuild(persistentGuildId).collectIn(viewModelScope) { event ->
+            event.fold(
+                onAdd = {
+                    guildName = it.name
+                    guildBannerUrl = it.bannerUrl
+                    guildBoostLevel = it.premiumTier
+                },
+                onUpdate = {
+                    guildName = it.name
+                    guildBannerUrl = it.bannerUrl
+                    guildBoostLevel = it.premiumTier
+                },
+                onRemove = {
+                    state = State.Unselected
+                },
+            )
+        }
+
+        channelStore.observeChannels(persistentGuildId).collectIn(viewModelScope) { event ->
+            state = State.Loaded
+            event.fold(
+                onAdd = { channels[it.id] = it },
+                onUpdate = { channels[it.id] = it },
+                onRemove = { channels.remove(it) },
+            )
         }
     }
 
@@ -90,23 +123,5 @@ class ChannelsViewModel(
             selectedChannelId = persistentChannelId
         }
         collapsedCategories.addAll(persistentDataManager.collapsedCategories)
-
-        gateway.onEvent<GuildUpdateEvent>({ it.data.id.value == persistentGuildId }) {
-            guildName = it.data.name
-            guildBannerUrl = it.data.banner
-            guildBoostLevel = it.data.premiumTier
-        }
-
-        gateway.onEvent<ChannelCreateEvent>({ it.data.guildId?.value == persistentGuildId }) {
-            val domainData = it.data.toDomain()
-            channels[domainData.id] = domainData
-        }
-        gateway.onEvent<ChannelUpdateEvent>({ it.data.guildId?.value == persistentGuildId }) {
-            val domainData = it.data.toDomain()
-            channels[domainData.id] = domainData
-        }
-        gateway.onEvent<ChannelDeleteEvent>({ it.data.guildId?.value == persistentGuildId }) {
-            channels.remove(it.data.id.value)
-        }
     }
 }

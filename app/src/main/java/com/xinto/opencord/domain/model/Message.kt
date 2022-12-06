@@ -7,11 +7,11 @@ import kotlinx.datetime.Instant
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
-//@Partialize(parent = true)
 sealed class DomainMessage {
     abstract val id: Long
     abstract val channelId: Long
     abstract val timestamp: Instant
+    abstract val pinned: Boolean
     abstract val content: String
     abstract val author: DomainUser
 
@@ -23,6 +23,7 @@ data class DomainMessageRegular(
     override val id: Long,
     override val channelId: Long,
     override val timestamp: Instant,
+    override val pinned: Boolean,
     override val content: String,
     override val author: DomainUser,
     val editedTimestamp: Instant?,
@@ -44,6 +45,16 @@ data class DomainMessageMemberJoin(
     override val id: Long,
     override val channelId: Long,
     override val timestamp: Instant,
+    override val pinned: Boolean,
     override val content: String,
     override val author: DomainUser
 ): DomainMessage()
+
+data class DomainMessageUnknown(
+    override val id: Long,
+    override val channelId: Long,
+    override val timestamp: Instant,
+    override val pinned: Boolean,
+    override val content: String,
+    override val author: DomainUser
+) : DomainMessage()
