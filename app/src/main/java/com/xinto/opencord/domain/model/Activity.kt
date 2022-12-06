@@ -1,6 +1,6 @@
 package com.xinto.opencord.domain.model
 
-import com.github.materiiapps.enumutil.ksp.FromValue
+import com.github.materiiapps.enumutil.FromValue
 import kotlinx.datetime.Instant
 
 @FromValue

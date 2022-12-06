@@ -1,6 +1,6 @@
 package com.xinto.opencord.gateway
 
-import com.github.materiiapps.enumutil.ksp.FromValue
+import com.github.materiiapps.enumutil.FromValue
 
 @FromValue
 enum class CloseCode(val code: Int) {

@@ -114,10 +114,6 @@ android {
     }
 }
 
-repositories {
-    mavenLocal()
-}
-
 dependencies {
     implementation(project(":bottom-dialog-compose"))
     implementation(project(":overlapping-panels-compose"))
