@@ -58,7 +58,7 @@ val httpModule = module {
         }
     }
 
-    fun OkHttpConfig.addStripKtorHeadersInterceptor() {
+    fun OkHttpConfig.addStripKtorHeadersInterceptor(stripJsonHeader: Boolean) {
         addInterceptor { chain ->
             val request = chain.request()
             val requestBuilder = request
@@ -66,7 +66,7 @@ val httpModule = module {
                 .removeHeader(HttpHeaders.Accept)
                 .removeHeader(HttpHeaders.AcceptCharset)
 
-            if (request.header(HttpHeaders.ContentType) == "application/json") {
+            if (stripJsonHeader && request.header(HttpHeaders.ContentType) == "application/json") {
                 requestBuilder.removeHeader(HttpHeaders.ContentType)
             }
 
@@ -111,7 +111,7 @@ val httpModule = module {
             installLogging(logger)
 
             engine {
-                addStripKtorHeadersInterceptor()
+                addStripKtorHeadersInterceptor(false)
             }
         }
     }
@@ -157,7 +157,7 @@ val httpModule = module {
             installLogging(logger)
 
             engine {
-                addStripKtorHeadersInterceptor()
+                addStripKtorHeadersInterceptor(true)
             }
         }
     }
@@ -193,7 +193,7 @@ val httpModule = module {
             installLogging(logger)
 
             engine {
-                addStripKtorHeadersInterceptor()
+                addStripKtorHeadersInterceptor(false)
             }
         }
     }

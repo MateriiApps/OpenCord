@@ -138,6 +138,7 @@ dependencies {
     Dependencies.AndroidxCore(this)
     Dependencies.AndroidxPreferences(this)
     Dependencies.AndroidxMedia3(this)
+    Dependencies.AndroidxRoom(this)
     Dependencies.Material(this)
     Dependencies.Compose(this)
     Dependencies.Accompanist(this)

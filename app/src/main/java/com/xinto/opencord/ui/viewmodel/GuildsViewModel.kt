@@ -3,20 +3,15 @@ package com.xinto.opencord.ui.viewmodel
 import androidx.compose.runtime.*
 import androidx.lifecycle.viewModelScope
 import com.xinto.opencord.domain.manager.PersistentDataManager
-import com.xinto.opencord.domain.mapper.toDomain
 import com.xinto.opencord.domain.model.DomainGuild
-import com.xinto.opencord.domain.repository.DiscordApiRepository
-import com.xinto.opencord.gateway.DiscordGateway
-import com.xinto.opencord.gateway.event.GuildCreateEvent
-import com.xinto.opencord.gateway.event.ReadyEvent
-import com.xinto.opencord.gateway.onEvent
+import com.xinto.opencord.store.GuildStore
+import com.xinto.opencord.store.fold
 import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
-import kotlinx.coroutines.launch
+import com.xinto.opencord.util.collectIn
 
 class GuildsViewModel(
-    gateway: DiscordGateway,
+    guildStore: GuildStore,
     persistentDataManager: PersistentDataManager,
-    private val repository: DiscordApiRepository
 ) : BasePersistenceViewModel(persistentDataManager) {
 
     sealed interface State {
@@ -32,44 +27,23 @@ class GuildsViewModel(
     var selectedGuildId by mutableStateOf(0L)
         private set
 
-    fun load() {
-        viewModelScope.launch {
-            try {
-                state = State.Loading
-//                val meGuilds = repository.getMeGuilds()
-//                guilds.clear()
-//                guilds.addAll(meGuilds)
-                state = State.Loaded
-            } catch (e: Exception) {
-                state = State.Error
-                e.printStackTrace()
-            }
-        }
-    }
-
     fun selectGuild(guildId: Long) {
         selectedGuildId = guildId
         persistentGuildId = guildId
     }
 
     init {
-        load()
-
-        gateway.onEvent<ReadyEvent> { event ->
-            event.data.guilds.forEach {
-                val domainGuild = it.toDomain()
-                guilds[domainGuild.id] = domainGuild
-            }
-        }
-
-        gateway.onEvent<GuildCreateEvent> {
-            val domainGuild = it.data.toDomain()
-            guilds[domainGuild.id] = domainGuild
+        guildStore.observeGuilds().collectIn(viewModelScope) { event ->
+            state = State.Loaded
+            event.fold(
+                onAdd = { guilds[it.id] = it },
+                onUpdate = { guilds[it.id] = it },
+                onRemove = { guilds.remove(it) },
+            )
         }
 
         if (persistentGuildId != 0L) {
             selectedGuildId = persistentGuildId
         }
     }
-
 }

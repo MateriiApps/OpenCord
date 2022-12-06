@@ -23,7 +23,6 @@ data class DomainUserSettings(
     val disableGamesTab: Boolean,
     val theme: DomainThemeSetting,
     val developerMode: Boolean,
-    val guildPositions: List<Long>,
     val detectPlatformAccounts: Boolean,
     val status: DomainUserStatus,
     val afkTimeout: Int,

@@ -7,26 +7,23 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xinto.opencord.R
-import com.xinto.opencord.domain.manager.CacheManager
 import com.xinto.opencord.domain.mapper.toApi
-import com.xinto.opencord.domain.mapper.toDomain
 import com.xinto.opencord.domain.model.*
-import com.xinto.opencord.domain.repository.DiscordApiRepository
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.dto.UpdatePresence
-import com.xinto.opencord.gateway.event.ReadyEvent
-import com.xinto.opencord.gateway.event.SessionsReplaceEvent
-import com.xinto.opencord.gateway.event.UserSettingsUpdateEvent
-import com.xinto.opencord.gateway.event.UserUpdateEvent
-import com.xinto.opencord.gateway.onEvent
+import com.xinto.opencord.store.CurrentUserStore
+import com.xinto.opencord.store.SessionStore
+import com.xinto.opencord.store.UserSettingsStore
+import com.xinto.opencord.util.collectIn
 import com.github.materiiapps.partial.Partial
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 
 class CurrentUserViewModel(
-    val repository: DiscordApiRepository,
-    val gateway: DiscordGateway,
-    val cache: CacheManager,
+    private val gateway: DiscordGateway,
+    private val sessionStore: SessionStore,
+    private val currentUserStore: CurrentUserStore,
+    private val userSettingsStore: UserSettingsStore,
 ) : ViewModel() {
 
     sealed interface State {
@@ -52,8 +49,6 @@ class CurrentUserViewModel(
     var isStreaming by mutableStateOf(false)
         private set
 
-    private var userSettings: DomainUserSettings? = null
-
     fun setStatus(@DrawableRes icon: Int) {
         viewModelScope.launch {
             val status = when (icon) {
@@ -69,29 +64,37 @@ class CurrentUserViewModel(
                     status = status.value,
                     afk = null,
                     since = Clock.System.now().toEpochMilliseconds(),
-                    activities = cache.getActivities().map { it.toApi() },
+                    activities = sessionStore.getActivities()?.map { it.toApi() } ?: return@launch,
                 )
             )
 
-            val settings = DomainUserSettingsPartial(status = Partial.Value(status))
-            repository.updateUserSettings(settings)
+            userSettingsStore.updateUserSettings(
+                DomainUserSettingsPartial(
+                    status = Partial.Value(status)
+                )
+            )
         }
     }
 
     fun setCustomStatus(status: DomainCustomStatus?) {
         viewModelScope.launch {
-            val settings = DomainUserSettingsPartial(
-                customStatus = Partial.Value(status)
+            val currentStatus = sessionStore.getCurrentSession()?.status
+                ?: return@launch
+            val currentActivities = sessionStore.getActivities()
+                ?.filter { it !is DomainActivityCustom }
+                ?.toMutableList()
+                ?: return@launch
+
+            userSettingsStore.updateUserSettings(
+                DomainUserSettingsPartial(
+                    customStatus = Partial.Value(status)
+                )
             )
-            repository.updateUserSettings(settings)
 
             val currentMillis = Clock.System.now().toEpochMilliseconds()
-            val activities = cache.getActivities()
-                .filter { it !is DomainActivityCustom }
-                .toMutableList()
 
             if (status != null) {
-                activities += DomainActivityCustom(
+                currentActivities += DomainActivityCustom(
                     name = "Custom Status",
                     status = status.text,
                     createdAt = currentMillis,
@@ -107,50 +110,30 @@ class CurrentUserViewModel(
 
             gateway.updatePresence(
                 UpdatePresence(
-                    status = cache.getCurrentSession().status,
+                    status = currentStatus,
                     since = currentMillis,
                     afk = null,
-                    activities = activities.map { it.toApi() },
+                    activities = currentActivities.map { it.toApi() },
                 )
             )
         }
     }
 
     init {
-        gateway.onEvent<ReadyEvent> {
-            val domainUser = it.data.user.toDomain()
-            avatarUrl = domainUser.avatarUrl
-            username = domainUser.username
-            discriminator = domainUser.formattedDiscriminator
-        }
-        gateway.onEvent<UserUpdateEvent> {
-            val data = it.data.toDomain() as DomainUserPrivate
-            avatarUrl = data.avatarUrl
-            username = data.username
-            discriminator = data.formattedDiscriminator
-        }
-        gateway.onEvent<UserSettingsUpdateEvent> {
-            val mergedData = userSettings?.merge(it.data.toDomain())
-                .also { mergedData -> userSettings = mergedData }
-            userStatus = mergedData?.status
-            userCustomStatus = mergedData?.customStatus
-        }
-        gateway.onEvent<SessionsReplaceEvent> {
-            isStreaming = cache.getActivities()
-                .any { it is DomainActivityStreaming }
+        currentUserStore.observeCurrentUser().collectIn(viewModelScope) { user ->
+            avatarUrl = user.avatarUrl
+            username = user.username
+            discriminator = user.discriminator
+            state = State.Loaded
         }
 
-        viewModelScope.launch {
-            try {
-                val settings = repository.getUserSettings()
-                userSettings = settings
-                userStatus = settings.status
-                userCustomStatus = settings.customStatus
-                state = State.Loaded
-            } catch (e: Throwable) {
-                e.printStackTrace()
-                state = State.Error
-            }
+        userSettingsStore.observeUserSettings().collectIn(viewModelScope) { event ->
+            userStatus = event.status
+            userCustomStatus = event.customStatus
+        }
+
+        sessionStore.observeActivities().collectIn(viewModelScope) { event ->
+            isStreaming = event.any { it is DomainActivityStreaming }
         }
     }
 }

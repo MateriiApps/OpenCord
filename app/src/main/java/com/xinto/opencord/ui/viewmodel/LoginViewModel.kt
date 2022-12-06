@@ -7,14 +7,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xinto.opencord.domain.manager.AccountManager
 import com.xinto.opencord.domain.manager.ActivityManager
+import com.xinto.opencord.domain.mapper.toDomain
 import com.xinto.opencord.domain.model.DomainLogin
-import com.xinto.opencord.domain.repository.DiscordAuthRepository
 import com.xinto.opencord.rest.body.LoginBody
 import com.xinto.opencord.rest.body.TwoFactorBody
+import com.xinto.opencord.rest.service.DiscordAuthService
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
-    private val repository: DiscordAuthRepository,
+    private val api: DiscordAuthService,
     private val activityManager: ActivityManager,
     private val accountManager: AccountManager
 ) : ViewModel() {
@@ -59,13 +60,13 @@ class LoginViewModel(
             }
 
             try {
-                val response = repository.login(
+                val response = api.login(
                     LoginBody(
                         login = username,
                         password = password,
                         captchaKey = captchaToken
                     )
-                )
+                ).toDomain()
 
                 when (response) {
                     is DomainLogin.Login -> {
@@ -99,12 +100,12 @@ class LoginViewModel(
 
             try {
                 showMfa = false
-                val response = repository.verifyTwoFactor(
+                val response = api.verifyTwoFactor(
                     TwoFactorBody(
                         code = code,
                         ticket = mfaTicket
                     )
-                )
+                ).toDomain()
                 when (response) {
                     is DomainLogin.Login -> {
                         activityManager.startMainActivity()

@@ -1,30 +1,27 @@
 package com.xinto.opencord.ui.viewmodel
 
 import androidx.compose.runtime.*
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xinto.opencord.domain.manager.PersistentDataManager
-import com.xinto.opencord.domain.mapper.toDomain
 import com.xinto.opencord.domain.model.DomainMessage
-import com.xinto.opencord.domain.model.DomainMessageRegular
-import com.xinto.opencord.domain.model.merge
-import com.xinto.opencord.domain.repository.DiscordApiRepository
-import com.xinto.opencord.gateway.DiscordGateway
-import com.xinto.opencord.gateway.event.MessageCreateEvent
-import com.xinto.opencord.gateway.event.MessageDeleteEvent
-import com.xinto.opencord.gateway.event.MessageUpdateEvent
-import com.xinto.opencord.gateway.event.ReadyEvent
-import com.xinto.opencord.gateway.onEvent
 import com.xinto.opencord.rest.body.MessageBody
-import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
+import com.xinto.opencord.rest.service.DiscordApiService
+import com.xinto.opencord.store.ChannelStore
+import com.xinto.opencord.store.MessageStore
+import com.xinto.opencord.store.fold
+import com.xinto.opencord.util.collectIn
 import com.xinto.opencord.util.throttle
+import kotlinx.coroutines.Job
 import com.github.materiiapps.partial.getOrNull
 import kotlinx.coroutines.launch
 
 class ChatViewModel(
-    gateway: DiscordGateway,
-    persistentDataManager: PersistentDataManager,
-    private val repository: DiscordApiRepository
-) : BasePersistenceViewModel(persistentDataManager) {
+    private val messageStore: MessageStore,
+    private val channelStore: ChannelStore,
+    private val api: DiscordApiService,
+    private val persistentDataManager: PersistentDataManager,
+) : ViewModel() {
 
     sealed interface State {
         object Unselected : State
@@ -46,25 +43,41 @@ class ChatViewModel(
     var currentUserId by mutableStateOf<Long?>(null)
         private set
 
+    private var job: Job? = null
+
     val startTyping = throttle(9500, viewModelScope) {
-        repository.startTyping(persistentChannelId)
+        api.startTyping(persistentDataManager.persistentChannelId)
     }
 
     fun load() {
         viewModelScope.launch {
+            state = State.Loading
+
             try {
-                state = State.Loading
-                val channelMessages = repository.getChannelMessages(persistentChannelId)
-                val channel = repository.getChannel(persistentChannelId)
-                messages.clear()
-                messages.putAll(channelMessages)
+                val channel = channelStore.fetchChannel(persistentDataManager.persistentChannelId)
+                    ?: return@launch
+                val channelMessages =
+                    messageStore.fetchMessages(persistentDataManager.persistentChannelId)
+
                 channelName = channel.name
+                messages.clear()
+                messages.putAll(channelMessages.associateBy { it.id })
                 state = State.Loaded
-            } catch (e: Exception) {
+            } catch (t: Throwable) {
+                t.printStackTrace()
                 state = State.Error
-                e.printStackTrace()
             }
         }
+
+        job = messageStore
+            .observeChannel(persistentDataManager.persistentChannelId)
+            .collectIn(viewModelScope) { event ->
+                event.fold(
+                    onAdd = { messages[it.id] = it },
+                    onUpdate = { messages[it.id] = it },
+                    onRemove = { messages.remove(it) },
+                )
+            }
     }
 
     fun sendMessage() {
@@ -72,8 +85,8 @@ class ChatViewModel(
             sendEnabled = false
             val message = userMessage
             userMessage = ""
-            repository.postChannelMessage(
-                channelId = persistentChannelId,
+            api.postChannelMessage(
+                channelId = persistentDataManager.persistentChannelId,
                 MessageBody(
                     content = message
                 )
@@ -91,41 +104,7 @@ class ChatViewModel(
         return messages.values.sortedByDescending { it.id }
     }
 
-    init {
-        gateway.onEvent<ReadyEvent> {
-            currentUserId = it.data.user.id.value
-        }
-
-        gateway.onEvent<MessageCreateEvent>(
-            filterPredicate = { it.data.channelId.value == persistentChannelId }
-        ) { event ->
-            val domainData = event.data.toDomain()
-            messages[domainData.id] = domainData
-        }
-
-        gateway.onEvent<MessageUpdateEvent>(
-            filterPredicate = { it.data.channelId.getOrNull()!!.value == persistentChannelId }
-        ) { event ->
-            val domainPartialData = event.data.toDomain()
-            val id = domainPartialData.id.getOrNull()!!
-            val mergedData = messages[id]?.let {
-                if (it is DomainMessageRegular) {
-                    it.merge(domainPartialData)
-                } else null
-            }
-            if (mergedData != null) {
-                messages[id] = mergedData
-            }
-        }
-
-        gateway.onEvent<MessageDeleteEvent>(
-            filterPredicate = { it.data.channelId.value == persistentChannelId }
-        ) { event ->
-            messages.remove(event.data.messageId.value)
-        }
-
-        if (persistentChannelId != 0L) {
-            load()
-        }
+    override fun onCleared() {
+        job?.cancel()
     }
 }

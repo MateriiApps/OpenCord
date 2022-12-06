@@ -33,7 +33,10 @@ class LoggerImpl : Logger {
     }
 
     override fun debug(tag: String, message: String) {
-        if (BuildConfig.DEBUG)
-            Log.d(tag, clean(message))
+        if (!BuildConfig.DEBUG) return
+
+        for (part in clean(message).chunked(4000)) {
+            Log.d(tag, part)
+        }
     }
 }

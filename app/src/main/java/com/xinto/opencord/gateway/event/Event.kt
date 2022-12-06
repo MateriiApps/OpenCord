@@ -1,5 +1,6 @@
 package com.xinto.opencord.gateway.event
 
+import com.xinto.opencord.gateway.dto.GuildDeleteData
 import com.xinto.opencord.gateway.dto.MessageDeleteData
 import com.xinto.opencord.gateway.dto.Ready
 import com.xinto.opencord.gateway.dto.SessionData
@@ -48,7 +49,9 @@ class EventDeserializationStrategy(
                 )
             }
             EventName.GuildDelete -> {
-                TODO()
+                GuildDeleteEvent(
+                    data = decoder.decodeSerializableValue(GuildDeleteData.serializer())
+                )
             }
             EventName.ChannelCreate -> {
                 ChannelCreateEvent(

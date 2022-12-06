@@ -31,16 +31,7 @@ val managerModule = module {
         )
     }
 
-    fun provideCacheManager(
-        gateway: DiscordGateway
-    ): CacheManager {
-        return CacheManagerImpl(
-            gateway = gateway,
-        )
-    }
-
     single { provideAccountManager(androidContext()) }
     single { provideActivityManager(androidContext()) }
     single { providePersistentDataManager(androidContext()) }
-    single { provideCacheManager(get()) }
 }

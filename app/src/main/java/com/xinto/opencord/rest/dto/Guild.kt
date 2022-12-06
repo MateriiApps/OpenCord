@@ -17,28 +17,12 @@ data class ApiGuild(
     @SerialName("banner")
     val banner: String? = null,
 
-    @SerialName("permissions")
-    val permissions: ApiPermissions = ApiPermissions(0),
-
     @SerialName("premium_tier")
     val premiumTier: Int,
 
     @SerialName("premium_subscription_count")
-    val premiumSubscriptionCount: Int? = null
-)
+    val premiumSubscriptionCount: Int? = null,
 
-
-@Serializable
-data class ApiMeGuild(
-    @SerialName("id")
-    val id: ApiSnowflake,
-
-    @SerialName("name")
-    val name: String,
-
-    @SerialName("icon")
-    val icon: String?,
-
-    @SerialName("permissions")
-    val permissions: ApiPermissions = ApiPermissions(0),
+    @SerialName("channels")
+    val channels: List<ApiChannel>,
 )

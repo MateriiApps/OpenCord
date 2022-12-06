@@ -43,7 +43,6 @@ fun HomeScreen(
                 GuildsChannelsScreen(
                     onGuildSelect = {
                         channelsViewModel.load()
-                        membersViewModel.load()
                     },
                     onChannelSelect = chatViewModel::load,
                     guildsViewModel = guildsViewModel,
