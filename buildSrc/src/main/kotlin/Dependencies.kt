@@ -212,14 +212,30 @@ sealed class Dependencies {
         }
     }
 
-    object KSP : Dependencies() {
-        const val version = "1.7.10-1.0.6"
+    object Partials : Dependencies() {
+        const val version = "1.0.0"
 
-        const val ksp = "com.google.devtools.ksp:symbol-processing-api:$version"
+        const val partial = "io.github.materiiapps:partial:$version"
+        const val partialKsp = "io.github.materiiapps:partial-ksp:$version"
 
         override fun invoke(scope: DependencyHandlerScope) {
             scope {
-                implementation(ksp)
+                implementation(partial)
+                ksp(partialKsp)
+            }
+        }
+    }
+
+    object EnumUtil : Dependencies() {
+        const val version = "1.0.0"
+
+        const val enumutil = "io.github.materiiapps:enumutil:$version"
+        const val enumutilKsp = "io.github.materiiapps:enumutil-ksp:$version"
+
+        override fun invoke(scope: DependencyHandlerScope) {
+            scope {
+                implementation(enumutil)
+                ksp(enumutilKsp)
             }
         }
     }

@@ -1,5 +1,3 @@
-import android.annotation.SuppressLint
-
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -117,15 +115,9 @@ android {
 }
 
 dependencies {
-    implementation("io.github.materiiapps:partial:1.0.0")
-    ksp("io.github.materiiapps:partial-ksp:1.0.0")
-
     implementation(project(":bottom-dialog-compose"))
     implementation(project(":overlapping-panels-compose"))
     implementation(project(":simpleast-compose"))
-
-    implementation(project(":enumgetter"))
-    ksp(project(":enumgetter"))
 
     // Use java.time.* on Android <= 8
     // https://developer.android.com/studio/write/java8-support#library-desugaring-versions
@@ -144,4 +136,6 @@ dependencies {
     Dependencies.Accompanist(this)
     Dependencies.Shimmer(this)
     Dependencies.Coil(this)
+    Dependencies.Partials(this)
+    Dependencies.EnumUtil(this)
 }

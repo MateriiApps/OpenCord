@@ -1,9 +1,9 @@
 package com.xinto.opencord.domain.model
 
-import com.xinto.enumgetter.GetterGen
+import com.github.materiiapps.enumutil.FromValue
 import kotlinx.datetime.Instant
 
-@GetterGen
+@FromValue
 enum class ActivityType(val value: Int) {
     Game(0),
     Streaming(1),

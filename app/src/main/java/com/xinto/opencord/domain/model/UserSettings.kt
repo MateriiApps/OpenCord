@@ -1,7 +1,7 @@
 package com.xinto.opencord.domain.model
 
+import com.github.materiiapps.enumutil.FromValue
 import com.github.materiiapps.partial.Partialize
-import com.xinto.enumgetter.GetterGen
 import kotlinx.datetime.Instant
 
 @Partialize
@@ -60,7 +60,7 @@ data class DomainCustomStatus(
     val emojiName: String?
 )
 
-@GetterGen
+@FromValue
 enum class DomainThemeSetting(val value: String) {
     Dark("dark"),
     Light("light");
@@ -68,7 +68,7 @@ enum class DomainThemeSetting(val value: String) {
     companion object
 }
 
-@GetterGen
+@FromValue
 enum class DomainUserStatus(val value: String) {
     Online("online"),
     Idle("idle"),

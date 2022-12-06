@@ -1,6 +1,6 @@
 package com.xinto.opencord.gateway.io
 
-import com.xinto.enumgetter.GetterGen
+import com.github.materiiapps.enumutil.FromValue
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind
@@ -9,8 +9,8 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
+@FromValue
 @Serializable(OpCode.Serializer::class)
-@GetterGen
 enum class OpCode(val code: Int) {
     Dispatch(0),
     Heartbeat(1),

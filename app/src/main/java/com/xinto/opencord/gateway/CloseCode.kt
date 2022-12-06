@@ -1,8 +1,8 @@
 package com.xinto.opencord.gateway
 
-import com.xinto.enumgetter.GetterGen
+import com.github.materiiapps.enumutil.FromValue
 
-@GetterGen
+@FromValue
 enum class CloseCode(val code: Int) {
     Unknown(-1),
     UnknownError(4000),
