@@ -4,7 +4,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
-import com.xinto.opencord.ui.theme.DiscordBlurple
+import com.xinto.opencord.ui.theme.Blurple
 import com.xinto.simpleast.Node
 
 class UserMentionNode<RC>(
@@ -14,8 +14,8 @@ class UserMentionNode<RC>(
     context(AnnotatedString.Builder)
     override fun render(renderContext: RC) {
         withStyle(SpanStyle(
-            color = DiscordBlurple,
-            background = DiscordBlurple.copy(alpha = 0.2f),
+            color = Blurple,
+            background = Blurple.copy(alpha = 0.2f),
             fontWeight = FontWeight.SemiBold
         )) {
             append("@$userId")
