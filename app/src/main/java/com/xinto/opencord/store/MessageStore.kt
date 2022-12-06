@@ -12,6 +12,7 @@ import com.xinto.opencord.gateway.event.MessageCreateEvent
 import com.xinto.opencord.gateway.event.MessageDeleteEvent
 import com.xinto.opencord.gateway.event.MessageUpdateEvent
 import com.xinto.opencord.gateway.onEvent
+import com.xinto.opencord.rest.dto.ApiMessage
 import com.xinto.opencord.rest.service.DiscordApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -22,6 +23,7 @@ import kotlinx.coroutines.withContext
 interface MessageStore {
     fun observeChannel(channelId: Long): Flow<Event<DomainMessage>>
 
+    suspend fun fetchPinnedMessages(channelId: Long): List<DomainMessage>
     suspend fun fetchMessages(
         channelId: Long,
         after: Long? = null,
@@ -79,6 +81,53 @@ class MessageStoreImpl(
         }
     }
 
+    private suspend fun storeMessages(messages: List<ApiMessage>) {
+        cache.runInTransaction {
+            cache.users().apply {
+                val users = messages
+                    .distinctBy { it.author.id }
+                    .map { it.author.toEntity() }
+
+                insertUsers(users)
+            }
+
+            cache.messages().insertMessages(messages.map { it.toEntity() })
+
+            cache.attachments().insertAttachments(messages.flatMap { msg ->
+                msg.attachments.map {
+                    it.toEntity(messageId = msg.id.value)
+                }
+            })
+
+            cache.embeds().insertEmbeds(messages.flatMap { msg ->
+                msg.embeds.mapIndexed { i, embed ->
+                    embed.toEntity(
+                        messageId = msg.id.value,
+                        embedIndex = i,
+                    )
+                }
+            })
+        }
+    }
+
+    override suspend fun fetchPinnedMessages(channelId: Long): List<DomainMessage> {
+        return withContext(Dispatchers.IO) {
+            val pinsStored = cache.channels().isChannelPinsStored(channelId)
+                ?: false
+
+            if (pinsStored) {
+                cache.messages().getPinnedMessages(channelId)
+                    .mapNotNull { constructDomainMessage(it) }
+            } else {
+                val messages = api.getChannelPins(channelId)
+
+                storeMessages(messages)
+                cache.channels().setChannelPinsStored(channelId, true)
+                messages.map { it.toDomain() }
+            }
+        }
+    }
+
     override suspend fun fetchMessages(
         channelId: Long,
         after: Long?,
@@ -104,33 +153,7 @@ class MessageStoreImpl(
                     after = after,
                 )
 
-                cache.runInTransaction {
-                    cache.users().apply {
-                        val users = messages
-                            .distinctBy { it.author.id }
-                            .map { it.author.toEntity() }
-
-                        insertUsers(users)
-                    }
-
-                    cache.messages().insertMessages(messages.map { it.toEntity() })
-
-                    cache.attachments().insertAttachments(messages.flatMap { msg ->
-                        msg.attachments.map {
-                            it.toEntity(messageId = msg.id.value)
-                        }
-                    })
-
-                    cache.embeds().insertEmbeds(messages.flatMap { msg ->
-                        msg.embeds.mapIndexed { i, embed ->
-                            embed.toEntity(
-                                messageId = msg.id.value,
-                                embedIndex = i,
-                            )
-                        }
-                    })
-                }
-
+                storeMessages(messages)
                 messages.map { it.toDomain() }
             }
         }
@@ -141,22 +164,7 @@ class MessageStoreImpl(
             val message = event.data
 
             events.emit(Event.Add(message.toDomain()))
-
-            cache.runInTransaction {
-                cache.users().insertUsers(listOf(message.author.toEntity()))
-                cache.messages().insertMessages(listOf(message.toEntity()))
-                cache.attachments().insertAttachments(
-                    message.attachments.map {
-                        it.toEntity(message.id.value)
-                    }
-                )
-                cache.embeds().insertEmbeds(message.embeds.mapIndexed { i, embed ->
-                    embed.toEntity(
-                        messageId = message.id.value,
-                        embedIndex = i,
-                    )
-                })
-            }
+            storeMessages(listOf(message))
         }
 
         gateway.onEvent<MessageUpdateEvent> { event ->

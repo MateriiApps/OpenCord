@@ -13,7 +13,7 @@ import androidx.room.PrimaryKey
     ],
 )
 data class EntityMessage(
-    // -------- Message data -------- //
+    // -------- Discord data -------- //
     @PrimaryKey
     val id: Long,
 
@@ -25,6 +25,9 @@ data class EntityMessage(
 
     @ColumnInfo(name = "timestamp")
     val timestamp: Long,
+
+    @ColumnInfo(name = "pinned")
+    val pinned: Boolean,
 
     @ColumnInfo(name = "content")
     val content: String,

@@ -40,4 +40,7 @@ interface MessagesDao {
 
     @Query("SELECT * FROM messages WHERE channel_id = :channelId AND id >= :aroundId - ROUND(:limit / 2, 0) ORDER BY id ASC LIMIT :limit")
     fun getMessagesAround(channelId: Long, limit: Int, aroundId: Long): List<EntityMessage>
+
+    @Query("SELECT * FROM messages WHERE pinned = 1 AND channel_id = :channelId")
+    fun getPinnedMessages(channelId: Long): List<EntityMessage>
 }

@@ -6,17 +6,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.xinto.opencord.domain.manager.PersistentDataManager
-import com.xinto.opencord.domain.mapper.toDomain
 import com.xinto.opencord.domain.model.DomainMessage
-import com.xinto.opencord.rest.service.DiscordApiService
+import com.xinto.opencord.store.MessageStore
 import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
 import kotlinx.coroutines.launch
 
 class ChannelPinsViewModel(
     persistentDataManager: PersistentDataManager,
-    private val api: DiscordApiService
+    private val messageStore: MessageStore,
 ) : BasePersistenceViewModel(persistentDataManager) {
-
     sealed interface State {
         object Loading : State
         object Loaded : State
@@ -31,15 +29,15 @@ class ChannelPinsViewModel(
         viewModelScope.launch {
             try {
                 state = State.Loading
-                val pinnedMessages = api.getChannelPins(persistentChannelId)
-                    .associate { it.id.value to it.toDomain() }
+
+                val messages = messageStore.fetchPinnedMessages(persistentChannelId)
                 pins.clear()
-                pins.putAll(pinnedMessages)
+                pins.putAll(messages.map { it.id to it })
+
                 state = State.Loaded
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
     }
-
 }

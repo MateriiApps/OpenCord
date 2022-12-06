@@ -128,6 +128,7 @@ fun ApiMessage.toDomain(): DomainMessage {
                 content = content,
                 author = domainAuthor,
                 timestamp = timestamp,
+                pinned = pinned,
                 editedTimestamp = editedTimestamp,
                 attachments = domainAttachments,
                 embeds = domainEmbeds,
@@ -143,6 +144,7 @@ fun ApiMessage.toDomain(): DomainMessage {
                 content = content,
                 channelId = channelId.value,
                 timestamp = timestamp,
+                pinned = pinned,
                 author = domainAuthor
             )
         }
@@ -151,6 +153,7 @@ fun ApiMessage.toDomain(): DomainMessage {
             content = content,
             channelId = channelId.value,
             timestamp = timestamp,
+            pinned = pinned,
             author = domainAuthor
         )
     }

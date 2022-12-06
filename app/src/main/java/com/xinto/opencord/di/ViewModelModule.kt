@@ -92,11 +92,11 @@ val viewModelModule = module {
 
     fun provideChannelPinsViewModel(
         persistentDataManager: PersistentDataManager,
-        api: DiscordApiService
+        messageStore: MessageStore,
     ): ChannelPinsViewModel {
         return ChannelPinsViewModel(
             persistentDataManager = persistentDataManager,
-            api = api
+            messageStore = messageStore,
         )
     }
 

@@ -28,6 +28,7 @@ fun EntityMessage.toDomain(
                 content = content,
                 author = author,
                 timestamp = Instant.fromEpochMilliseconds(timestamp),
+                pinned = pinned,
                 editedTimestamp = editedTimestamp?.let { Instant.fromEpochMilliseconds(it) },
                 attachments = attachments ?: emptyList(),
                 embeds = embeds ?: emptyList(),
@@ -44,6 +45,7 @@ fun EntityMessage.toDomain(
                 content = content,
                 channelId = channelId,
                 timestamp = Instant.fromEpochMilliseconds(timestamp),
+                pinned = pinned,
                 author = author,
             )
         }
@@ -52,6 +54,7 @@ fun EntityMessage.toDomain(
             content = content,
             channelId = channelId,
             timestamp = Instant.fromEpochMilliseconds(timestamp),
+            pinned = pinned,
             author = author,
         )
     }

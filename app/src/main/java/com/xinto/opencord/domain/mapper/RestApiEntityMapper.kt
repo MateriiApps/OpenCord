@@ -14,6 +14,7 @@ fun ApiMessage.toEntity(): EntityMessage {
         channelId = channelId.value,
         type = type.value,
         timestamp = timestamp.toEpochMilliseconds(),
+        pinned = pinned,
         content = content,
         authorId = author.id.value,
         editedTimestamp = editedTimestamp?.toEpochMilliseconds(),
@@ -75,6 +76,7 @@ fun ApiChannel.toEntity(guildId: Long): EntityChannel {
         position = position,
         parentId = parentId?.value,
         nsfw = nsfw,
+        pinsStored = false,
     )
 }
 

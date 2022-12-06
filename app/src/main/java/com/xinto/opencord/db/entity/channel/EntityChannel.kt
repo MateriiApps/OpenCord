@@ -12,6 +12,7 @@ import androidx.room.PrimaryKey
     ],
 )
 data class EntityChannel(
+    // -------- Discord data -------- //
     @PrimaryKey
     val id: Long,
 
@@ -32,4 +33,8 @@ data class EntityChannel(
 
     @ColumnInfo(name = "nsfw")
     val nsfw: Boolean,
+
+    // -------- DB relational data -------- //
+    @ColumnInfo(name = "is_pins_stored")
+    val pinsStored: Boolean,
 )
