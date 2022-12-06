@@ -1,94 +1,91 @@
 package com.xinto.opencord.ui.theme
 
-import androidx.compose.material3.ColorScheme
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
+import android.os.Build
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 
-private val LightColorPalette = darkColorScheme(
-    primary = LightPrimary,
-    onPrimary = LightOnPrimary,
-    primaryContainer = LightPrimaryContainer,
-    onPrimaryContainer = LightOnPrimaryContainer,
-    secondary = LightSecondary,
-    onSecondary = LightOnSecondary,
-    secondaryContainer = LightSecondaryContainer,
-    onSecondaryContainer = LightOnSecondaryContainer,
-    tertiary = LightTertiary,
-    onTertiary = LightOnTertiary,
-    tertiaryContainer = LightTertiaryContainer,
-    onTertiaryContainer = LightOnTertiaryContainer,
-    error = LightError,
-    errorContainer = LightErrorContainer,
-    onError = LightOnError,
-    onErrorContainer = LightOnErrorContainer,
-    background = LightBackground,
-    onBackground = LightOnBackground,
-    surface = LightSurface,
-    onSurface = LightOnSurface,
-    surfaceVariant = LightSurfaceVariant,
-    onSurfaceVariant = LightOnSurfaceVariant,
-    outline = LightOutline,
-    inverseOnSurface = LightInverseOnSurface,
-    inverseSurface = LightInverseSurface,
-    inversePrimary = LightInversePrimary,
+private val LightColors = lightColorScheme(
+    primary = ColorLightPrimary,
+    onPrimary = ColorLightOnPrimary,
+    primaryContainer = ColorLightPrimaryContainer,
+    onPrimaryContainer = ColorLightOnPrimaryContainer,
+    secondary = ColorLightSecondary,
+    onSecondary = ColorLightOnSecondary,
+    secondaryContainer = ColorLightSecondaryContainer,
+    onSecondaryContainer = ColorLightOnSecondaryContainer,
+    tertiary = ColorLightTertiary,
+    onTertiary = ColorLightOnTertiary,
+    tertiaryContainer = ColorLightTertiaryContainer,
+    onTertiaryContainer = ColorLightOnTertiaryContainer,
+    error = ColorLightError,
+    errorContainer = ColorLightErrorContainer,
+    onError = ColorLightOnError,
+    onErrorContainer = ColorLightOnErrorContainer,
+    background = ColorLightBackground,
+    onBackground = ColorLightOnBackground,
+    surface = ColorLightSurface,
+    onSurface = ColorLightOnSurface,
+    surfaceVariant = ColorLightSurfaceVariant,
+    onSurfaceVariant = ColorLightOnSurfaceVariant,
+    outline = ColorLightOutline,
+    inverseOnSurface = ColorLightInverseOnSurface,
+    inverseSurface = ColorLightInverseSurface,
+    inversePrimary = ColorLightInversePrimary,
+    surfaceTint = ColorLightSurfaceTint,
+    outlineVariant = ColorLightOutlineVariant,
+    scrim = ColorLightScrim,
 )
 
-private val DarkColorPalette = lightColorScheme(
-    primary = DarkPrimary,
-    onPrimary = DarkOnPrimary,
-    primaryContainer = DarkPrimaryContainer,
-    onPrimaryContainer = DarkOnPrimaryContainer,
-    secondary = DarkSecondary,
-    onSecondary = DarkOnSecondary,
-    secondaryContainer = DarkSecondaryContainer,
-    onSecondaryContainer = DarkOnSecondaryContainer,
-    tertiary = DarkTertiary,
-    onTertiary = DarkOnTertiary,
-    tertiaryContainer = DarkTertiaryContainer,
-    onTertiaryContainer = DarkOnTertiaryContainer,
-    error = DarkError,
-    errorContainer = DarkErrorContainer,
-    onError = DarkOnError,
-    onErrorContainer = DarkOnErrorContainer,
-    background = DarkBackground,
-    onBackground = DarkOnBackground,
-    surface = DarkSurface,
-    onSurface = DarkOnSurface,
-    surfaceVariant = DarkSurfaceVariant,
-    onSurfaceVariant = DarkOnSurfaceVariant,
-    outline = DarkOutline,
-    inverseOnSurface = DarkInverseOnSurface,
-    inverseSurface = DarkInverseSurface,
-    inversePrimary = DarkInversePrimary,
+private val DarkColors = darkColorScheme(
+    primary = ColorDarkPrimary,
+    onPrimary = ColorDarkOnPrimary,
+    primaryContainer = ColorDarkPrimaryContainer,
+    onPrimaryContainer = ColorDarkOnPrimaryContainer,
+    secondary = ColorDarkSecondary,
+    onSecondary = ColorDarkOnSecondary,
+    secondaryContainer = ColorDarkSecondaryContainer,
+    onSecondaryContainer = ColorDarkOnSecondaryContainer,
+    tertiary = ColorDarkTertiary,
+    onTertiary = ColorDarkOnTertiary,
+    tertiaryContainer = ColorDarkTertiaryContainer,
+    onTertiaryContainer = ColorDarkOnTertiaryContainer,
+    error = ColorDarkError,
+    errorContainer = ColorDarkErrorContainer,
+    onError = ColorDarkOnError,
+    onErrorContainer = ColorDarkOnErrorContainer,
+    background = ColorDarkBackground,
+    onBackground = ColorDarkOnBackground,
+    surface = ColorDarkSurface,
+    onSurface = ColorDarkOnSurface,
+    surfaceVariant = ColorDarkSurfaceVariant,
+    onSurfaceVariant = ColorDarkOnSurfaceVariant,
+    outline = ColorDarkOutline,
+    inverseOnSurface = ColorDarkInverseOnSurface,
+    inverseSurface = ColorDarkInverseSurface,
+    inversePrimary = ColorDarkInversePrimary,
+    surfaceTint = ColorDarkSurfaceTint,
+    outlineVariant = ColorDarkOutlineVariant,
+    scrim = ColorDarkScrim,
 )
-
-val ColorScheme.discordGreen
-    get() = DiscordGreen
-
-val ColorScheme.discordYellow
-    get() = DiscordYellow
-
-val ColorScheme.discordFuchsia
-    get() = DiscordFuchsia
-
-val ColorScheme.discordRed
-    get() = DiscordRed
 
 @Composable
 fun OpenCordTheme(
-    darkMode: Boolean = true,
+    darkMode: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
-    val colors = if (darkMode) {
-        DarkColorPalette
-    } else {
-        LightColorPalette
+    val colorScheme = when {
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+            val context = LocalContext.current
+            if (darkMode) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+        }
+        darkMode -> DarkColors
+        else -> LightColors
     }
 
     MaterialTheme(
-        colorScheme = colors,
+        colorScheme = colorScheme,
         typography = Typography,
         shapes = Shapes,
         content = content
