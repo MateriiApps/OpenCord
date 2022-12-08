@@ -13,7 +13,6 @@ class GuildsViewModel(
     guildStore: GuildStore,
     persistentDataManager: PersistentDataManager,
 ) : BasePersistenceViewModel(persistentDataManager) {
-
     sealed interface State {
         object Loading : State
         object Loaded : State

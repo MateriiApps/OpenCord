@@ -68,7 +68,7 @@ fun CurrentUserSheet(
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 25.dp, vertical = 12.dp)
+                            .padding(horizontal = 25.dp, vertical = 12.dp),
                     ) {
                         // TODO: draw status emoji here
                         Text(viewModel.userCustomStatus!!.text ?: "")
@@ -80,7 +80,7 @@ fun CurrentUserSheet(
                                 .clickable {
                                     viewModel.setCustomStatus(null)
                                     onClose()
-                                }
+                                },
                         )
                     }
                 } else {
@@ -90,7 +90,7 @@ fun CurrentUserSheet(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable { /*TODO*/ }
-                            .padding(horizontal = 25.dp, vertical = 9.dp)
+                            .padding(horizontal = 25.dp, vertical = 9.dp),
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_set_custom_status),
@@ -108,7 +108,7 @@ fun CurrentUserSheet(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable { /*TODO*/ }
-                        .padding(horizontal = 25.dp, vertical = 9.dp)
+                        .padding(horizontal = 25.dp, vertical = 9.dp),
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_account_switch),

@@ -2,7 +2,6 @@ package com.xinto.opencord.di
 
 import android.content.Context
 import com.xinto.opencord.domain.manager.*
-import com.xinto.opencord.gateway.DiscordGateway
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
@@ -11,7 +10,7 @@ val managerModule = module {
         context: Context
     ): AccountManager {
         return AccountManagerImpl(
-            authPrefs = context.getSharedPreferences("auth", Context.MODE_PRIVATE)
+            authPrefs = context.getSharedPreferences("auth", Context.MODE_PRIVATE),
         )
     }
 
@@ -19,7 +18,7 @@ val managerModule = module {
         context: Context
     ): ActivityManager {
         return ActivityManagerImpl(
-            context = context
+            context = context,
         )
     }
 
@@ -27,7 +26,7 @@ val managerModule = module {
         context: Context
     ): PersistentDataManager {
         return PersistentDataManagerImpl(
-            persistentPrefs = context.getSharedPreferences("persistent_data", Context.MODE_PRIVATE)
+            persistentPrefs = context.getSharedPreferences("persistent_data", Context.MODE_PRIVATE),
         )
     }
 

@@ -7,12 +7,12 @@ fun ApiLogin.toDomain(): DomainLogin {
     return when {
         ticket != null -> {
             DomainLogin.TwoFactorAuth(
-                ticket = ticket
+                ticket = ticket,
             )
         }
         captchaSiteKey != null -> {
             DomainLogin.Captcha(
-                captchaSiteKey = captchaSiteKey
+                captchaSiteKey = captchaSiteKey,
             )
         }
         token != null -> {
@@ -20,7 +20,7 @@ fun ApiLogin.toDomain(): DomainLogin {
                 token = token,
                 mfa = mfa,
                 theme = userSettings?.theme ?: "",
-                locale = userSettings?.locale ?: ""
+                locale = userSettings?.locale ?: "",
             )
         }
         else -> DomainLogin.Error

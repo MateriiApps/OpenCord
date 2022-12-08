@@ -18,7 +18,7 @@ fun WidgetBranchReply(
             path = Path().apply {
                 moveTo(
                     x = 0f,
-                    y = size.height
+                    y = size.height,
                 )
                 cubicTo(
                     x1 = 0f,
@@ -26,13 +26,13 @@ fun WidgetBranchReply(
                     x2 = 0f,
                     y2 = 0f,
                     x3 = size.width,
-                    y3 = 0f
+                    y3 = 0f,
                 )
             },
             color = color,
             style = Stroke(
                 width = 5f,
-            )
+            ),
         )
     }
 }

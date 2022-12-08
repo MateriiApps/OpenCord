@@ -13,7 +13,6 @@ import com.xinto.opencord.store.fold
 import com.xinto.opencord.util.collectIn
 import com.xinto.opencord.util.throttle
 import kotlinx.coroutines.Job
-import com.github.materiiapps.partial.getOrNull
 import kotlinx.coroutines.launch
 
 class ChatViewModel(
@@ -22,7 +21,6 @@ class ChatViewModel(
     private val api: DiscordApiService,
     private val persistentDataManager: PersistentDataManager,
 ) : ViewModel() {
-
     sealed interface State {
         object Unselected : State
         object Loading : State
@@ -88,8 +86,8 @@ class ChatViewModel(
             api.postChannelMessage(
                 channelId = persistentDataManager.persistentChannelId,
                 MessageBody(
-                    content = message
-                )
+                    content = message,
+                ),
             )
             sendEnabled = true
         }

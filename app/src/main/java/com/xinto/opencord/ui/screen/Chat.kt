@@ -58,7 +58,7 @@ fun ChatScreen(
                     IconButton(onChannelsButtonClick) {
                         Icon(
                             painter = painterResource(R.drawable.ic_menu),
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
                 },
@@ -66,13 +66,13 @@ fun ChatScreen(
                     IconButton(onClick = onPinsButtonClick) {
                         Icon(
                             painter = painterResource(R.drawable.ic_push_pin),
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
                     IconButton(onMembersButtonClick) {
                         Icon(
                             painter = painterResource(R.drawable.ic_people),
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
                 },
@@ -83,17 +83,17 @@ fun ChatScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues),
-            tonalElevation = 2.dp
+            tonalElevation = 2.dp,
         ) {
             when (viewModel.state) {
                 is ChatViewModel.State.Unselected -> {
                     ChatScreenUnselected(
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
                     )
                 }
                 is ChatViewModel.State.Loading -> {
                     ChatScreenLoading(
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
                     )
                 }
                 is ChatViewModel.State.Loaded -> {
@@ -110,7 +110,7 @@ fun ChatScreen(
                 }
                 is ChatViewModel.State.Error -> {
                     ChatScreenError(
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
                     )
                 }
             }
@@ -124,7 +124,7 @@ private fun ChatScreenUnselected(
 ) {
     Box(
         modifier = modifier,
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         ProvideTextStyle(MaterialTheme.typography.titleMedium) {
             Text(stringResource(R.string.chat_unselected_message))
@@ -142,8 +142,8 @@ private fun ChatScreenLoading(
             .padding(vertical = 8.dp)
             .verticalScroll(
                 state = rememberScrollState(),
-                enabled = false
-            )
+                enabled = false,
+            ),
     )
     {
         repeat(10) {
@@ -155,7 +155,7 @@ private fun ChatScreenLoading(
                             .shimmer(shimmer)
                             .size(40.dp)
                             .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f))
+                            .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)),
                     )
                 },
                 author = {
@@ -165,7 +165,7 @@ private fun ChatScreenLoading(
                             .shimmer(shimmer)
                             .size(width = width, height = 14.dp)
                             .clip(MaterialTheme.shapes.medium)
-                            .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
+                            .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)),
                     )
                 },
                 content = {
@@ -183,12 +183,12 @@ private fun ChatScreenLoading(
                                         .shimmer(shimmer)
                                         .padding(top = 8.dp)
                                         .clip(MaterialTheme.shapes.medium)
-                                        .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f))
+                                        .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)),
                                 )
                             }
                         }
                     }
-                }
+                },
             )
         }
     }
@@ -217,7 +217,7 @@ private fun ChatScreenLoaded(
 
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         LazyColumn(
             state = listState,
@@ -256,7 +256,7 @@ private fun ChatScreenLoaded(
                                 .clip(MaterialTheme.shapes.medium)
                                 .combinedClickable(
                                     onClick = {},
-                                    onLongClick = { showBottomDialog = true }
+                                    onLongClick = { showBottomDialog = true },
                                 ),
                             mentioned = mentioned,
                             reply = message.isReply.ifComposable {
@@ -273,10 +273,10 @@ private fun ChatScreenLoaded(
                                             WidgetMessageReplyContent(
                                                 text = render(
                                                     nodes = referencedMessage.contentNodes,
-                                                    renderContext = null
-                                                ).toAnnotatedString()
+                                                    renderContext = null,
+                                                ).toAnnotatedString(),
                                             )
-                                        }
+                                        },
                                     )
                                 } else {
                                     ProvideTextStyle(MaterialTheme.typography.bodySmall) {
@@ -302,8 +302,8 @@ private fun ChatScreenLoaded(
                                 WidgetMessageContent(
                                     text = render(
                                         nodes = nodes,
-                                        renderContext = null
-                                    ).toAnnotatedString()
+                                        renderContext = null,
+                                    ).toAnnotatedString(),
                                 )
                             },
                             embeds = message.embeds.ifNotEmptyComposable { embeds ->
@@ -319,10 +319,10 @@ private fun ChatScreenLoaded(
                                             for (field in it) {
                                                 WidgetEmbedField(
                                                     name = field.name,
-                                                    value = field.value
+                                                    value = field.value,
                                                 )
                                             }
-                                        }
+                                        },
                                     )
                                 }
                             },
@@ -335,27 +335,28 @@ private fun ChatScreenLoaded(
                                                     .heightIn(max = 400.dp),
                                                 url = attachment.proxyUrl,
                                                 width = attachment.width,
-                                                height = attachment.height
+                                                height = attachment.height,
                                             )
                                         }
                                         is DomainAttachment.Video -> {
                                             WidgetAttachmentVideo(
                                                 url = attachment.url,
-                                                modifier = Modifier.fillMaxWidth()
-                                                    .aspectRatio(attachment.width.toFloat() / attachment.height.toFloat())
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .aspectRatio(attachment.width.toFloat() / attachment.height.toFloat()),
                                             )
                                         }
                                         else -> {}
                                     }
                                 }
-                            }
+                            },
                         )
                     }
                     else -> {}
                 }
                 if (showBottomDialog) {
                     MessageActionMenu(
-                        onDismissRequest = { showBottomDialog = false }
+                        onDismissRequest = { showBottomDialog = false },
                     )
                 }
             }
@@ -364,13 +365,13 @@ private fun ChatScreenLoaded(
             modifier = Modifier.padding(
                 start = 8.dp,
                 end = 8.dp,
-                bottom = 4.dp
+                bottom = 4.dp,
             ),
             value = userMessage,
             onValueChange = onUserMessageUpdate,
             sendEnabled = sendEnabled,
             onSendClick = onUserMessageSend,
-            hint = { Text(stringResource(R.string.chat_input_hint, channelName)) }
+            hint = { Text(stringResource(R.string.chat_input_hint, channelName)) },
         )
     }
 }
@@ -382,20 +383,20 @@ private fun ChatScreenError(
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
+        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
     ) {
         CompositionLocalProvider(
             LocalContentColor provides MaterialTheme.colorScheme.error,
-            LocalTextStyle provides MaterialTheme.typography.titleMedium
+            LocalTextStyle provides MaterialTheme.typography.titleMedium,
         ) {
             Icon(
                 modifier = Modifier.size(56.dp),
                 painter = painterResource(R.drawable.ic_error),
-                contentDescription = null
+                contentDescription = null,
             )
             Text(
                 text = stringResource(R.string.chat_loading_error),
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
         }
     }
@@ -406,7 +407,7 @@ private fun MessageActionMenu(
     onDismissRequest: () -> Unit
 ) {
     BottomSheetDialog(
-        onDismissRequest = onDismissRequest
+        onDismissRequest = onDismissRequest,
     ) {
         Surface {
             Column {

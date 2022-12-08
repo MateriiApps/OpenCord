@@ -54,9 +54,9 @@ fun WidgetChatMessage(
                     start = 8.dp,
                     top = if (!isMerged) 16.dp else 1.dp,
                     end = 8.dp,
-                    bottom = 1.dp
+                    bottom = 1.dp,
                 ),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+            verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             if (reply != null) {
                 Row(
@@ -64,7 +64,7 @@ fun WidgetChatMessage(
                         .fillMaxWidth()
                         .height(IntrinsicSize.Min),
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    verticalAlignment = Alignment.Bottom
+                    verticalAlignment = Alignment.Bottom,
                 ) {
                     WidgetBranchReply(
                         modifier = Modifier
@@ -77,12 +77,12 @@ fun WidgetChatMessage(
             }
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.Top
+                verticalAlignment = Alignment.Top,
             ) {
                 if (avatar != null) {
                     Box(
                         modifier = Modifier.size(40.dp),
-                        contentAlignment = Alignment.Center
+                        contentAlignment = Alignment.Center,
                     ) {
                         avatar()
                     }
@@ -108,7 +108,7 @@ fun WidgetChatMessage(
                     if (attachments != null) {
                         Column(
                             modifier = Modifier.fillMaxWidth(0.9f),
-                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                            verticalArrangement = Arrangement.spacedBy(4.dp),
                         ) {
                             attachments()
                         }
@@ -116,7 +116,7 @@ fun WidgetChatMessage(
                     if (embeds != null) {
                         Column(
                             modifier = Modifier.fillMaxWidth(0.9f),
-                            verticalArrangement = Arrangement.spacedBy(2.dp)
+                            verticalArrangement = Arrangement.spacedBy(2.dp),
                         ) {
                             embeds()
                         }
@@ -137,12 +137,12 @@ fun WidgetMessageReply(
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(4.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         if (avatar != null) {
             Box(
                 modifier = Modifier.size(20.dp),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 avatar()
             }
@@ -170,7 +170,7 @@ fun WidgetMessageReplyContent(
         text = text,
         inlineContent = textInlineContent(),
         overflow = TextOverflow.Ellipsis,
-        maxLines = 1
+        maxLines = 1,
     )
 }
 
@@ -183,7 +183,7 @@ fun WidgetMessageReplyAuthor(
         modifier = modifier,
         text = author,
         overflow = TextOverflow.Ellipsis,
-        maxLines = 1
+        maxLines = 1,
     )
 }
 
@@ -211,7 +211,7 @@ fun WidgetMessageAuthor(
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(4.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         ProvideTextStyle(MaterialTheme.typography.labelLarge) {
             Text(
@@ -220,10 +220,10 @@ fun WidgetMessageAuthor(
                     .clickable(
                         enabled = onAuthorClick != null,
                         indication = null,
-                        interactionSource = remember { MutableInteractionSource() }
+                        interactionSource = remember { MutableInteractionSource() },
                     ) {
                         onAuthorClick?.invoke()
-                    }
+                    },
             )
         }
         if (isBot) {
@@ -234,7 +234,7 @@ fun WidgetMessageAuthor(
                 ) {
                     Text(
                         text = stringResource(R.string.chat_bot_label),
-                        modifier = Modifier.padding(horizontal = 4.dp)
+                        modifier = Modifier.padding(horizontal = 4.dp),
                     )
                 }
             }
@@ -265,7 +265,7 @@ fun WidgetMessageContent(
     Text(
         modifier = modifier,
         text = text,
-        inlineContent = textInlineContent()
+        inlineContent = textInlineContent(),
     )
 }
 
@@ -277,12 +277,12 @@ private fun textInlineContent(): Map<String, InlineTextContent> {
             placeholder = Placeholder(
                 width = emoteSize,
                 height = emoteSize,
-                placeholderVerticalAlign = PlaceholderVerticalAlign.Center
-            )
+                placeholderVerticalAlign = PlaceholderVerticalAlign.Center,
+            ),
         ) { emoteId ->
             OCAsyncImage(
                 url = "${BuildConfig.URL_CDN}/emojis/$emoteId",
             )
-        }
+        },
     )
 }

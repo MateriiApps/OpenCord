@@ -4,15 +4,12 @@ import com.xinto.opencord.gateway.dto.IdentificationProperties
 import com.xinto.opencord.rest.body.XSuperProperties
 
 interface PropertyProvider {
-
     val xSuperProperties: XSuperProperties
-
     val identificationProperties: IdentificationProperties
-
 }
 
 class PropertyProviderImpl(
-    private val telemetryProvider: TelemetryProvider
+    telemetryProvider: TelemetryProvider
 ) : PropertyProvider {
 
     override val xSuperProperties: XSuperProperties =
@@ -21,7 +18,7 @@ class PropertyProviderImpl(
             userAgent = telemetryProvider.userAgent,
             clientBuildVersion = telemetryProvider.clientBuildVersion,
             clientBuildNumber = telemetryProvider.clientBuildCode,
-            deviceName =telemetryProvider.deviceName,
+            deviceName = telemetryProvider.deviceName,
             os = telemetryProvider.os,
             osVersion = telemetryProvider.osVersion,
             osSdkVersion = telemetryProvider.osSdk,
@@ -31,7 +28,7 @@ class PropertyProviderImpl(
             memoryPerformance = telemetryProvider.memoryPerformance,
             accessibilitySupport = telemetryProvider.accessibility,
             accessibilityFeatures = telemetryProvider.accessibilityFeatures,
-            deviceAdId = telemetryProvider.deviceAdId.toString()
+            deviceAdId = telemetryProvider.deviceAdId.toString(),
         )
 
     override val identificationProperties: IdentificationProperties =
@@ -44,7 +41,6 @@ class PropertyProviderImpl(
             os = telemetryProvider.os,
             osVersion = telemetryProvider.osVersion,
             osSdkVersion = telemetryProvider.osSdk,
-            systemLocale = telemetryProvider.systemLocale
+            systemLocale = telemetryProvider.systemLocale,
         )
-
 }

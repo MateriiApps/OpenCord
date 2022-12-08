@@ -40,7 +40,7 @@ fun OCBasicTextField(
         enabled = enabled,
         readOnly = readOnly,
         textStyle = MaterialTheme.typography.bodyMedium.copy(
-            color = contentColor
+            color = contentColor,
         ),
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
@@ -50,6 +50,6 @@ fun OCBasicTextField(
         onTextLayout = onTextLayout,
         interactionSource = interactionSource,
         cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
-        decorationBox = decorationBox
+        decorationBox = decorationBox,
     )
 }

@@ -93,20 +93,24 @@ class MessageStoreImpl(
 
             cache.messages().insertMessages(messages.map { it.toEntity() })
 
-            cache.attachments().insertAttachments(messages.flatMap { msg ->
-                msg.attachments.map {
-                    it.toEntity(messageId = msg.id.value)
-                }
-            })
+            cache.attachments().insertAttachments(
+                messages.flatMap { msg ->
+                    msg.attachments.map {
+                        it.toEntity(messageId = msg.id.value)
+                    }
+                },
+            )
 
-            cache.embeds().insertEmbeds(messages.flatMap { msg ->
-                msg.embeds.mapIndexed { i, embed ->
-                    embed.toEntity(
-                        messageId = msg.id.value,
-                        embedIndex = i,
-                    )
-                }
-            })
+            cache.embeds().insertEmbeds(
+                messages.flatMap { msg ->
+                    msg.embeds.mapIndexed { i, embed ->
+                        embed.toEntity(
+                            messageId = msg.id.value,
+                            embedIndex = i,
+                        )
+                    }
+                },
+            )
         }
     }
 

@@ -11,7 +11,6 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val gatewayModule = module {
-
     fun provideGateway(
         client: HttpClient,
         json: Json,
@@ -24,7 +23,7 @@ val gatewayModule = module {
             json = json,
             accountManager = accountManager,
             propertyProvider = propertyProvider,
-            logger = logger
+            logger = logger,
         )
     }
 

@@ -10,7 +10,6 @@ import org.koin.android.ext.android.inject
 
 @SuppressLint("CustomSplashScreen")
 class SplashScreenActivity : ComponentActivity() {
-
     private val accountManager: AccountManager by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,5 +23,4 @@ class SplashScreenActivity : ComponentActivity() {
         }
         finish()
     }
-
 }

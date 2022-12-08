@@ -58,7 +58,7 @@ sealed class DomainChannel : Comparable<DomainChannel>, Mentionable {
         private val sortedChannelTypes = listOf(
             AnnouncementChannel::class,
             TextChannel::class,
-            VoiceChannel::class
+            VoiceChannel::class,
         )
     }
 }

@@ -54,7 +54,7 @@ public fun BottomSheetDialog(
             composeView = view,
             layoutDirection = layoutDirection,
             density = density,
-            dialogId = dialogId
+            dialogId = dialogId,
         ).apply {
             setContent(composition) {
                 BottomDialogLayout(
@@ -79,7 +79,7 @@ public fun BottomSheetDialog(
         bottomDialog.updateParameters(
             onDismissRequest = onDismissRequest,
             properties = properties,
-            layoutDirection = layoutDirection
+            layoutDirection = layoutDirection,
         )
     }
 }
@@ -122,10 +122,10 @@ private class BottomSheetDialogWrapper(
         ViewTreeLifecycleOwner.set(bottomDialogLayout, ViewTreeLifecycleOwner.get(composeView))
         ViewTreeViewModelStoreOwner.set(
             bottomDialogLayout,
-            ViewTreeViewModelStoreOwner.get(composeView)
+            ViewTreeViewModelStoreOwner.get(composeView),
         )
         bottomDialogLayout.setViewTreeSavedStateRegistryOwner(
-            composeView.findViewTreeSavedStateRegistryOwner()
+            composeView.findViewTreeSavedStateRegistryOwner(),
         )
 
         setOnDismissListener {
@@ -207,7 +207,7 @@ private fun BottomDialogLayout(
 ) {
     Layout(
         content = content,
-        modifier = modifier
+        modifier = modifier,
     ) { measurables, constraints ->
         val placeables = measurables.fastMap { it.measure(constraints) }
         val width = placeables.fastMaxBy { it.width }?.width ?: constraints.minWidth

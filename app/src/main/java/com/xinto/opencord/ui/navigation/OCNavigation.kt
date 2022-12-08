@@ -21,12 +21,12 @@ fun <T : Parcelable> OCNavigation(
     val saveableStateHolder = rememberSaveableStateHolder()
     BackHandler(
         enabled = backPressEnabled,
-        onBack = onBackPress
+        onBack = onBackPress,
     )
     AnimatedContent(
         modifier = modifier,
         targetState = navigator.current,
-        transitionSpec = transitionSpec
+        transitionSpec = transitionSpec,
     ) { animatedCurrentItem ->
         saveableStateHolder.SaveableStateProvider(animatedCurrentItem) {
             content(animatedCurrentItem)

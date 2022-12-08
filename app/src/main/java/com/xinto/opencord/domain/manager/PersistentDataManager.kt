@@ -32,7 +32,7 @@ class PersistentDataManagerImpl(
         set(value) {
             putStringSet(
                 COLLAPSED_CATEGORIES_ID_KEY,
-                value.map { it.toString() }.toSet()
+                value.map { it.toString() }.toSet(),
             )
         }
 

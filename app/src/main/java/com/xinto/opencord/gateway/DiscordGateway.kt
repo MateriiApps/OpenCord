@@ -52,7 +52,6 @@ class DiscordGatewayImpl(
     private val propertyProvider: PropertyProvider,
     private val logger: Logger
 ) : DiscordGateway {
-
     override val coroutineContext: CoroutineContext
         get() = SupervisorJob() + Dispatchers.Default
 
@@ -133,7 +132,7 @@ class DiscordGatewayImpl(
                     try {
                         json.decodeFromJsonElement(
                             EventDeserializationStrategy(eventName!!),
-                            data!!
+                            data!!,
                         ).let { decodedEvent ->
                             if (decodedEvent is ReadyEvent) {
                                 sessionId = decodedEvent.data.sessionId
@@ -181,7 +180,7 @@ class DiscordGatewayImpl(
     private suspend fun sendHeartbeat() {
         sendPayload(
             opCode = OpCode.Heartbeat,
-            data = sequenceNumber
+            data = sequenceNumber,
         )
     }
 
@@ -198,9 +197,9 @@ class DiscordGatewayImpl(
                     guildHashes = emptyMap(),
                     highestLastMessageId = 0,
                     readStateVersion = -1,
-                    userGuildSettingsVersion = -1
+                    userGuildSettingsVersion = -1,
                 ),
-            )
+            ),
         )
     }
 
@@ -210,8 +209,8 @@ class DiscordGatewayImpl(
             data = Resume(
                 token = accountManager.currentAccountToken!!,
                 sessionId = sessionId,
-                sequenceNumber = sequenceNumber
-            )
+                sequenceNumber = sequenceNumber,
+            ),
         )
     }
 
@@ -219,8 +218,8 @@ class DiscordGatewayImpl(
         sendSerializedData(
             OutgoingPayload(
                 opCode = opCode,
-                data = data
-            )
+                data = data,
+            ),
         )
     }
 
@@ -234,8 +233,8 @@ class DiscordGatewayImpl(
         sendPayload(
             opCode = OpCode.RequestGuildMembers,
             data = RequestGuildMembers(
-                guildId = ApiSnowflake(guildId)
-            )
+                guildId = ApiSnowflake(guildId),
+            ),
         )
     }
 

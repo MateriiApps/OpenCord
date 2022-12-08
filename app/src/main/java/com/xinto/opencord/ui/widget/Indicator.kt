@@ -19,10 +19,10 @@ fun UnreadIndicator(
             .clip(
                 RoundedCornerShape(
                     topEnd = 12.dp,
-                    bottomEnd = 12.dp
-                )
+                    bottomEnd = 12.dp,
+                ),
             )
             .background(LocalContentColor.current)
-            .width(4.dp)
+            .width(4.dp),
     )
 }

@@ -10,16 +10,17 @@ import com.xinto.simpleast.Node
 class ChannelMentionNode<RC>(
     val channel: String?
 ) : Node<RC>() {
-
+    //@formatter:off
     context(AnnotatedString.Builder)
-    override fun render(renderContext: RC) {
-        withStyle(SpanStyle(
-            color = Blurple,
-            background = Blurple.copy(alpha = 0.2f),
-            fontWeight = FontWeight.SemiBold
-        )) {
+    override fun render(renderContext: RC) { //@formatter:on
+        withStyle(
+            SpanStyle(
+                color = Blurple,
+                background = Blurple.copy(alpha = 0.2f),
+                fontWeight = FontWeight.SemiBold,
+            ),
+        ) {
             append("#$channel")
         }
     }
-
 }

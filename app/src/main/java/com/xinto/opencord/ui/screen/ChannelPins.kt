@@ -43,20 +43,20 @@ fun ChannelPinsScreen(
                     IconButton(onClick = onBackClick) {
                         Icon(
                             painter = painterResource(R.drawable.ic_arrow_back),
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
                 },
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
             )
-        }
+        },
     ) { paddingValues ->
         when (viewModel.state) {
             is ChannelPinsViewModel.State.Loading -> {
                 ChannelPinsLoading(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(paddingValues)
+                        .padding(paddingValues),
                 )
             }
             is ChannelPinsViewModel.State.Loaded -> {
@@ -66,7 +66,7 @@ fun ChannelPinsScreen(
                         .padding(paddingValues),
                     pins = viewModel.pins.values.sortedByDescending {
                         it.timestamp
-                    }
+                    },
                 )
             }
             is ChannelPinsViewModel.State.Error -> {
@@ -86,7 +86,7 @@ private fun ChannelPinsLoading(
 ) {
     Box(
         modifier = modifier,
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         CircularProgressIndicator()
     }
@@ -100,7 +100,7 @@ private fun ChannelPinsLoaded(
     LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(8.dp)
+        contentPadding = PaddingValues(8.dp),
     ) {
         items(pins) { message ->
             when (message) {
@@ -108,7 +108,7 @@ private fun ChannelPinsLoaded(
                     Surface(
                         modifier = Modifier.fillParentMaxWidth(),
                         shape = MaterialTheme.shapes.medium,
-                        tonalElevation = 1.dp
+                        tonalElevation = 1.dp,
                     ) {
                         WidgetChatMessage(
                             modifier = Modifier.fillMaxWidth(),
@@ -126,10 +126,10 @@ private fun ChannelPinsLoaded(
                                             WidgetMessageReplyContent(
                                                 text = render(
                                                     nodes = referencedMessage.contentNodes,
-                                                    renderContext = null
-                                                ).toAnnotatedString()
+                                                    renderContext = null,
+                                                ).toAnnotatedString(),
                                             )
-                                        }
+                                        },
                                     )
                                 } else {
                                     ProvideTextStyle(MaterialTheme.typography.bodySmall) {
@@ -153,8 +153,8 @@ private fun ChannelPinsLoaded(
                                     text = render(
                                         builder = AnnotatedString.Builder(),
                                         nodes = nodes,
-                                        renderContext = null
-                                    ).toAnnotatedString()
+                                        renderContext = null,
+                                    ).toAnnotatedString(),
                                 )
                             },
                             embeds = message.embeds.ifNotEmptyComposable { embeds ->
@@ -170,10 +170,10 @@ private fun ChannelPinsLoaded(
                                             for (field in it) {
                                                 WidgetEmbedField(
                                                     name = field.name,
-                                                    value = field.value
+                                                    value = field.value,
                                                 )
                                             }
-                                        }
+                                        },
                                     )
                                 }
                             },
@@ -186,7 +186,7 @@ private fun ChannelPinsLoaded(
                                                     .heightIn(max = 250.dp),
                                                 url = attachment.proxyUrl,
                                                 width = attachment.width,
-                                                height = attachment.height
+                                                height = attachment.height,
                                             )
                                         }
                                         is DomainAttachment.Video -> {
@@ -195,7 +195,7 @@ private fun ChannelPinsLoaded(
                                         else -> {}
                                     }
                                 }
-                            }
+                            },
                         )
                     }
                 }
@@ -212,20 +212,20 @@ private fun ChannelPinsError(
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
+        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
     ) {
         CompositionLocalProvider(
             LocalContentColor provides MaterialTheme.colorScheme.error,
-            LocalTextStyle provides MaterialTheme.typography.titleMedium
+            LocalTextStyle provides MaterialTheme.typography.titleMedium,
         ) {
             Icon(
                 modifier = Modifier.size(56.dp),
                 painter = painterResource(R.drawable.ic_error),
-                contentDescription = null
+                contentDescription = null,
             )
             Text(
                 text = stringResource(R.string.pins_loading_error),
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
         }
     }

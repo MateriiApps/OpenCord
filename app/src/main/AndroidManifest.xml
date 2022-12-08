@@ -13,8 +13,8 @@
         android:supportsRtl="true">
         <activity
             android:name=".ui.SplashScreenActivity"
-            android:theme="@style/Theme.OpenCord.Splash"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.OpenCord.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,8 +29,6 @@
         <activity
             android:name=".ui.MainActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:windowSoftInputMode="adjustResize"/>
-
+            android:windowSoftInputMode="adjustResize" />
     </application>
-
 </manifest>

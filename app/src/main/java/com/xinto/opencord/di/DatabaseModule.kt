@@ -21,7 +21,7 @@ val databaseModule = module {
             val blacklist = arrayOf(
                 "BEGIN DEFERRED TRANSACTION",
                 "TRANSACTION SUCCESSFUL",
-                "END TRANSACTION"
+                "END TRANSACTION",
             )
 
             db.setQueryCallback(
@@ -34,7 +34,7 @@ val databaseModule = module {
                         }
                     }
                 },
-                Executors.newSingleThreadExecutor()
+                Executors.newSingleThreadExecutor(),
             )
         }
 

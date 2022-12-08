@@ -14,7 +14,7 @@ fun getSortedChannels(channels: Collection<DomainChannel>): Map<DomainChannel.Ca
     val sortedChannels = mutableMapOf<DomainChannel.Category?, List<DomainChannel>>(
         null to nonCategories.filter {
             it.parentId == null
-        }
+        },
     )
 
     categories.forEach { category ->

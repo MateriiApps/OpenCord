@@ -9,7 +9,8 @@ import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Send
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -29,7 +30,7 @@ fun WidgetChatInput(
             .fillMaxWidth()
             .heightIn(min = 48.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(4.dp)
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         OCBasicTextField(
             modifier = Modifier.weight(1f),
@@ -46,7 +47,7 @@ fun WidgetChatInput(
                             innerTextField()
                             CompositionLocalProvider(
                                 LocalContentAlpha provides ContentAlpha.medium,
-                                LocalTextStyle provides MaterialTheme.typography.bodyMedium
+                                LocalTextStyle provides MaterialTheme.typography.bodyMedium,
                             ) {
                                 if (value.isEmpty()) {
                                     hint()
@@ -55,7 +56,7 @@ fun WidgetChatInput(
                         }
                     }
                 }
-            }
+            },
         )
         AnimatedVisibility(
             visible = value.isNotEmpty(),
@@ -64,11 +65,11 @@ fun WidgetChatInput(
         ) {
             FilledIconButton(
                 onClick = onSendClick,
-                enabled = sendEnabled
+                enabled = sendEnabled,
             ) {
                 Icon(
                     imageVector = Icons.Rounded.Send,
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
         }

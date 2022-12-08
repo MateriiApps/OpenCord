@@ -52,13 +52,13 @@ fun OCAsyncImage(
                     .placeholder(
                         visible = true,
                         color = MaterialTheme.colorScheme.surfaceColorAtElevation(
-                            elevation = localElevation + 2.dp
+                            elevation = localElevation + 2.dp,
                         ),
                         highlight = PlaceholderHighlight.shimmer(
                             highlightColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
-                                elevation = localElevation + 3.dp
-                            )
-                        )
+                                elevation = localElevation + 3.dp,
+                            ),
+                        ),
                     )
                     .fillMaxSize(),
             )
@@ -70,6 +70,6 @@ fun OCAsyncImage(
         contentScale = contentScale,
         alpha = alpha,
         colorFilter = colorFilter,
-        filterQuality = filterQuality
+        filterQuality = filterQuality,
     )
 }

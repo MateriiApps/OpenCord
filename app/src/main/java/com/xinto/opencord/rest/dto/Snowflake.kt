@@ -6,5 +6,6 @@ import kotlinx.serialization.Serializable
 @JvmInline
 value class ApiSnowflake(val value: Long) {
     constructor(value: String) : this(value.toLong())
+
     override fun toString(): String = value.toString()
 }

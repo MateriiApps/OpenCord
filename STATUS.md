@@ -1,5 +1,7 @@
 # Status of OpenCord
+
 ## API
+
 - [ ] Chat
   - [ ] Messages
     - [x] Content
@@ -85,10 +87,10 @@
   - [ ] Name
     - [ ] User
     - [ ] Guild
-    - [ ] Tag 
+    - [ ] Tag
 - [ ] Direct Messages
 - [ ] Voice Activity
-  - [ ] Communication 
+  - [ ] Communication
   - [ ] Mute
   - [ ] Deafen
   - [ ] Screenshare
@@ -111,9 +113,10 @@
   - [ ] Tag
   - [ ] Status
     - [ ] Text
-    - [x] Indicator 
+    - [x] Indicator
 
 ## App
+
 - [ ] Multiplatform
   - [x] Android
   - [ ] Windows

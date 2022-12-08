@@ -5,7 +5,6 @@ import com.xinto.opencord.util.LoggerImpl
 import org.koin.dsl.module
 
 val loggerModule = module {
-
     fun provideLogger(): Logger {
         return LoggerImpl()
     }

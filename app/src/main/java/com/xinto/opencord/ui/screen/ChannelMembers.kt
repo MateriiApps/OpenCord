@@ -20,14 +20,14 @@ fun ChannelMembersScreen(
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = 12.dp)
+            .padding(horizontal = 12.dp),
     ) {
         items(viewModel.members) { member ->
             WidgetMemberListItem(
                 modifier = Modifier
                     .padding(12.dp)
                     .clickable {},
-                guildMember = member
+                guildMember = member,
             )
         }
     }

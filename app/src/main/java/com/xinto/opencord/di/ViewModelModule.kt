@@ -16,7 +16,7 @@ val viewModelModule = module {
         gateway: DiscordGateway
     ): MainViewModel {
         return MainViewModel(
-            gateway = gateway
+            gateway = gateway,
         )
     }
 
@@ -28,7 +28,7 @@ val viewModelModule = module {
         return LoginViewModel(
             api = api,
             activityManager = activityManager,
-            accountManager = accountManager
+            accountManager = accountManager,
         )
     }
 
@@ -42,7 +42,7 @@ val viewModelModule = module {
             messageStore = messageStore,
             channelStore = channelStore,
             api = api,
-            persistentDataManager = persistentDataManager
+            persistentDataManager = persistentDataManager,
         )
     }
 
@@ -52,7 +52,7 @@ val viewModelModule = module {
     ): GuildsViewModel {
         return GuildsViewModel(
             guildStore = guildStore,
-            persistentDataManager = persistentDataManager
+            persistentDataManager = persistentDataManager,
         )
     }
 

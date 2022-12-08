@@ -1,7 +1,6 @@
 package com.xinto.opencord.di
 
 import android.content.Context
-import androidx.fragment.app.FragmentActivity
 import com.hcaptcha.sdk.HCaptcha
 import com.hcaptcha.sdk.HCaptchaConfig
 import com.xinto.opencord.BuildConfig

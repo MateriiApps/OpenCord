@@ -1,9 +1,10 @@
 package com.xinto.opencord.rest.service
 
-import com.github.materiiapps.partial.getOrNull
 import com.xinto.opencord.BuildConfig
 import com.xinto.opencord.rest.body.MessageBody
-import com.xinto.opencord.rest.dto.*
+import com.xinto.opencord.rest.dto.ApiMessage
+import com.xinto.opencord.rest.dto.ApiUserSettings
+import com.xinto.opencord.rest.dto.ApiUserSettingsPartial
 import com.xinto.opencord.util.queryParameters
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -22,9 +23,7 @@ interface DiscordApiService {
     ): List<ApiMessage>
 
     suspend fun postChannelMessage(channelId: Long, body: MessageBody)
-
     suspend fun updateUserSettings(settings: ApiUserSettingsPartial): ApiUserSettings
-
     suspend fun startTyping(channelId: Long)
 }
 

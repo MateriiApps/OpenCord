@@ -1,7 +1,6 @@
 package com.xinto.opencord.domain.model
 
 sealed interface DomainAttachment {
-
     val id: Long
     val filename: String
     val size: Int
@@ -36,4 +35,3 @@ sealed interface DomainAttachment {
         override val proxyUrl: String,
     ) : DomainAttachment
 }
-

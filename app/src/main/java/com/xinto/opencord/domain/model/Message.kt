@@ -34,7 +34,7 @@ data class DomainMessageRegular(
     val mentionEveryone: Boolean,
 //    val mentionedRoles: List<DomainRole>,
     val mentions: List<DomainUser>,
-): DomainMessage(), KoinComponent {
+) : DomainMessage(), KoinComponent {
     private val parser: SimpleAstParser = get()
 
     val isEdited = editedTimestamp != null
@@ -48,7 +48,7 @@ data class DomainMessageMemberJoin(
     override val pinned: Boolean,
     override val content: String,
     override val author: DomainUser
-): DomainMessage()
+) : DomainMessage()
 
 data class DomainMessageUnknown(
     override val id: Long,

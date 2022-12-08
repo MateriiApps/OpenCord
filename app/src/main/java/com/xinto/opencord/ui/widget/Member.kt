@@ -1,6 +1,5 @@
 package com.xinto.opencord.ui.widget
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
@@ -19,15 +18,15 @@ fun WidgetMemberListItem(
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         OCAsyncImage(
             modifier = Modifier.size(56.dp),
-            url = guildMember.avatarUrl
+            url = guildMember.avatarUrl,
         )
         Text(
             text = guildMember.nick ?: guildMember.user?.username ?: "",
-            style = MaterialTheme.typography.bodyMedium
+            style = MaterialTheme.typography.bodyMedium,
         )
     }
 }

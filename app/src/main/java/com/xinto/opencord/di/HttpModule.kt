@@ -124,8 +124,9 @@ val httpModule = module {
         propertyProvider: PropertyProvider
     ): HttpClient {
         return HttpClient(OkHttp) {
-            val superProperties =
-                json.encodeToString(propertyProvider.xSuperProperties).encodeBase64()
+            val superProperties = json
+                .encodeToString(propertyProvider.xSuperProperties)
+                .encodeBase64()
 
             defaultRequest {
                 header(HttpHeaders.ContentType, ContentType.Application.Json.toString())

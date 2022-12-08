@@ -1,7 +1,9 @@
 package com.xinto.opencord.ui.navigation
 
 import android.os.Parcelable
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 
 @Composable
 inline fun <reified T : Parcelable> rememberOCNavigatorBackstack(
@@ -13,17 +15,13 @@ inline fun <reified T : Parcelable> rememberOCNavigatorBackstack(
 }
 
 interface OCNavigator<T : Parcelable> {
-
     val current: T
 
     fun navigate(screen: T)
-
     fun back(): Boolean
-
 }
 
 class OCNavigatorBackstackImpl<T : Parcelable>(initial: T) : OCNavigator<T> {
-
     private val _current = mutableStateListOf(initial)
 
     override val current: T

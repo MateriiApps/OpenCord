@@ -8,7 +8,9 @@ import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -46,7 +48,7 @@ fun LoginScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
                 .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(24.dp)
+            verticalArrangement = Arrangement.spacedBy(24.dp),
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -55,18 +57,18 @@ fun LoginScreen(
             ) {
                 Text(
                     text = stringResource(R.string.login_login_title),
-                    style = MaterialTheme.typography.displaySmall
+                    style = MaterialTheme.typography.displaySmall,
                 )
                 CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
                     Text(
                         text = stringResource(R.string.login_login_subtitle),
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
                     )
                 }
             }
             Column(
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 OutlinedTextField(
                     modifier = Modifier.fillMaxWidth(),
@@ -77,8 +79,8 @@ fun LoginScreen(
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
                         capitalization = KeyboardCapitalization.None,
-                        autoCorrect = false
-                    )
+                        autoCorrect = false,
+                    ),
                 )
                 OutlinedTextField(
                     modifier = Modifier.fillMaxWidth(),
@@ -89,8 +91,8 @@ fun LoginScreen(
                     singleLine = true,
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Password
-                    )
+                        keyboardType = KeyboardType.Password,
+                    ),
                 )
             }
             Spacer(Modifier.weight(1f))
@@ -113,9 +115,9 @@ fun LoginScreen(
                 Toast.makeText(
                     context,
                     "Captcha failed for: ${error.message}, code $code. Try again",
-                    Toast.LENGTH_LONG
+                    Toast.LENGTH_LONG,
                 ).show()
-            }
+            },
         )
     }
 
@@ -132,8 +134,8 @@ fun LoginScreen(
                     isError = viewModel.mfaError,
                     keyboardOptions = KeyboardOptions(
                         capitalization = KeyboardCapitalization.None,
-                        autoCorrect = false
-                    )
+                        autoCorrect = false,
+                    ),
                 )
             },
             onDismissRequest = viewModel::dismissMfa,
@@ -146,7 +148,7 @@ fun LoginScreen(
                 TextButton(onClick = viewModel::dismissMfa) {
                     Text(stringResource(R.string.login_mfa_cancel))
                 }
-            }
+            },
         )
     }
 }
@@ -162,18 +164,18 @@ private fun LoginAppBar(
             title = { Text(stringResource(R.string.login_action_login)) },
             navigationIcon = {
                 IconButton(
-                    onClick = onBackClick
+                    onClick = onBackClick,
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.ArrowBack,
-                        contentDescription = stringResource(R.string.navigation_back)
+                        contentDescription = stringResource(R.string.navigation_back),
                     )
                 }
             },
         )
         if (isLoading) {
             LinearProgressIndicator(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
         }
     }

@@ -13,7 +13,7 @@ val serviceModule = module {
         client: HttpClient
     ): DiscordAuthService {
         return DiscordAuthServiceImpl(
-            client = client
+            client = client,
         )
     }
 

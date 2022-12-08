@@ -1,7 +1,6 @@
 package com.xinto.simpleast
 
 import java.util.*
-import kotlin.collections.ArrayList
 
 public inline fun <RC, T : Node<RC>, S> createParser(
     rules: Parser<RC, T, S>.RuleScope.() -> Unit,
@@ -12,7 +11,6 @@ public inline fun <RC, T : Node<RC>, S> createParser(
 }
 
 public class Parser<RC, T : Node<RC>, S> {
-
     private val rules = ArrayList<Rule<RC, out T, S>>()
 
     public fun parse(
@@ -31,8 +29,8 @@ public class Parser<RC, T : Node<RC>, S> {
                     node = topLevelRootNode,
                     state = initialState,
                     startIndex = 0,
-                    endIndex = source.length
-                )
+                    endIndex = source.length,
+                ),
             )
         }
 
@@ -65,8 +63,8 @@ public class Parser<RC, T : Node<RC>, S> {
                         node = parent,
                         state = builder.state,
                         startIndex = matcherSourceEnd,
-                        endIndex = builder.endIndex
-                    )
+                        endIndex = builder.endIndex,
+                    ),
                 )
             }
 
@@ -81,18 +79,17 @@ public class Parser<RC, T : Node<RC>, S> {
                 throw ParseException(
                     message = "matcher found no matches",
                     source = source,
-                    cause = throwable
+                    cause = throwable,
                 )
             }
         }
 
         @Suppress("UNCHECKED_CAST")
-        val children =  topLevelRootNode.nodeChildren?.toMutableList() as? MutableList<T>
+        val children = topLevelRootNode.nodeChildren?.toMutableList() as? MutableList<T>
         return children ?: ArrayList()
     }
 
     public inner class RuleScope {
-
         public fun rule(newRule: Rule<RC, out T, S>) {
             rules.add(newRule)
         }

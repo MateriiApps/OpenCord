@@ -9,7 +9,6 @@ import com.xinto.opencord.db.entity.message.EntityMessage
 import com.xinto.opencord.db.entity.user.EntityUser
 import com.xinto.opencord.domain.model.*
 import com.xinto.opencord.rest.dto.ApiMessageType
-import com.xinto.opencord.rest.dto.ApiPermissions
 import com.xinto.opencord.rest.dto.fromValue
 import com.xinto.opencord.rest.service.DiscordCdnServiceImpl
 import kotlinx.datetime.Instant
@@ -70,7 +69,7 @@ fun EntityAttachment.toDomain(): DomainAttachment {
                 url = url,
                 proxyUrl = proxyUrl,
                 width = width ?: 100,
-                height = height ?: 100
+                height = height ?: 100,
             )
             else -> DomainAttachment.Picture(
                 id = id,
@@ -79,7 +78,7 @@ fun EntityAttachment.toDomain(): DomainAttachment {
                 url = url,
                 proxyUrl = proxyUrl,
                 width = width ?: 100,
-                height = height ?: 100
+                height = height ?: 100,
             )
         }
     } else {
@@ -100,7 +99,7 @@ fun EntityEmbed.toDomain(): DomainEmbed {
         url = url,
         color = color?.let { Color(it) },
         author = authorName?.let { DomainEmbedAuthor(it) },
-        fields = fields?.map { it.toDomain() }
+        fields = fields?.map { it.toDomain() },
     )
 }
 
@@ -142,7 +141,7 @@ fun EntityChannel.toDomain(): DomainChannel {
             name = name,
             position = position,
             parentId = parentId,
-            nsfw = nsfw
+            nsfw = nsfw,
         )
         else -> DomainChannel.TextChannel(
             id = id,
@@ -150,24 +149,21 @@ fun EntityChannel.toDomain(): DomainChannel {
             name = name,
             position = position,
             parentId = parentId,
-            nsfw = nsfw
+            nsfw = nsfw,
         )
     }
 }
 
 fun EntityGuild.toDomain(): DomainGuild {
-    val iconUrl = icon?.let { icon ->
-        DiscordCdnServiceImpl.getGuildIconUrl(id.toString(), icon)
-    }
-    val bannerUrl = banner?.let { banner ->
-        DiscordCdnServiceImpl.getGuildBannerUrl(id.toString(), banner)
-    }
-
     return DomainGuild(
         id = id,
         name = name,
-        iconUrl = iconUrl,
-        bannerUrl = bannerUrl,
+        iconUrl = icon?.let { icon ->
+            DiscordCdnServiceImpl.getGuildIconUrl(id.toString(), icon)
+        },
+        bannerUrl = banner?.let { banner ->
+            DiscordCdnServiceImpl.getGuildBannerUrl(id.toString(), banner)
+        },
         premiumTier = premiumTier,
         premiumSubscriptionCount = premiumSubscriptionCount ?: 0,
     )

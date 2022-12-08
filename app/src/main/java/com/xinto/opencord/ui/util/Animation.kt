@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.LocalDensity
 fun animateCornerBasedShapeAsState(targetValue: CornerBasedShape): State<CornerBasedShape> {
     val size = Size.Unspecified
     val density = LocalDensity.current
+
     return animateValueAsState(
         targetValue = targetValue,
         typeConverter = TwoWayConverter(
@@ -33,7 +34,7 @@ fun animateCornerBasedShapeAsState(targetValue: CornerBasedShape): State<CornerB
                             topStart = it.v1,
                             topEnd = it.v2,
                             bottomStart = it.v3,
-                            bottomEnd = it.v4
+                            bottomEnd = it.v4,
                         )
                     }
                     is CutCornerShape -> {
@@ -41,12 +42,12 @@ fun animateCornerBasedShapeAsState(targetValue: CornerBasedShape): State<CornerB
                             topStart = it.v1,
                             topEnd = it.v2,
                             bottomStart = it.v3,
-                            bottomEnd = it.v4
+                            bottomEnd = it.v4,
                         )
                     }
                     else -> EmptyCornerBasedShape
                 }
-            }
-        )
+            },
+        ),
     )
 }

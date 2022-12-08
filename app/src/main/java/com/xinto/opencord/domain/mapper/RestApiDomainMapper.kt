@@ -17,7 +17,7 @@ fun ApiAttachment.toDomain(): DomainAttachment {
                 url = url,
                 proxyUrl = proxyUrl,
                 width = width ?: 100,
-                height = height ?: 100
+                height = height ?: 100,
             )
             else -> DomainAttachment.Picture(
                 id = id.value,
@@ -26,7 +26,7 @@ fun ApiAttachment.toDomain(): DomainAttachment {
                 url = url,
                 proxyUrl = proxyUrl,
                 width = width ?: 100,
-                height = height ?: 100
+                height = height ?: 100,
             )
         }
     } else {
@@ -61,7 +61,7 @@ fun ApiChannel.toDomain(): DomainChannel {
             name = name,
             position = position,
             parentId = parentId?.value,
-            nsfw = nsfw
+            nsfw = nsfw,
         )
         else -> DomainChannel.TextChannel(
             id = id.value,
@@ -69,23 +69,21 @@ fun ApiChannel.toDomain(): DomainChannel {
             name = name,
             position = position,
             parentId = parentId?.value,
-            nsfw = nsfw
+            nsfw = nsfw,
         )
     }
 }
 
 fun ApiGuild.toDomain(): DomainGuild {
-    val iconUrl = icon?.let { icon ->
-        DiscordCdnServiceImpl.getGuildIconUrl(id.toString(), icon)
-    }
-    val bannerUrl = banner?.let { banner ->
-        DiscordCdnServiceImpl.getGuildBannerUrl(id.toString(), banner)
-    }
     return DomainGuild(
         id = id.value,
         name = name,
-        iconUrl = iconUrl,
-        bannerUrl = bannerUrl,
+        iconUrl = icon?.let { icon ->
+            DiscordCdnServiceImpl.getGuildIconUrl(id.toString(), icon)
+        },
+        bannerUrl = banner?.let { banner ->
+            DiscordCdnServiceImpl.getGuildBannerUrl(id.toString(), banner)
+        },
         premiumTier = premiumTier,
         premiumSubscriptionCount = premiumSubscriptionCount ?: 0,
     )
@@ -93,15 +91,14 @@ fun ApiGuild.toDomain(): DomainGuild {
 
 fun ApiGuildMember.toDomain(): DomainGuildMember {
     val avatarUrl = user?.let { user ->
-        avatar?.let { avatar ->
-            DiscordCdnServiceImpl.getUserAvatarUrl(user.id.toString(), avatar)
-        } ?: DiscordCdnServiceImpl.getDefaultAvatarUrl(user.discriminator.toInt().rem(5))
+        avatar
+            ?.let { DiscordCdnServiceImpl.getUserAvatarUrl(user.id.toString(), it) }
+            ?: DiscordCdnServiceImpl.getDefaultAvatarUrl(user.discriminator.toInt().rem(5))
     }
-    val domainUser = user?.toDomain()
     return DomainGuildMember(
-        user = domainUser,
+        user = user?.toDomain(),
         nick = nick,
-        avatarUrl = avatarUrl
+        avatarUrl = avatarUrl,
     )
 }
 
@@ -116,24 +113,20 @@ fun ApiGuildMemberChunk.toDomain(): DomainGuildMemberChunk {
 }
 
 fun ApiMessage.toDomain(): DomainMessage {
-    val domainAuthor = author.toDomain()
     return when (type) {
         ApiMessageType.Default, ApiMessageType.Reply -> {
-            val domainAttachments = attachments.map { it.toDomain() }
-            val domainEmbeds = embeds.map { it.toDomain() }
-            val domainReferencedMessage = referencedMessage?.toDomain()
             DomainMessageRegular(
                 id = id.value,
                 channelId = channelId.value,
                 content = content,
-                author = domainAuthor,
+                author = author.toDomain(),
                 timestamp = timestamp,
                 pinned = pinned,
                 editedTimestamp = editedTimestamp,
-                attachments = domainAttachments,
-                embeds = domainEmbeds,
+                attachments = attachments.map { it.toDomain() },
+                embeds = embeds.map { it.toDomain() },
                 isReply = type == ApiMessageType.Reply,
-                referencedMessage = domainReferencedMessage as? DomainMessageRegular,
+                referencedMessage = referencedMessage?.toDomain() as? DomainMessageRegular,
                 mentionEveryone = mentionEveryone,
                 mentions = mentions.map { it.toDomain() },
             )
@@ -145,7 +138,7 @@ fun ApiMessage.toDomain(): DomainMessage {
                 channelId = channelId.value,
                 timestamp = timestamp,
                 pinned = pinned,
-                author = domainAuthor
+                author = author.toDomain(),
             )
         }
         else -> DomainMessageUnknown(
@@ -154,28 +147,25 @@ fun ApiMessage.toDomain(): DomainMessage {
             channelId = channelId.value,
             timestamp = timestamp,
             pinned = pinned,
-            author = domainAuthor
+            author = author.toDomain(),
         )
     }
 }
 
 fun ApiMessagePartial.toDomain(): DomainMessageRegularPartial {
-    val domainAuthor = author.map { it.toDomain() }
-    val domainAttachments = attachments.map { attachments ->
-        attachments.map { it.toDomain() }
-    }
-    val domainEmbeds = embeds.map { embeds ->
-        embeds.map { it.toDomain() }
-    }
     return DomainMessageRegularPartial(
         id = id.map { it.value },
         content = content,
         channelId = channelId.map { it.value },
-        author = domainAuthor,
+        author = author.map { it.toDomain() },
         timestamp = timestamp,
         editedTimestamp = editedTimestamp,
-        attachments = domainAttachments,
-        embeds = domainEmbeds
+        attachments = attachments.map { attachments ->
+            attachments.map { it.toDomain() }
+        },
+        embeds = embeds.map { embeds ->
+            embeds.map { it.toDomain() }
+        },
     )
 }
 
@@ -227,31 +217,28 @@ fun ApiUser.toDomain(): DomainUser {
 }
 
 fun ApiPermissions.toDomain(): List<DomainPermission> {
-    val permissions = value
     return DomainPermission.values().filter {
-        (permissions and it.flags) == it.flags
+        (value and it.flags) == it.flags
     }
 }
 
 fun ApiEmbed.toDomain(): DomainEmbed {
-    val domainFields = fields?.map { it.toDomain() }
-    val domainColor = color?.let {
-        Color(red = it.red, green = it.green, blue = it.blue)
-    }
     val domainAuthor = author?.toDomain()
     return DomainEmbed(
         title = title,
         description = description,
         url = url,
-        color = domainColor,
+        color = color?.let {
+            Color(red = it.red, green = it.green, blue = it.blue)
+        },
         author = domainAuthor,
-        fields = domainFields
+        fields = fields?.map { it.toDomain() },
     )
 }
 
 fun ApiEmbedAuthor.toDomain(): DomainEmbedAuthor {
     return DomainEmbedAuthor(
-        name = name
+        name = name,
     )
 }
 
@@ -263,13 +250,6 @@ fun ApiEmbedField.toDomain(): DomainEmbedField {
 }
 
 fun ApiUserSettingsPartial.toDomain(): DomainUserSettingsPartial {
-    val domainPartialTheme = theme.map { DomainThemeSetting.fromValue(it)!! }
-    val domainPartialStatus = status.map { DomainUserStatus.fromValue(it)!! }
-    val domainPartialFriendSourceFlags = friendSourceFlags.map { it.toDomain() }
-    val domainPartialGuildFolders = guildFolders.map { guildFolders ->
-        guildFolders.map { it.toDomain() }
-    }
-    val domainPartialCustomStatus = customStatus.map { it?.toDomain() }
     return DomainUserSettingsPartial(
         locale = locale,
         showCurrentGame = showCurrentGame,
@@ -283,10 +263,10 @@ fun ApiUserSettingsPartial.toDomain(): DomainUserSettingsPartial {
         messageDisplayCompact = messageDisplayCompact,
         convertEmoticons = convertEmoticons,
         disableGamesTab = disableGamesTab,
-        theme = domainPartialTheme,
+        theme = theme.map { DomainThemeSetting.fromValue(it)!! },
         developerMode = developerMode,
         detectPlatformAccounts = detectPlatformAccounts,
-        status = domainPartialStatus,
+        status = status.map { DomainUserStatus.fromValue(it)!! },
         afkTimeout = afkTimeout,
         timezoneOffset = timezoneOffset,
         streamNotificationsEnabled = streamNotificationsEnabled,
@@ -297,9 +277,11 @@ fun ApiUserSettingsPartial.toDomain(): DomainUserSettingsPartial {
         friendDiscoveryFlags = friendDiscoveryFlags,
         viewNsfwGuilds = viewNsfwGuilds,
         passwordless = passwordless,
-        friendSourceFlags = domainPartialFriendSourceFlags,
-        guildFolders = domainPartialGuildFolders,
-        customStatus = domainPartialCustomStatus,
+        friendSourceFlags = friendSourceFlags.map { it.toDomain() },
+        guildFolders = guildFolders.map { guildFolders ->
+            guildFolders.map { it.toDomain() }
+        },
+        customStatus = customStatus.map { it?.toDomain() },
     )
 }
 
@@ -308,6 +290,7 @@ fun ApiUserSettings.toDomain(): DomainUserSettings {
         ?: throw IllegalArgumentException("Invalid theme $theme")
     val domainStatus = DomainUserStatus.fromValue(status)
         ?: throw IllegalArgumentException("Invalid status $status")
+
     return DomainUserSettings(
         locale = locale,
         showCurrentGame = showCurrentGame,
@@ -387,7 +370,7 @@ fun ApiActivity.toDomain(): DomainActivity {
             url = url!!,
             state = state!!,
             details = details!!,
-            assets = assets!!.toDomain()
+            assets = assets!!.toDomain(),
         )
         ActivityType.Listening -> DomainActivityListening(
             name = name,
@@ -406,7 +389,7 @@ fun ApiActivity.toDomain(): DomainActivity {
             name = name,
             createdAt = createdAt ?: 0,
             status = state,
-            emoji = emoji?.toDomain()
+            emoji = emoji?.toDomain(),
         )
         else -> DomainActivityUnknown(
             name = name,

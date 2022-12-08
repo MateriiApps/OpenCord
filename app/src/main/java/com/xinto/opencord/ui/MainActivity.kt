@@ -12,7 +12,6 @@ import com.xinto.opencord.ui.viewmodel.MainViewModel
 import org.koin.android.ext.android.get
 
 class MainActivity : ComponentActivity() {
-
     private val viewModel: MainViewModel = get()
 
     override fun onCreate(savedInstanceState: Bundle?) {

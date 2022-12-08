@@ -19,7 +19,6 @@ class ChannelsViewModel(
     private val channelStore: ChannelStore,
     private val guildStore: GuildStore,
 ) : BasePersistenceViewModel(persistentDataManager) {
-
     sealed interface State {
         object Unselected : State
         object Loading : State

@@ -7,12 +7,14 @@ import androidx.compose.ui.text.withStyle
 import com.xinto.simpleast.Node
 
 class SpoilerNode<RC> : Node.Parent<RC>() {
-
+    //@formatter:off
     context(AnnotatedString.Builder)
-    override fun render(renderContext: RC) {
-        withStyle(SpanStyle(
-            background = Color.Black
-        )) {
+    override fun render(renderContext: RC) { //@formatter:on
+        withStyle(
+            SpanStyle(
+                background = Color.Black,
+            ),
+        ) {
             super.render(renderContext)
         }
     }

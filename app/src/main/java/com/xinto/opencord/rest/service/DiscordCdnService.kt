@@ -5,7 +5,6 @@ import com.xinto.opencord.BuildConfig
 interface DiscordCdnService
 
 class DiscordCdnServiceImpl : DiscordCdnService {
-
     companion object {
         private const val BASE = BuildConfig.URL_CDN
 
@@ -25,5 +24,4 @@ class DiscordCdnServiceImpl : DiscordCdnService {
             return "$BASE/banners/$guildId/$iconHash"
         }
     }
-
 }

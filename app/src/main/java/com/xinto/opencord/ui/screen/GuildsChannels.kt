@@ -56,7 +56,7 @@ fun GuildsChannelsScreen(
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(6.dp)
+        verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
         Row(
             modifier = Modifier.weight(1f),
@@ -66,14 +66,14 @@ fun GuildsChannelsScreen(
                     .fillMaxHeight()
                     .width(72.dp),
                 onGuildSelect = onGuildSelect,
-                viewModel = guildsViewModel
+                viewModel = guildsViewModel,
             )
             ChannelsList(
                 modifier = Modifier
                     .fillMaxHeight()
                     .weight(1f),
                 onChannelSelect = onChannelSelect,
-                viewModel = channelsViewModel
+                viewModel = channelsViewModel,
             )
         }
         CurrentUserItem(
@@ -81,7 +81,7 @@ fun GuildsChannelsScreen(
                 .fillMaxWidth()
                 .padding(start = 6.dp),
             viewModel = currentUserViewModel,
-            onSettingsClick = onSettingsClick
+            onSettingsClick = onSettingsClick,
         )
     }
 }
@@ -104,7 +104,7 @@ private fun GuildsList(
                     onGuildSelect()
                 },
                 guilds = viewModel.guilds.values.toList(),
-                selectedGuildId = viewModel.selectedGuildId
+                selectedGuildId = viewModel.selectedGuildId,
             )
         }
         GuildsViewModel.State.Error -> {
@@ -132,12 +132,12 @@ private fun ChannelsList(
             when (viewModel.state) {
                 is ChannelsViewModel.State.Unselected -> {
                     ChannelsListUnselected(
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
                     )
                 }
                 is ChannelsViewModel.State.Loading -> {
                     ChannelsListLoading(
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
                     )
                 }
                 is ChannelsViewModel.State.Loaded -> {
@@ -155,7 +155,7 @@ private fun ChannelsList(
                         guildName = viewModel.guildName,
                         channels = sortedChannels,
                         collapsedCategories = viewModel.collapsedCategories,
-                        selectedChannelId = viewModel.selectedChannelId
+                        selectedChannelId = viewModel.selectedChannelId,
                     )
                 }
                 is ChannelsViewModel.State.Error -> {
@@ -178,12 +178,12 @@ private fun CurrentUserItem(
         modifier = modifier,
         onClick = { showStatusSheet = true },
         shape = MaterialTheme.shapes.medium,
-        tonalElevation = 1.dp
+        tonalElevation = 1.dp,
     ) {
         when (viewModel.state) {
             CurrentUserViewModel.State.Loading -> {
                 CurrentUserItemLoading(
-                    onSettingsClick = onSettingsClick
+                    onSettingsClick = onSettingsClick,
                 )
             }
             CurrentUserViewModel.State.Loaded -> {
@@ -194,7 +194,7 @@ private fun CurrentUserItem(
                     discriminator = viewModel.discriminator,
                     status = viewModel.userStatus,
                     isStreaming = viewModel.isStreaming,
-                    customStatus = viewModel.userCustomStatus
+                    customStatus = viewModel.userCustomStatus,
                 )
             }
             CurrentUserViewModel.State.Error -> {
@@ -232,7 +232,7 @@ private fun CurrentUserItemLoading(
                 modifier = Modifier
                     .shimmer(shimmer)
                     .clip(MaterialTheme.shapes.medium)
-                    .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f))
+                    .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)),
             )
         },
         discriminator = {
@@ -241,18 +241,18 @@ private fun CurrentUserItemLoading(
                 modifier = Modifier
                     .shimmer(shimmer)
                     .clip(MaterialTheme.shapes.medium)
-                    .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f))
+                    .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)),
             )
         },
         buttons = {
             IconButton(onClick = onSettingsClick) {
                 Icon(
                     painter = painterResource(R.drawable.ic_settings),
-                    contentDescription = stringResource(R.string.settings_open)
+                    contentDescription = stringResource(R.string.settings_open),
                 )
             }
         },
-        customStatus = null
+        customStatus = null,
     )
 }
 
@@ -273,15 +273,15 @@ private fun CurrentUserItemLoaded(
                     WidgetStatusIcon(
                         modifier = Modifier.size(10.dp),
                         isStreaming = isStreaming,
-                        userStatus = userStatus
+                        userStatus = userStatus,
                     )
-                }
+                },
             ) {
                 OCAsyncImage(
                     modifier = Modifier
                         .size(40.dp)
                         .clip(CircleShape),
-                    url = avatarUrl
+                    url = avatarUrl,
                 )
             }
         },
@@ -292,7 +292,7 @@ private fun CurrentUserItemLoaded(
             IconButton(onClick = onSettingsClick) {
                 Icon(
                     painter = painterResource(R.drawable.ic_settings),
-                    contentDescription = stringResource(R.string.settings_open)
+                    contentDescription = stringResource(R.string.settings_open),
                 )
             }
         },
@@ -318,7 +318,7 @@ private fun GuildsListLoading(
         WidgetGuildListItem(
             selected = false,
             showIndicator = false,
-            onClick = {}
+            onClick = {},
         ) {
             WidgetGuildContentVector {
                 Icon(
@@ -347,7 +347,7 @@ private fun GuildsListLoading(
                     .shimmer(shimmer)
                     .size(48.dp)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
+                    .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)),
             )
         }
     }
@@ -364,14 +364,14 @@ private fun GuildsListLoaded(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        contentPadding = PaddingValues(vertical = 8.dp)
+        contentPadding = PaddingValues(vertical = 8.dp),
     ) {
         item {
             WidgetGuildListItem(
                 modifier = Modifier.fillParentMaxWidth(),
                 selected = false,
                 showIndicator = false,
-                onClick = {}
+                onClick = {},
             ) {
                 WidgetGuildContentVector {
                     Icon(
@@ -403,11 +403,11 @@ private fun GuildsListLoaded(
                 showIndicator = true,
                 onClick = {
                     onGuildSelect(guild.id)
-                }
+                },
             ) {
                 if (guild.iconUrl != null) {
                     WidgetGuildContentImage(
-                        url = guild.iconUrl
+                        url = guild.iconUrl,
                     )
                 } else {
                     WidgetGuildContentVector {
@@ -425,7 +425,7 @@ private fun ChannelsListUnselected(
 ) {
     Box(
         modifier = modifier,
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         ProvideTextStyle(MaterialTheme.typography.titleMedium) {
             Text(stringResource(R.string.channel_unselected_message))
@@ -445,7 +445,7 @@ private fun ChannelsListLoading(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(14.dp)
+                .padding(14.dp),
         ) {
             val guildName = remember { " ".repeat((20..30).random()) }
             val shimmerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
@@ -454,7 +454,7 @@ private fun ChannelsListLoading(
                     .size(24.dp)
                     .shimmer(shimmer)
                     .clip(CircleShape)
-                    .background(shimmerColor)
+                    .background(shimmerColor),
             )
             Text(
                 modifier = Modifier
@@ -472,7 +472,7 @@ private fun ChannelsListLoading(
                 WidgetCategory(
                     modifier = Modifier.padding(
                         top = 12.dp,
-                        bottom = 4.dp
+                        bottom = 4.dp,
                     ),
                     title = {
                         val title = remember { " ".repeat((10..20).random()) }
@@ -481,7 +481,7 @@ private fun ChannelsListLoading(
                                 .shimmer(shimmer)
                                 .clip(MaterialTheme.shapes.medium)
                                 .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)),
-                            text = title
+                            text = title,
                         )
                     },
                     icon = {
@@ -490,7 +490,7 @@ private fun ChannelsListLoading(
                                 .fillMaxSize()
                                 .shimmer(shimmer)
                                 .clip(CircleShape)
-                                .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f))
+                                .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)),
                         )
                     },
                     onClick = {},
@@ -505,7 +505,7 @@ private fun ChannelsListLoading(
                                 .shimmer(shimmer)
                                 .clip(MaterialTheme.shapes.medium)
                                 .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)),
-                            text = title
+                            text = title,
                         )
                     },
                     icon = {
@@ -514,7 +514,7 @@ private fun ChannelsListLoading(
                                 .fillMaxSize()
                                 .shimmer(shimmer)
                                 .clip(CircleShape)
-                                .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f))
+                                .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)),
                         )
                     },
                     selected = false,
@@ -545,7 +545,7 @@ private fun ChannelsListLoaded(
             Box(
                 modifier = Modifier
                     .fillParentMaxWidth()
-                    .height(IntrinsicSize.Min)
+                    .height(IntrinsicSize.Min),
             ) {
                 if (bannerUrl != null) {
                     OCAsyncImage(
@@ -564,11 +564,11 @@ private fun ChannelsListLoaded(
                                 brush = Brush.verticalGradient(
                                     colors = listOf(
                                         Color.DarkGray,
-                                        Color.Transparent
+                                        Color.Transparent,
                                     ),
                                 ),
-                                alpha = 0.8f
-                            )
+                                alpha = 0.8f,
+                            ),
                     )
                 }
 
@@ -578,7 +578,7 @@ private fun ChannelsListLoaded(
                     modifier = Modifier
                         .fillMaxWidth()
                         .align(Alignment.TopStart)
-                        .padding(14.dp)
+                        .padding(14.dp),
                 ) {
                     val boostIcon = when (boostLevel to (bannerUrl != null)) {
                         1 to false -> R.drawable.ic_guild_badge_premium_tier_1
@@ -605,7 +605,7 @@ private fun ChannelsListLoaded(
                                 color = Color.Black,
                                 offset = Offset(0f, 5f),
                                 blurRadius = 3f,
-                            )
+                            ),
                         ),
                     )
                 }
@@ -622,20 +622,20 @@ private fun ChannelsListLoaded(
                             targetValue = if (collapsed) -90f else 0f,
                             animationSpec = spring(
                                 dampingRatio = Spring.DampingRatioMediumBouncy,
-                                stiffness = Spring.StiffnessLow
-                            )
+                                stiffness = Spring.StiffnessLow,
+                            ),
                         )
                         WidgetCategory(
                             modifier = Modifier.padding(
                                 top = 12.dp,
-                                bottom = 4.dp
+                                bottom = 4.dp,
                             ),
                             title = { Text(category.capsName) },
                             icon = {
                                 Icon(
                                     painter = painterResource(R.drawable.ic_keyboard_arrow_down),
                                     contentDescription = stringResource(R.string.channels_collapse_category),
-                                    modifier = Modifier.rotate(iconRotation)
+                                    modifier = Modifier.rotate(iconRotation),
                                 )
                             },
                             onClick = {
@@ -657,7 +657,7 @@ private fun ChannelsListLoaded(
                                 icon = {
                                     Icon(
                                         painter = painterResource(R.drawable.ic_tag),
-                                        contentDescription = null
+                                        contentDescription = null,
                                     )
                                 },
                                 selected = selectedChannelId == channel.id,
@@ -674,7 +674,7 @@ private fun ChannelsListLoaded(
                                 icon = {
                                     Icon(
                                         painter = painterResource(R.drawable.ic_volume_up),
-                                        contentDescription = null
+                                        contentDescription = null,
                                     )
                                 },
                                 selected = false,

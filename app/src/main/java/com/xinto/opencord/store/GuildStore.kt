@@ -34,7 +34,7 @@ class GuildStoreImpl(
             event.fold(
                 onAdd = { it.id == guildId },
                 onUpdate = { it.id == guildId },
-                onRemove = { it == guildId }
+                onRemove = { it == guildId },
             )
         }
     }

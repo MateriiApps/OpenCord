@@ -17,7 +17,6 @@ interface Event
 class EventDeserializationStrategy(
     private val eventName: EventName
 ) : DeserializationStrategy<Event> {
-
     override val descriptor: SerialDescriptor
         get() = JsonElement.serializer().descriptor
 
@@ -25,72 +24,72 @@ class EventDeserializationStrategy(
         return when (eventName) {
             EventName.Ready -> {
                 ReadyEvent(
-                    data = decoder.decodeSerializableValue(Ready.serializer())
+                    data = decoder.decodeSerializableValue(Ready.serializer()),
                 )
             }
             EventName.UserUpdate -> {
                 UserUpdateEvent(
-                    data = decoder.decodeSerializableValue(ApiUser.serializer())
+                    data = decoder.decodeSerializableValue(ApiUser.serializer()),
                 )
             }
             EventName.GuildMemberChunk -> {
                 GuildMemberChunkEvent(
-                    data = decoder.decodeSerializableValue(ApiGuildMemberChunk.serializer())
+                    data = decoder.decodeSerializableValue(ApiGuildMemberChunk.serializer()),
                 )
             }
             EventName.GuildCreate -> {
                 GuildCreateEvent(
-                    data = decoder.decodeSerializableValue(ApiGuild.serializer())
+                    data = decoder.decodeSerializableValue(ApiGuild.serializer()),
                 )
             }
             EventName.GuildUpdate -> {
                 GuildUpdateEvent(
-                    data = decoder.decodeSerializableValue(ApiGuild.serializer())
+                    data = decoder.decodeSerializableValue(ApiGuild.serializer()),
                 )
             }
             EventName.GuildDelete -> {
                 GuildDeleteEvent(
-                    data = decoder.decodeSerializableValue(GuildDeleteData.serializer())
+                    data = decoder.decodeSerializableValue(GuildDeleteData.serializer()),
                 )
             }
             EventName.ChannelCreate -> {
                 ChannelCreateEvent(
-                    data = decoder.decodeSerializableValue(ApiChannel.serializer())
+                    data = decoder.decodeSerializableValue(ApiChannel.serializer()),
                 )
             }
             EventName.ChannelUpdate -> {
                 ChannelUpdateEvent(
-                    data = decoder.decodeSerializableValue(ApiChannel.serializer())
+                    data = decoder.decodeSerializableValue(ApiChannel.serializer()),
                 )
             }
             EventName.ChannelDelete -> {
                 ChannelDeleteEvent(
-                    data = decoder.decodeSerializableValue(ApiChannel.serializer())
+                    data = decoder.decodeSerializableValue(ApiChannel.serializer()),
                 )
             }
             EventName.MessageCreate -> {
                 MessageCreateEvent(
-                    data = decoder.decodeSerializableValue(ApiMessage.serializer())
+                    data = decoder.decodeSerializableValue(ApiMessage.serializer()),
                 )
             }
             EventName.MessageUpdate -> {
                 MessageUpdateEvent(
-                    data = decoder.decodeSerializableValue(ApiMessagePartial.serializer())
+                    data = decoder.decodeSerializableValue(ApiMessagePartial.serializer()),
                 )
             }
             EventName.MessageDelete -> {
                 MessageDeleteEvent(
-                    data = decoder.decodeSerializableValue(MessageDeleteData.serializer())
+                    data = decoder.decodeSerializableValue(MessageDeleteData.serializer()),
                 )
             }
             EventName.SessionsReplace -> {
                 SessionsReplaceEvent(
-                    data = decoder.decodeSerializableValue(ListSerializer(SessionData.serializer()))
+                    data = decoder.decodeSerializableValue(ListSerializer(SessionData.serializer())),
                 )
             }
             EventName.UserSettingsUpdate -> {
                 UserSettingsUpdateEvent(
-                    data = decoder.decodeSerializableValue(ApiUserSettingsPartial.serializer())
+                    data = decoder.decodeSerializableValue(ApiUserSettingsPartial.serializer()),
                 )
             }
             else -> throw IllegalArgumentException("Unknown event $eventName")

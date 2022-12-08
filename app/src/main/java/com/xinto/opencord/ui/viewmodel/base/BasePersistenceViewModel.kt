@@ -6,7 +6,7 @@ import com.xinto.opencord.domain.manager.PersistentDataManager
 abstract class BasePersistenceViewModel(
     private val persistentDataManager: PersistentDataManager
 ) : ViewModel() {
-    // TODO: migrate this to a DB like RoomDB
+    // TODO: migrate this to a store
 
     protected var persistentGuildId
         get() = persistentDataManager.persistentGuildId

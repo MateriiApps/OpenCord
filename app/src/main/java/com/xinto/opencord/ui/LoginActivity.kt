@@ -13,7 +13,6 @@ import org.koin.android.ext.android.get
 import org.koin.core.parameter.parametersOf
 
 class LoginActivity : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         get<HCaptcha> { parametersOf(this) } //load client at start
@@ -34,5 +33,4 @@ class LoginActivity : AppCompatActivity() {
             }
         }
     }
-
 }

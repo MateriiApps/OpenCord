@@ -2,7 +2,10 @@ package com.xinto.opencord.ast.rule
 
 import com.xinto.opencord.ast.node.*
 import com.xinto.opencord.ast.util.*
-import com.xinto.simpleast.*
+import com.xinto.simpleast.Node
+import com.xinto.simpleast.ParseSpec
+import com.xinto.simpleast.Rule
+import com.xinto.simpleast.createRule
 
 fun <RC, S> createSpoilerRule(): Rule<RC, Node<RC>, S> =
     createRule(PATTERN_SPOILER) { matcher, _, state ->
@@ -10,7 +13,7 @@ fun <RC, S> createSpoilerRule(): Rule<RC, Node<RC>, S> =
             node = SpoilerNode(),
             state = state,
             startIndex = matcher.start(1),
-            endIndex = matcher.end(1)
+            endIndex = matcher.end(1),
         )
     }
 
@@ -28,7 +31,7 @@ fun <RC, S> createUserMentionRule(): Rule<RC, Node<RC>, S> =
             node = UserMentionNode(matcher.group(1)),
             state = state,
             startIndex = matcher.start(1),
-            endIndex = matcher.end(1)
+            endIndex = matcher.end(1),
         )
     }
 
@@ -38,7 +41,7 @@ fun <RC, S> createEveryoneMentionRule(): Rule<RC, Node<RC>, S> =
             node = UserMentionNode(null),
             state = state,
             startIndex = matcher.start(1),
-            endIndex = matcher.end(1)
+            endIndex = matcher.end(1),
         )
     }
 
@@ -46,7 +49,7 @@ fun <RC, S> createChannelMentionRule(): Rule<RC, Node<RC>, S> =
     createRule(PATTERN_CHANNEL_MENTION) { matcher, _, state ->
         ParseSpec.createTerminal(
             node = ChannelMentionNode(matcher.group(1)!!),
-            state = state
+            state = state,
         )
     }
 
@@ -54,6 +57,6 @@ fun <RC, S> createEscapeRule(): Rule<RC, Node<RC>, S> =
     createRule(PATTERN_ESCAPE) { matcher, _, state ->
         ParseSpec.createTerminal(
             node = TextNode(matcher.group(1)!!),
-            state = state
+            state = state,
         )
     }

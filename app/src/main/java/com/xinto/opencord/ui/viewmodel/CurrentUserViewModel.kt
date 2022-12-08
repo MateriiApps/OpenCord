@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.materiiapps.partial.Partial
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.mapper.toApi
 import com.xinto.opencord.domain.model.*
@@ -15,7 +16,6 @@ import com.xinto.opencord.store.CurrentUserStore
 import com.xinto.opencord.store.SessionStore
 import com.xinto.opencord.store.UserSettingsStore
 import com.xinto.opencord.util.collectIn
-import com.github.materiiapps.partial.Partial
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 
@@ -25,7 +25,6 @@ class CurrentUserViewModel(
     private val currentUserStore: CurrentUserStore,
     private val userSettingsStore: UserSettingsStore,
 ) : ViewModel() {
-
     sealed interface State {
         object Loading : State
         object Loaded : State
@@ -65,13 +64,13 @@ class CurrentUserViewModel(
                     afk = null,
                     since = Clock.System.now().toEpochMilliseconds(),
                     activities = sessionStore.getActivities()?.map { it.toApi() } ?: return@launch,
-                )
+                ),
             )
 
             userSettingsStore.updateUserSettings(
                 DomainUserSettingsPartial(
-                    status = Partial.Value(status)
-                )
+                    status = Partial.Value(status),
+                ),
             )
         }
     }
@@ -87,8 +86,8 @@ class CurrentUserViewModel(
 
             userSettingsStore.updateUserSettings(
                 DomainUserSettingsPartial(
-                    customStatus = Partial.Value(status)
-                )
+                    customStatus = Partial.Value(status),
+                ),
             )
 
             val currentMillis = Clock.System.now().toEpochMilliseconds()
@@ -104,7 +103,7 @@ class CurrentUserViewModel(
                             id = status.emojiId,
                             animated = false, // TODO: fix this
                         )
-                    }
+                    },
                 )
             }
 
@@ -114,7 +113,7 @@ class CurrentUserViewModel(
                     since = currentMillis,
                     afk = null,
                     activities = currentActivities.map { it.toApi() },
-                )
+                ),
             )
         }
     }

@@ -25,8 +25,7 @@ interface TelemetryProvider {
 }
 
 //TODO add device generation
-class AnonymousTelemetryProvider: TelemetryProvider {
-
+class AnonymousTelemetryProvider : TelemetryProvider {
     private val device = AnonymousDevice.devices.random()
 
     override val browser = "Discord Android"
@@ -47,7 +46,6 @@ class AnonymousTelemetryProvider: TelemetryProvider {
     override val accessibilityFeatures = 128
 
     override val deviceAdId: UUID = UUID.randomUUID()
-
 }
 
 data class AnonymousDevice(
@@ -60,7 +58,6 @@ data class AnonymousDevice(
     val cpuPerformance: Int,
     val memoryPerformance: Int,
 ) {
-
     companion object {
         val devices = listOf(
             buildAnonymousDevice(

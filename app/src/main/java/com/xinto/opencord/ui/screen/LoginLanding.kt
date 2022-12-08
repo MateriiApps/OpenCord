@@ -18,7 +18,7 @@ fun LoginLandingScreen(
     onRegisterClick: () -> Unit,
 ) {
     Scaffold(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -30,25 +30,25 @@ fun LoginLandingScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(32.dp)
+                verticalArrangement = Arrangement.spacedBy(32.dp),
             ) {
                 Text(
                     text = stringResource(R.string.login_landing_title),
                     style = MaterialTheme.typography.displaySmall,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
                 CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
                     Text(
                         text = stringResource(R.string.login_landing_subtitle),
                         style = MaterialTheme.typography.bodyMedium,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
                     )
                 }
             }
             Spacer(Modifier.weight(1f))
             Column(
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 Button(
                     modifier = Modifier.fillMaxWidth(),

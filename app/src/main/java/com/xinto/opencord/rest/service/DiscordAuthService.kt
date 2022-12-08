@@ -11,17 +11,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 interface DiscordAuthService {
-
     suspend fun login(body: LoginBody): ApiLogin
-
     suspend fun verifyTwoFactor(body: TwoFactorBody): ApiLogin
-
 }
 
 class DiscordAuthServiceImpl(
     private val client: HttpClient
 ) : DiscordAuthService {
-
     override suspend fun login(body: LoginBody): ApiLogin {
         val url = getLoginUrl()
         return withContext(Dispatchers.IO) {
@@ -51,5 +47,4 @@ class DiscordAuthServiceImpl(
             return "$BASE/auth/mfa/totp"
         }
     }
-
 }

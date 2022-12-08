@@ -24,11 +24,11 @@ fun WidgetCurrentUser(
                     start = 12.dp,
                     top = 12.dp,
                     bottom = 12.dp,
-                    end = 4.dp
+                    end = 4.dp,
                 )
                 .height(40.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Box(modifier = Modifier.size(40.dp)) {
                 avatar()
@@ -38,7 +38,7 @@ fun WidgetCurrentUser(
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
                     ProvideTextStyle(MaterialTheme.typography.titleSmall) {
                         username()

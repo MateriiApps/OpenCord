@@ -7,7 +7,6 @@ import com.xinto.simpleast.createParser
 import org.koin.dsl.module
 
 val simpleAstModule = module {
-
     fun provideSimpleAst(): Parser<Any?, Node<Any?>, Any?> {
         return createParser {
             rule(createEscapeRule())
@@ -26,5 +25,4 @@ val simpleAstModule = module {
     }
 
     single { provideSimpleAst() }
-
 }

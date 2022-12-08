@@ -8,7 +8,6 @@ import kotlinx.coroutines.launch
 class MainViewModel(
     private val gateway: DiscordGateway
 ) : ViewModel() {
-
     override fun onCleared() {
         viewModelScope.launch {
             gateway.disconnect()

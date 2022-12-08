@@ -30,7 +30,6 @@ enum class EventName(val eventName: String) {
     PresenceUpdate("PRESENCE_UPDATE");
 
     companion object Serializer : KSerializer<EventName> {
-
         override val descriptor: SerialDescriptor
             get() = PrimitiveSerialDescriptor("Event", PrimitiveKind.STRING)
 

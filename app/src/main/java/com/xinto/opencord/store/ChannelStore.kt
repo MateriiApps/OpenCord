@@ -35,7 +35,7 @@ class ChannelStoreImpl(
             event.fold(
                 onAdd = { it.id == channelId },
                 onUpdate = { it.id == channelId },
-                onRemove = { it == channelId }
+                onRemove = { it == channelId },
             )
         }
     }
@@ -45,7 +45,7 @@ class ChannelStoreImpl(
             event.fold(
                 onAdd = { it.guildId == guildId },
                 onUpdate = { it.guildId == guildId },
-                onRemove = { it == guildId }
+                onRemove = { it == guildId },
             )
         }
     }

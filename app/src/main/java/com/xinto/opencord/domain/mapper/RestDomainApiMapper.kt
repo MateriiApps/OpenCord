@@ -5,13 +5,6 @@ import com.xinto.opencord.domain.model.*
 import com.xinto.opencord.rest.dto.*
 
 fun DomainUserSettingsPartial.toApi(): ApiUserSettingsPartial {
-    val apiPartialTheme = theme.map { it.value }
-    val apiPartialStatus = status.map { it.value }
-    val apiPartialFriendSourceFlags = friendSourceFlags.map { it.toApi() }
-    val apiPartialGuildFolders = guildFolders.map { guildFolders ->
-        guildFolders.map { it.toApi() }
-    }
-    val apiPartialCustomStatus = customStatus.map { it?.toApi() }
     return ApiUserSettingsPartial(
         locale = locale,
         showCurrentGame = showCurrentGame,
@@ -25,10 +18,10 @@ fun DomainUserSettingsPartial.toApi(): ApiUserSettingsPartial {
         messageDisplayCompact = messageDisplayCompact,
         convertEmoticons = convertEmoticons,
         disableGamesTab = disableGamesTab,
-        theme = apiPartialTheme,
+        theme = theme.map { it.value },
         developerMode = developerMode,
         detectPlatformAccounts = detectPlatformAccounts,
-        status = apiPartialStatus,
+        status = status.map { it.value },
         afkTimeout = afkTimeout,
         timezoneOffset = timezoneOffset,
         streamNotificationsEnabled = streamNotificationsEnabled,
@@ -39,9 +32,11 @@ fun DomainUserSettingsPartial.toApi(): ApiUserSettingsPartial {
         friendDiscoveryFlags = friendDiscoveryFlags,
         viewNsfwGuilds = viewNsfwGuilds,
         passwordless = passwordless,
-        friendSourceFlags = apiPartialFriendSourceFlags,
-        guildFolders = apiPartialGuildFolders,
-        customStatus = apiPartialCustomStatus,
+        friendSourceFlags = friendSourceFlags.map { it.toApi() },
+        guildFolders = guildFolders.map { guildFolders ->
+            guildFolders.map { it.toApi() }
+        },
+        customStatus = customStatus.map { it?.toApi() },
     )
 }
 
@@ -93,7 +88,7 @@ fun DomainActivity.toApi(): ApiActivity {
             url = url,
             state = state,
             details = details,
-            assets = assets.toApi()
+            assets = assets.toApi(),
         )
         is DomainActivityListening -> ApiActivity(
             type = type.value,
@@ -114,7 +109,7 @@ fun DomainActivity.toApi(): ApiActivity {
             name = name,
             createdAt = createdAt,
             state = status,
-            emoji = emoji?.toApi()
+            emoji = emoji?.toApi(),
         )
         else -> {
             throw IllegalArgumentException("Cannot convert an unknown activity type to an api model!")

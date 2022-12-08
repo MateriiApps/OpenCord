@@ -5,3 +5,4 @@ import com.xinto.opencord.rest.dto.ApiGuildMemberChunk
 data class GuildMemberChunkEvent(
     val data: ApiGuildMemberChunk
 ) : Event
+

@@ -5,7 +5,6 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -32,6 +31,7 @@ fun WidgetGuildListItem(
 ) {
     val indicatorFraction by animateFloatAsState(if (selected) 0.8f else 0.15f)
     val imageCornerRadius by animateIntAsState(if (selected) 25 else 50)
+
     Box(
         modifier = modifier.height(48.dp),
     ) {
@@ -39,10 +39,10 @@ fun WidgetGuildListItem(
             modifier = Modifier.align(Alignment.CenterStart),
             visible = showIndicator || selected,
             enter = slideInHorizontally(),
-            exit = slideOutHorizontally()
+            exit = slideOutHorizontally(),
         ) {
             UnreadIndicator(
-                modifier = Modifier.fillMaxHeight(indicatorFraction)
+                modifier = Modifier.fillMaxHeight(indicatorFraction),
             )
         }
         Box(
@@ -52,7 +52,7 @@ fun WidgetGuildListItem(
                 .size(48.dp)
                 .clip(RoundedCornerShape(imageCornerRadius))
                 .clickable(onClick = onClick),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             content()
         }
@@ -77,15 +77,15 @@ fun WidgetGuildContentVector(
 ) {
     Surface(
         modifier = modifier,
-        tonalElevation = 1.dp
+        tonalElevation = 1.dp,
     ) {
         Box(
             modifier = Modifier.size(48.dp),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             CompositionLocalProvider(
                 LocalContentColor provides MaterialTheme.colorScheme.primary,
-                LocalTextStyle provides MaterialTheme.typography.headlineSmall
+                LocalTextStyle provides MaterialTheme.typography.headlineSmall,
             ) {
                 content()
             }

@@ -8,9 +8,9 @@ import com.xinto.simpleast.Node
 class StyledNode<RC>(
     val styles: Collection<SpanStyle>,
 ) : Node.Parent<RC>() {
-
+    //@formatter:off
     context(AnnotatedString.Builder)
-    override fun render(renderContext: RC) {
+    override fun render(renderContext: RC) { //@formatter:on
         var style = SpanStyle()
 
         styles.forEach {
@@ -21,5 +21,4 @@ class StyledNode<RC>(
             super.render(renderContext)
         }
     }
-
 }

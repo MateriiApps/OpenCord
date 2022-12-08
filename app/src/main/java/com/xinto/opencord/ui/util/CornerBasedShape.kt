@@ -13,7 +13,6 @@ object EmptyCornerBasedShape : CornerBasedShape(
     bottomStart = CornerSize(0f),
     bottomEnd = CornerSize(0f),
 ) {
-
     override fun copy(
         topStart: CornerSize,
         topEnd: CornerSize,

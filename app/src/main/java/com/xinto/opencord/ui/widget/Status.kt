@@ -27,6 +27,6 @@ fun WidgetStatusIcon(
         modifier = modifier,
         painter = painterResource(statusIcon),
         contentDescription = null,
-        tint = Color.Unspecified
+        tint = Color.Unspecified,
     )
 }

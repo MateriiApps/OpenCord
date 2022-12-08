@@ -77,8 +77,11 @@ fun OpenCordTheme(
 ) {
     val colorScheme = when {
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkMode) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+            if (darkMode) {
+                dynamicDarkColorScheme(LocalContext.current)
+            } else {
+                dynamicLightColorScheme(LocalContext.current)
+            }
         }
         darkMode -> DarkColors
         else -> LightColors
@@ -88,6 +91,6 @@ fun OpenCordTheme(
         colorScheme = colorScheme,
         typography = Typography,
         shapes = Shapes,
-        content = content
+        content = content,
     )
 }

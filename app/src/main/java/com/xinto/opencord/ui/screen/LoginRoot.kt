@@ -1,12 +1,15 @@
 package com.xinto.opencord.ui.screen
 
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.with
 import androidx.compose.material3.LocalAbsoluteTonalElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.unit.dp
-import com.xinto.opencord.ui.navigation.OCNavigation
 import com.xinto.opencord.ui.navigation.LoginScreen
+import com.xinto.opencord.ui.navigation.OCNavigation
 import com.xinto.opencord.ui.navigation.rememberOCNavigatorBackstack
 
 @Composable
@@ -20,19 +23,19 @@ fun LoginRootScreen() {
                     LoginScreen.Landing isTransitioningTo LoginScreen.Login -> {
                         slideIntoContainer(
                             towards = AnimatedContentScope.SlideDirection.Start,
-                            initialOffset = { it }
+                            initialOffset = { it },
                         ) with fadeOut() + slideOutOfContainer(
                             towards = AnimatedContentScope.SlideDirection.Start,
-                            targetOffset = { it / 3 }
+                            targetOffset = { it / 3 },
                         )
                     }
                     LoginScreen.Login isTransitioningTo LoginScreen.Landing -> {
                         fadeIn() + slideIntoContainer(
                             towards = AnimatedContentScope.SlideDirection.End,
-                            initialOffset = { it / 3 }
+                            initialOffset = { it / 3 },
                         ) with slideOutOfContainer(
                             towards = AnimatedContentScope.SlideDirection.End,
-                            targetOffset = { it }
+                            targetOffset = { it },
                         )
                     }
                     else -> fadeIn() with fadeOut()
@@ -40,7 +43,7 @@ fun LoginRootScreen() {
 
             },
             backPressEnabled = true,
-            onBackPress = { navigator.back() }
+            onBackPress = { navigator.back() },
         ) {
             when (it) {
                 is LoginScreen.Landing -> {
@@ -48,7 +51,7 @@ fun LoginRootScreen() {
                         onLoginClick = {
                             navigator.navigate(LoginScreen.Login)
                         },
-                        onRegisterClick = {}
+                        onRegisterClick = {},
                     )
                 }
                 is LoginScreen.Login -> {

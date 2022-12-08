@@ -6,7 +6,6 @@ import java.util.regex.Pattern
 public abstract class Rule<RC, T : Node<RC>, S>(
     private val matcher: Matcher
 ) {
-
     public constructor(pattern: Pattern) : this(pattern.matcher(""))
 
     public open fun match(

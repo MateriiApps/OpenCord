@@ -20,29 +20,31 @@ fun WidgetEmbed(
     fields: (@Composable () -> Unit)? = null,
     footer: (@Composable () -> Unit)? = null,
 ) {
-    val stripeColor = (color ?: LocalContentColor.current).compositeOver(MaterialTheme.colorScheme.surface)
+    val stripeColor = (color ?: LocalContentColor.current)
+        .compositeOver(MaterialTheme.colorScheme.surface)
+
     Surface(
         modifier = modifier,
         shape = MaterialTheme.shapes.medium,
         tonalElevation = 2.dp,
-        shadowElevation = 1.dp
+        shadowElevation = 1.dp,
     ) {
         Row(
             modifier = Modifier
                 .height(IntrinsicSize.Min)
-                .fillMaxWidth()
+                .fillMaxWidth(),
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxHeight()
                     .width(4.dp)
-                    .background(stripeColor)
+                    .background(stripeColor),
             )
             Column(
                 modifier = Modifier
                     .weight(1f)
                     .padding(12.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 if (author != null) {
                     author()
@@ -60,7 +62,7 @@ fun WidgetEmbed(
                 if (fields != null) {
                     Column(
                         modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(6.dp)
+                        verticalArrangement = Arrangement.spacedBy(6.dp),
                     ) {
                         fields()
                     }
@@ -80,7 +82,7 @@ fun WidgetEmbedAuthor(
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(2.dp)
+        horizontalArrangement = Arrangement.spacedBy(2.dp),
     ) {
         ProvideTextStyle(MaterialTheme.typography.labelMedium) {
             Text(name)
@@ -96,7 +98,7 @@ fun WidgetEmbedField(
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+        verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         ProvideTextStyle(MaterialTheme.typography.labelMedium) {
             Text(name)
@@ -115,7 +117,7 @@ fun WidgetEmbedFooter(
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(2.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         ProvideTextStyle(MaterialTheme.typography.labelSmall) {
             Text(text)

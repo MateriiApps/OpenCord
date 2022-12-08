@@ -56,7 +56,7 @@ fun HomeScreen(
                     if (panelState.offsetNotZero)
                         MaterialTheme.shapes.large
                     else
-                        RoundedCornerShape(0.dp)
+                        RoundedCornerShape(0.dp),
                 )
                 ChatScreen(
                     onChannelsButtonClick = {
@@ -76,14 +76,14 @@ fun HomeScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .clip(shape),
-                    viewModel = chatViewModel
+                    viewModel = chatViewModel,
                 )
             },
             panelEnd = {
                 ChannelMembersScreen(
-                    viewModel = membersViewModel
+                    viewModel = membersViewModel,
                 )
-            }
+            },
         )
     }
 }

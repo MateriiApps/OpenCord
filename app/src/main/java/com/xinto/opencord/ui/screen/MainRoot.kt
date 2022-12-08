@@ -21,23 +21,23 @@ fun MainRootScreen() {
             if (initialState == MainScreen.Home) {
                 slideIntoContainer(
                     towards = AnimatedContentScope.SlideDirection.Start,
-                    initialOffset = { it }
+                    initialOffset = { it },
                 ) with fadeOut() + slideOutOfContainer(
                     towards = AnimatedContentScope.SlideDirection.Start,
-                    targetOffset = { it / 3 }
+                    targetOffset = { it / 3 },
                 )
             } else {
                 fadeIn() + slideIntoContainer(
                     towards = AnimatedContentScope.SlideDirection.End,
-                    initialOffset = { it / 3 }
+                    initialOffset = { it / 3 },
                 ) with slideOutOfContainer(
                     towards = AnimatedContentScope.SlideDirection.End,
-                    targetOffset = { it }
+                    targetOffset = { it },
                 )
             }
         },
         backPressEnabled = true,
-        onBackPress = { navigator.back() }
+        onBackPress = { navigator.back() },
     ) {
         when (it) {
             is MainScreen.Home -> {
@@ -48,7 +48,7 @@ fun MainRootScreen() {
                     },
                     onPinsClick = {
                         navigator.navigate(MainScreen.Pins)
-                    }
+                    },
                 )
             }
             is MainScreen.Pins -> {
@@ -56,7 +56,7 @@ fun MainRootScreen() {
                     modifier = Modifier.fillMaxSize(),
                     onBackClick = {
                         navigator.back()
-                    }
+                    },
                 )
             }
             is MainScreen.Settings -> {
@@ -64,7 +64,7 @@ fun MainRootScreen() {
                     modifier = Modifier.fillMaxSize(),
                     onBackClick = {
                         navigator.back()
-                    }
+                    },
                 )
             }
         }

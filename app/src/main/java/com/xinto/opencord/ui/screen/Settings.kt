@@ -24,17 +24,17 @@ fun Settings(
                     IconButton(onClick = onBackClick) {
                         Icon(
                             painter = painterResource(R.drawable.ic_arrow_back),
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
-                }
+                },
             )
         },
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
+                .padding(paddingValues),
         ) {
 
         }

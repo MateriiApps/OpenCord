@@ -14,7 +14,6 @@ abstract class BaseNavigationScreen(val route: String) : Parcelable {
 }
 
 sealed class MainScreen(route: String) : BaseNavigationScreen(route) {
-
     @Parcelize
     object Home : MainScreen("home")
 
@@ -23,15 +22,12 @@ sealed class MainScreen(route: String) : BaseNavigationScreen(route) {
 
     @Parcelize
     object Settings : MainScreen("settings")
-
 }
 
 sealed class LoginScreen(route: String) : BaseNavigationScreen(route) {
-
     @Parcelize
     object Landing : LoginScreen("landing")
 
     @Parcelize
     object Login : LoginScreen("login")
-
 }

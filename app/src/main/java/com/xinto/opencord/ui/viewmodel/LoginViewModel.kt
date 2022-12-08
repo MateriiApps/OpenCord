@@ -19,7 +19,6 @@ class LoginViewModel(
     private val activityManager: ActivityManager,
     private val accountManager: AccountManager
 ) : ViewModel() {
-
     lateinit var mfaTicket: String
         private set
 
@@ -64,8 +63,8 @@ class LoginViewModel(
                     LoginBody(
                         login = username,
                         password = password,
-                        captchaKey = captchaToken
-                    )
+                        captchaKey = captchaToken,
+                    ),
                 ).toDomain()
 
                 when (response) {
@@ -103,8 +102,8 @@ class LoginViewModel(
                 val response = api.verifyTwoFactor(
                     TwoFactorBody(
                         code = code,
-                        ticket = mfaTicket
-                    )
+                        ticket = mfaTicket,
+                    ),
                 ).toDomain()
                 when (response) {
                     is DomainLogin.Login -> {

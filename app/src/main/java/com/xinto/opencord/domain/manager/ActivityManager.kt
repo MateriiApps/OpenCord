@@ -23,7 +23,7 @@ class ActivityManagerImpl(
         context.startActivity(
             Intent(context, T::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            }
+            },
         )
     }
 }

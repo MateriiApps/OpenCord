@@ -11,7 +11,7 @@ interface AttachmentsDao {
     // --------------- Inserts ---------------
     @Insert(
         onConflict = OnConflictStrategy.REPLACE,
-        entity = EntityAttachment::class
+        entity = EntityAttachment::class,
     )
     fun insertAttachments(attachments: List<EntityAttachment>)
 

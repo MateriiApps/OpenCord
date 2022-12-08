@@ -6,7 +6,6 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 
 object ContentAlpha {
-
     val full: Float
         @Composable
         @ReadOnlyComposable
@@ -53,6 +52,6 @@ fun ProvideContentAlpha(value: Float, content: @Composable () -> Unit) {
     val opaqueColor = LocalContentColor.current.copy(alpha = value)
     CompositionLocalProvider(
         LocalContentColor provides opaqueColor,
-        content = content
+        content = content,
     )
 }

@@ -28,7 +28,7 @@ android {
         buildConfigField(
             "String",
             "URL_GATEWAY",
-            "\"wss://gateway.discord.gg/?encoding=json&v=9&compress=zlib-stream\""
+            "\"wss://gateway.discord.gg/?encoding=json&v=9&compress=zlib-stream\"",
         )
     }
 
@@ -38,7 +38,7 @@ android {
             isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
