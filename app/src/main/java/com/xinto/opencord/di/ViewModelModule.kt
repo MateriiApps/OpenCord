@@ -68,14 +68,6 @@ val viewModelModule = module {
         )
     }
 
-    fun provideMembersViewModel(
-        persistentDataManager: PersistentDataManager,
-    ): MembersViewModel {
-        return MembersViewModel(
-            persistentDataManager = persistentDataManager,
-        )
-    }
-
     fun provideCurrentUserViewModel(
         gateway: DiscordGateway,
         sessionStore: SessionStore,
@@ -105,7 +97,6 @@ val viewModelModule = module {
     viewModelOf(::provideChatViewModel)
     viewModelOf(::provideGuildsViewModel)
     viewModelOf(::provideChannelsViewModel)
-    viewModelOf(::provideMembersViewModel)
     viewModelOf(::provideCurrentUserViewModel)
     viewModelOf(::provideChannelPinsViewModel)
 }
