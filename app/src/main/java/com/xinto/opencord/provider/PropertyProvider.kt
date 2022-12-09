@@ -1,4 +1,4 @@
-package com.xinto.opencord.domain.provider
+package com.xinto.opencord.provider
 
 import com.xinto.opencord.gateway.dto.IdentificationProperties
 import com.xinto.opencord.rest.body.XSuperProperties
@@ -11,7 +11,6 @@ interface PropertyProvider {
 class PropertyProviderImpl(
     telemetryProvider: TelemetryProvider
 ) : PropertyProvider {
-
     override val xSuperProperties: XSuperProperties =
         XSuperProperties(
             browser = telemetryProvider.browser,

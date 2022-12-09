@@ -1,7 +1,7 @@
 package com.xinto.opencord.di
 
-import com.xinto.opencord.domain.manager.AccountManager
-import com.xinto.opencord.domain.provider.PropertyProvider
+import com.xinto.opencord.manager.AccountManager
+import com.xinto.opencord.provider.PropertyProvider
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.DiscordGatewayImpl
 import com.xinto.opencord.util.Logger

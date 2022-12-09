@@ -1,4 +1,4 @@
-package com.xinto.opencord.domain.manager
+package com.xinto.opencord.manager
 
 import android.app.Activity
 import android.content.Context
@@ -6,15 +6,12 @@ import android.content.Intent
 import com.xinto.opencord.ui.MainActivity
 
 interface ActivityManager {
-
     fun startMainActivity()
-
 }
 
 class ActivityManagerImpl(
     private val context: Context
 ) : ActivityManager {
-
     override fun startMainActivity() {
         startActivity<MainActivity>()
     }

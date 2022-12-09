@@ -1,7 +1,7 @@
-package com.xinto.opencord.domain.manager
+package com.xinto.opencord.manager
 
 import android.content.SharedPreferences
-import com.xinto.opencord.domain.manager.base.BasePreferenceManager
+import com.xinto.opencord.manager.base.BasePreferenceManager
 
 interface PersistentDataManager {
     var persistentGuildId: Long

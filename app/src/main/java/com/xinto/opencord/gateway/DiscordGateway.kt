@@ -1,8 +1,8 @@
 package com.xinto.opencord.gateway
 
 import com.xinto.opencord.BuildConfig
-import com.xinto.opencord.domain.manager.AccountManager
-import com.xinto.opencord.domain.provider.PropertyProvider
+import com.xinto.opencord.manager.AccountManager
+import com.xinto.opencord.provider.PropertyProvider
 import com.xinto.opencord.gateway.dto.*
 import com.xinto.opencord.gateway.event.Event
 import com.xinto.opencord.gateway.event.EventDeserializationStrategy

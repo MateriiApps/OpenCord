@@ -1,9 +1,9 @@
 package com.xinto.opencord.di
 
 import com.xinto.opencord.BuildConfig
-import com.xinto.opencord.domain.manager.AccountManager
-import com.xinto.opencord.domain.provider.PropertyProvider
-import com.xinto.opencord.domain.provider.TelemetryProvider
+import com.xinto.opencord.manager.AccountManager
+import com.xinto.opencord.provider.PropertyProvider
+import com.xinto.opencord.provider.TelemetryProvider
 import io.ktor.client.*
 import io.ktor.client.engine.*
 import io.ktor.client.engine.okhttp.*
