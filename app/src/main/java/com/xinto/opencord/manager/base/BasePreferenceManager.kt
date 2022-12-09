@@ -1,4 +1,4 @@
-package com.xinto.opencord.domain.manager.base
+package com.xinto.opencord.manager.base
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
@@ -6,7 +6,6 @@ import androidx.core.content.edit
 abstract class BasePreferenceManager(
     private val prefs: SharedPreferences
 ) {
-
     protected fun getString(key: String, defaultValue: String?): String? {
         return prefs.getString(key, defaultValue)
     }
@@ -46,5 +45,4 @@ abstract class BasePreferenceManager(
     protected fun putStringSet(key: String, value: Set<String>) {
         prefs.edit { putStringSet(key, value) }
     }
-
 }

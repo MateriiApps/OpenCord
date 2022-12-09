@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.xinto.opencord.domain.manager.AccountManager
+import com.xinto.opencord.manager.AccountManager
 import org.koin.android.ext.android.inject
 
 @SuppressLint("CustomSplashScreen")

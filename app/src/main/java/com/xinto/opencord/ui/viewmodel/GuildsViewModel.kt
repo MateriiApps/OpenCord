@@ -2,7 +2,7 @@ package com.xinto.opencord.ui.viewmodel
 
 import androidx.compose.runtime.*
 import androidx.lifecycle.viewModelScope
-import com.xinto.opencord.domain.manager.PersistentDataManager
+import com.xinto.opencord.manager.PersistentDataManager
 import com.xinto.opencord.domain.model.DomainGuild
 import com.xinto.opencord.store.GuildStore
 import com.xinto.opencord.store.fold

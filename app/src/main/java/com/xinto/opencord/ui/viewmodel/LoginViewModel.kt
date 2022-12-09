@@ -5,8 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.xinto.opencord.domain.manager.AccountManager
-import com.xinto.opencord.domain.manager.ActivityManager
+import com.xinto.opencord.manager.AccountManager
+import com.xinto.opencord.manager.ActivityManager
 import com.xinto.opencord.domain.mapper.toDomain
 import com.xinto.opencord.domain.model.DomainLogin
 import com.xinto.opencord.rest.body.LoginBody

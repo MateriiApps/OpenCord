@@ -1,4 +1,4 @@
-package com.xinto.opencord.domain.provider
+package com.xinto.opencord.provider
 
 import com.xinto.opencord.BuildConfig
 import java.util.*

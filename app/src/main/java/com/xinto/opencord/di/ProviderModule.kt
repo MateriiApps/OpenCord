@@ -1,9 +1,9 @@
 package com.xinto.opencord.di
 
-import com.xinto.opencord.domain.provider.AnonymousTelemetryProvider
-import com.xinto.opencord.domain.provider.PropertyProvider
-import com.xinto.opencord.domain.provider.PropertyProviderImpl
-import com.xinto.opencord.domain.provider.TelemetryProvider
+import com.xinto.opencord.provider.AnonymousTelemetryProvider
+import com.xinto.opencord.provider.PropertyProvider
+import com.xinto.opencord.provider.PropertyProviderImpl
+import com.xinto.opencord.provider.TelemetryProvider
 import org.koin.dsl.module
 
 val providerModule = module {
