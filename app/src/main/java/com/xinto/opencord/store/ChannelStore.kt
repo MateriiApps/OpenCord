@@ -1,9 +1,9 @@
 package com.xinto.opencord.store
 
 import com.xinto.opencord.db.database.CacheDatabase
-import com.xinto.opencord.domain.mapper.toDomain
-import com.xinto.opencord.domain.mapper.toEntity
-import com.xinto.opencord.domain.model.DomainChannel
+import com.xinto.opencord.db.entity.channel.toEntity
+import com.xinto.opencord.domain.channel.DomainChannel
+import com.xinto.opencord.domain.channel.toDomain
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.event.ChannelCreateEvent
 import com.xinto.opencord.gateway.event.ChannelDeleteEvent

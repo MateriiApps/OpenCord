@@ -1,7 +1,7 @@
 package com.xinto.opencord.store
 
-import com.xinto.opencord.domain.mapper.toDomain
-import com.xinto.opencord.domain.model.DomainUser
+import com.xinto.opencord.domain.user.DomainUser
+import com.xinto.opencord.domain.user.toDomain
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.event.ReadyEvent
 import com.xinto.opencord.gateway.onEvent

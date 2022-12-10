@@ -24,9 +24,11 @@ import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 import com.xinto.bdc.BottomSheetDialog
 import com.xinto.opencord.R
-import com.xinto.opencord.domain.model.DomainAttachment
-import com.xinto.opencord.domain.model.DomainMessage
-import com.xinto.opencord.domain.model.DomainMessageRegular
+import com.xinto.opencord.domain.attachment.DomainAttachment
+import com.xinto.opencord.domain.attachment.DomainPictureAttachment
+import com.xinto.opencord.domain.attachment.DomainVideoAttachment
+import com.xinto.opencord.domain.message.DomainMessage
+import com.xinto.opencord.domain.message.DomainMessageRegular
 import com.xinto.opencord.ui.viewmodel.ChatViewModel
 import com.xinto.opencord.ui.widget.*
 import com.xinto.opencord.util.ifComposable
@@ -329,7 +331,7 @@ private fun ChatScreenLoaded(
                             attachments = message.attachments.ifNotEmptyComposable { attachments ->
                                 for (attachment in attachments) {
                                     when (attachment) {
-                                        is DomainAttachment.Picture -> {
+                                        is DomainPictureAttachment -> {
                                             WidgetAttachmentPicture(
                                                 modifier = Modifier
                                                     .heightIn(max = 400.dp),
@@ -338,7 +340,7 @@ private fun ChatScreenLoaded(
                                                 height = attachment.height,
                                             )
                                         }
-                                        is DomainAttachment.Video -> {
+                                        is DomainVideoAttachment -> {
                                             WidgetAttachmentVideo(
                                                 url = attachment.url,
                                                 modifier = Modifier

@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.xinto.opencord.rest.dto.ApiAttachment
 
 @Entity(
     tableName = "attachments",
@@ -39,3 +40,17 @@ data class EntityAttachment(
     @ColumnInfo(name = "content_type")
     val contentType: String?,
 )
+
+fun ApiAttachment.toEntity(messageId: Long): EntityAttachment {
+    return EntityAttachment(
+        id = id.value,
+        messageId = messageId,
+        fileName = filename,
+        size = size,
+        url = url,
+        proxyUrl = proxyUrl,
+        width = width,
+        height = height,
+        contentType = contentType,
+    )
+}

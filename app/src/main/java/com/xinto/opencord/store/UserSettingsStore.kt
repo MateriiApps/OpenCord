@@ -1,10 +1,10 @@
 package com.xinto.opencord.store
 
 import com.xinto.opencord.domain.mapper.toApi
-import com.xinto.opencord.domain.mapper.toDomain
-import com.xinto.opencord.domain.model.DomainUserSettings
-import com.xinto.opencord.domain.model.DomainUserSettingsPartial
-import com.xinto.opencord.domain.model.merge
+import com.xinto.opencord.domain.usersettings.DomainUserSettings
+import com.xinto.opencord.domain.usersettings.DomainUserSettingsPartial
+import com.xinto.opencord.domain.usersettings.merge
+import com.xinto.opencord.domain.usersettings.toDomain
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.event.ReadyEvent
 import com.xinto.opencord.gateway.event.UserSettingsUpdateEvent

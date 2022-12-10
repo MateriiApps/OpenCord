@@ -1,7 +1,7 @@
 package com.xinto.opencord.store
 
-import com.xinto.opencord.domain.mapper.toDomain
-import com.xinto.opencord.domain.model.DomainActivity
+import com.xinto.opencord.domain.activity.DomainActivity
+import com.xinto.opencord.domain.activity.toDomain
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.dto.SessionData
 import com.xinto.opencord.gateway.event.ReadyEvent

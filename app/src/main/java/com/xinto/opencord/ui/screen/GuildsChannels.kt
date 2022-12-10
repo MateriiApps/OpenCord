@@ -29,10 +29,13 @@ import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 import com.xinto.opencord.R
-import com.xinto.opencord.domain.model.DomainChannel
-import com.xinto.opencord.domain.model.DomainCustomStatus
-import com.xinto.opencord.domain.model.DomainGuild
-import com.xinto.opencord.domain.model.DomainUserStatus
+import com.xinto.opencord.domain.channel.DomainCategoryChannel
+import com.xinto.opencord.domain.channel.DomainChannel
+import com.xinto.opencord.domain.channel.DomainTextChannel
+import com.xinto.opencord.domain.channel.DomainVoiceChannel
+import com.xinto.opencord.domain.usersettings.DomainCustomStatus
+import com.xinto.opencord.domain.guild.DomainGuild
+import com.xinto.opencord.domain.usersettings.DomainUserStatus
 import com.xinto.opencord.ui.component.OCAsyncImage
 import com.xinto.opencord.ui.component.OCBadgeBox
 import com.xinto.opencord.ui.util.ContentAlpha
@@ -534,7 +537,7 @@ private fun ChannelsListLoaded(
     bannerUrl: String?,
     boostLevel: Int,
     guildName: String,
-    channels: Map<DomainChannel.Category?, List<DomainChannel>>,
+    channels: Map<DomainCategoryChannel?, List<DomainChannel>>,
     collapsedCategories: List<Long>,
     modifier: Modifier = Modifier
 ) {
@@ -630,7 +633,7 @@ private fun ChannelsListLoaded(
                                 top = 12.dp,
                                 bottom = 4.dp,
                             ),
-                            title = { Text(category.capsName) },
+                            title = { Text(category.name.uppercase()) },
                             icon = {
                                 Icon(
                                     painter = painterResource(R.drawable.ic_keyboard_arrow_down),
@@ -650,7 +653,7 @@ private fun ChannelsListLoaded(
 //                if (channel.canView) {
                 if (!(channel.id != selectedChannelId && collapsed)) {
                     when (channel) {
-                        is DomainChannel.TextChannel -> {
+                        is DomainTextChannel -> {
                             WidgetChannelListItem(
                                 modifier = Modifier.padding(bottom = 2.dp),
                                 title = { Text(channel.name) },
@@ -667,7 +670,7 @@ private fun ChannelsListLoaded(
                                 },
                             )
                         }
-                        is DomainChannel.VoiceChannel -> {
+                        is DomainVoiceChannel -> {
                             WidgetChannelListItem(
                                 modifier = Modifier.padding(bottom = 2.dp),
                                 title = { Text(channel.name) },
