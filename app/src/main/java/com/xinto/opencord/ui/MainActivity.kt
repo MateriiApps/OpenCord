@@ -17,7 +17,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            OpenCordTheme(darkMode = true) {
+            OpenCordTheme {
                 val systemUiController = rememberSystemUiController()
                 val isLight = false
                 val surface = MaterialTheme.colorScheme.surface
