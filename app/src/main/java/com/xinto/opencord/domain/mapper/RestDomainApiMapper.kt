@@ -6,10 +6,10 @@ import com.xinto.opencord.domain.activity.types.DomainActivityCustom
 import com.xinto.opencord.domain.activity.types.DomainActivityGame
 import com.xinto.opencord.domain.activity.types.DomainActivityListening
 import com.xinto.opencord.domain.activity.types.DomainActivityStreaming
-import com.xinto.opencord.domain.model.DomainUserSettingsPartial
 import com.xinto.opencord.domain.usersettings.DomainCustomStatus
 import com.xinto.opencord.domain.usersettings.DomainFriendSources
 import com.xinto.opencord.domain.usersettings.DomainGuildFolder
+import com.xinto.opencord.domain.usersettings.DomainUserSettingsPartial
 import com.xinto.opencord.rest.dto.*
 
 fun DomainUserSettingsPartial.toApi(): ApiUserSettingsPartial {

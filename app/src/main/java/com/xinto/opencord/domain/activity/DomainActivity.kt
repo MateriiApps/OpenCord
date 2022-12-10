@@ -1,7 +1,6 @@
 package com.xinto.opencord.domain.activity
 
 import com.xinto.opencord.domain.activity.types.*
-import com.xinto.opencord.domain.model.fromValue
 import com.xinto.opencord.rest.dto.ApiActivity
 
 interface DomainActivity {

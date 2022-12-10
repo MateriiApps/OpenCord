@@ -16,6 +16,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.attachment.DomainAttachment
+import com.xinto.opencord.domain.attachment.DomainPictureAttachment
+import com.xinto.opencord.domain.attachment.DomainVideoAttachment
 import com.xinto.opencord.domain.message.DomainMessage
 import com.xinto.opencord.domain.message.DomainMessageRegular
 import com.xinto.opencord.ui.viewmodel.ChannelPinsViewModel
@@ -180,7 +182,7 @@ private fun ChannelPinsLoaded(
                             attachments = message.attachments.ifNotEmptyComposable { attachments ->
                                 for (attachment in attachments) {
                                     when (attachment) {
-                                        is DomainAttachment.Picture -> {
+                                        is DomainPictureAttachment -> {
                                             WidgetAttachmentPicture(
                                                 modifier = Modifier
                                                     .heightIn(max = 250.dp),
@@ -189,7 +191,7 @@ private fun ChannelPinsLoaded(
                                                 height = attachment.height,
                                             )
                                         }
-                                        is DomainAttachment.Video -> {
+                                        is DomainVideoAttachment -> {
                                             WidgetAttachmentVideo(url = attachment.url)
                                         }
                                         else -> {}

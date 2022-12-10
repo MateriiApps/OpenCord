@@ -6,7 +6,6 @@ import com.xinto.opencord.domain.attachment.DomainAttachment
 import com.xinto.opencord.domain.attachment.toDomain
 import com.xinto.opencord.domain.embed.DomainEmbed
 import com.xinto.opencord.domain.embed.toDomain
-import com.xinto.opencord.domain.model.DomainMessageRegularPartial
 import com.xinto.opencord.domain.user.DomainUser
 import com.xinto.opencord.domain.user.toDomain
 import com.xinto.opencord.rest.dto.ApiMessagePartial
