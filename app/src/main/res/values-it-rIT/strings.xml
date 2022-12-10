@@ -2,7 +2,7 @@
 <resources>
     <string name="navigation_back">Indietro</string>
     <string name="login_landing_title">Benvenuto su OpenCord!</string>
-    <string name="login_landing_subtitle">Unisciti alle 0 persone che usano OpenCord come alternativa all\'app Discord.</string>
+    <string name="login_landing_subtitle">Unisciti a più di 0 persone che usano OpenCord come alternativa all\'app stock di discord.</string>
     <string name="login_login_title">Bentornato!</string>
     <string name="login_login_subtitle">Siamo contenti di rivederti!</string>
     <string name="login_action_login">Login</string>
@@ -14,14 +14,14 @@
     <string name="login_mfa_confirm">Conferma</string>
     <string name="login_mfa_cancel">Cancella</string>
     <string name="chat_title">#%1$s</string>
-    <string name="chat_unselected_message">Seleziona un canale.</string>
+    <string name="chat_unselected_message">Per favore seleziona un canale.</string>
     <string name="chat_input_hint">Scrivi su #%1$s</string>
-    <string name="chat_loading_error">C\'è stato un errore caricando le chat.</string>
+    <string name="chat_loading_error">Si è verificato un errore durante il caricamento della chat.</string>
     <string name="chat_bot_label">BOT</string>
     <string name="channel_unselected_message">Seleziona un server.</string>
-    <string name="channels_collapse_category">Chiudi la categoria</string>
+    <string name="channels_collapse_category">Comprimi categoria</string>
     <string name="pins_title">Messaggi Fissati</string>
-    <string name="pins_loading_error">C\'è stato un errore caricando i messaggi fissati.</string>
+    <string name="pins_loading_error">Si è verificato un errore durante il caricamento dei messaggi fissati.</string>
     <string name="settings_title">Impostazioni</string>
     <string name="settings_open">Apri le impostazioni</string>
     <string name="timestamp_tomorrow">Domani alle %1$s</string>
@@ -31,6 +31,6 @@
     <string name="guilds_home">Home</string>
     <string name="guild_boost_level">Livello potenziamenti server</string>
     <string name="current_user_set_status">Imposta uno stato personalizzato</string>
-    <string name="current_user_clear_status">Cancella lo stato</string>
+    <string name="current_user_clear_status">Pulisci stato</string>
     <string name="accounts_open">Apri l\'account switcher</string>
 </resources>
