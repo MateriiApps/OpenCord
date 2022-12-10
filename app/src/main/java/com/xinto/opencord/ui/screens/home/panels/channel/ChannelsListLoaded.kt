@@ -26,7 +26,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
-import com.xinto.opencord.domain.model.DomainChannel
+import com.xinto.opencord.domain.channel.DomainCategoryChannel
+import com.xinto.opencord.domain.channel.DomainChannel
+import com.xinto.opencord.domain.channel.DomainTextChannel
+import com.xinto.opencord.domain.channel.DomainVoiceChannel
 import com.xinto.opencord.ui.components.OCAsyncImage
 import com.xinto.opencord.ui.components.channel.list.ChannelListRegularItem
 import com.xinto.opencord.ui.components.channel.list.ChannelListCategoryItem
@@ -41,7 +44,7 @@ fun ChannelsListLoaded(
     bannerUrl: String?,
     boostLevel: Int,
     guildName: String,
-    channels: Map<DomainChannel.Category?, List<DomainChannel>>,
+    channels: Map<DomainCategoryChannel?, List<DomainChannel>>,
     collapsedCategories: List<Long>,
     modifier: Modifier = Modifier
 ) {
@@ -137,7 +140,7 @@ fun ChannelsListLoaded(
                                 top = 12.dp,
                                 bottom = 4.dp,
                             ),
-                            title = { Text(category.capsName) },
+                            title = { Text(category.name.uppercase()) },
                             icon = {
                                 Icon(
                                     painter = painterResource(R.drawable.ic_keyboard_arrow_down),
@@ -157,7 +160,7 @@ fun ChannelsListLoaded(
 //                if (channel.canView) {
                 if (!(channel.id != selectedChannelId && collapsed)) {
                     when (channel) {
-                        is DomainChannel.TextChannel -> {
+                        is DomainTextChannel -> {
                             ChannelListRegularItem(
                                 modifier = Modifier.padding(bottom = 2.dp),
                                 title = { Text(channel.name) },
@@ -174,7 +177,7 @@ fun ChannelsListLoaded(
                                 },
                             )
                         }
-                        is DomainChannel.VoiceChannel -> {
+                        is DomainVoiceChannel -> {
                             ChannelListRegularItem(
                                 modifier = Modifier.padding(bottom = 2.dp),
                                 title = { Text(channel.name) },

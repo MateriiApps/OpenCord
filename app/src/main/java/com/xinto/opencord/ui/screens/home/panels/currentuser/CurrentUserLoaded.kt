@@ -12,8 +12,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
-import com.xinto.opencord.domain.model.DomainCustomStatus
-import com.xinto.opencord.domain.model.DomainUserStatus
+import com.xinto.opencord.domain.usersettings.DomainCustomStatus
+import com.xinto.opencord.domain.usersettings.DomainUserStatus
 import com.xinto.opencord.ui.components.OCAsyncImage
 import com.xinto.opencord.ui.components.OCBadgeBox
 import com.xinto.opencord.ui.components.indicator.UserStatusIcon

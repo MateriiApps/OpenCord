@@ -8,7 +8,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import com.xinto.opencord.ui.util.messageInlineContent
 
 @Composable
-fun MessageRepliedToContent(
+fun MessageReferencedContent(
     text: AnnotatedString,
     modifier: Modifier = Modifier,
 ) {

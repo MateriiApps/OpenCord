@@ -18,7 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
-import com.xinto.opencord.domain.model.DomainGuild
+import com.xinto.opencord.domain.guild.DomainGuild
 import com.xinto.opencord.ui.components.guild.list.GuildsListItemImage
 import com.xinto.opencord.ui.components.guild.list.GuildsListItemText
 import com.xinto.opencord.ui.components.guild.list.RegularGuildItem

@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun MessageReply(
+fun MessageReferenced(
     modifier: Modifier = Modifier,
     avatar: @Composable (() -> Unit)? = null,
     author: @Composable (() -> Unit)? = null,
