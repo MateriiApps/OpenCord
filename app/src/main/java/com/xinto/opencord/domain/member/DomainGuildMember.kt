@@ -2,7 +2,7 @@ package com.xinto.opencord.domain.member
 
 import com.xinto.opencord.domain.user.DomainUser
 import com.xinto.opencord.domain.user.toDomain
-import com.xinto.opencord.rest.dto.ApiGuildMember
+import com.xinto.opencord.rest.models.ApiGuildMember
 import com.xinto.opencord.rest.service.DiscordCdnServiceImpl
 
 data class DomainGuildMember(

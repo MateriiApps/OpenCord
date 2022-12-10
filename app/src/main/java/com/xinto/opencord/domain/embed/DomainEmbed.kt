@@ -2,7 +2,7 @@ package com.xinto.opencord.domain.embed
 
 import androidx.compose.ui.graphics.Color
 import com.xinto.opencord.db.entity.message.EntityEmbed
-import com.xinto.opencord.rest.dto.ApiEmbed
+import com.xinto.opencord.rest.models.embed.ApiEmbed
 
 data class DomainEmbed(
     val title: String?,

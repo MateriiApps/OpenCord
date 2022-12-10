@@ -1,7 +1,7 @@
 package com.xinto.opencord.ui.util
 
 import androidx.compose.foundation.text.InlineTextContent
-import androidx.compose.material3.*
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign

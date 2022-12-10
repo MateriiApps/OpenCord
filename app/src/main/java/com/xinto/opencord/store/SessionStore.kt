@@ -7,7 +7,7 @@ import com.xinto.opencord.gateway.dto.SessionData
 import com.xinto.opencord.gateway.event.ReadyEvent
 import com.xinto.opencord.gateway.event.SessionsReplaceEvent
 import com.xinto.opencord.gateway.onEvent
-import com.xinto.opencord.rest.dto.ApiActivity
+import com.xinto.opencord.rest.models.activity.ApiActivity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.map

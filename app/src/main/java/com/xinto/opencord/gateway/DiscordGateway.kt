@@ -1,8 +1,6 @@
 package com.xinto.opencord.gateway
 
 import com.xinto.opencord.BuildConfig
-import com.xinto.opencord.manager.AccountManager
-import com.xinto.opencord.provider.PropertyProvider
 import com.xinto.opencord.gateway.dto.*
 import com.xinto.opencord.gateway.event.Event
 import com.xinto.opencord.gateway.event.EventDeserializationStrategy
@@ -10,7 +8,9 @@ import com.xinto.opencord.gateway.event.ReadyEvent
 import com.xinto.opencord.gateway.io.IncomingPayload
 import com.xinto.opencord.gateway.io.OpCode
 import com.xinto.opencord.gateway.io.OutgoingPayload
-import com.xinto.opencord.rest.dto.ApiSnowflake
+import com.xinto.opencord.manager.AccountManager
+import com.xinto.opencord.provider.PropertyProvider
+import com.xinto.opencord.rest.models.ApiSnowflake
 import com.xinto.opencord.util.Logger
 import io.ktor.client.*
 import io.ktor.client.plugins.websocket.*

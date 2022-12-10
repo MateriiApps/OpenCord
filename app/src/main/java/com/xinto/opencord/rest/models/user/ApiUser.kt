@@ -1,5 +1,6 @@
-package com.xinto.opencord.rest.dto
+package com.xinto.opencord.rest.models.user
 
+import com.xinto.opencord.rest.models.ApiSnowflake
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

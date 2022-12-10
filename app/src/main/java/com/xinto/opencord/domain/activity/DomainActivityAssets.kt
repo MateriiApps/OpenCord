@@ -1,6 +1,6 @@
 package com.xinto.opencord.domain.activity
 
-import com.xinto.opencord.rest.dto.ApiActivityAssets
+import com.xinto.opencord.rest.models.activity.ApiActivityAssets
 
 data class DomainActivityAssets(
     val largeImage: String?,

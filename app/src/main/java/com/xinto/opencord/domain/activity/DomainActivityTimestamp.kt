@@ -1,6 +1,6 @@
 package com.xinto.opencord.domain.activity
 
-import com.xinto.opencord.rest.dto.ApiActivityTimestamp
+import com.xinto.opencord.rest.models.activity.ApiActivityTimestamp
 import kotlinx.datetime.Instant
 
 data class DomainActivityTimestamp(

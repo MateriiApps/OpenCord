@@ -1,6 +1,6 @@
 package com.xinto.opencord.domain.activity
 
-import com.xinto.opencord.rest.dto.ApiActivityParty
+import com.xinto.opencord.rest.models.activity.ApiActivityParty
 
 data class DomainActivityParty(
     val id: String?,

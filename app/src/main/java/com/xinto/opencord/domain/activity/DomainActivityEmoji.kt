@@ -1,6 +1,6 @@
 package com.xinto.opencord.domain.activity
 
-import com.xinto.opencord.rest.dto.ApiActivityEmoji
+import com.xinto.opencord.rest.models.activity.ApiActivityEmoji
 
 // TODO: use a partial emoji instead
 data class DomainActivityEmoji(

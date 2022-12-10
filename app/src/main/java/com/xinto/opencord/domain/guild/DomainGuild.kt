@@ -1,7 +1,7 @@
 package com.xinto.opencord.domain.guild
 
 import com.xinto.opencord.db.entity.guild.EntityGuild
-import com.xinto.opencord.rest.dto.ApiGuild
+import com.xinto.opencord.rest.models.ApiGuild
 import com.xinto.opencord.rest.service.DiscordCdnServiceImpl
 
 data class DomainGuild(

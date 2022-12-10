@@ -1,16 +1,13 @@
-package com.xinto.opencord.rest.dto
+package com.xinto.opencord.rest.models.message
 
-import com.github.materiiapps.enumutil.FromValue
 import com.github.materiiapps.partial.Partialize
+import com.xinto.opencord.rest.models.ApiAttachment
+import com.xinto.opencord.rest.models.ApiSnowflake
+import com.xinto.opencord.rest.models.embed.ApiEmbed
+import com.xinto.opencord.rest.models.user.ApiUser
 import kotlinx.datetime.Instant
-import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.PrimitiveKind
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
 
 @Serializable
 @Partialize
@@ -58,24 +55,3 @@ data class ApiMessage(
     @SerialName("mentions")
     val mentions: List<ApiUser>,
 )
-
-@FromValue
-@Serializable(ApiMessageType.Serializer::class)
-enum class ApiMessageType(val value: Int) {
-    Default(0),
-    GuildMemberJoin(7),
-    Reply(19);
-
-    companion object Serializer : KSerializer<ApiMessageType> {
-        override val descriptor: SerialDescriptor
-            get() = PrimitiveSerialDescriptor("ApiMessageType", PrimitiveKind.INT)
-
-        override fun deserialize(decoder: Decoder): ApiMessageType {
-            return fromValue(decoder.decodeInt()) ?: Default
-        }
-
-        override fun serialize(encoder: Encoder, value: ApiMessageType) {
-            encoder.encodeInt(value.value)
-        }
-    }
-}

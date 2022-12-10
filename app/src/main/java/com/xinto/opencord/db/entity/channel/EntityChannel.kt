@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.xinto.opencord.rest.dto.ApiChannel
+import com.xinto.opencord.rest.models.ApiChannel
 
 @Entity(
     tableName = "channels",

@@ -3,7 +3,7 @@ package com.xinto.opencord.db.entity.user
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.xinto.opencord.rest.dto.ApiUser
+import com.xinto.opencord.rest.models.user.ApiUser
 
 @Entity(
     tableName = "users",

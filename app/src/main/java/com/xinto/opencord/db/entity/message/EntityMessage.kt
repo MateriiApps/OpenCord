@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.xinto.opencord.rest.dto.ApiMessage
+import com.xinto.opencord.rest.models.message.ApiMessage
 
 @Entity(
     tableName = "messages",

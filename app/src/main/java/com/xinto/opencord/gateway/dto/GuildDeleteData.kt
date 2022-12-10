@@ -1,6 +1,6 @@
 package com.xinto.opencord.gateway.dto
 
-import com.xinto.opencord.rest.dto.ApiSnowflake
+import com.xinto.opencord.rest.models.ApiSnowflake
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

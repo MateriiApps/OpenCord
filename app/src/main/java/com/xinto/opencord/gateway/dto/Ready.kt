@@ -1,8 +1,8 @@
 package com.xinto.opencord.gateway.dto
 
-import com.xinto.opencord.rest.dto.ApiGuild
-import com.xinto.opencord.rest.dto.ApiUser
-import com.xinto.opencord.rest.dto.ApiUserSettings
+import com.xinto.opencord.rest.models.ApiGuild
+import com.xinto.opencord.rest.models.user.ApiUser
+import com.xinto.opencord.rest.models.user.settings.ApiUserSettings
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

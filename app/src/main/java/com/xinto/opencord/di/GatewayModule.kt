@@ -1,9 +1,9 @@
 package com.xinto.opencord.di
 
-import com.xinto.opencord.manager.AccountManager
-import com.xinto.opencord.provider.PropertyProvider
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.DiscordGatewayImpl
+import com.xinto.opencord.manager.AccountManager
+import com.xinto.opencord.provider.PropertyProvider
 import com.xinto.opencord.util.Logger
 import io.ktor.client.*
 import kotlinx.serialization.json.Json

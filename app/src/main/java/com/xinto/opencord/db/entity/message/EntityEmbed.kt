@@ -3,8 +3,8 @@ package com.xinto.opencord.db.entity.message
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
-import com.xinto.opencord.rest.dto.ApiEmbed
-import com.xinto.opencord.rest.dto.ApiEmbedField
+import com.xinto.opencord.rest.models.embed.ApiEmbed
+import com.xinto.opencord.rest.models.embed.ApiEmbedField
 
 @Entity(
     tableName = "embeds",

@@ -1,6 +1,6 @@
 package com.xinto.opencord.domain.login
 
-import com.xinto.opencord.rest.dto.ApiLogin
+import com.xinto.opencord.rest.models.login.ApiLogin
 
 sealed interface DomainLogin {
     data class Login(

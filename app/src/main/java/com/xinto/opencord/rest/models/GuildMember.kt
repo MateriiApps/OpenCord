@@ -1,5 +1,6 @@
-package com.xinto.opencord.rest.dto
+package com.xinto.opencord.rest.models
 
+import com.xinto.opencord.rest.models.user.ApiUser
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

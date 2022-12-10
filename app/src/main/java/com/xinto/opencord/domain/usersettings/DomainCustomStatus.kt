@@ -1,6 +1,6 @@
 package com.xinto.opencord.domain.usersettings
 
-import com.xinto.opencord.rest.dto.ApiCustomStatus
+import com.xinto.opencord.rest.models.user.settings.ApiCustomStatus
 import kotlinx.datetime.Instant
 
 data class DomainCustomStatus(

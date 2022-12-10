@@ -1,6 +1,6 @@
 package com.xinto.opencord.domain.embed
 
-import com.xinto.opencord.rest.dto.ApiEmbedField
+import com.xinto.opencord.rest.models.embed.ApiEmbedField
 
 data class DomainEmbedField(
     val name: String,

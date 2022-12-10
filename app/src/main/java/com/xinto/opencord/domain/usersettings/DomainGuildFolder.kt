@@ -1,6 +1,6 @@
 package com.xinto.opencord.domain.usersettings
 
-import com.xinto.opencord.rest.dto.ApiGuildFolder
+import com.xinto.opencord.rest.models.user.settings.ApiGuildFolder
 
 data class DomainGuildFolder(
     val id: Long?,

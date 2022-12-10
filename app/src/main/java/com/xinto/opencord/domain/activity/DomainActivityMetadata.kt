@@ -1,6 +1,6 @@
 package com.xinto.opencord.domain.activity
 
-import com.xinto.opencord.rest.dto.ApiActivityMetadata
+import com.xinto.opencord.rest.models.activity.ApiActivityMetadata
 
 data class DomainActivityMetadata(
     val albumId: String?,

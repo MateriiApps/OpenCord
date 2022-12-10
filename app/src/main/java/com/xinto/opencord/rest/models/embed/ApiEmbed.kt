@@ -1,5 +1,6 @@
-package com.xinto.opencord.rest.dto
+package com.xinto.opencord.rest.models.embed
 
+import com.xinto.opencord.rest.models.ApiColor
 import kotlinx.datetime.Instant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -26,19 +27,4 @@ data class ApiEmbed(
 
     @SerialName("fields")
     val fields: List<ApiEmbedField>? = null
-)
-
-@Serializable
-data class ApiEmbedAuthor(
-    @SerialName("name")
-    val name: String
-)
-
-@Serializable
-data class ApiEmbedField(
-    @SerialName("name")
-    val name: String,
-
-    @SerialName("value")
-    val value: String,
 )

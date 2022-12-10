@@ -1,7 +1,7 @@
 package com.xinto.opencord.db
 
 import androidx.room.TypeConverter
-import com.xinto.opencord.rest.dto.ApiEmbedField
+import com.xinto.opencord.rest.models.embed.ApiEmbedField
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json

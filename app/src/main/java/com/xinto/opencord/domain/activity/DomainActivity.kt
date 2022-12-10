@@ -1,7 +1,7 @@
 package com.xinto.opencord.domain.activity
 
 import com.xinto.opencord.domain.activity.types.*
-import com.xinto.opencord.rest.dto.ApiActivity
+import com.xinto.opencord.rest.models.activity.ApiActivity
 
 interface DomainActivity {
     val name: String

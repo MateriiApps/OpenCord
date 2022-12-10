@@ -1,4 +1,4 @@
-package com.xinto.opencord.rest.dto
+package com.xinto.opencord.rest.models.login
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -19,13 +19,4 @@ data class ApiLogin(
 
     @SerialName("ticket")
     val ticket: String? = null,
-)
-
-@Serializable
-data class ApiLoginUserSettings(
-    @SerialName("locale")
-    val locale: String,
-
-    @SerialName("theme")
-    val theme: String,
 )

@@ -1,6 +1,6 @@
 package com.xinto.opencord.domain.permissions
 
-import com.xinto.opencord.rest.dto.ApiPermissions
+import com.xinto.opencord.rest.models.ApiPermissions
 
 enum class DomainPermission(val flags: Long) {
     NONE(0L),

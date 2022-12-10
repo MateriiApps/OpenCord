@@ -1,6 +1,6 @@
 package com.xinto.opencord.domain.activity
 
-import com.xinto.opencord.rest.dto.ApiActivitySecrets
+import com.xinto.opencord.rest.models.activity.ApiActivitySecrets
 
 data class DomainActivitySecrets(
     val join: String?,

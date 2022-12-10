@@ -1,6 +1,6 @@
 package com.xinto.opencord.domain.usersettings
 
-import com.xinto.opencord.rest.dto.ApiFriendSources
+import com.xinto.opencord.rest.models.user.settings.ApiFriendSources
 
 data class DomainFriendSources(
     val all: Boolean,

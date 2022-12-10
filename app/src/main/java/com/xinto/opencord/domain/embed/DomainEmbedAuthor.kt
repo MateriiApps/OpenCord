@@ -1,6 +1,6 @@
 package com.xinto.opencord.domain.embed
 
-import com.xinto.opencord.rest.dto.ApiEmbedAuthor
+import com.xinto.opencord.rest.models.embed.ApiEmbedAuthor
 
 data class DomainEmbedAuthor(
     val name: String,
