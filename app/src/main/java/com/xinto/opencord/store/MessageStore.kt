@@ -3,10 +3,14 @@ package com.xinto.opencord.store
 import androidx.room.withTransaction
 import com.xinto.opencord.db.database.CacheDatabase
 import com.xinto.opencord.db.entity.message.EntityMessage
-import com.xinto.opencord.domain.mapper.toDomain
-import com.xinto.opencord.domain.mapper.toEntity
-import com.xinto.opencord.domain.model.DomainMessage
-import com.xinto.opencord.domain.model.DomainUser
+import com.xinto.opencord.db.entity.message.toEntity
+import com.xinto.opencord.db.entity.user.toEntity
+import com.xinto.opencord.domain.attachment.toDomain
+import com.xinto.opencord.domain.embed.toDomain
+import com.xinto.opencord.domain.message.DomainMessage
+import com.xinto.opencord.domain.message.toDomain
+import com.xinto.opencord.domain.user.DomainUser
+import com.xinto.opencord.domain.user.toDomain
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.event.MessageCreateEvent
 import com.xinto.opencord.gateway.event.MessageDeleteEvent
@@ -81,7 +85,7 @@ class MessageStoreImpl(
         }
     }
 
-    private suspend fun storeMessages(messages: List<ApiMessage>) {
+    private fun storeMessages(messages: List<ApiMessage>) {
         cache.runInTransaction {
             cache.users().apply {
                 val users = messages

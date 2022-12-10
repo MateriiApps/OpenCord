@@ -3,6 +3,7 @@ package com.xinto.opencord.db.entity.message
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
+import com.xinto.opencord.rest.dto.ApiEmbed
 import com.xinto.opencord.rest.dto.ApiEmbedField
 
 @Entity(
@@ -43,3 +44,17 @@ data class EntityEmbed(
     @ColumnInfo(name = "fields")
     val fields: List<ApiEmbedField>?,
 )
+
+fun ApiEmbed.toEntity(messageId: Long, embedIndex: Int): EntityEmbed {
+    return EntityEmbed(
+        embedIndex = embedIndex,
+        messageId = messageId,
+        title = title,
+        description = description,
+        url = url,
+        color = color?.rgbColor,
+        timestamp = timestamp?.toEpochMilliseconds(),
+        authorName = author?.name,
+        fields = fields,
+    )
+}

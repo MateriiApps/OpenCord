@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xinto.opencord.manager.AccountManager
 import com.xinto.opencord.manager.ActivityManager
-import com.xinto.opencord.domain.mapper.toDomain
-import com.xinto.opencord.domain.model.DomainLogin
+import com.xinto.opencord.domain.login.DomainLogin
+import com.xinto.opencord.domain.login.toDomain
 import com.xinto.opencord.rest.body.LoginBody
 import com.xinto.opencord.rest.body.TwoFactorBody
 import com.xinto.opencord.rest.service.DiscordAuthService

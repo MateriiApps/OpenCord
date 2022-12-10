@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.xinto.opencord.rest.dto.ApiChannel
 
 @Entity(
     tableName = "channels",
@@ -38,3 +39,16 @@ data class EntityChannel(
     @ColumnInfo(name = "is_pins_stored")
     val pinsStored: Boolean,
 )
+
+fun ApiChannel.toEntity(guildId: Long): EntityChannel {
+    return EntityChannel(
+        id = id.value,
+        guildId = this.guildId?.value ?: guildId,
+        name = name,
+        type = type,
+        position = position,
+        parentId = parentId?.value,
+        nsfw = nsfw,
+        pinsStored = false,
+    )
+}
