@@ -13,17 +13,19 @@
       - [ ] Spoiler
       - [ ] Timestamps
       - [ ] Stickers
+      - [ ] Code blocks
+      - [ ] Inline code blocks
     - [x] Replies
     - [x] Timestamp
     - [x] Edited
     - [x] Pinned
     - [ ] Reactions
-    - [ ] Sender
-      - [ ] Avatar
-        - [ ] Guild
+    - [x] Sender
+      - [x] Avatar
+        - [x] Guild
         - [x] User
-      - [ ] Name
-        - [ ] Guild
+      - [x] Name
+        - [x] Guild
         - [x] User
     - [ ] Slash commands
   - [ ] Sending
@@ -64,6 +66,7 @@
     - [ ] Rules
   - [ ] Category
     - [x] Collapse/Expand
+    - [ ] Syncing data
   - [ ] Unread indicator
   - [ ] Threads
   - [ ] Permissions
@@ -114,13 +117,3 @@
   - [ ] Status
     - [ ] Text
     - [x] Indicator
-
-## App
-
-- [ ] Multiplatform
-  - [x] Android
-  - [ ] Windows
-  - [ ] Linux
-  - [ ] macOS
-- [ ] Plugins
-- [ ] Themes
