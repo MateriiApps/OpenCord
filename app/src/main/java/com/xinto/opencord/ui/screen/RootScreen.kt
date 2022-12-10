@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import com.xinto.opencord.ui.navigation.MainScreen
 import com.xinto.opencord.ui.navigation.OCNavigation
 import com.xinto.opencord.ui.navigation.rememberOCNavigatorBackstack
+import com.xinto.opencord.ui.screen.home.HomeScreen
 import com.xinto.opencord.ui.screen.pins.PinsScreen
 
 @Composable

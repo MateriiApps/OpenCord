@@ -1,11 +1,11 @@
-package com.xinto.opencord.ui.panel.currentuser
+package com.xinto.opencord.ui.screen.home.panels.currentuser
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.xinto.opencord.ui.panel.currentuser.sheet.CurrentUserSheet
+import com.xinto.opencord.ui.screen.home.panels.currentuser.sheet.CurrentUserSheet
 import com.xinto.opencord.ui.viewmodel.CurrentUserViewModel
 import org.koin.androidx.compose.getViewModel
 
