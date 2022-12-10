@@ -53,12 +53,15 @@ android {
 
     kotlinOptions {
         jvmTarget = "11"
-        freeCompilerArgs = freeCompilerArgs +
-                "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi" +
-                "-opt-in=androidx.compose.animation.ExperimentalAnimationApi" +
-                "-opt-in=androidx.compose.material.ExperimentalMaterialApi" +
-                "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api" +
-                "-Xcontext-receivers"
+        freeCompilerArgs += listOf(
+            "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
+            "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",
+            "-opt-in=androidx.compose.material.ExperimentalMaterialApi",
+            "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
+            "-Xcontext-receivers",
+            "-P",
+            "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=${buildDir.resolve("report").absolutePath}",
+        )
     }
 
     buildFeatures {

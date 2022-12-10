@@ -1,8 +1,10 @@
 package com.xinto.opencord.domain.usersettings
 
+import androidx.compose.runtime.Immutable
 import com.xinto.opencord.rest.dto.ApiCustomStatus
 import kotlinx.datetime.Instant
 
+@Immutable
 data class DomainCustomStatus(
     val text: String?,
     val expiresAt: Instant?,

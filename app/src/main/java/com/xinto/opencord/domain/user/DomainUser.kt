@@ -1,10 +1,12 @@
 package com.xinto.opencord.domain.user
 
+import androidx.compose.runtime.Immutable
 import com.xinto.opencord.db.entity.user.EntityUser
 import com.xinto.opencord.domain.Mentionable
 import com.xinto.opencord.rest.dto.ApiUser
 import com.xinto.opencord.rest.service.DiscordCdnServiceImpl
 
+@Immutable
 abstract class DomainUser : Mentionable {
     abstract val id: Long
     abstract val username: String

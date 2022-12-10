@@ -1,7 +1,9 @@
 package com.xinto.opencord.domain.activity
 
+import androidx.compose.runtime.Immutable
 import com.xinto.opencord.rest.dto.ApiActivityMetadata
 
+@Immutable
 data class DomainActivityMetadata(
     val albumId: String?,
     val artistIds: List<String>?,

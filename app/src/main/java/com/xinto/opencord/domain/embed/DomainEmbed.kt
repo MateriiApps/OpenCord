@@ -1,9 +1,11 @@
 package com.xinto.opencord.domain.embed
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 import com.xinto.opencord.db.entity.message.EntityEmbed
 import com.xinto.opencord.rest.dto.ApiEmbed
 
+@Immutable
 data class DomainEmbed(
     val title: String?,
     val description: String?,

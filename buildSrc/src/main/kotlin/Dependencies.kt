@@ -28,14 +28,17 @@ sealed class Dependencies {
     object KotlinX : Dependencies() {
         const val datetimeVersion = "0.4.0"
         const val serializationVersion = "1.3.3"
+        const val immutableVersion = "0.3.5"
 
         const val datetime = "org.jetbrains.kotlinx:kotlinx-datetime:$datetimeVersion"
         const val serialization = "org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationVersion"
+        const val immutable = "org.jetbrains.kotlinx:kotlinx-collections-immutable:$immutableVersion"
 
         override fun invoke(scope: DependencyHandlerScope) {
             scope {
                 implementation(datetime)
                 implementation(serialization)
+                implementation(immutable)
             }
         }
     }

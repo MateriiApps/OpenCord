@@ -36,10 +36,11 @@ import com.xinto.opencord.util.ifComposable
 import com.xinto.opencord.util.ifNotEmptyComposable
 import com.xinto.opencord.util.ifNotNullComposable
 import com.xinto.simpleast.render
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun ChatLoaded(
-    messages: List<DomainMessage>,
+    messages: ImmutableList<DomainMessage>,
     currentUserId: Long?,
     channelName: String,
     userMessage: String,

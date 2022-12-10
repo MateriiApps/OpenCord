@@ -1,7 +1,9 @@
 package com.xinto.opencord.domain.permissions
 
+import androidx.compose.runtime.Immutable
 import com.xinto.opencord.rest.dto.ApiPermissions
 
+@Immutable
 enum class DomainPermission(val flags: Long) {
     NONE(0L),
     CREATE_INSTANT_INVITE(1L shl 0),

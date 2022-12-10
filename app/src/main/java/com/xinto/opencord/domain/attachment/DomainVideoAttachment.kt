@@ -1,5 +1,8 @@
 package com.xinto.opencord.domain.attachment
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 data class DomainVideoAttachment(
     override val id: Long,
     override val filename: String,

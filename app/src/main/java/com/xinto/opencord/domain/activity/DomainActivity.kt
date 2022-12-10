@@ -1,8 +1,10 @@
 package com.xinto.opencord.domain.activity
 
+import androidx.compose.runtime.Immutable
 import com.xinto.opencord.domain.activity.types.*
 import com.xinto.opencord.rest.dto.ApiActivity
 
+@Immutable
 interface DomainActivity {
     val name: String
     val createdAt: Long

@@ -1,8 +1,11 @@
 package com.xinto.opencord.domain.login
 
+import androidx.compose.runtime.Immutable
 import com.xinto.opencord.rest.dto.ApiLogin
 
+@Immutable
 sealed interface DomainLogin {
+    @Immutable
     data class Login(
         val token: String,
         val mfa: Boolean,
@@ -10,10 +13,13 @@ sealed interface DomainLogin {
         val theme: String,
     ) : DomainLogin
 
+    @Immutable
     data class Captcha(val captchaSiteKey: String) : DomainLogin
 
+    @Immutable
     data class TwoFactorAuth(val ticket: String) : DomainLogin
 
+    @Immutable
     object Error : DomainLogin
 }
 

@@ -35,6 +35,8 @@ import com.xinto.opencord.ui.components.channel.list.ChannelListRegularItem
 import com.xinto.opencord.ui.components.channel.list.ChannelListCategoryItem
 import com.xinto.opencord.ui.util.ContentAlpha
 import com.xinto.opencord.ui.util.ProvideContentAlpha
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.ImmutableMap
 
 @Composable
 fun ChannelsListLoaded(
@@ -44,8 +46,8 @@ fun ChannelsListLoaded(
     bannerUrl: String?,
     boostLevel: Int,
     guildName: String,
-    channels: Map<DomainCategoryChannel?, List<DomainChannel>>,
-    collapsedCategories: List<Long>,
+    channels: ImmutableMap<DomainCategoryChannel?, ImmutableList<DomainChannel>>,
+    collapsedCategories: ImmutableList<Long>,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(

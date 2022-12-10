@@ -1,9 +1,11 @@
 package com.xinto.opencord.domain.guild
 
+import androidx.compose.runtime.Immutable
 import com.xinto.opencord.db.entity.guild.EntityGuild
 import com.xinto.opencord.rest.dto.ApiGuild
 import com.xinto.opencord.rest.service.DiscordCdnServiceImpl
 
+@Immutable
 data class DomainGuild(
     val id: Long,
     val name: String,
@@ -12,10 +14,11 @@ data class DomainGuild(
     val premiumTier: Int,
     val premiumSubscriptionCount: Int,
 ) {
-    val iconText = name
-        .split(ICON_TEXT_REGEX)
-        .map { it[0] }
-        .joinToString()
+    val iconText by lazy {
+        name.split(ICON_TEXT_REGEX)
+            .map { it[0] }
+            .joinToString()
+    }
 
     companion object {
         val ICON_TEXT_REGEX = """\s+""".toRegex()

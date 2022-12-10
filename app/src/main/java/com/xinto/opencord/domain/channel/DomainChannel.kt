@@ -1,9 +1,11 @@
 package com.xinto.opencord.domain.channel
 
+import androidx.compose.runtime.Immutable
 import com.xinto.opencord.db.entity.channel.EntityChannel
 import com.xinto.opencord.domain.Mentionable
 import com.xinto.opencord.rest.dto.ApiChannel
 
+@Immutable
 abstract class DomainChannel : Comparable<DomainChannel>, Mentionable {
     abstract val id: Long
     abstract val guildId: Long?
@@ -13,7 +15,6 @@ abstract class DomainChannel : Comparable<DomainChannel>, Mentionable {
 
     override val formattedMention
         get() = "<#$id>"
-
 
     override fun compareTo(other: DomainChannel): Int {
         val thisPositionInList = sortedChannelTypes.indexOf(this::class)
