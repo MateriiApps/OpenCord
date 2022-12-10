@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.screen.home.panels.chat
+package com.xinto.opencord.ui.screens.home.panels.chat
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
-import com.xinto.opencord.ui.component.message.MessageRegular
+import com.xinto.opencord.ui.components.message.MessageRegular
 
 @Composable
 fun ChatLoading(

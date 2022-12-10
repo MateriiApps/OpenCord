@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.component.message
+package com.xinto.opencord.ui.components.message
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -9,7 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.xinto.opencord.ui.component.message.reply.MessageReplyBranch
+import com.xinto.opencord.ui.components.message.reply.MessageReplyBranch
 
 @Composable
 fun MessageRegular(

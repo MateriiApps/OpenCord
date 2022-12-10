@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.screen.home
+package com.xinto.opencord.ui.screens.home
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,10 +13,10 @@ import androidx.compose.ui.unit.dp
 import com.xinto.opc.OverlappingPanels
 import com.xinto.opc.OverlappingPanelsValue
 import com.xinto.opc.rememberOverlappingPanelsState
-import com.xinto.opencord.ui.screen.home.panels.channel.ChannelsList
-import com.xinto.opencord.ui.screen.home.panels.chat.Chat
-import com.xinto.opencord.ui.screen.home.panels.currentuser.CurrentUser
-import com.xinto.opencord.ui.screen.home.panels.guild.GuildsList
+import com.xinto.opencord.ui.screens.home.panels.channel.ChannelsList
+import com.xinto.opencord.ui.screens.home.panels.chat.Chat
+import com.xinto.opencord.ui.screens.home.panels.currentuser.CurrentUser
+import com.xinto.opencord.ui.screens.home.panels.guild.GuildsList
 import com.xinto.opencord.ui.util.animateCornerBasedShapeAsState
 import com.xinto.opencord.ui.viewmodel.*
 import kotlinx.coroutines.launch

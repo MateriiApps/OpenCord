@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.screen.home.panels.currentuser
+package com.xinto.opencord.ui.screens.home.panels.currentuser
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

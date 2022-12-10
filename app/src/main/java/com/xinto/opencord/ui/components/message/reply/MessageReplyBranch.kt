@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.component.message.reply
+package com.xinto.opencord.ui.components.message.reply
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.material3.MaterialTheme

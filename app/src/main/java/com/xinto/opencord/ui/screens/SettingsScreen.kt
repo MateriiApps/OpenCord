@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.screen
+package com.xinto.opencord.ui.screens
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding

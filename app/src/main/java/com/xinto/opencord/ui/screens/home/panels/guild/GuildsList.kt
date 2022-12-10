@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.screen.home.panels.guild
+package com.xinto.opencord.ui.screens.home.panels.guild
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

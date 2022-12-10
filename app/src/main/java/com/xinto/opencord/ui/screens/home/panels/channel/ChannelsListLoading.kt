@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.screen.home.panels.channel
+package com.xinto.opencord.ui.screens.home.panels.channel
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -15,8 +15,8 @@ import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
-import com.xinto.opencord.ui.component.channel.list.ChannelListRegularItem
-import com.xinto.opencord.ui.component.channel.list.ChannelListCategoryItem
+import com.xinto.opencord.ui.components.channel.list.ChannelListRegularItem
+import com.xinto.opencord.ui.components.channel.list.ChannelListCategoryItem
 
 @Composable
 fun ChannelsListLoading(

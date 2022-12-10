@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.screen.home.panels.currentuser
+package com.xinto.opencord.ui.screens.home.panels.currentuser
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -14,9 +14,9 @@ import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainCustomStatus
 import com.xinto.opencord.domain.model.DomainUserStatus
-import com.xinto.opencord.ui.component.OCAsyncImage
-import com.xinto.opencord.ui.component.OCBadgeBox
-import com.xinto.opencord.ui.component.indicator.UserStatusIcon
+import com.xinto.opencord.ui.components.OCAsyncImage
+import com.xinto.opencord.ui.components.OCBadgeBox
+import com.xinto.opencord.ui.components.indicator.UserStatusIcon
 import com.xinto.opencord.util.ifNotNullComposable
 
 @Composable

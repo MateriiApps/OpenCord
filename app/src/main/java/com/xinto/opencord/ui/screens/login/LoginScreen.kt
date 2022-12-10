@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.screen.login
+package com.xinto.opencord.ui.screens.login
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
@@ -19,7 +19,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
-import com.xinto.opencord.ui.component.captcha.HCaptcha
+import com.xinto.opencord.ui.components.captcha.HCaptcha
 import com.xinto.opencord.ui.viewmodel.LoginViewModel
 import org.koin.androidx.compose.getViewModel
 

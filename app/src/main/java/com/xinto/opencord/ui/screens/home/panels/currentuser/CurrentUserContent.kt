@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.screen.home.panels.currentuser
+package com.xinto.opencord.ui.screens.home.panels.currentuser
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme

@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.component.message
+package com.xinto.opencord.ui.components.message
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable

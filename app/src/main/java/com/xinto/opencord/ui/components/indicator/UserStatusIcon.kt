@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.component.indicator
+package com.xinto.opencord.ui.components.indicator
 
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable

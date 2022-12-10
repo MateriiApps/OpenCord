@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.component
+package com.xinto.opencord.ui.components
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.text.BasicTextField

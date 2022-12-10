@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.component.guild.list
+package com.xinto.opencord.ui.components.guild.list
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size

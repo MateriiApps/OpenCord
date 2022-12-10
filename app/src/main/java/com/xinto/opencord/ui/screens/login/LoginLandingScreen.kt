@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.screen.login
+package com.xinto.opencord.ui.screens.login
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ContentAlpha

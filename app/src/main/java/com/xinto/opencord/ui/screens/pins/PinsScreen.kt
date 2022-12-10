@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.screen.pins
+package com.xinto.opencord.ui.screens.pins
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding

@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.component.captcha
+package com.xinto.opencord.ui.components.captcha
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect

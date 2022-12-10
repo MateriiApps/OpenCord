@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.screen.home.panels.channel
+package com.xinto.opencord.ui.screens.home.panels.channel
 
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
@@ -27,9 +27,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainChannel
-import com.xinto.opencord.ui.component.OCAsyncImage
-import com.xinto.opencord.ui.component.channel.list.ChannelListRegularItem
-import com.xinto.opencord.ui.component.channel.list.ChannelListCategoryItem
+import com.xinto.opencord.ui.components.OCAsyncImage
+import com.xinto.opencord.ui.components.channel.list.ChannelListRegularItem
+import com.xinto.opencord.ui.components.channel.list.ChannelListCategoryItem
 import com.xinto.opencord.ui.util.ContentAlpha
 import com.xinto.opencord.ui.util.ProvideContentAlpha
 

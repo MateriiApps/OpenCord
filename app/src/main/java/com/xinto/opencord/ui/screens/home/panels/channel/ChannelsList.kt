@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.screen.home.panels.channel
+package com.xinto.opencord.ui.screens.home.panels.channel
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.LocalAbsoluteTonalElevation
@@ -7,9 +7,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.xinto.opencord.ui.screen.home.panels.channel.ChannelsListLoaded
-import com.xinto.opencord.ui.screen.home.panels.channel.ChannelsListLoading
-import com.xinto.opencord.ui.screen.home.panels.channel.ChannelsListUnselected
 import com.xinto.opencord.ui.viewmodel.ChannelsViewModel
 
 @Composable

@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.component.channel
+package com.xinto.opencord.ui.components.channel
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInHorizontally
@@ -14,7 +14,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.xinto.opencord.ui.component.OCBasicTextField
+import com.xinto.opencord.ui.components.OCBasicTextField
 
 @Composable
 fun ChatInput(

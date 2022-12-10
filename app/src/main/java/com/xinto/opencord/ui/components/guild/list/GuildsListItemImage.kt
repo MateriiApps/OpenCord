@@ -1,10 +1,10 @@
-package com.xinto.opencord.ui.component.guild.list
+package com.xinto.opencord.ui.components.guild.list
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.xinto.opencord.ui.component.OCAsyncImage
+import com.xinto.opencord.ui.components.OCAsyncImage
 
 @Composable
 fun GuildsListItemImage(

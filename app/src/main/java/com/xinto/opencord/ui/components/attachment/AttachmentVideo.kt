@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.component.attachment
+package com.xinto.opencord.ui.components.attachment
 
 import android.widget.FrameLayout
 import androidx.compose.runtime.Composable

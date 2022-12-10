@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.component.embed
+package com.xinto.opencord.ui.components.embed
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

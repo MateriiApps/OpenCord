@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.screen.home.panels.guild
+package com.xinto.opencord.ui.screens.home.panels.guild
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -20,8 +20,8 @@ import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 import com.xinto.opencord.R
-import com.xinto.opencord.ui.component.guild.list.GuildsListItemText
-import com.xinto.opencord.ui.component.guild.list.RegularGuildItem
+import com.xinto.opencord.ui.components.guild.list.GuildsListItemText
+import com.xinto.opencord.ui.components.guild.list.RegularGuildItem
 
 @Composable
 fun GuildsListLoading(

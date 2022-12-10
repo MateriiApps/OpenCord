@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.screen.home.panels.chat
+package com.xinto.opencord.ui.screens.home.panels.chat
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

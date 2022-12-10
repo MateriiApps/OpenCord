@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.component.channel.list
+package com.xinto.opencord.ui.components.channel.list
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*

@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.component.guild.list
+package com.xinto.opencord.ui.components.guild.list
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
@@ -14,7 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.xinto.opencord.ui.component.indicator.UnreadIndicator
+import com.xinto.opencord.ui.components.indicator.UnreadIndicator
 
 @Composable
 fun RegularGuildItem(

@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.screen.pins
+package com.xinto.opencord.ui.screens.pins
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,18 +19,18 @@ import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainAttachment
 import com.xinto.opencord.domain.model.DomainMessage
 import com.xinto.opencord.domain.model.DomainMessageRegular
-import com.xinto.opencord.ui.component.attachment.AttachmentPicture
-import com.xinto.opencord.ui.component.attachment.AttachmentVideo
-import com.xinto.opencord.ui.component.embed.Embed
-import com.xinto.opencord.ui.component.embed.EmbedAuthor
-import com.xinto.opencord.ui.component.embed.EmbedField
-import com.xinto.opencord.ui.component.message.MessageRegular
-import com.xinto.opencord.ui.component.message.reply.MessageRepliedToContent
-import com.xinto.opencord.ui.component.message.reply.MessageReply
-import com.xinto.opencord.ui.component.message.MessageAuthor
-import com.xinto.opencord.ui.component.message.MessageAvatar
-import com.xinto.opencord.ui.component.message.MessageContent
-import com.xinto.opencord.ui.component.message.reply.MessageReferencedAuthor
+import com.xinto.opencord.ui.components.attachment.AttachmentPicture
+import com.xinto.opencord.ui.components.attachment.AttachmentVideo
+import com.xinto.opencord.ui.components.embed.Embed
+import com.xinto.opencord.ui.components.embed.EmbedAuthor
+import com.xinto.opencord.ui.components.embed.EmbedField
+import com.xinto.opencord.ui.components.message.MessageRegular
+import com.xinto.opencord.ui.components.message.reply.MessageRepliedToContent
+import com.xinto.opencord.ui.components.message.reply.MessageReply
+import com.xinto.opencord.ui.components.message.MessageAuthor
+import com.xinto.opencord.ui.components.message.MessageAvatar
+import com.xinto.opencord.ui.components.message.MessageContent
+import com.xinto.opencord.ui.components.message.reply.MessageReferencedAuthor
 import com.xinto.opencord.util.ifComposable
 import com.xinto.opencord.util.ifNotEmptyComposable
 import com.xinto.opencord.util.ifNotNullComposable

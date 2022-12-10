@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.component.attachment
+package com.xinto.opencord.ui.components.attachment
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -6,7 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import coil.size.Size
-import com.xinto.opencord.ui.component.OCAsyncImage
+import com.xinto.opencord.ui.components.OCAsyncImage
 
 @Composable
 fun AttachmentPicture(

@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.component.indicator
+package com.xinto.opencord.ui.components.indicator
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

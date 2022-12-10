@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.screen.home.panels.guild
+package com.xinto.opencord.ui.screens.home.panels.guild
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,9 +19,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainGuild
-import com.xinto.opencord.ui.component.guild.list.GuildsListItemImage
-import com.xinto.opencord.ui.component.guild.list.GuildsListItemText
-import com.xinto.opencord.ui.component.guild.list.RegularGuildItem
+import com.xinto.opencord.ui.components.guild.list.GuildsListItemImage
+import com.xinto.opencord.ui.components.guild.list.GuildsListItemText
+import com.xinto.opencord.ui.components.guild.list.RegularGuildItem
 
 @Composable
 fun GuildsListLoaded(

@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.screen.home.panels.channel
+package com.xinto.opencord.ui.screens.home.panels.channel
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.MaterialTheme
