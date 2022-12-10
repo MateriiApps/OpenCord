@@ -1,8 +1,11 @@
 package com.xinto.opencord.domain.user
 
+import androidx.compose.runtime.Immutable
+
 /**
  * Sent on the `user` field of the READY event
  */
+@Immutable
 data class DomainUserPrivateReady(
     override val id: Long,
     override val username: String,

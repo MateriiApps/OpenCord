@@ -1,5 +1,6 @@
 package com.xinto.opencord.domain.message
 
+import androidx.compose.runtime.Immutable
 import com.github.materiiapps.partial.Partialize
 import com.github.materiiapps.partial.map
 import com.xinto.opencord.domain.attachment.DomainAttachment
@@ -14,6 +15,7 @@ import kotlinx.datetime.Instant
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
+@Immutable
 @Partialize
 data class DomainMessageRegular(
     override val id: Long,
@@ -31,10 +33,10 @@ data class DomainMessageRegular(
 //    val mentionedRoles: List<DomainRole>,
     val mentions: List<DomainUser>,
 ) : DomainMessage(), KoinComponent {
-    private val parser: SimpleAstParser = get()
+    val isEdited: Boolean
+        get() = editedTimestamp != null
 
-    val isEdited = editedTimestamp != null
-    val contentNodes = parser.parse(content, null)
+    val contentNodes by lazy { get<SimpleAstParser>().parse(content, null) }
 }
 
 // TODO: turn this into DomainMessagePartial once partial heierarchy is done

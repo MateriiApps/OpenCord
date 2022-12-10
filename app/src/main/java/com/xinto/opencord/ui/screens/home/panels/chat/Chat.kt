@@ -13,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
 import com.xinto.opencord.ui.viewmodel.ChatViewModel
+import kotlinx.collections.immutable.toImmutableList
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -25,7 +26,7 @@ fun Chat(
 ) {
     val sortedMessages by remember(viewModel.messages) {
         derivedStateOf {
-            viewModel.getSortedMessages()
+            viewModel.getSortedMessages().toImmutableList()
         }
     }
 

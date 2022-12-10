@@ -1,7 +1,9 @@
 package com.xinto.opencord.domain.usersettings
 
+import androidx.compose.runtime.Immutable
 import com.xinto.opencord.rest.models.user.settings.ApiFriendSources
 
+@Immutable
 data class DomainFriendSources(
     val all: Boolean,
     val mutualFriends: Boolean,

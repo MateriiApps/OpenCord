@@ -8,6 +8,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.ui.viewmodel.ChannelsViewModel
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toImmutableMap
 
 @Composable
 fun ChannelsList(
@@ -18,8 +20,16 @@ fun ChannelsList(
     val sortedChannels by remember(viewModel.channels) {
         derivedStateOf {
             viewModel.getSortedChannels()
+                .mapValues { it.value.toImmutableList() }
+                .toImmutableMap()
         }
     }
+    val collapsedCategories by remember(viewModel.collapsedCategories) {
+        derivedStateOf {
+            viewModel.collapsedCategories.toImmutableList()
+        }
+    }
+
     CompositionLocalProvider(LocalAbsoluteTonalElevation provides 1.dp) {
         Surface(
             modifier = modifier,
@@ -50,7 +60,7 @@ fun ChannelsList(
                         boostLevel = viewModel.guildBoostLevel,
                         guildName = viewModel.guildName,
                         channels = sortedChannels,
-                        collapsedCategories = viewModel.collapsedCategories,
+                        collapsedCategories = collapsedCategories,
                         selectedChannelId = viewModel.selectedChannelId,
                     )
                 }

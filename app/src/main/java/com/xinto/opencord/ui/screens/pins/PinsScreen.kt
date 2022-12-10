@@ -4,12 +4,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.xinto.opencord.R
 import com.xinto.opencord.ui.viewmodel.ChannelPinsViewModel
+import kotlinx.collections.immutable.toImmutableList
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -19,6 +23,14 @@ fun PinsScreen(
     viewModel: ChannelPinsViewModel = getViewModel()
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+    val pins by remember(viewModel.pins) {
+        derivedStateOf {
+            viewModel.pins.values
+                .sortedByDescending { it.timestamp }
+                .toImmutableList()
+        }
+    }
+
     Scaffold(
         modifier = modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -50,9 +62,7 @@ fun PinsScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(paddingValues),
-                    pins = viewModel.pins.values.sortedByDescending {
-                        it.timestamp
-                    },
+                    pins = pins,
                 )
             }
             is ChannelPinsViewModel.State.Error -> {

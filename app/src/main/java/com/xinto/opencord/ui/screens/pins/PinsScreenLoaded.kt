@@ -36,10 +36,11 @@ import com.xinto.opencord.util.ifComposable
 import com.xinto.opencord.util.ifNotEmptyComposable
 import com.xinto.opencord.util.ifNotNullComposable
 import com.xinto.simpleast.render
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun PinsScreenLoaded(
-    pins: List<DomainMessage>,
+    pins: ImmutableList<DomainMessage>,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(

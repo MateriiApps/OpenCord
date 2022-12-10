@@ -1,7 +1,9 @@
 package com.xinto.opencord.domain.activity
 
+import androidx.compose.runtime.Immutable
 import com.github.materiiapps.enumutil.FromValue
 
+@Immutable
 @FromValue
 enum class ActivityType(val value: Int) {
     Game(0),
