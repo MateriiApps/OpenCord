@@ -1,8 +1,8 @@
 package com.xinto.opencord.di
 
-import com.xinto.opencord.domain.manager.AccountManager
-import com.xinto.opencord.domain.manager.ActivityManager
-import com.xinto.opencord.domain.manager.PersistentDataManager
+import com.xinto.opencord.manager.AccountManager
+import com.xinto.opencord.manager.ActivityManager
+import com.xinto.opencord.manager.PersistentDataManager
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.rest.service.DiscordApiService
 import com.xinto.opencord.rest.service.DiscordAuthService
