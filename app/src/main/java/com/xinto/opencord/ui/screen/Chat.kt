@@ -24,9 +24,9 @@ import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 import com.xinto.bdc.BottomSheetDialog
 import com.xinto.opencord.R
-import com.xinto.opencord.domain.model.DomainAttachment
-import com.xinto.opencord.domain.model.DomainMessage
-import com.xinto.opencord.domain.model.DomainMessageRegular
+import com.xinto.opencord.domain.attachment.DomainAttachment
+import com.xinto.opencord.domain.message.DomainMessage
+import com.xinto.opencord.domain.message.DomainMessageRegular
 import com.xinto.opencord.ui.viewmodel.ChatViewModel
 import com.xinto.opencord.ui.widget.*
 import com.xinto.opencord.util.ifComposable

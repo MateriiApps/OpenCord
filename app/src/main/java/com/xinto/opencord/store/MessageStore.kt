@@ -5,8 +5,8 @@ import com.xinto.opencord.db.database.CacheDatabase
 import com.xinto.opencord.db.entity.message.EntityMessage
 import com.xinto.opencord.domain.mapper.toDomain
 import com.xinto.opencord.domain.mapper.toEntity
-import com.xinto.opencord.domain.model.DomainMessage
-import com.xinto.opencord.domain.model.DomainUser
+import com.xinto.opencord.domain.message.DomainMessage
+import com.xinto.opencord.domain.user.DomainUser
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.event.MessageCreateEvent
 import com.xinto.opencord.gateway.event.MessageDeleteEvent

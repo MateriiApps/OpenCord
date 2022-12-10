@@ -1,6 +1,6 @@
 package com.xinto.opencord.util
 
-import com.xinto.opencord.domain.model.DomainChannel
+import com.xinto.opencord.domain.channel.DomainChannel
 
 /**
  * @return Category with a list of channels inside it.

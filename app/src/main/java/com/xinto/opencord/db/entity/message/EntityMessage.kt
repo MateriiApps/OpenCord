@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.xinto.opencord.rest.dto.ApiMessage
 
 @Entity(
     tableName = "messages",
@@ -58,3 +59,20 @@ data class EntityMessage(
     @ColumnInfo(name = "has_embeds")
     val hasEmbeds: Boolean,
 )
+
+fun ApiMessage.toEntity(): EntityMessage {
+    return EntityMessage(
+        id = id.value,
+        channelId = channelId.value,
+        type = type.value,
+        timestamp = timestamp.toEpochMilliseconds(),
+        pinned = pinned,
+        content = content,
+        authorId = author.id.value,
+        editedTimestamp = editedTimestamp?.toEpochMilliseconds(),
+        referencedMessageId = referencedMessage?.id?.value,
+        mentionsEveryone = mentionEveryone,
+        hasAttachments = attachments.isNotEmpty(),
+        hasEmbeds = embeds.isNotEmpty(),
+    )
+}

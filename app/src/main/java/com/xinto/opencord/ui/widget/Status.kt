@@ -6,7 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import com.xinto.opencord.R
-import com.xinto.opencord.domain.model.DomainUserStatus
+import com.xinto.opencord.domain.usersettings.DomainUserStatus
 
 @Composable
 fun WidgetStatusIcon(

@@ -29,10 +29,10 @@ import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 import com.xinto.opencord.R
-import com.xinto.opencord.domain.model.DomainChannel
-import com.xinto.opencord.domain.model.DomainCustomStatus
-import com.xinto.opencord.domain.model.DomainGuild
-import com.xinto.opencord.domain.model.DomainUserStatus
+import com.xinto.opencord.domain.channel.DomainChannel
+import com.xinto.opencord.domain.usersettings.DomainCustomStatus
+import com.xinto.opencord.domain.guild.DomainGuild
+import com.xinto.opencord.domain.usersettings.DomainUserStatus
 import com.xinto.opencord.ui.component.OCAsyncImage
 import com.xinto.opencord.ui.component.OCBadgeBox
 import com.xinto.opencord.ui.util.ContentAlpha

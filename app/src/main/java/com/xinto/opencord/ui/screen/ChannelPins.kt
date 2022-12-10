@@ -15,9 +15,9 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
-import com.xinto.opencord.domain.model.DomainAttachment
-import com.xinto.opencord.domain.model.DomainMessage
-import com.xinto.opencord.domain.model.DomainMessageRegular
+import com.xinto.opencord.domain.attachment.DomainAttachment
+import com.xinto.opencord.domain.message.DomainMessage
+import com.xinto.opencord.domain.message.DomainMessageRegular
 import com.xinto.opencord.ui.viewmodel.ChannelPinsViewModel
 import com.xinto.opencord.ui.widget.*
 import com.xinto.opencord.util.ifComposable
