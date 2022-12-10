@@ -1,10 +1,12 @@
 package com.xinto.opencord.domain.usersettings
 
+import androidx.compose.runtime.Immutable
 import com.github.materiiapps.partial.Partialize
 import com.github.materiiapps.partial.map
 import com.xinto.opencord.rest.dto.ApiUserSettings
 import com.xinto.opencord.rest.dto.ApiUserSettingsPartial
 
+@Immutable
 @Partialize
 data class DomainUserSettings(
     val locale: String,

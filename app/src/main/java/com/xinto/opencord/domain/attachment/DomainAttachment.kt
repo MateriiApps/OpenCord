@@ -1,8 +1,10 @@
 package com.xinto.opencord.domain.attachment
 
+import androidx.compose.runtime.Immutable
 import com.xinto.opencord.db.entity.message.EntityAttachment
 import com.xinto.opencord.rest.dto.ApiAttachment
 
+@Immutable
 interface DomainAttachment {
     val id: Long
     val filename: String

@@ -1,5 +1,8 @@
 package com.xinto.opencord.domain.channel
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 data class DomainCategoryChannel(
     override val id: Long,
     override val guildId: Long?,

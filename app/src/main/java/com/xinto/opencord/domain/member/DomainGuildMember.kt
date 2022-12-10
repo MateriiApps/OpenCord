@@ -1,10 +1,12 @@
 package com.xinto.opencord.domain.member
 
+import androidx.compose.runtime.Immutable
 import com.xinto.opencord.domain.user.DomainUser
 import com.xinto.opencord.domain.user.toDomain
 import com.xinto.opencord.rest.dto.ApiGuildMember
 import com.xinto.opencord.rest.service.DiscordCdnServiceImpl
 
+@Immutable
 data class DomainGuildMember(
     val user: DomainUser?,
     val nick: String? = null,

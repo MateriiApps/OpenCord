@@ -1,5 +1,6 @@
 package com.xinto.opencord.domain.message
 
+import androidx.compose.runtime.Immutable
 import com.xinto.opencord.db.entity.message.EntityMessage
 import com.xinto.opencord.domain.attachment.DomainAttachment
 import com.xinto.opencord.domain.attachment.toDomain
@@ -13,6 +14,7 @@ import com.xinto.opencord.rest.dto.fromValue
 import com.xinto.opencord.util.Timestamp
 import kotlinx.datetime.Instant
 
+@Immutable
 abstract class DomainMessage {
     abstract val id: Long
     abstract val channelId: Long

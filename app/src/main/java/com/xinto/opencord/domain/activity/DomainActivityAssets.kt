@@ -1,7 +1,9 @@
 package com.xinto.opencord.domain.activity
 
+import androidx.compose.runtime.Immutable
 import com.xinto.opencord.rest.dto.ApiActivityAssets
 
+@Immutable
 data class DomainActivityAssets(
     val largeImage: String?,
     val largeText: String?,

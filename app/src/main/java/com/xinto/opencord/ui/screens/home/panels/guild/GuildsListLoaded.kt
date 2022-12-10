@@ -22,12 +22,13 @@ import com.xinto.opencord.domain.guild.DomainGuild
 import com.xinto.opencord.ui.components.guild.list.GuildsListItemImage
 import com.xinto.opencord.ui.components.guild.list.GuildsListItemText
 import com.xinto.opencord.ui.components.guild.list.RegularGuildItem
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun GuildsListLoaded(
     onGuildSelect: (Long) -> Unit,
     selectedGuildId: Long,
-    guilds: List<DomainGuild>,
+    guilds: ImmutableList<DomainGuild>,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
