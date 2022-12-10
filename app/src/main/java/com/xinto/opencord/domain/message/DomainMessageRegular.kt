@@ -9,7 +9,7 @@ import com.xinto.opencord.domain.embed.DomainEmbed
 import com.xinto.opencord.domain.embed.toDomain
 import com.xinto.opencord.domain.user.DomainUser
 import com.xinto.opencord.domain.user.toDomain
-import com.xinto.opencord.rest.dto.ApiMessagePartial
+import com.xinto.opencord.rest.models.message.ApiMessagePartial
 import com.xinto.opencord.util.SimpleAstParser
 import kotlinx.datetime.Instant
 import org.koin.core.component.KoinComponent

@@ -1,7 +1,6 @@
 package com.xinto.opencord.rest.models.message
 
 import com.github.materiiapps.enumutil.FromValue
-import com.xinto.opencord.rest.dto.fromValue
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind

@@ -1,6 +1,5 @@
 package com.xinto.opencord.store
 
-import com.xinto.opencord.domain.mapper.toApi
 import com.xinto.opencord.domain.usersettings.DomainUserSettings
 import com.xinto.opencord.domain.usersettings.DomainUserSettingsPartial
 import com.xinto.opencord.domain.usersettings.merge
@@ -9,6 +8,7 @@ import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.event.ReadyEvent
 import com.xinto.opencord.gateway.event.UserSettingsUpdateEvent
 import com.xinto.opencord.gateway.onEvent
+import com.xinto.opencord.rest.models.user.settings.toApi
 import com.xinto.opencord.rest.service.DiscordApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

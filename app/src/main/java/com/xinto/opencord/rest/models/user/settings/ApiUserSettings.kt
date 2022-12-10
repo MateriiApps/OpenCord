@@ -3,7 +3,6 @@ package com.xinto.opencord.rest.models.user.settings
 import com.github.materiiapps.partial.Partialize
 import com.github.materiiapps.partial.map
 import com.xinto.opencord.domain.usersettings.DomainUserSettingsPartial
-import com.xinto.opencord.rest.dto.ApiUserSettingsPartial
 import com.xinto.opencord.rest.models.ApiSnowflake
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
