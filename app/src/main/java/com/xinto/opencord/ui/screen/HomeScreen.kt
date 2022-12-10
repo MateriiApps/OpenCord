@@ -13,10 +13,10 @@ import androidx.compose.ui.unit.dp
 import com.xinto.opc.OverlappingPanels
 import com.xinto.opc.OverlappingPanelsValue
 import com.xinto.opc.rememberOverlappingPanelsState
-import com.xinto.opencord.ui.component.channel.list.ChannelsList
-import com.xinto.opencord.ui.component.chat.Chat
-import com.xinto.opencord.ui.component.currentuser.CurrentUser
-import com.xinto.opencord.ui.component.guild.list.GuildsList
+import com.xinto.opencord.ui.panel.channel.ChannelsList
+import com.xinto.opencord.ui.panel.chat.Chat
+import com.xinto.opencord.ui.panel.currentuser.CurrentUser
+import com.xinto.opencord.ui.panel.guild.GuildsList
 import com.xinto.opencord.ui.util.animateCornerBasedShapeAsState
 import com.xinto.opencord.ui.viewmodel.*
 import kotlinx.coroutines.launch

@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.component.guild.list.item
+package com.xinto.opencord.ui.component.guild.list
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
@@ -7,7 +7,7 @@ import androidx.compose.ui.unit.dp
 import com.xinto.opencord.ui.component.OCAsyncImage
 
 @Composable
-fun GuildItemImage(
+fun GuildsListItemImage(
     url: String,
     modifier: Modifier = Modifier,
 ) {

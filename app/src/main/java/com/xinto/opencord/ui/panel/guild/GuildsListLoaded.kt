@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.component.guild.list
+package com.xinto.opencord.ui.panel.guild
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,9 +19,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainGuild
-import com.xinto.opencord.ui.component.guild.list.item.GuildItemImage
-import com.xinto.opencord.ui.component.guild.list.item.GuildItemImageText
-import com.xinto.opencord.ui.component.guild.list.item.RegularGuildItem
+import com.xinto.opencord.ui.component.guild.list.GuildsListItemImage
+import com.xinto.opencord.ui.component.guild.list.GuildsListItemText
+import com.xinto.opencord.ui.component.guild.list.RegularGuildItem
 
 @Composable
 fun GuildsListLoaded(
@@ -43,7 +43,7 @@ fun GuildsListLoaded(
                 showIndicator = false,
                 onClick = {},
             ) {
-                GuildItemImageText {
+                GuildsListItemText {
                     Icon(
                         modifier = Modifier
                             .size(32.dp)
@@ -76,11 +76,11 @@ fun GuildsListLoaded(
                 },
             ) {
                 if (guild.iconUrl != null) {
-                    GuildItemImage(
+                    GuildsListItemImage(
                         url = guild.iconUrl,
                     )
                 } else {
-                    GuildItemImageText {
+                    GuildsListItemText {
                         Text(guild.iconText)
                     }
                 }

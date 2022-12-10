@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.component.currentuser.sheet
+package com.xinto.opencord.ui.panel.currentuser.sheet
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

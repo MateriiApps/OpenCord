@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.component.guild.list.item
+package com.xinto.opencord.ui.component.guild.list
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun GuildItemImageText(
+fun GuildsListItemText(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {

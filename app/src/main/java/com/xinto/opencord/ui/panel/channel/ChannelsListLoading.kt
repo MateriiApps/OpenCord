@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.component.channel.list
+package com.xinto.opencord.ui.panel.channel
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -15,8 +15,8 @@ import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
-import com.xinto.opencord.ui.component.channel.list.item.CategoryChannelItem
-import com.xinto.opencord.ui.component.channel.list.item.RegularChannelItem
+import com.xinto.opencord.ui.component.channel.list.ChannelListRegularItem
+import com.xinto.opencord.ui.component.channel.list.ChannelListCategoryItem
 
 @Composable
 fun ChannelsListLoading(
@@ -54,7 +54,7 @@ fun ChannelsListLoading(
         repeat(items) { itemIndex ->
             val isCategory = remember { itemIndex == 0 || (0..6).random() == 1 }
             if (isCategory) {
-                CategoryChannelItem(
+                ChannelListCategoryItem(
                     modifier = Modifier.padding(
                         top = 12.dp,
                         bottom = 4.dp,
@@ -81,7 +81,7 @@ fun ChannelsListLoading(
                     onClick = {},
                 )
             } else {
-                RegularChannelItem(
+                ChannelListRegularItem(
                     modifier = Modifier.padding(bottom = 2.dp),
                     title = {
                         val title = remember { " ".repeat((15..30).random()) }

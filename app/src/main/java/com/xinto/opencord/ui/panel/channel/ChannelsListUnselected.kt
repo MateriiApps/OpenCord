@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.component.chat
+package com.xinto.opencord.ui.panel.channel
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.MaterialTheme
@@ -11,7 +11,7 @@ import androidx.compose.ui.res.stringResource
 import com.xinto.opencord.R
 
 @Composable
-fun ChatUnselected(
+fun ChannelsListUnselected(
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -19,7 +19,7 @@ fun ChatUnselected(
         contentAlignment = Alignment.Center,
     ) {
         ProvideTextStyle(MaterialTheme.typography.titleMedium) {
-            Text(stringResource(R.string.chat_unselected_message))
+            Text(stringResource(R.string.channel_unselected_message))
         }
     }
 }

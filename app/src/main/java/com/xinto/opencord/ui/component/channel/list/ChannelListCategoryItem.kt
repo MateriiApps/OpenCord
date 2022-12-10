@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.component.channel.list.item
+package com.xinto.opencord.ui.component.channel.list
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -12,7 +12,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CategoryChannelItem(
+fun ChannelListCategoryItem(
     modifier: Modifier = Modifier,
     title: (@Composable () -> Unit),
     icon: (@Composable () -> Unit),

@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.component.channel.list.item
+package com.xinto.opencord.ui.component.channel.list
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.xinto.opencord.ui.component.indicator.UnreadIndicator
 
 @Composable
-fun RegularChannelItem(
+fun ChannelListRegularItem(
     onClick: () -> Unit,
     title: @Composable () -> Unit,
     icon: @Composable () -> Unit,

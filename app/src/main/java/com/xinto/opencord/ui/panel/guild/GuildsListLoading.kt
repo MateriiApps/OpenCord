@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.component.guild.list
+package com.xinto.opencord.ui.panel.guild
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -20,8 +20,8 @@ import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 import com.xinto.opencord.R
-import com.xinto.opencord.ui.component.guild.list.item.GuildItemImageText
-import com.xinto.opencord.ui.component.guild.list.item.RegularGuildItem
+import com.xinto.opencord.ui.component.guild.list.GuildsListItemText
+import com.xinto.opencord.ui.component.guild.list.RegularGuildItem
 
 @Composable
 fun GuildsListLoading(
@@ -44,7 +44,7 @@ fun GuildsListLoading(
             showIndicator = false,
             onClick = {},
         ) {
-            GuildItemImageText {
+            GuildsListItemText {
                 Icon(
                     modifier = Modifier
                         .size(32.dp)

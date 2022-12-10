@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.component.chat
+package com.xinto.opencord.ui.panel.chat
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*

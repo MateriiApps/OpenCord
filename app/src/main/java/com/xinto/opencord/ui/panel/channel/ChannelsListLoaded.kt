@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.component.channel.list
+package com.xinto.opencord.ui.panel.channel
 
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
@@ -28,8 +28,8 @@ import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.model.DomainChannel
 import com.xinto.opencord.ui.component.OCAsyncImage
-import com.xinto.opencord.ui.component.channel.list.item.CategoryChannelItem
-import com.xinto.opencord.ui.component.channel.list.item.RegularChannelItem
+import com.xinto.opencord.ui.component.channel.list.ChannelListRegularItem
+import com.xinto.opencord.ui.component.channel.list.ChannelListCategoryItem
 import com.xinto.opencord.ui.util.ContentAlpha
 import com.xinto.opencord.ui.util.ProvideContentAlpha
 
@@ -132,7 +132,7 @@ fun ChannelsListLoaded(
                                 stiffness = Spring.StiffnessLow,
                             ),
                         )
-                        CategoryChannelItem(
+                        ChannelListCategoryItem(
                             modifier = Modifier.padding(
                                 top = 12.dp,
                                 bottom = 4.dp,
@@ -158,7 +158,7 @@ fun ChannelsListLoaded(
                 if (!(channel.id != selectedChannelId && collapsed)) {
                     when (channel) {
                         is DomainChannel.TextChannel -> {
-                            RegularChannelItem(
+                            ChannelListRegularItem(
                                 modifier = Modifier.padding(bottom = 2.dp),
                                 title = { Text(channel.name) },
                                 icon = {
@@ -175,7 +175,7 @@ fun ChannelsListLoaded(
                             )
                         }
                         is DomainChannel.VoiceChannel -> {
-                            RegularChannelItem(
+                            ChannelListRegularItem(
                                 modifier = Modifier.padding(bottom = 2.dp),
                                 title = { Text(channel.name) },
                                 icon = {

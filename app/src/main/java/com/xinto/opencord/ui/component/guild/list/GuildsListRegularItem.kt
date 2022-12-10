@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.component.guild.list.item
+package com.xinto.opencord.ui.component.guild.list
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
