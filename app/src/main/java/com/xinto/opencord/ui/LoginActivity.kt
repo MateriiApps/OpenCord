@@ -7,7 +7,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.SideEffect
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.hcaptcha.sdk.HCaptcha
-import com.xinto.opencord.ui.screen.LoginRootScreen
+import com.xinto.opencord.ui.screens.login.LoginRootScreen
 import com.xinto.opencord.ui.theme.OpenCordTheme
 import org.koin.android.ext.android.get
 import org.koin.core.parameter.parametersOf
