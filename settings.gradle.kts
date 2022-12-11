@@ -2,7 +2,7 @@ pluginManagement {
     plugins {
         val agpVersion = "7.3.1"
         id("com.android.application") version agpVersion apply false
-        id("com.android.library") version agpVersion
+        id("com.android.library") version agpVersion apply false
 
         val kotlinVersion = "1.7.20"
         kotlin("android") version kotlinVersion apply false
