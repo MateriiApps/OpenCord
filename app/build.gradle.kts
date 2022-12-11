@@ -1,9 +1,9 @@
 plugins {
     id("com.android.application")
-    id("kotlin-android")
-    id("kotlin-parcelize")
+    id("com.google.devtools.ksp")
+    kotlin("android")
+    kotlin("plugin.parcelize")
     kotlin("plugin.serialization")
-    id("com.google.devtools.ksp") version "1.7.10-1.0.6"
 }
 
 android {
@@ -124,7 +124,7 @@ dependencies {
 
     // Use java.time.* on Android <= 8
     // https://developer.android.com/studio/write/java8-support#library-desugaring-versions
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.2.0")
 
     Dependencies.Koin(this)
     Dependencies.Ktor(this)

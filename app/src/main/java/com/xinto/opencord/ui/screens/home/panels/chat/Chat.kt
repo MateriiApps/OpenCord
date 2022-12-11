@@ -33,7 +33,7 @@ fun Chat(
     Scaffold(
         modifier = modifier,
         topBar = {
-            SmallTopAppBar(
+            TopAppBar(
                 title = { Text(stringResource(R.string.chat_title, viewModel.channelName)) },
                 navigationIcon = {
                     IconButton(onChannelsButtonClick) {

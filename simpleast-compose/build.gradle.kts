@@ -34,10 +34,14 @@ android {
 
     kotlinOptions {
         jvmTarget = "11"
-        freeCompilerArgs = freeCompilerArgs +
-                "-Xexplicit-api=strict" +
-                "-Xcontext-receivers"
+        freeCompilerArgs += listOf(
+            "-Xcontext-receivers"
+        )
     }
+}
+
+kotlin {
+    explicitApi()
 }
 
 dependencies {
