@@ -5,7 +5,6 @@ import com.xinto.opencord.domain.activity.types.DomainActivityCustom
 import com.xinto.opencord.domain.activity.types.DomainActivityGame
 import com.xinto.opencord.domain.activity.types.DomainActivityListening
 import com.xinto.opencord.domain.activity.types.DomainActivityStreaming
-import com.xinto.opencord.rest.dto.*
 import com.xinto.opencord.rest.models.ApiSnowflake
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
