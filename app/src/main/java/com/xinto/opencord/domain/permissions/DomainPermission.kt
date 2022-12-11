@@ -1,7 +1,7 @@
 package com.xinto.opencord.domain.permissions
 
 import androidx.compose.runtime.Immutable
-import com.xinto.opencord.rest.dto.ApiPermissions
+import com.xinto.opencord.rest.models.ApiPermissions
 
 @Immutable
 enum class DomainPermission(val flags: Long) {

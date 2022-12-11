@@ -31,8 +31,8 @@ import com.xinto.opencord.domain.channel.DomainChannel
 import com.xinto.opencord.domain.channel.DomainTextChannel
 import com.xinto.opencord.domain.channel.DomainVoiceChannel
 import com.xinto.opencord.ui.components.OCAsyncImage
-import com.xinto.opencord.ui.components.channel.list.ChannelListRegularItem
 import com.xinto.opencord.ui.components.channel.list.ChannelListCategoryItem
+import com.xinto.opencord.ui.components.channel.list.ChannelListRegularItem
 import com.xinto.opencord.ui.util.ContentAlpha
 import com.xinto.opencord.ui.util.ProvideContentAlpha
 import kotlinx.collections.immutable.ImmutableList

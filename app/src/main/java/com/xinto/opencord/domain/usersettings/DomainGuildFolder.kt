@@ -1,7 +1,7 @@
 package com.xinto.opencord.domain.usersettings
 
 import androidx.compose.runtime.Immutable
-import com.xinto.opencord.rest.dto.ApiGuildFolder
+import com.xinto.opencord.rest.models.user.settings.ApiGuildFolder
 
 @Immutable
 data class DomainGuildFolder(

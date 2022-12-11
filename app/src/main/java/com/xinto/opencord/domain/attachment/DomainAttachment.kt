@@ -2,7 +2,7 @@ package com.xinto.opencord.domain.attachment
 
 import androidx.compose.runtime.Immutable
 import com.xinto.opencord.db.entity.message.EntityAttachment
-import com.xinto.opencord.rest.dto.ApiAttachment
+import com.xinto.opencord.rest.models.ApiAttachment
 
 @Immutable
 interface DomainAttachment {

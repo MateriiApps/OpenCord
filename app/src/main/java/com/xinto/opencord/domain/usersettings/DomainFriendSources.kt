@@ -1,7 +1,7 @@
 package com.xinto.opencord.domain.usersettings
 
 import androidx.compose.runtime.Immutable
-import com.xinto.opencord.rest.dto.ApiFriendSources
+import com.xinto.opencord.rest.models.user.settings.ApiFriendSources
 
 @Immutable
 data class DomainFriendSources(

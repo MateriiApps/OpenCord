@@ -3,8 +3,8 @@ package com.xinto.opencord.ui.viewmodel
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.xinto.opencord.manager.PersistentDataManager
 import com.xinto.opencord.domain.message.DomainMessage
+import com.xinto.opencord.manager.PersistentDataManager
 import com.xinto.opencord.rest.body.MessageBody
 import com.xinto.opencord.rest.service.DiscordApiService
 import com.xinto.opencord.store.ChannelStore

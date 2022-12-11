@@ -3,7 +3,7 @@ package com.xinto.opencord.rest.service
 import com.xinto.opencord.BuildConfig
 import com.xinto.opencord.rest.body.LoginBody
 import com.xinto.opencord.rest.body.TwoFactorBody
-import com.xinto.opencord.rest.dto.ApiLogin
+import com.xinto.opencord.rest.models.login.ApiLogin
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*

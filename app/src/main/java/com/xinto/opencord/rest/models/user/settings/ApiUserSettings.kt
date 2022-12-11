@@ -1,6 +1,9 @@
-package com.xinto.opencord.rest.dto
+package com.xinto.opencord.rest.models.user.settings
 
 import com.github.materiiapps.partial.Partialize
+import com.github.materiiapps.partial.map
+import com.xinto.opencord.domain.usersettings.DomainUserSettingsPartial
+import com.xinto.opencord.rest.models.ApiSnowflake
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -107,41 +110,38 @@ data class ApiUserSettings(
     val customStatus: ApiCustomStatus?,
 )
 
-@Serializable
-data class ApiFriendSources(
-    @SerialName("all")
-    val all: Boolean? = null,
-
-    @SerialName("mutual_friends")
-    val mutualFriends: Boolean? = null,
-
-    @SerialName("mutual_guilds")
-    val mutualGuilds: Boolean? = null,
-)
-
-@Serializable
-data class ApiGuildFolder(
-    @SerialName("guild_ids")
-    val guildIds: List<ApiSnowflake>,
-
-    @SerialName("id")
-    val id: ApiSnowflake? = null,
-
-    @SerialName("name")
-    val name: String? = null,
-)
-
-@Serializable
-data class ApiCustomStatus(
-    @SerialName("text")
-    val text: String?,
-
-    @SerialName("expires_at")
-    val expiresAt: String?,
-
-    @SerialName("emoji_id")
-    val emojiId: ApiSnowflake?,
-
-    @SerialName("emoji_name")
-    val emojiName: String?
-)
+fun DomainUserSettingsPartial.toApi(): ApiUserSettingsPartial {
+    return ApiUserSettingsPartial(
+        locale = locale,
+        showCurrentGame = showCurrentGame,
+        inlineAttachmentMedia = inlineAttachmentMedia,
+        inlineEmbedMedia = inlineEmbedMedia,
+        gifAutoPlay = gifAutoPlay,
+        renderEmbeds = renderEmbeds,
+        renderReactions = renderReactions,
+        animateEmoji = animateEmoji,
+        enableTTSCommand = enableTTSCommand,
+        messageDisplayCompact = messageDisplayCompact,
+        convertEmoticons = convertEmoticons,
+        disableGamesTab = disableGamesTab,
+        theme = theme.map { it.value },
+        developerMode = developerMode,
+        detectPlatformAccounts = detectPlatformAccounts,
+        status = status.map { it.value },
+        afkTimeout = afkTimeout,
+        timezoneOffset = timezoneOffset,
+        streamNotificationsEnabled = streamNotificationsEnabled,
+        allowAccessibilityDetection = allowAccessibilityDetection,
+        contactSyncEnabled = contactSyncEnabled,
+        nativePhoneIntegrationEnabled = nativePhoneIntegrationEnabled,
+        animateStickers = animateStickers,
+        friendDiscoveryFlags = friendDiscoveryFlags,
+        viewNsfwGuilds = viewNsfwGuilds,
+        passwordless = passwordless,
+        friendSourceFlags = friendSourceFlags.map { it.toApi() },
+        guildFolders = guildFolders.map { guildFolders ->
+            guildFolders.map { it.toApi() }
+        },
+        customStatus = customStatus.map { it?.toApi() },
+    )
+}

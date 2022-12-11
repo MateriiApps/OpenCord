@@ -16,7 +16,7 @@ import com.xinto.opencord.gateway.event.MessageCreateEvent
 import com.xinto.opencord.gateway.event.MessageDeleteEvent
 import com.xinto.opencord.gateway.event.MessageUpdateEvent
 import com.xinto.opencord.gateway.onEvent
-import com.xinto.opencord.rest.dto.ApiMessage
+import com.xinto.opencord.rest.models.message.ApiMessage
 import com.xinto.opencord.rest.service.DiscordApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

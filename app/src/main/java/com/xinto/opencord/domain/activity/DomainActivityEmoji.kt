@@ -1,7 +1,7 @@
 package com.xinto.opencord.domain.activity
 
 import androidx.compose.runtime.Immutable
-import com.xinto.opencord.rest.dto.ApiActivityEmoji
+import com.xinto.opencord.rest.models.activity.ApiActivityEmoji
 
 // TODO: use a partial emoji instead
 @Immutable

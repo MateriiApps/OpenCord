@@ -1,6 +1,6 @@
 package com.xinto.opencord.gateway.dto
 
-import com.xinto.opencord.rest.dto.ApiActivity
+import com.xinto.opencord.rest.models.activity.ApiActivity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

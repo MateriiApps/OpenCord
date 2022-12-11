@@ -11,12 +11,12 @@ import com.xinto.opencord.R
 import com.xinto.opencord.domain.activity.DomainActivityEmoji
 import com.xinto.opencord.domain.activity.types.DomainActivityCustom
 import com.xinto.opencord.domain.activity.types.DomainActivityStreaming
-import com.xinto.opencord.domain.mapper.toApi
 import com.xinto.opencord.domain.usersettings.DomainCustomStatus
 import com.xinto.opencord.domain.usersettings.DomainUserSettingsPartial
 import com.xinto.opencord.domain.usersettings.DomainUserStatus
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.dto.UpdatePresence
+import com.xinto.opencord.rest.models.activity.toApi
 import com.xinto.opencord.store.CurrentUserStore
 import com.xinto.opencord.store.SessionStore
 import com.xinto.opencord.store.UserSettingsStore

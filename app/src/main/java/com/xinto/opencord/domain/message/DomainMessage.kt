@@ -8,9 +8,9 @@ import com.xinto.opencord.domain.embed.DomainEmbed
 import com.xinto.opencord.domain.embed.toDomain
 import com.xinto.opencord.domain.user.DomainUser
 import com.xinto.opencord.domain.user.toDomain
-import com.xinto.opencord.rest.dto.ApiMessage
-import com.xinto.opencord.rest.dto.ApiMessageType
-import com.xinto.opencord.rest.dto.fromValue
+import com.xinto.opencord.rest.models.message.ApiMessage
+import com.xinto.opencord.rest.models.message.ApiMessageType
+import com.xinto.opencord.rest.models.message.fromValue
 import com.xinto.opencord.util.Timestamp
 import kotlinx.datetime.Instant
 

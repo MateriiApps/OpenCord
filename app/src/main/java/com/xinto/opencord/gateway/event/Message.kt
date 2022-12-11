@@ -1,8 +1,8 @@
 package com.xinto.opencord.gateway.event
 
 import com.xinto.opencord.gateway.dto.MessageDeleteData
-import com.xinto.opencord.rest.dto.ApiMessage
-import com.xinto.opencord.rest.dto.ApiMessagePartial
+import com.xinto.opencord.rest.models.message.ApiMessage
+import com.xinto.opencord.rest.models.message.ApiMessagePartial
 
 data class MessageCreateEvent(
     val data: ApiMessage,

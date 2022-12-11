@@ -1,7 +1,7 @@
 package com.xinto.opencord.domain.embed
 
 import androidx.compose.runtime.Immutable
-import com.xinto.opencord.rest.dto.ApiEmbedField
+import com.xinto.opencord.rest.models.embed.ApiEmbedField
 
 @Immutable
 data class DomainEmbedField(

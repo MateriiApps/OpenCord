@@ -1,6 +1,6 @@
 package com.xinto.opencord.gateway.event
 
-import com.xinto.opencord.rest.dto.ApiChannel
+import com.xinto.opencord.rest.models.ApiChannel
 
 data class ChannelCreateEvent(
     val data: ApiChannel,

@@ -15,8 +15,8 @@ import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
-import com.xinto.opencord.ui.components.channel.list.ChannelListRegularItem
 import com.xinto.opencord.ui.components.channel.list.ChannelListCategoryItem
+import com.xinto.opencord.ui.components.channel.list.ChannelListRegularItem
 
 @Composable
 fun ChannelsListLoading(

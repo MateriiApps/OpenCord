@@ -2,9 +2,9 @@ package com.xinto.opencord.rest.service
 
 import com.xinto.opencord.BuildConfig
 import com.xinto.opencord.rest.body.MessageBody
-import com.xinto.opencord.rest.dto.ApiMessage
-import com.xinto.opencord.rest.dto.ApiUserSettings
-import com.xinto.opencord.rest.dto.ApiUserSettingsPartial
+import com.xinto.opencord.rest.models.message.ApiMessage
+import com.xinto.opencord.rest.models.user.settings.ApiUserSettings
+import com.xinto.opencord.rest.models.user.settings.ApiUserSettingsPartial
 import com.xinto.opencord.util.queryParameters
 import io.ktor.client.*
 import io.ktor.client.call.*

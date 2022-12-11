@@ -1,7 +1,7 @@
 package com.xinto.opencord.domain.login
 
 import androidx.compose.runtime.Immutable
-import com.xinto.opencord.rest.dto.ApiLogin
+import com.xinto.opencord.rest.models.login.ApiLogin
 
 @Immutable
 sealed interface DomainLogin {

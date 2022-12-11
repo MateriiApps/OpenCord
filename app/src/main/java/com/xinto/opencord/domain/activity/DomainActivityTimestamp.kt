@@ -1,7 +1,7 @@
 package com.xinto.opencord.domain.activity
 
 import androidx.compose.runtime.Immutable
-import com.xinto.opencord.rest.dto.ApiActivityTimestamp
+import com.xinto.opencord.rest.models.activity.ApiActivityTimestamp
 import kotlinx.datetime.Instant
 
 @Immutable

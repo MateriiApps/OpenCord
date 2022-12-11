@@ -3,7 +3,7 @@ package com.xinto.opencord.domain.channel
 import androidx.compose.runtime.Immutable
 import com.xinto.opencord.db.entity.channel.EntityChannel
 import com.xinto.opencord.domain.Mentionable
-import com.xinto.opencord.rest.dto.ApiChannel
+import com.xinto.opencord.rest.models.ApiChannel
 
 @Immutable
 abstract class DomainChannel : Comparable<DomainChannel>, Mentionable {

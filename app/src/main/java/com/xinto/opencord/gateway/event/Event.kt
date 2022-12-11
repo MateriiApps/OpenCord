@@ -5,7 +5,13 @@ import com.xinto.opencord.gateway.dto.MessageDeleteData
 import com.xinto.opencord.gateway.dto.Ready
 import com.xinto.opencord.gateway.dto.SessionData
 import com.xinto.opencord.gateway.io.EventName
-import com.xinto.opencord.rest.dto.*
+import com.xinto.opencord.rest.models.ApiChannel
+import com.xinto.opencord.rest.models.ApiGuild
+import com.xinto.opencord.rest.models.ApiGuildMemberChunk
+import com.xinto.opencord.rest.models.message.ApiMessage
+import com.xinto.opencord.rest.models.message.ApiMessagePartial
+import com.xinto.opencord.rest.models.user.ApiUser
+import com.xinto.opencord.rest.models.user.settings.ApiUserSettingsPartial
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor

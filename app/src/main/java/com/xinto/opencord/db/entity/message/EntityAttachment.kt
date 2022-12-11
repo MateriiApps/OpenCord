@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.xinto.opencord.rest.dto.ApiAttachment
+import com.xinto.opencord.rest.models.ApiAttachment
 
 @Entity(
     tableName = "attachments",

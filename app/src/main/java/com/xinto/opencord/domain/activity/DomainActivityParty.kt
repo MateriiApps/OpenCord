@@ -1,7 +1,7 @@
 package com.xinto.opencord.domain.activity
 
 import androidx.compose.runtime.Immutable
-import com.xinto.opencord.rest.dto.ApiActivityParty
+import com.xinto.opencord.rest.models.activity.ApiActivityParty
 
 @Immutable
 data class DomainActivityParty(

@@ -5,8 +5,8 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
-import com.xinto.opencord.manager.PersistentDataManager
 import com.xinto.opencord.domain.message.DomainMessage
+import com.xinto.opencord.manager.PersistentDataManager
 import com.xinto.opencord.store.MessageStore
 import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
 import kotlinx.coroutines.launch

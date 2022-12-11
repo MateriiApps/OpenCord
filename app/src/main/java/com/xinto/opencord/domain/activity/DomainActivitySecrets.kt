@@ -1,7 +1,7 @@
 package com.xinto.opencord.domain.activity
 
 import androidx.compose.runtime.Immutable
-import com.xinto.opencord.rest.dto.ApiActivitySecrets
+import com.xinto.opencord.rest.models.activity.ApiActivitySecrets
 
 @Immutable
 data class DomainActivitySecrets(

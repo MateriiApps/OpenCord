@@ -25,13 +25,13 @@ import com.xinto.opencord.ui.components.channel.ChatInput
 import com.xinto.opencord.ui.components.embed.Embed
 import com.xinto.opencord.ui.components.embed.EmbedAuthor
 import com.xinto.opencord.ui.components.embed.EmbedField
-import com.xinto.opencord.ui.components.message.MessageRegular
-import com.xinto.opencord.ui.components.message.reply.MessageReferencedContent
-import com.xinto.opencord.ui.components.message.reply.MessageReferenced
 import com.xinto.opencord.ui.components.message.MessageAuthor
 import com.xinto.opencord.ui.components.message.MessageAvatar
 import com.xinto.opencord.ui.components.message.MessageContent
+import com.xinto.opencord.ui.components.message.MessageRegular
+import com.xinto.opencord.ui.components.message.reply.MessageReferenced
 import com.xinto.opencord.ui.components.message.reply.MessageReferencedAuthor
+import com.xinto.opencord.ui.components.message.reply.MessageReferencedContent
 import com.xinto.opencord.util.ifComposable
 import com.xinto.opencord.util.ifNotEmptyComposable
 import com.xinto.opencord.util.ifNotNullComposable

@@ -3,8 +3,8 @@ package com.xinto.opencord.domain.usersettings
 import androidx.compose.runtime.Immutable
 import com.github.materiiapps.partial.Partialize
 import com.github.materiiapps.partial.map
-import com.xinto.opencord.rest.dto.ApiUserSettings
-import com.xinto.opencord.rest.dto.ApiUserSettingsPartial
+import com.xinto.opencord.rest.models.user.settings.ApiUserSettings
+import com.xinto.opencord.rest.models.user.settings.ApiUserSettingsPartial
 
 @Immutable
 @Partialize

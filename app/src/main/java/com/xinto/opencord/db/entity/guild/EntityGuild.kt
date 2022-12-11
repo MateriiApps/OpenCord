@@ -3,7 +3,7 @@ package com.xinto.opencord.db.entity.guild
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.xinto.opencord.rest.dto.ApiGuild
+import com.xinto.opencord.rest.models.ApiGuild
 
 @Entity(
     tableName = "guilds",
