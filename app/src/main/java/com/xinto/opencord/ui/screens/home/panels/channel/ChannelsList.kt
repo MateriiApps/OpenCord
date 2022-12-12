@@ -10,13 +10,16 @@ import androidx.compose.ui.unit.dp
 import com.xinto.opencord.ui.viewmodel.ChannelsViewModel
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toImmutableMap
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun ChannelsList(
-    onChannelSelect: () -> Unit,
-    viewModel: ChannelsViewModel,
+    guildId: Long,
+    onChannelSelect: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val viewModel: ChannelsViewModel = koinViewModel { parametersOf(guildId) }
     val sortedChannels by remember(viewModel.channels) {
         derivedStateOf {
             viewModel.getSortedChannels()
@@ -51,7 +54,7 @@ fun ChannelsList(
                         modifier = Modifier.fillMaxSize(),
                         onChannelSelect = {
                             viewModel.selectChannel(it)
-                            onChannelSelect()
+                            onChannelSelect(it)
                         },
                         onCategoryClick = {
                             viewModel.toggleCategory(it)

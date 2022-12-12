@@ -16,6 +16,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class ChannelsViewModel(
+    guildId: Long,
+
     persistentDataManager: PersistentDataManager,
     private val channelStore: ChannelStore,
     private val guildStore: GuildStore,
@@ -42,12 +44,41 @@ class ChannelsViewModel(
     val collapsedCategories = mutableStateListOf<Long>()
 
     fun load() {
+
+    }
+
+    fun selectChannel(channelId: Long) {
+        selectedChannelId = channelId
+        persistentChannelId = channelId
+    }
+
+    fun toggleCategory(categoryId: Long) {
+        if (persistentCollapsedCategories.contains(categoryId))
+            addPersistentCollapseCategory(categoryId)
+        else {
+            removePersistentCollapseCategory(categoryId)
+        }
+
+        if (!collapsedCategories.remove(categoryId))
+            collapsedCategories.add(categoryId)
+    }
+
+    fun getSortedChannels(): Map<DomainCategoryChannel?, List<DomainChannel>> {
+        return getSortedChannels(channels.values)
+    }
+
+    init {
+        if (persistentChannelId != 0L) {
+            selectedChannelId = persistentChannelId
+        }
+        collapsedCategories.addAll(persistentDataManager.collapsedCategories)
+
         viewModelScope.launch {
             state = State.Loading
             withContext(Dispatchers.IO) {
                 try {
-                    val guild = guildStore.fetchGuild(persistentGuildId) ?: return@withContext
-                    val guildChannels = channelStore.fetchChannels(persistentGuildId)
+                    val guild = guildStore.fetchGuild(guildId) ?: return@withContext
+                    val guildChannels = channelStore.fetchChannels(guildId)
                         .associateBy { it.id }
 
                     withContext(Dispatchers.Main) {
@@ -93,35 +124,5 @@ class ChannelsViewModel(
                 onRemove = { channels.remove(it) },
             )
         }
-    }
-
-    fun selectChannel(channelId: Long) {
-        selectedChannelId = channelId
-        persistentChannelId = channelId
-    }
-
-    fun toggleCategory(categoryId: Long) {
-        if (persistentCollapsedCategories.contains(categoryId))
-            addPersistentCollapseCategory(categoryId)
-        else {
-            removePersistentCollapseCategory(categoryId)
-        }
-
-        if (!collapsedCategories.remove(categoryId))
-            collapsedCategories.add(categoryId)
-    }
-
-    fun getSortedChannels(): Map<DomainCategoryChannel?, List<DomainChannel>> {
-        return getSortedChannels(channels.values)
-    }
-
-    init {
-        if (persistentGuildId != 0L) {
-            load()
-        }
-        if (persistentChannelId != 0L) {
-            selectedChannelId = persistentChannelId
-        }
-        collapsedCategories.addAll(persistentDataManager.collapsedCategories)
     }
 }

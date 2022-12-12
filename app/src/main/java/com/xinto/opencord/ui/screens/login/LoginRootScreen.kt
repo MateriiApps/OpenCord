@@ -8,15 +8,15 @@ import androidx.compose.material3.LocalAbsoluteTonalElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.unit.dp
-import com.xinto.opencord.ui.navigation.LoginScreen
-import com.xinto.opencord.ui.navigation.OCNavigation
-import com.xinto.opencord.ui.navigation.rememberOCNavigatorBackstack
+import com.xinto.opencord.ui.screens.login.navigation.LoginScreen
+import com.xinto.taxi.Taxi
+import com.xinto.taxi.rememberBackstackNavigator
 
 @Composable
 fun LoginRootScreen() {
-    val navigator = rememberOCNavigatorBackstack<LoginScreen>(initial = LoginScreen.Landing)
+    val navigator = rememberBackstackNavigator<LoginScreen>(initial = LoginScreen.Landing)
     CompositionLocalProvider(LocalAbsoluteTonalElevation provides 1.dp) {
-        OCNavigation(
+        Taxi(
             navigator = navigator,
             transitionSpec = {
                 when {
@@ -42,20 +42,18 @@ fun LoginRootScreen() {
                 }
 
             },
-            backPressEnabled = true,
-            onBackPress = { navigator.back() },
         ) {
             when (it) {
                 is LoginScreen.Landing -> {
                     LoginLandingScreen(
                         onLoginClick = {
-                            navigator.navigate(LoginScreen.Login)
+                            navigator.push(LoginScreen.Login)
                         },
                         onRegisterClick = {},
                     )
                 }
                 is LoginScreen.Login -> {
-                    LoginScreen(onBackClick = { navigator.back() })
+                    LoginScreen(onBackClick = navigator::pop)
                 }
             }
         }

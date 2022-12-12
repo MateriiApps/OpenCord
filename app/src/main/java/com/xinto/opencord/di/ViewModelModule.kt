@@ -33,12 +33,14 @@ val viewModelModule = module {
     }
 
     fun provideChatViewModel(
+        channelId: Long,
         messageStore: MessageStore,
         channelStore: ChannelStore,
         api: DiscordApiService,
         persistentDataManager: PersistentDataManager
     ): ChatViewModel {
         return ChatViewModel(
+            channelId = channelId,
             messageStore = messageStore,
             channelStore = channelStore,
             api = api,
@@ -57,11 +59,13 @@ val viewModelModule = module {
     }
 
     fun provideChannelsViewModel(
+        guildId: Long,
         persistentDataManager: PersistentDataManager,
         channelStore: ChannelStore,
         guildStore: GuildStore,
     ): ChannelsViewModel {
         return ChannelsViewModel(
+            guildId = guildId,
             persistentDataManager = persistentDataManager,
             channelStore = channelStore,
             guildStore = guildStore,
@@ -83,10 +87,12 @@ val viewModelModule = module {
     }
 
     fun provideChannelPinsViewModel(
+        channelId: Long,
         persistentDataManager: PersistentDataManager,
         messageStore: MessageStore,
     ): ChannelPinsViewModel {
         return ChannelPinsViewModel(
+            channelId = channelId,
             persistentDataManager = persistentDataManager,
             messageStore = messageStore,
         )

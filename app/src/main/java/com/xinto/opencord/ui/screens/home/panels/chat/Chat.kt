@@ -12,18 +12,22 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
+import com.xinto.opencord.ui.viewmodel.ChannelsViewModel
 import com.xinto.opencord.ui.viewmodel.ChatViewModel
 import kotlinx.collections.immutable.toImmutableList
 import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun Chat(
+    channelId: Long,
     onChannelsButtonClick: () -> Unit,
     onMembersButtonClick: () -> Unit,
     onPinsButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: ChatViewModel = getViewModel(),
 ) {
+    val viewModel: ChatViewModel = koinViewModel { parametersOf(channelId) }
     val sortedMessages by remember(viewModel.messages) {
         derivedStateOf {
             viewModel.getSortedMessages().toImmutableList()

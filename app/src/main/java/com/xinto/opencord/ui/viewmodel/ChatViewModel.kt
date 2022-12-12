@@ -16,6 +16,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class ChatViewModel(
+    channelId: Long,
+
     private val messageStore: MessageStore,
     private val channelStore: ChannelStore,
     private val api: DiscordApiService,
@@ -47,37 +49,6 @@ class ChatViewModel(
         api.startTyping(persistentDataManager.persistentChannelId)
     }
 
-    fun load() {
-        viewModelScope.launch {
-            state = State.Loading
-
-            try {
-                val channel = channelStore.fetchChannel(persistentDataManager.persistentChannelId)
-                    ?: return@launch
-                val channelMessages =
-                    messageStore.fetchMessages(persistentDataManager.persistentChannelId)
-
-                channelName = channel.name
-                messages.clear()
-                messages.putAll(channelMessages.associateBy { it.id })
-                state = State.Loaded
-            } catch (t: Throwable) {
-                t.printStackTrace()
-                state = State.Error
-            }
-        }
-
-        job = messageStore
-            .observeChannel(persistentDataManager.persistentChannelId)
-            .collectIn(viewModelScope) { event ->
-                event.fold(
-                    onAdd = { messages[it.id] = it },
-                    onUpdate = { messages[it.id] = it },
-                    onRemove = { messages.remove(it) },
-                )
-            }
-    }
-
     fun sendMessage() {
         viewModelScope.launch {
             sendEnabled = false
@@ -104,5 +75,36 @@ class ChatViewModel(
 
     override fun onCleared() {
         job?.cancel()
+    }
+
+    init {
+        viewModelScope.launch {
+            state = State.Loading
+
+            try {
+                val channel = channelStore.fetchChannel(channelId)
+                    ?: return@launch
+                val channelMessages =
+                    messageStore.fetchMessages(channelId)
+
+                channelName = channel.name
+                messages.clear()
+                messages.putAll(channelMessages.associateBy { it.id })
+                state = State.Loaded
+            } catch (t: Throwable) {
+                t.printStackTrace()
+                state = State.Error
+            }
+        }
+
+        job = messageStore
+            .observeChannel(persistentDataManager.persistentChannelId)
+            .collectIn(viewModelScope) { event ->
+                event.fold(
+                    onAdd = { messages[it.id] = it },
+                    onUpdate = { messages[it.id] = it },
+                    onRemove = { messages.remove(it) },
+                )
+            }
     }
 }

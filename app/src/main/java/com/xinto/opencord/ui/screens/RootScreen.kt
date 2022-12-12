@@ -1,5 +1,6 @@
 package com.xinto.opencord.ui.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -8,17 +9,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.xinto.opencord.ui.navigation.MainScreen
-import com.xinto.opencord.ui.navigation.OCNavigation
-import com.xinto.opencord.ui.navigation.rememberOCNavigatorBackstack
 import com.xinto.opencord.ui.screens.home.HomeScreen
 import com.xinto.opencord.ui.screens.pins.PinsScreen
+import com.xinto.taxi.Taxi
+import com.xinto.taxi.rememberBackstackNavigator
 
 @Composable
 fun RootScreen() {
-    val navigator = rememberOCNavigatorBackstack<MainScreen>(initial = MainScreen.Home)
+    val navigator = rememberBackstackNavigator<MainScreen>(MainScreen.Home)
 
-    OCNavigation(
-        modifier = Modifier.fillMaxSize(),
+    BackHandler {
+        navigator.pop()
+    }
+
+    Taxi(
         navigator = navigator,
         transitionSpec = {
             if (initialState == MainScreen.Home) {
@@ -39,35 +43,29 @@ fun RootScreen() {
                 )
             }
         },
-        backPressEnabled = true,
-        onBackPress = { navigator.back() },
-    ) {
-        when (it) {
+    ) { mainScreen ->
+        when (mainScreen) {
             is MainScreen.Home -> {
                 HomeScreen(
                     modifier = Modifier.fillMaxSize(),
                     onSettingsClick = {
-                        navigator.navigate(MainScreen.Settings)
+                        navigator.push(MainScreen.Settings)
                     },
                     onPinsClick = {
-                        navigator.navigate(MainScreen.Pins)
+                        navigator.push(MainScreen.Pins(it))
                     },
                 )
             }
             is MainScreen.Pins -> {
                 PinsScreen(
                     modifier = Modifier.fillMaxSize(),
-                    onBackClick = {
-                        navigator.back()
-                    },
+                    onBackClick = navigator::pop,
                 )
             }
             is MainScreen.Settings -> {
                 Settings(
                     modifier = Modifier.fillMaxSize(),
-                    onBackClick = {
-                        navigator.back()
-                    },
+                    onBackClick = navigator::pop,
                 )
             }
         }

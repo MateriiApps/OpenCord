@@ -1,33 +1,16 @@
 package com.xinto.opencord.ui.navigation
 
-import android.os.Parcelable
+import com.xinto.taxi.Destination
 import kotlinx.parcelize.Parcelize
 
-abstract class BaseNavigationScreen(val route: String) : Parcelable {
-    override fun equals(other: Any?): Boolean {
-        return other is BaseNavigationScreen && this.route == other.route
-    }
+sealed interface MainScreen : Destination {
+    @Parcelize
+    object Home : MainScreen
 
-    override fun hashCode(): Int {
-        return route.hashCode()
-    }
+    @Parcelize
+    data class Pins(val channelId: Long) : MainScreen
+
+    @Parcelize
+    object Settings : MainScreen
 }
 
-sealed class MainScreen(route: String) : BaseNavigationScreen(route) {
-    @Parcelize
-    object Home : MainScreen("home")
-
-    @Parcelize
-    object Pins : MainScreen("pins")
-
-    @Parcelize
-    object Settings : MainScreen("settings")
-}
-
-sealed class LoginScreen(route: String) : BaseNavigationScreen(route) {
-    @Parcelize
-    object Landing : LoginScreen("landing")
-
-    @Parcelize
-    object Login : LoginScreen("login")
-}

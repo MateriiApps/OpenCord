@@ -12,6 +12,8 @@ import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
 import kotlinx.coroutines.launch
 
 class ChannelPinsViewModel(
+    channelId: Long,
+
     persistentDataManager: PersistentDataManager,
     private val messageStore: MessageStore,
 ) : BasePersistenceViewModel(persistentDataManager) {
@@ -25,12 +27,12 @@ class ChannelPinsViewModel(
 
     val pins = mutableStateMapOf<Long, DomainMessage>()
 
-    fun load() {
+    init {
         viewModelScope.launch {
             try {
                 state = State.Loading
 
-                val messages = messageStore.fetchPinnedMessages(persistentChannelId)
+                val messages = messageStore.fetchPinnedMessages(channelId)
                 pins.clear()
                 pins.putAll(messages.map { it.id to it })
 

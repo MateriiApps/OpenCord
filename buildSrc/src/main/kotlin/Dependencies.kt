@@ -145,6 +145,18 @@ sealed class Dependencies {
         }
     }
 
+    object Taxi : Dependencies() {
+        const val version = "1.3.0"
+
+        const val taxi = "com.github.X1nto.taxi:taxi:$version"
+
+        override fun invoke(scope: DependencyHandlerScope) {
+            scope {
+                implementation(taxi)
+            }
+        }
+    }
+
     object Material : Dependencies() {
         const val version = "1.7.0"
 
