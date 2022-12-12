@@ -35,7 +35,7 @@ fun PinsScreen(
         modifier = modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            SmallTopAppBar(
+            TopAppBar(
                 title = { Text(stringResource(R.string.pins_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {

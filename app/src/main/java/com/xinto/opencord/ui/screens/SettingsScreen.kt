@@ -18,7 +18,7 @@ fun Settings(
     Scaffold(
         modifier = modifier,
         topBar = {
-            SmallTopAppBar(
+            TopAppBar(
                 title = { Text(stringResource(R.string.settings_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {

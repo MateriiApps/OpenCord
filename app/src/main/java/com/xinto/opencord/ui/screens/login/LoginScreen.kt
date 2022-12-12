@@ -33,7 +33,7 @@ fun LoginScreen(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             Column(modifier = Modifier.fillMaxWidth()) {
-                SmallTopAppBar(
+                TopAppBar(
                     title = { Text(stringResource(R.string.login_action_login)) },
                     navigationIcon = {
                         IconButton(
