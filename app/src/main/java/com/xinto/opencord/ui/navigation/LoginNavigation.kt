@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.screens.login.navigation
+package com.xinto.opencord.ui.navigation
 
 import com.xinto.taxi.Destination
 import kotlinx.parcelize.Parcelize

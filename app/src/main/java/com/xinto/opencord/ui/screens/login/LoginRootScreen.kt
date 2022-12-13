@@ -8,7 +8,7 @@ import androidx.compose.material3.LocalAbsoluteTonalElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.unit.dp
-import com.xinto.opencord.ui.screens.login.navigation.LoginScreen
+import com.xinto.opencord.ui.navigation.LoginScreen
 import com.xinto.taxi.Taxi
 import com.xinto.taxi.rememberBackstackNavigator
 
