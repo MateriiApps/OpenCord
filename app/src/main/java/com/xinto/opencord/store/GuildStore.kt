@@ -1,5 +1,6 @@
 package com.xinto.opencord.store
 
+import androidx.room.withTransaction
 import com.xinto.opencord.db.database.CacheDatabase
 import com.xinto.opencord.db.entity.guild.toEntity
 import com.xinto.opencord.domain.guild.DomainGuild
@@ -11,14 +12,12 @@ import com.xinto.opencord.gateway.event.GuildUpdateEvent
 import com.xinto.opencord.gateway.event.ReadyEvent
 import com.xinto.opencord.gateway.onEvent
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
 
 interface GuildStore {
-    fun observeGuild(guildId: Long): Flow<Event<DomainGuild>>
-    fun observeGuilds(): Flow<Event<DomainGuild>>
+    fun observeGuild(guildId: Long): Flow<DomainGuild?>
+    fun observeGuilds(): Flow<List<DomainGuild>>
 
     suspend fun fetchGuild(guildId: Long): DomainGuild?
 }
@@ -27,23 +26,25 @@ class GuildStoreImpl(
     gateway: DiscordGateway,
     private val cache: CacheDatabase,
 ) : GuildStore {
-    private val events = MutableSharedFlow<Event<DomainGuild>>()
+    private val guilds = cache.guilds()
+    private val channels = cache.channels()
 
-    override fun observeGuild(guildId: Long): Flow<Event<DomainGuild>> {
-        return events.filter { event ->
-            event.fold(
-                onAdd = { it.id == guildId },
-                onUpdate = { it.id == guildId },
-                onRemove = { it == guildId },
-            )
-        }
+    override fun observeGuild(guildId: Long): Flow<DomainGuild?> {
+        return guilds.observeGuild(guildId)
+            .map { it?.toDomain() }
     }
 
-    override fun observeGuilds() = events
+    override fun observeGuilds() = guilds
+        .observeGuilds()
+        .map {
+            it.map {
+                it.toDomain()
+            }
+        }
 
     override suspend fun fetchGuild(guildId: Long): DomainGuild? {
         return withContext(Dispatchers.IO) {
-            cache.guilds().getGuild(guildId)?.toDomain()
+            cache.guilds().getGuildById(guildId)?.toDomain()
         }
     }
 
@@ -51,12 +52,8 @@ class GuildStoreImpl(
         gateway.onEvent<ReadyEvent> { event ->
             val guilds = event.data.guilds.map { it.toEntity() }
 
-            for (guild in guilds) {
-                events.emit(Event.Add(guild.toDomain()))
-            }
-
-            cache.runInTransaction {
-                cache.guilds().apply {
+            cache.withTransaction {
+                this.guilds.apply {
                     clear()
                     insertGuilds(guilds)
                 }
@@ -64,24 +61,19 @@ class GuildStoreImpl(
         }
 
         gateway.onEvent<GuildCreateEvent> {
-            events.emit(Event.Add(it.data.toDomain()))
-
-            cache.guilds().insertGuilds(listOf(it.data.toEntity()))
+            guilds.insertGuild(it.data.toEntity())
         }
 
         gateway.onEvent<GuildUpdateEvent> {
-            events.emit(Event.Update(it.data.toDomain()))
-            cache.guilds().insertGuilds(listOf(it.data.toEntity()))
+            guilds.updateGuild(it.data.toEntity())
         }
 
         gateway.onEvent<GuildDeleteEvent> {
             val guildId = it.data.id.value
 
-            events.emit(Event.Remove(guildId))
-
-            cache.runInTransaction {
-                cache.guilds().deleteGuild(guildId)
-                cache.channels().deleteChannelsByGuild(guildId)
+            cache.withTransaction {
+                guilds.deleteGuildById(guildId)
+                channels.deleteChannelsByGuild(guildId)
             }
         }
     }

@@ -11,6 +11,11 @@ interface EmbedsDao {
     // --------------- Inserts ---------------
     @Insert(
         onConflict = OnConflictStrategy.REPLACE,
+    )
+    fun insertEmbed(embed: EntityEmbed)
+
+    @Insert(
+        onConflict = OnConflictStrategy.REPLACE,
         entity = EntityEmbed::class,
     )
     fun insertEmbeds(embeds: List<EntityEmbed>)

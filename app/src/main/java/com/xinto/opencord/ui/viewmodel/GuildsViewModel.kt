@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.xinto.opencord.domain.guild.DomainGuild
 import com.xinto.opencord.manager.PersistentDataManager
 import com.xinto.opencord.store.GuildStore
-import com.xinto.opencord.store.fold
 import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
 import com.xinto.opencord.util.collectIn
 
@@ -22,7 +21,7 @@ class GuildsViewModel(
     var state by mutableStateOf<State>(State.Loading)
         private set
 
-    val guilds = mutableStateMapOf<Long, DomainGuild>()
+    val guilds = mutableStateListOf<DomainGuild>()
     var selectedGuildId by mutableStateOf(0L)
         private set
 
@@ -32,14 +31,13 @@ class GuildsViewModel(
     }
 
     init {
-        guildStore.observeGuilds().collectIn(viewModelScope) { event ->
-            state = State.Loaded
-            event.fold(
-                onAdd = { guilds[it.id] = it },
-                onUpdate = { guilds[it.id] = it },
-                onRemove = { guilds.remove(it) },
-            )
-        }
+        guildStore
+            .observeGuilds()
+            .collectIn(viewModelScope) { event ->
+                state = State.Loaded
+                guilds.clear()
+                guilds.addAll(event)
+            }
 
         if (persistentGuildId != 0L) {
             selectedGuildId = persistentGuildId

@@ -15,12 +15,6 @@ fun GuildsList(
     modifier: Modifier = Modifier,
     viewModel: GuildsViewModel = getViewModel()
 ) {
-    val guilds by remember(viewModel.guilds) {
-        derivedStateOf {
-            viewModel.guilds.values.toImmutableList()
-        }
-    }
-
     when (viewModel.state) {
         GuildsViewModel.State.Loading -> {
             GuildsListLoading(modifier = modifier)
@@ -32,7 +26,7 @@ fun GuildsList(
                     viewModel.selectGuild(it)
                     onGuildSelect(it)
                 },
-                guilds = guilds,
+                guilds = viewModel.guilds.toImmutableList(),
                 selectedGuildId = viewModel.selectedGuildId,
             )
         }

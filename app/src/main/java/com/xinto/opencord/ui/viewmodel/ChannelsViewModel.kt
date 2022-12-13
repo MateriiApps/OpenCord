@@ -7,7 +7,6 @@ import com.xinto.opencord.domain.channel.DomainChannel
 import com.xinto.opencord.manager.PersistentDataManager
 import com.xinto.opencord.store.ChannelStore
 import com.xinto.opencord.store.GuildStore
-import com.xinto.opencord.store.fold
 import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
 import com.xinto.opencord.util.collectIn
 import com.xinto.opencord.util.getSortedChannels
@@ -32,7 +31,7 @@ class ChannelsViewModel(
     var state by mutableStateOf<State>(State.Unselected)
         private set
 
-    val channels = mutableStateMapOf<Long, DomainChannel>()
+    val channels = mutableListOf<DomainChannel>()
     var guildName by mutableStateOf("")
         private set
     var guildBannerUrl by mutableStateOf<String?>(null)
@@ -42,10 +41,6 @@ class ChannelsViewModel(
     var selectedChannelId by mutableStateOf(0L)
         private set
     val collapsedCategories = mutableStateListOf<Long>()
-
-    fun load() {
-
-    }
 
     fun selectChannel(channelId: Long) {
         selectedChannelId = channelId
@@ -64,7 +59,7 @@ class ChannelsViewModel(
     }
 
     fun getSortedChannels(): Map<DomainCategoryChannel?, List<DomainChannel>> {
-        return getSortedChannels(channels.values)
+        return getSortedChannels(channels)
     }
 
     init {
@@ -74,55 +69,33 @@ class ChannelsViewModel(
         collapsedCategories.addAll(persistentDataManager.collapsedCategories)
 
         viewModelScope.launch {
-            state = State.Loading
-            withContext(Dispatchers.IO) {
-                try {
-                    val guild = guildStore.fetchGuild(guildId) ?: return@withContext
-                    val guildChannels = channelStore.fetchChannels(guildId)
-                        .associateBy { it.id }
+            try {
+                guildStore.fetchGuild(guildId)
+                channelStore.fetchChannels(guildId)
 
-                    withContext(Dispatchers.Main) {
-                        channels.clear()
-                        channels.putAll(guildChannels)
-                        guildName = guild.name
-                        guildBannerUrl = guild.bannerUrl
-                        guildBoostLevel = guild.premiumTier
-                        state = State.Loaded
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    withContext(Dispatchers.Main) {
-                        state = State.Error
-                    }
+                state = State.Loaded
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    state = State.Error
                 }
             }
         }
 
         guildStore.observeGuild(persistentGuildId).collectIn(viewModelScope) { event ->
-            event.fold(
-                onAdd = {
-                    guildName = it.name
-                    guildBannerUrl = it.bannerUrl
-                    guildBoostLevel = it.premiumTier
-                },
-                onUpdate = {
-                    guildName = it.name
-                    guildBannerUrl = it.bannerUrl
-                    guildBoostLevel = it.premiumTier
-                },
-                onRemove = {
-                    state = State.Unselected
-                },
-            )
+            if (event != null) {
+                guildName = event.name
+                guildBannerUrl = event.bannerUrl
+                guildBoostLevel = event.premiumTier
+            } else {
+                state = State.Unselected
+            }
         }
 
         channelStore.observeChannels(persistentGuildId).collectIn(viewModelScope) { event ->
             state = State.Loaded
-            event.fold(
-                onAdd = { channels[it.id] = it },
-                onUpdate = { channels[it.id] = it },
-                onRemove = { channels.remove(it) },
-            )
+            channels.clear()
+            channels.addAll(event)
         }
     }
 }

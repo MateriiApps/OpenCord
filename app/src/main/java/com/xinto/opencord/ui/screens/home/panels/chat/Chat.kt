@@ -28,12 +28,6 @@ fun Chat(
     modifier: Modifier = Modifier,
 ) {
     val viewModel: ChatViewModel = koinViewModel { parametersOf(channelId) }
-    val sortedMessages by remember(viewModel.messages) {
-        derivedStateOf {
-            viewModel.getSortedMessages().toImmutableList()
-        }
-    }
-
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -83,7 +77,7 @@ fun Chat(
                 }
                 is ChatViewModel.State.Loaded -> {
                     ChatLoaded(
-                        messages = sortedMessages,
+                        messages = viewModel.messages.toImmutableList(),
                         currentUserId = viewModel.currentUserId,
                         channelName = viewModel.channelName,
                         userMessage = viewModel.userMessage,

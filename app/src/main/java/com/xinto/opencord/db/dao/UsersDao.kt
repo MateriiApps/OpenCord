@@ -13,13 +13,18 @@ interface UsersDao {
         onConflict = OnConflictStrategy.REPLACE,
         entity = EntityUser::class,
     )
-    fun insertUsers(users: List<EntityUser>)
+    suspend fun insertUsers(users: List<EntityUser>)
+
+    @Insert(
+        onConflict = OnConflictStrategy.REPLACE,
+    )
+    suspend fun insertUser(user: EntityUser)
 
     // --------------- Deletes ---------------
     @Query("DELETE FROM USERS WHERE id NOT IN(SELECT author_id FROM MESSAGES)")
-    fun deleteUnusedUsers()
+    suspend fun deleteUnusedUsers()
 
     // --------------- Queries ---------------
     @Query("SELECT * FROM users WHERE id = :userId LIMIT 1")
-    fun getUser(userId: Long): EntityUser?
+    suspend fun getUser(userId: Long): EntityUser?
 }

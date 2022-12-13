@@ -20,12 +20,12 @@ import com.xinto.opencord.rest.models.message.ApiMessage
 import com.xinto.opencord.rest.service.DiscordApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 interface MessageStore {
-    fun observeChannel(channelId: Long): Flow<Event<DomainMessage>>
+    fun observeMessage(id: Long): Flow<DomainMessage?>
+    fun observeMessages(channelId: Long): Flow<List<DomainMessage>>
 
     suspend fun fetchPinnedMessages(channelId: Long): List<DomainMessage>
     suspend fun fetchMessages(
@@ -41,15 +41,26 @@ class MessageStoreImpl(
     private val api: DiscordApiService,
     private val cache: CacheDatabase,
 ) : MessageStore {
-    private val events = MutableSharedFlow<Event<DomainMessage>>()
+    private val messages = cache.messages()
+    private val attachments = cache.attachments()
+    private val embeds = cache.embeds()
+    private val channels = cache.channels()
+    private val users = cache.users()
 
-    override fun observeChannel(channelId: Long): Flow<Event<DomainMessage>> {
-        return events.filter { event ->
-            event.fold(
-                onAdd = { it.id == channelId },
-                onUpdate = { it.id == channelId },
-                onRemove = { it == channelId },
-            )
+    override fun observeMessage(id: Long): Flow<DomainMessage?> {
+        return messages.observeMessage(id)
+            .map {
+                it?.let { message ->
+                    constructDomainMessage(message)
+                }
+            }
+    }
+
+    override fun observeMessages(channelId: Long): Flow<List<DomainMessage>> {
+        return messages.observeMessagesByChannelId(channelId).map { entityMessages ->
+            entityMessages.mapNotNull {
+                constructDomainMessage(it)
+            }.sortedByDescending { it.id }
         }
     }
 
@@ -59,21 +70,27 @@ class MessageStoreImpl(
     ): DomainMessage? {
         return cache.withTransaction {
             val attachments = if (!message.hasAttachments) null else {
-                cache.attachments().getAttachments(message.id)
+                attachments.getAttachmentsByMessageId(message.id)
             }
 
             val referencedMessage = message.referencedMessageId?.let {
-                cache.messages().getMessage(it)
+                messages.getMessage(it)
             }
 
             val embeds = if (!message.hasEmbeds) null else {
-                cache.embeds().getEmbeds(message.id)
+                embeds.getEmbeds(message.id)
             }
 
-            val author = cachedUsers.computeIfAbsent(message.authorId) {
-                cache.users().getUser(message.authorId)?.toDomain()
-            } ?: return@withTransaction null
+            val author = if (cachedUsers[message.authorId] != null) {
+                cachedUsers[message.authorId]!!
+            } else {
+                val user = users.getUser(message.authorId)?.toDomain()
+                    ?: return@withTransaction null
 
+                cachedUsers[message.authorId] = user
+
+                user
+            }
             message.toDomain(
                 author = author,
                 referencedMessage = referencedMessage?.let {
@@ -85,9 +102,9 @@ class MessageStoreImpl(
         }
     }
 
-    private fun storeMessages(messages: List<ApiMessage>) {
-        cache.runInTransaction {
-            cache.users().apply {
+    private suspend fun storeMessages(messages: List<ApiMessage>) {
+        cache.withTransaction {
+            users.apply {
                 val users = messages
                     .distinctBy { it.author.id }
                     .map { it.author.toEntity() }
@@ -95,24 +112,37 @@ class MessageStoreImpl(
                 insertUsers(users)
             }
 
-            cache.messages().insertMessages(messages.map { it.toEntity() })
+            this.messages.insertMessages(messages.map { it.toEntity() })
 
-            cache.attachments().insertAttachments(
-                messages.flatMap { msg ->
-                    msg.attachments.map {
-                        it.toEntity(messageId = msg.id.value)
-                    }
-                },
+            messages.forEachIndexed { index, message ->
+                attachments.insertAttachments(
+                    message.attachments.map { it.toEntity(message.id.value) }
+                )
+                embeds.insertEmbeds(
+                    message.embeds.map { it.toEntity(message.id.value, index) }
+                )
+            }
+        }
+    }
+
+    private suspend fun storeMessage(message: ApiMessage) {
+        cache.withTransaction {
+            users.insertUser(message.author.toEntity())
+
+            this.messages.insertMessage(message.toEntity())
+
+            attachments.insertAttachments(
+                message.attachments.map {
+                    it.toEntity(messageId = message.id.value)
+                }
             )
 
-            cache.embeds().insertEmbeds(
-                messages.flatMap { msg ->
-                    msg.embeds.mapIndexed { i, embed ->
-                        embed.toEntity(
-                            messageId = msg.id.value,
-                            embedIndex = i,
-                        )
-                    }
+            embeds.insertEmbeds(
+                message.embeds.mapIndexed { i, embed ->
+                    embed.toEntity(
+                        messageId = message.id.value,
+                        embedIndex = i,
+                    )
                 },
             )
         }
@@ -124,13 +154,13 @@ class MessageStoreImpl(
                 ?: false
 
             if (pinsStored) {
-                cache.messages().getPinnedMessages(channelId)
+                messages.getPinnedMessages(channelId)
                     .mapNotNull { constructDomainMessage(it) }
             } else {
                 val messages = api.getChannelPins(channelId)
 
                 storeMessages(messages)
-                cache.channels().setChannelPinsStored(channelId, true)
+                channels.setChannelPinsStored(channelId, true)
                 messages.map { it.toDomain() }
             }
         }
@@ -144,10 +174,10 @@ class MessageStoreImpl(
     ): List<DomainMessage> {
         return withContext(Dispatchers.IO) {
             val cachedMessages = when {
-                after != null -> cache.messages().getMessagesAfter(channelId, 50, after)
-                around != null -> cache.messages().getMessagesAround(channelId, 50, around)
-                before != null -> cache.messages().getMessagesBefore(channelId, 50, before)
-                else -> cache.messages().getMessagesLast(channelId, 50)
+                after != null -> messages.getMessagesAfter(channelId, 50, after)
+                around != null -> messages.getMessagesAround(channelId, 50, around)
+                before != null -> messages.getMessagesBefore(channelId, 50, before)
+                else -> messages.getMessagesLast(channelId, 50)
             }
 
             if (cachedMessages.size >= 50) {
@@ -161,7 +191,11 @@ class MessageStoreImpl(
                     after = after,
                 )
 
-                storeMessages(messages)
+                if (messages.size > 1) {
+                    storeMessages(messages)
+                } else if (messages.size == 1) {
+                    storeMessage(messages[0])
+                }
                 messages.map { it.toDomain() }
             }
         }
@@ -171,8 +205,7 @@ class MessageStoreImpl(
         gateway.onEvent<MessageCreateEvent> { event ->
             val message = event.data
 
-            events.emit(Event.Add(message.toDomain()))
-            storeMessages(listOf(message))
+            storeMessage(message)
         }
 
         gateway.onEvent<MessageUpdateEvent> { event ->
@@ -182,12 +215,10 @@ class MessageStoreImpl(
         gateway.onEvent<MessageDeleteEvent> {
             val messageId = it.data.messageId.value
 
-            events.emit(Event.Remove(messageId))
-
-            cache.runInTransaction {
-                cache.messages().deleteMessage(messageId)
-                cache.attachments().deleteAttachments(messageId)
-                cache.embeds().deleteEmbeds(messageId)
+            cache.withTransaction {
+                messages.deleteMessage(messageId)
+                attachments.deleteAttachmentsByMessageId(messageId)
+                embeds.deleteEmbeds(messageId)
             }
         }
     }

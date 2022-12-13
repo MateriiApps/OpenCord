@@ -59,10 +59,10 @@ class DiscordGatewayImpl(
     private lateinit var zlibInflater: Inflater
     private var establishConnection = true
 
-    private val _events = MutableSharedFlow<Event>()
+    private val _events = MutableSharedFlow<Event>(replay = 10)
     override val events = _events.asSharedFlow()
 
-    private val _state = MutableSharedFlow<DiscordGateway.State>()
+    private val _state = MutableSharedFlow<DiscordGateway.State>(replay = 1)
     override val state = _state.asSharedFlow()
 
     private var sequenceNumber: Int = 0

@@ -9,7 +9,6 @@ import com.xinto.opencord.rest.body.MessageBody
 import com.xinto.opencord.rest.service.DiscordApiService
 import com.xinto.opencord.store.ChannelStore
 import com.xinto.opencord.store.MessageStore
-import com.xinto.opencord.store.fold
 import com.xinto.opencord.util.collectIn
 import com.xinto.opencord.util.throttle
 import kotlinx.coroutines.Job
@@ -33,7 +32,7 @@ class ChatViewModel(
     var state by mutableStateOf<State>(State.Unselected)
         private set
 
-    val messages = mutableStateMapOf<Long, DomainMessage>()
+    val messages = mutableStateListOf<DomainMessage>()
     var channelName by mutableStateOf("")
         private set
     var userMessage by mutableStateOf("")
@@ -69,42 +68,40 @@ class ChatViewModel(
         startTyping()
     }
 
-    fun getSortedMessages(): List<DomainMessage> {
-        return messages.values.sortedByDescending { it.id }
-    }
-
     override fun onCleared() {
         job?.cancel()
     }
 
     init {
         viewModelScope.launch {
-            state = State.Loading
+            state = try {
+                State.Loading
 
-            try {
-                val channel = channelStore.fetchChannel(channelId)
-                    ?: return@launch
-                val channelMessages =
-                    messageStore.fetchMessages(channelId)
+                channelStore.fetchChannel(channelId)
+                messageStore.fetchMessages(channelId)
 
-                channelName = channel.name
-                messages.clear()
-                messages.putAll(channelMessages.associateBy { it.id })
-                state = State.Loaded
+                State.Loaded
             } catch (t: Throwable) {
                 t.printStackTrace()
-                state = State.Error
+                State.Error
             }
         }
 
         job = messageStore
-            .observeChannel(persistentDataManager.persistentChannelId)
+            .observeMessages(channelId)
             .collectIn(viewModelScope) { event ->
-                event.fold(
-                    onAdd = { messages[it.id] = it },
-                    onUpdate = { messages[it.id] = it },
-                    onRemove = { messages.remove(it) },
-                )
+                messages.clear()
+                messages.addAll(event)
+            }
+
+        channelStore
+            .observeChannel(channelId)
+            .collectIn(viewModelScope) { event ->
+                if (event != null) {
+                    channelName = event.name
+                } else {
+                    state = State.Unselected
+                }
             }
     }
 }

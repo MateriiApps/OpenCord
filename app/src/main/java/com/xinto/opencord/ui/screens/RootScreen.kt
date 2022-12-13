@@ -60,6 +60,7 @@ fun RootScreen() {
                 PinsScreen(
                     modifier = Modifier.fillMaxSize(),
                     onBackClick = navigator::pop,
+                    channelId = mainScreen.channelId
                 )
             }
             is MainNavigation.Settings -> {

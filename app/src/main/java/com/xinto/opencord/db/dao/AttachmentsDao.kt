@@ -11,18 +11,23 @@ interface AttachmentsDao {
     // --------------- Inserts ---------------
     @Insert(
         onConflict = OnConflictStrategy.REPLACE,
+    )
+    suspend fun insertAttachment(attachment: EntityAttachment)
+
+    @Insert(
+        onConflict = OnConflictStrategy.REPLACE,
         entity = EntityAttachment::class,
     )
-    fun insertAttachments(attachments: List<EntityAttachment>)
+    suspend fun insertAttachments(attachments: List<EntityAttachment>)
 
     // --------------- Deletes ---------------
     @Query("DELETE FROM attachments WHERE message_id = :messageId")
-    fun deleteAttachments(messageId: Long)
+    suspend fun deleteAttachmentsByMessageId(messageId: Long)
 
     @Query("DELETE FROM attachments")
-    fun clear()
+    suspend fun clear()
 
     // --------------- Queries ---------------
     @Query("SELECT * FROM attachments WHERE id = :messageId")
-    fun getAttachments(messageId: Long): List<EntityAttachment>
+    suspend fun getAttachmentsByMessageId(messageId: Long): List<EntityAttachment>
 }

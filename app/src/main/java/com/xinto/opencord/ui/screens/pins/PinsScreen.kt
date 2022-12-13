@@ -14,14 +14,16 @@ import androidx.compose.ui.res.stringResource
 import com.xinto.opencord.R
 import com.xinto.opencord.ui.viewmodel.ChannelPinsViewModel
 import kotlinx.collections.immutable.toImmutableList
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun PinsScreen(
+    channelId: Long,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: ChannelPinsViewModel = getViewModel()
 ) {
+    val viewModel: ChannelPinsViewModel = koinViewModel { parametersOf(channelId) }
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val pins by remember(viewModel.pins) {
         derivedStateOf {
