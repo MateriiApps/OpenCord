@@ -127,7 +127,7 @@ class CurrentUserViewModel(
         currentUserStore.observeCurrentUser().collectIn(viewModelScope) { user ->
             avatarUrl = user.avatarUrl
             username = user.username
-            discriminator = user.discriminator
+            discriminator = user.formattedDiscriminator
             state = State.Loaded
         }
 

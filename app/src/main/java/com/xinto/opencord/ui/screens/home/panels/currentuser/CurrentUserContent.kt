@@ -7,6 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.xinto.opencord.ui.util.ContentAlpha
+import com.xinto.opencord.ui.util.ProvideContentAlpha
 
 @Composable
 fun CurrentUserContent(
@@ -45,7 +47,9 @@ fun CurrentUserContent(
                     }
                     if (customStatus != null) {
                         ProvideTextStyle(MaterialTheme.typography.bodySmall) {
-                            discriminator()
+                            ProvideContentAlpha(ContentAlpha.medium) {
+                                discriminator()
+                            }
                         }
                     }
                 }
@@ -53,7 +57,9 @@ fun CurrentUserContent(
                     if (customStatus != null) {
                         customStatus()
                     } else {
-                        discriminator()
+                        ProvideContentAlpha(ContentAlpha.medium) {
+                            discriminator()
+                        }
                     }
                 }
             }
