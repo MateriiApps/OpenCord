@@ -3,7 +3,7 @@
     <string name="navigation_back">Retour</string>
     <string name="login_landing_title">Bienvenue sur OpenCord!</string>
     <string name="login_landing_subtitle">Rejoignez plus de 0 personnes qui utilisent OpenCord comme alternative à l\'application Discord standard.</string>
-    <string name="login_login_title">Re-bienvenue!</string>
+    <string name="login_login_title">Rebonjour !</string>
     <string name="login_login_subtitle">Nous sommes ravis de vous revoir !</string>
     <string name="login_action_login">Se connecter</string>
     <string name="login_action_register">S\'inscrire</string>
@@ -14,11 +14,11 @@
     <string name="login_mfa_confirm">Confirmer</string>
     <string name="login_mfa_cancel">Annuler</string>
     <string name="chat_title">#%1$s</string>
-    <string name="chat_unselected_message">Sélecter un salon s.v.p.</string>
+    <string name="chat_unselected_message">Veuillez sélectionner un salon.</string>
     <string name="chat_input_hint">Message #%1$s</string>
     <string name="chat_loading_error">Une erreur s\'est produite lors du chargement du chat.</string>
     <string name="chat_bot_label">BOT</string>
-    <string name="channel_unselected_message">Sélecter un serveur s.v.p.</string>
+    <string name="channel_unselected_message">Veuillez sélectionner un serveur.</string>
     <string name="channels_collapse_category">Réduire la catégorie</string>
     <string name="pins_title">Messages épinglés</string>
     <string name="pins_loading_error">Une erreur s\'est produite lors du chargement des messages épinglés.</string>

@@ -10,7 +10,7 @@
     <string name="login_field_username">Correo electrónico o número de teléfono</string>
     <string name="login_field_password">Contraseña</string>
     <string name="login_mfa_title">¡Se requiere A2F!</string>
-    <string name="login_mfa_code">A2F o código de seguridad</string>
+    <string name="login_mfa_code">Código de autenticación o de respaldo</string>
     <string name="login_mfa_confirm">Confirmar</string>
     <string name="login_mfa_cancel">Cancelar</string>
     <string name="chat_title">#%1$s</string>
