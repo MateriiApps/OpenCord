@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
 import com.xinto.opencord.ui.util.ContentAlpha
@@ -32,7 +33,9 @@ fun MessageAuthor(
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        ProvideTextStyle(MaterialTheme.typography.labelLarge) {
+        ProvideTextStyle(MaterialTheme.typography.titleMedium.copy(
+            fontWeight = FontWeight.SemiBold,
+        )) {
             Text(
                 text = author,
                 modifier = Modifier
@@ -59,12 +62,12 @@ fun MessageAuthor(
             }
         }
         ProvideContentAlpha(ContentAlpha.low) {
-            Text("·")
-            ProvideTextStyle(MaterialTheme.typography.labelSmall) {
+            ProvideTextStyle(MaterialTheme.typography.labelMedium) {
+                Text(" ·")
                 Text(timestamp)
             }
             if (isEdited) {
-                Text("·")
+                Text(" ·")
                 Icon(
                     modifier = Modifier
                         .size(12.dp),

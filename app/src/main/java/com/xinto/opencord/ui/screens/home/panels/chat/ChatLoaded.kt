@@ -63,7 +63,7 @@ fun ChatLoaded(
 
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(18.dp),
     ) {
         LazyColumn(
             state = listState,

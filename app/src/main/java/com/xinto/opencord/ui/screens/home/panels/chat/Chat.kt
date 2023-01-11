@@ -1,15 +1,20 @@
 package com.xinto.opencord.ui.screens.home.panels.chat
 
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
 import com.xinto.opencord.ui.viewmodel.ChatViewModel
@@ -34,7 +39,19 @@ fun Chat(
         modifier = modifier,
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.chat_title, viewModel.channelName)) },
+                title = {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        if(viewModel.channelName.isNotEmpty()) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_channel_text),
+                                contentDescription = null,
+                                modifier = Modifier.size(24.dp),
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                        }
+                        Text(viewModel.channelName, style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold))
+                    }
+                },
                 navigationIcon = {
                     IconButton(onChannelsButtonClick) {
                         Icon(
@@ -72,11 +89,13 @@ fun Chat(
                         modifier = Modifier.fillMaxSize(),
                     )
                 }
+
                 is ChatViewModel.State.Loading -> {
                     ChatLoading(
                         modifier = Modifier.fillMaxSize(),
                     )
                 }
+
                 is ChatViewModel.State.Loaded -> {
                     ChatLoaded(
                         messages = sortedMessages,
@@ -89,6 +108,7 @@ fun Chat(
                         modifier = Modifier.fillMaxSize(),
                     )
                 }
+
                 is ChatViewModel.State.Error -> {
                     ChatError(
                         modifier = Modifier.fillMaxSize(),

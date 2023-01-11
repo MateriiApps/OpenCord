@@ -48,7 +48,7 @@ fun ChannelsListLoading(
                     .background(shimmerColor),
                 text = guildName,
                 fontWeight = FontWeight.SemiBold,
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleSmall,
             )
         }
         repeat(items) { itemIndex ->

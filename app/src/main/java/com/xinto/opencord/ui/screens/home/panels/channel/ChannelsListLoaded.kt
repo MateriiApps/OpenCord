@@ -112,7 +112,7 @@ fun ChannelsListLoaded(
                     Text(
                         text = guildName,
                         fontWeight = FontWeight.SemiBold,
-                        style = MaterialTheme.typography.titleLarge.copy(
+                        style = MaterialTheme.typography.titleMedium.copy(
                             shadow = Shadow(
                                 color = Color.Black,
                                 offset = Offset(0f, 5f),

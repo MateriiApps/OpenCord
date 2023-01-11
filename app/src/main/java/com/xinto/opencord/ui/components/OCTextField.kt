@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
 
 @Composable
@@ -39,8 +40,9 @@ fun OCBasicTextField(
         onValueChange = onValueChange,
         enabled = enabled,
         readOnly = readOnly,
-        textStyle = MaterialTheme.typography.bodyMedium.copy(
+        textStyle = MaterialTheme.typography.titleMedium.copy(
             color = contentColor,
+            fontWeight = FontWeight.Medium,
         ),
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,

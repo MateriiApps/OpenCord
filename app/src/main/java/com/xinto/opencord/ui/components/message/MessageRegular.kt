@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.ui.components.message.reply.MessageReplyBranch
 
@@ -35,9 +36,9 @@ fun MessageRegular(
             modifier = Modifier
                 .wrapContentHeight()
                 .padding(
-                    start = 8.dp,
+                    start = 18.dp,
                     top = if (!isMerged) 16.dp else 1.dp,
-                    end = 8.dp,
+                    end = 18.dp,
                     bottom = 1.dp,
                 ),
             verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -60,22 +61,22 @@ fun MessageRegular(
                 }
             }
             Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalAlignment = Alignment.Top,
             ) {
                 if (avatar != null) {
                     Box(
-                        modifier = androidx.compose.ui.Modifier.size(40.dp),
+                        modifier = Modifier.size(40.dp),
                         contentAlignment = Alignment.Center,
                     ) {
                         avatar()
                     }
                 } else {
-                    Spacer(modifier = androidx.compose.ui.Modifier.width(40.dp))
+                    Spacer(modifier = Modifier.width(40.dp))
                 }
                 Column(
                     modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     Column(
                         modifier = Modifier.fillMaxWidth(),
@@ -84,7 +85,7 @@ fun MessageRegular(
                             author()
                         }
                         if (content != null) {
-                            ProvideTextStyle(MaterialTheme.typography.bodyMedium) {
+                            ProvideTextStyle(MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium)) {
                                 content()
                             }
                         }
