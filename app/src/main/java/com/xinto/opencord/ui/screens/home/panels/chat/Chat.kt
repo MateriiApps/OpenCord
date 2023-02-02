@@ -1,11 +1,6 @@
 package com.xinto.opencord.ui.screens.home.panels.chat
 
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -15,6 +10,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
 import com.xinto.opencord.ui.viewmodel.ChatViewModel
@@ -45,11 +42,19 @@ fun Chat(
                             Icon(
                                 painter = painterResource(R.drawable.ic_channel_text),
                                 contentDescription = null,
-                                modifier = Modifier.size(24.dp),
+                                modifier = Modifier
+                                    .size(28.dp)
+                                    .padding(end = 6.dp),
                             )
-                            Spacer(modifier = Modifier.width(6.dp))
                         }
-                        Text(viewModel.channelName, style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold))
+                        Text(
+                            text = viewModel.channelName,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            style = MaterialTheme.typography.titleLarge.copy(
+                                fontWeight = FontWeight.Bold,
+                            ),
+                        )
                     }
                 },
                 navigationIcon = {

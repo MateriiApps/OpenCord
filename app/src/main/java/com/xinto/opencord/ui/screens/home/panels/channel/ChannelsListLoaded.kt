@@ -168,8 +168,9 @@ fun ChannelsListLoaded(
                                 title = { Text(channel.name) },
                                 icon = {
                                     Icon(
-                                        painter = painterResource(R.drawable.ic_tag),
+                                        painter = painterResource(R.drawable.ic_channel_text),
                                         contentDescription = null,
+                                        modifier = Modifier.size(24.dp)
                                     )
                                 },
                                 selected = selectedChannelId == channel.id,
