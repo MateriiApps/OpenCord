@@ -37,7 +37,7 @@ class GuildsViewModel(
             event.fold(
                 onAdd = { guilds[it.id] = it },
                 onUpdate = { guilds[it.id] = it },
-                onRemove = { guilds.remove(it) },
+                onDelete = { guilds.remove(it) },
             )
         }
 

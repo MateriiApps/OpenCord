@@ -79,7 +79,7 @@ class ChannelsViewModel(
                     guildBannerUrl = it.bannerUrl
                     guildBoostLevel = it.premiumTier
                 },
-                onRemove = {
+                onDelete = {
                     state = State.Unselected
                 },
             )
@@ -90,7 +90,7 @@ class ChannelsViewModel(
             event.fold(
                 onAdd = { channels[it.id] = it },
                 onUpdate = { channels[it.id] = it },
-                onRemove = { channels.remove(it) },
+                onDelete = { channels.remove(it) },
             )
         }
     }

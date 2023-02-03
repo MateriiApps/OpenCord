@@ -16,9 +16,11 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.withContext
 
+typealias ChannelEvent = Event<DomainChannel, DomainChannel, Long>
+
 interface ChannelStore {
-    fun observeChannel(channelId: Long): Flow<Event<DomainChannel>>
-    fun observeChannels(guildId: Long): Flow<Event<DomainChannel>>
+    fun observeChannel(channelId: Long): Flow<ChannelEvent>
+    fun observeChannels(guildId: Long): Flow<ChannelEvent>
 
     suspend fun fetchChannel(channelId: Long): DomainChannel?
     suspend fun fetchChannels(guildId: Long): List<DomainChannel>
@@ -28,24 +30,24 @@ class ChannelStoreImpl(
     gateway: DiscordGateway,
     private val cache: CacheDatabase,
 ) : ChannelStore {
-    private val events = MutableSharedFlow<Event<DomainChannel>>()
+    private val events = MutableSharedFlow<ChannelEvent>()
 
-    override fun observeChannel(channelId: Long): Flow<Event<DomainChannel>> {
+    override fun observeChannel(channelId: Long): Flow<ChannelEvent> {
         return events.filter { event ->
             event.fold(
                 onAdd = { it.id == channelId },
                 onUpdate = { it.id == channelId },
-                onRemove = { it == channelId },
+                onDelete = { it == channelId },
             )
         }
     }
 
-    override fun observeChannels(guildId: Long): Flow<Event<DomainChannel>> {
+    override fun observeChannels(guildId: Long): Flow<ChannelEvent> {
         return events.filter { event ->
             event.fold(
                 onAdd = { it.guildId == guildId },
                 onUpdate = { it.guildId == guildId },
-                onRemove = { it == guildId },
+                onDelete = { it == guildId },
             )
         }
     }
@@ -70,7 +72,7 @@ class ChannelStoreImpl(
             }
 
             for (channel in channels) {
-                events.emit(Event.Add(channel.toDomain()))
+                events.emit(ChannelEvent.Add(channel.toDomain()))
             }
 
             cache.runInTransaction {
@@ -85,7 +87,7 @@ class ChannelStoreImpl(
             val guildId = it.data.guildId?.value
                 ?: error("no guild id on channel create event")
 
-            events.emit(Event.Add(it.data.toDomain()))
+            events.emit(ChannelEvent.Add(it.data.toDomain()))
             cache.channels().insertChannels(listOf(it.data.toEntity(guildId)))
         }
 
@@ -93,14 +95,14 @@ class ChannelStoreImpl(
             val guildId = it.data.guildId?.value
                 ?: error("no guild id on channel update event")
 
-            events.emit(Event.Update(it.data.toDomain()))
+            events.emit(ChannelEvent.Update(it.data.toDomain()))
             cache.channels().insertChannels(listOf(it.data.toEntity(guildId)))
         }
 
         gateway.onEvent<ChannelDeleteEvent> {
             val channelId = it.data.id.value
 
-            events.emit(Event.Remove(channelId))
+            events.emit(ChannelEvent.Delete(channelId))
 
             cache.runInTransaction {
                 cache.channels().deleteChannel(channelId)

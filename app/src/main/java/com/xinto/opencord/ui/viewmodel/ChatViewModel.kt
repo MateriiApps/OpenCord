@@ -74,7 +74,7 @@ class ChatViewModel(
                 event.fold(
                     onAdd = { messages[it.id] = it },
                     onUpdate = { messages[it.id] = it },
-                    onRemove = { messages.remove(it) },
+                    onDelete = { messages.remove(it.messageId.value) },
                 )
             }
     }

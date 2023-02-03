@@ -16,9 +16,11 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.withContext
 
+typealias GuildEvent = Event<DomainGuild, DomainGuild, Long>
+
 interface GuildStore {
-    fun observeGuild(guildId: Long): Flow<Event<DomainGuild>>
-    fun observeGuilds(): Flow<Event<DomainGuild>>
+    fun observeGuild(guildId: Long): Flow<GuildEvent>
+    fun observeGuilds(): Flow<GuildEvent>
 
     suspend fun fetchGuild(guildId: Long): DomainGuild?
 }
@@ -27,14 +29,14 @@ class GuildStoreImpl(
     gateway: DiscordGateway,
     private val cache: CacheDatabase,
 ) : GuildStore {
-    private val events = MutableSharedFlow<Event<DomainGuild>>()
+    private val events = MutableSharedFlow<GuildEvent>()
 
-    override fun observeGuild(guildId: Long): Flow<Event<DomainGuild>> {
+    override fun observeGuild(guildId: Long): Flow<GuildEvent> {
         return events.filter { event ->
             event.fold(
                 onAdd = { it.id == guildId },
                 onUpdate = { it.id == guildId },
-                onRemove = { it == guildId },
+                onDelete = { it == guildId },
             )
         }
     }
@@ -52,7 +54,7 @@ class GuildStoreImpl(
             val guilds = event.data.guilds.map { it.toEntity() }
 
             for (guild in guilds) {
-                events.emit(Event.Add(guild.toDomain()))
+                events.emit(GuildEvent.Add(guild.toDomain()))
             }
 
             cache.runInTransaction {
@@ -64,20 +66,20 @@ class GuildStoreImpl(
         }
 
         gateway.onEvent<GuildCreateEvent> {
-            events.emit(Event.Add(it.data.toDomain()))
+            events.emit(GuildEvent.Add(it.data.toDomain()))
 
             cache.guilds().insertGuilds(listOf(it.data.toEntity()))
         }
 
         gateway.onEvent<GuildUpdateEvent> {
-            events.emit(Event.Update(it.data.toDomain()))
+            events.emit(GuildEvent.Update(it.data.toDomain()))
             cache.guilds().insertGuilds(listOf(it.data.toEntity()))
         }
 
         gateway.onEvent<GuildDeleteEvent> {
             val guildId = it.data.id.value
 
-            events.emit(Event.Remove(guildId))
+            events.emit(GuildEvent.Delete(guildId))
 
             cache.runInTransaction {
                 cache.guilds().deleteGuild(guildId)

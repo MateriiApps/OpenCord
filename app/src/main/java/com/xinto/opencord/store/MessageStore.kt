@@ -1,6 +1,7 @@
 package com.xinto.opencord.store
 
 import androidx.room.withTransaction
+import com.github.materiiapps.partial.Partial
 import com.xinto.opencord.db.database.CacheDatabase
 import com.xinto.opencord.db.entity.message.EntityMessage
 import com.xinto.opencord.db.entity.message.toEntity
@@ -8,10 +9,12 @@ import com.xinto.opencord.db.entity.user.toEntity
 import com.xinto.opencord.domain.attachment.toDomain
 import com.xinto.opencord.domain.embed.toDomain
 import com.xinto.opencord.domain.message.DomainMessage
+import com.xinto.opencord.domain.message.DomainMessageRegular
 import com.xinto.opencord.domain.message.toDomain
 import com.xinto.opencord.domain.user.DomainUser
 import com.xinto.opencord.domain.user.toDomain
 import com.xinto.opencord.gateway.DiscordGateway
+import com.xinto.opencord.gateway.dto.MessageDeleteData
 import com.xinto.opencord.gateway.event.MessageCreateEvent
 import com.xinto.opencord.gateway.event.MessageDeleteEvent
 import com.xinto.opencord.gateway.event.MessageUpdateEvent
@@ -24,8 +27,10 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.withContext
 
+typealias MessageEvent = Event<DomainMessage, DomainMessage, MessageDeleteData>
+
 interface MessageStore {
-    fun observeChannel(channelId: Long): Flow<Event<DomainMessage>>
+    fun observeChannel(channelId: Long): Flow<MessageEvent>
 
     suspend fun fetchPinnedMessages(channelId: Long): List<DomainMessage>
     suspend fun fetchMessages(
@@ -41,14 +46,14 @@ class MessageStoreImpl(
     private val api: DiscordApiService,
     private val cache: CacheDatabase,
 ) : MessageStore {
-    private val events = MutableSharedFlow<Event<DomainMessage>>()
+    private val events = MutableSharedFlow<MessageEvent>()
 
-    override fun observeChannel(channelId: Long): Flow<Event<DomainMessage>> {
+    override fun observeChannel(channelId: Long): Flow<MessageEvent> {
         return events.filter { event ->
             event.fold(
                 onAdd = { it.channelId == channelId },
                 onUpdate = { it.channelId == channelId },
-                onRemove = { true }, // FIXME: cannot check if remove event is from current channel (only msg id is provided)
+                onDelete = { it.channelId.value == channelId },
             )
         }
     }
@@ -171,7 +176,7 @@ class MessageStoreImpl(
         gateway.onEvent<MessageCreateEvent> { event ->
             val message = event.data
 
-            events.emit(Event.Add(message.toDomain()))
+            events.emit(MessageEvent.Add(message.toDomain()))
             storeMessages(listOf(message))
         }
 
@@ -182,7 +187,7 @@ class MessageStoreImpl(
         gateway.onEvent<MessageDeleteEvent> {
             val messageId = it.data.messageId.value
 
-            events.emit(Event.Remove(messageId))
+            events.emit(MessageEvent.Delete(it.data))
 
             cache.runInTransaction {
                 cache.messages().deleteMessage(messageId)
