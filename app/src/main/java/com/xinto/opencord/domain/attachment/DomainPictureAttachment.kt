@@ -9,6 +9,7 @@ data class DomainPictureAttachment(
     override val size: Int,
     override val url: String,
     override val proxyUrl: String,
+    override val type: String,
     val width: Int,
     val height: Int,
 ) : DomainAttachment

@@ -11,11 +11,12 @@ interface DomainAttachment {
     val size: Int
     val url: String
     val proxyUrl: String
+    val type: String?
 }
 
 fun ApiAttachment.toDomain(): DomainAttachment {
     return when {
-        contentType.startsWith("video/") -> DomainVideoAttachment(
+        contentType?.startsWith("video/") == true -> DomainVideoAttachment(
             id = id.value,
             filename = filename,
             size = size,
@@ -23,8 +24,9 @@ fun ApiAttachment.toDomain(): DomainAttachment {
             proxyUrl = proxyUrl,
             width = width ?: 100,
             height = height ?: 100,
+            type = contentType,
         )
-        contentType.startsWith("image/") -> DomainPictureAttachment(
+        contentType?.startsWith("image/") == true -> DomainPictureAttachment(
             id = id.value,
             filename = filename,
             size = size,
@@ -32,6 +34,7 @@ fun ApiAttachment.toDomain(): DomainAttachment {
             proxyUrl = proxyUrl,
             width = width ?: 100,
             height = height ?: 100,
+            type = contentType,
         )
         else -> DomainFileAttachment(
             id = id.value,
@@ -39,6 +42,7 @@ fun ApiAttachment.toDomain(): DomainAttachment {
             size = size,
             url = url,
             proxyUrl = proxyUrl,
+            type = contentType,
         )
     }
 }
@@ -46,6 +50,7 @@ fun ApiAttachment.toDomain(): DomainAttachment {
 fun EntityAttachment.toDomain(): DomainAttachment {
     return if (contentType?.isNotEmpty() == true) {
         when (contentType) {
+            // TODO: more explicit video and picture types
             "video/mp4" -> DomainVideoAttachment(
                 id = id,
                 filename = fileName,
@@ -54,6 +59,7 @@ fun EntityAttachment.toDomain(): DomainAttachment {
                 proxyUrl = proxyUrl,
                 width = width ?: 100,
                 height = height ?: 100,
+                type = contentType,
             )
             else -> DomainPictureAttachment(
                 id = id,
@@ -63,6 +69,7 @@ fun EntityAttachment.toDomain(): DomainAttachment {
                 proxyUrl = proxyUrl,
                 width = width ?: 100,
                 height = height ?: 100,
+                type = contentType,
             )
         }
     } else {
@@ -72,6 +79,7 @@ fun EntityAttachment.toDomain(): DomainAttachment {
             size = size,
             url = url,
             proxyUrl = proxyUrl,
+            type = contentType,
         )
     }
 }

@@ -109,9 +109,7 @@ fun PinsScreenLoaded(
                                         title = embed.title,
                                         description = embed.description,
                                         color = embed.color,
-                                        author = embed.author.ifNotNullComposable {
-                                            EmbedAuthor(name = it.name)
-                                        },
+                                        author = embed.author.ifNotNullComposable { EmbedAuthor(name = it) },
                                         fields = embed.fields.ifNotNullComposable {
                                             for (field in it) {
                                                 EmbedField(

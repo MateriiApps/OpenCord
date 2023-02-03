@@ -1,5 +1,8 @@
 package com.xinto.opencord.rest.models
 
+import com.xinto.opencord.domain.attachment.DomainAttachment
+import com.xinto.opencord.domain.attachment.DomainPictureAttachment
+import com.xinto.opencord.domain.attachment.DomainVideoAttachment
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -27,5 +30,40 @@ data class ApiAttachment(
     val height: Int? = null,
 
     @SerialName("content_type")
-    val contentType: String = ""
+    val contentType: String? = null
 )
+
+fun DomainAttachment.toApi(): ApiAttachment {
+    return when (this) {
+        is DomainVideoAttachment -> ApiAttachment(
+            id = ApiSnowflake(id),
+            filename = filename,
+            size = size,
+            url = url,
+            proxyUrl = proxyUrl,
+            width = width,
+            height = height,
+            contentType = type,
+        )
+        is DomainPictureAttachment -> ApiAttachment(
+            id = ApiSnowflake(id),
+            filename = filename,
+            size = size,
+            url = url,
+            proxyUrl = proxyUrl,
+            width = width,
+            height = height,
+            contentType = type,
+        )
+        else -> ApiAttachment(
+            id = ApiSnowflake(id),
+            filename = filename,
+            size = size,
+            url = url,
+            proxyUrl = proxyUrl,
+            width = null,
+            height = null,
+            contentType = type,
+        )
+    }
+}

@@ -9,4 +9,5 @@ data class DomainFileAttachment(
     override val size: Int,
     override val url: String,
     override val proxyUrl: String,
+    override val type: String?,
 ) : DomainAttachment

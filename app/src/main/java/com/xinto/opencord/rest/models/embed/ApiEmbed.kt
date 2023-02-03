@@ -1,6 +1,8 @@
 package com.xinto.opencord.rest.models.embed
 
+import com.xinto.opencord.domain.embed.DomainEmbed
 import com.xinto.opencord.rest.models.ApiColor
+import com.xinto.opencord.rest.models.toApi
 import kotlinx.datetime.Instant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -28,3 +30,15 @@ data class ApiEmbed(
     @SerialName("fields")
     val fields: List<ApiEmbedField>? = null
 )
+
+fun DomainEmbed.toApi(): ApiEmbed {
+    return ApiEmbed(
+        title = title,
+        description = description,
+        url = url,
+        color = color?.toApi(),
+        timestamp = timestamp,
+        author = author?.let { ApiEmbedAuthor(name = it) },
+        fields = fields,
+    )
+}

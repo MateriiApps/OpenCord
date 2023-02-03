@@ -1,5 +1,7 @@
 package com.xinto.opencord.rest.models.user
 
+import com.xinto.opencord.domain.user.DomainUser
+import com.xinto.opencord.domain.user.DomainUserPublic
 import com.xinto.opencord.rest.models.ApiSnowflake
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -75,3 +77,36 @@ data class ApiUser(
     @SerialName("premium")
     val premium: Boolean? = null,
 )
+
+// TODO: figure out a way to get rid of this
+fun DomainUser.toApi(): ApiUser {
+    val avatarUrl = if (avatarUrl.contains("/embed/")) {
+        null
+    } else {
+        avatarUrl.takeLastWhile { it != '/' }.takeWhile { it != '.' }
+    }
+
+    return when (this) {
+        is DomainUserPublic -> ApiUser(
+            id = ApiSnowflake(id),
+            username = username,
+            discriminator = discriminator,
+            avatar = avatarUrl,
+            bot = bot,
+            pronouns = pronouns,
+            bio = bio,
+            banner = null,
+            accentColor = null,
+            publicFlags = flags,
+            privateFlags = null,
+            verified = null,
+            email = null,
+            phone = null,
+            mfaEnabled = null,
+            locale = null,
+            purchasedFlags = null,
+            premium = null,
+        )
+        else -> throw UnsupportedOperationException("Cannot convert other DomainUser types to ApiUser")
+    }
+}

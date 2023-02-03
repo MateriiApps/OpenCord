@@ -20,6 +20,7 @@ import com.xinto.opencord.gateway.event.MessageDeleteEvent
 import com.xinto.opencord.gateway.event.MessageUpdateEvent
 import com.xinto.opencord.gateway.onEvent
 import com.xinto.opencord.rest.models.message.ApiMessage
+import com.xinto.opencord.rest.models.message.toApi
 import com.xinto.opencord.rest.service.DiscordApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -181,7 +182,21 @@ class MessageStoreImpl(
         }
 
         gateway.onEvent<MessageUpdateEvent> { event ->
-            // TODO: figure out message updates + cache updating
+            // TODO: @required annotation on partialgen
+            // TODO: getOrNull methods or something on partialgen
+
+            val id = (event.data.id as Partial.Value).value.value
+            val message = cache.messages().getMessage(id)
+                ?.let { constructDomainMessage(it) }
+                ?: return@onEvent
+
+            // FIXME: no way to merge partials with a hierarchy / interfaces
+            val newMessage = (message as? DomainMessageRegular)
+                ?.let { event.data.toDomain().merge(it) }
+                ?: return@onEvent
+
+            events.emit(MessageEvent.Update(newMessage))
+            storeMessages(listOf(newMessage.toApi()))
         }
 
         gateway.onEvent<MessageDeleteEvent> {
