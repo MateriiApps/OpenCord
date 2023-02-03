@@ -67,6 +67,7 @@ class ChatViewModel(
             }
         }
 
+        job?.cancel()
         job = messageStore
             .observeChannel(persistentDataManager.persistentChannelId)
             .collectIn(viewModelScope) { event ->

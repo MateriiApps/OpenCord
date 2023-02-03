@@ -46,9 +46,9 @@ class MessageStoreImpl(
     override fun observeChannel(channelId: Long): Flow<Event<DomainMessage>> {
         return events.filter { event ->
             event.fold(
-                onAdd = { it.id == channelId },
-                onUpdate = { it.id == channelId },
-                onRemove = { it == channelId },
+                onAdd = { it.channelId == channelId },
+                onUpdate = { it.channelId == channelId },
+                onRemove = { true }, // FIXME: cannot check if remove event is from current channel (only msg id is provided)
             )
         }
     }
