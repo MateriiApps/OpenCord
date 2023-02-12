@@ -1,6 +1,7 @@
 package com.xinto.opencord.rest.models.message
 
 import com.github.materiiapps.partial.Partialize
+import com.github.materiiapps.partial.Required
 import com.xinto.opencord.domain.message.DomainMessage
 import com.xinto.opencord.domain.message.DomainMessageMemberJoin
 import com.xinto.opencord.domain.message.DomainMessageRegular
@@ -18,9 +19,11 @@ import kotlinx.serialization.Serializable
 @Serializable
 @Partialize
 data class ApiMessage(
+    @Required
     @SerialName("id")
     val id: ApiSnowflake,
 
+    @Required
     @SerialName("channel_id")
     val channelId: ApiSnowflake,
 

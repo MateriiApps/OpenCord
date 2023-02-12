@@ -216,7 +216,7 @@ sealed class Dependencies {
     }
 
     object Partials : Dependencies() {
-        const val version = "1.0.0"
+        const val version = "1.1.0"
 
         const val partial = "io.github.materiiapps:partial:$version"
         const val partialKsp = "io.github.materiiapps:partial-ksp:$version"

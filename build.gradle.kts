@@ -2,10 +2,11 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        maven(url = "https://jitpack.io")
+        maven("https://jitpack.io")
     }
 }
 
 task<Delete>("clean") {
     delete(rootProject.buildDir)
+    delete(rootDir.resolve("buildSrc/build"))
 }

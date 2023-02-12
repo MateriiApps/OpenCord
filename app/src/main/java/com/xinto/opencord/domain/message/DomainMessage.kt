@@ -1,6 +1,7 @@
 package com.xinto.opencord.domain.message
 
 import androidx.compose.runtime.Immutable
+import com.github.materiiapps.partial.*
 import com.xinto.opencord.db.entity.message.EntityMessage
 import com.xinto.opencord.domain.attachment.DomainAttachment
 import com.xinto.opencord.domain.attachment.toDomain
@@ -9,21 +10,37 @@ import com.xinto.opencord.domain.embed.toDomain
 import com.xinto.opencord.domain.user.DomainUser
 import com.xinto.opencord.domain.user.toDomain
 import com.xinto.opencord.rest.models.message.ApiMessage
+import com.xinto.opencord.rest.models.message.ApiMessagePartial
 import com.xinto.opencord.rest.models.message.ApiMessageType
 import com.xinto.opencord.rest.models.message.fromValue
-import com.xinto.opencord.util.Timestamp
+import com.xinto.simpleast.Node
 import kotlinx.datetime.Instant
 
 @Immutable
-abstract class DomainMessage {
-    abstract val id: Long
-    abstract val channelId: Long
-    abstract val timestamp: Instant
-    abstract val pinned: Boolean
-    abstract val content: String
-    abstract val author: DomainUser
+@Partialize(
+    children = [
+        DomainMessageRegular::class,
+        DomainMessageMemberJoin::class,
+        DomainMessageUnknown::class,
+    ],
+)
+interface DomainMessage {
+    @Required
+    val id: Long
 
-    val formattedTimestamp by lazy { Timestamp.getFormattedTimestamp(timestamp) }
+    @Required
+    val channelId: Long
+
+    val timestamp: Instant
+    val pinned: Boolean
+    val content: String
+    val author: DomainUser
+
+    @Skip
+    val contentNodes: List<Node<Any?>>
+
+    @Skip
+    val formattedTimestamp: String
 }
 
 fun ApiMessage.toDomain(): DomainMessage {
@@ -62,6 +79,46 @@ fun ApiMessage.toDomain(): DomainMessage {
             timestamp = timestamp,
             pinned = pinned,
             author = author.toDomain(),
+        )
+    }
+}
+
+fun ApiMessagePartial.toDomain(): DomainMessagePartial {
+    return when (val type = type.getOrNull()) {
+        ApiMessageType.Default, ApiMessageType.Reply -> {
+            DomainMessageRegularPartial(
+                id = id.value,
+                channelId = channelId.value,
+                content = content,
+                author = author.map { it.toDomain() },
+                timestamp = timestamp,
+                pinned = pinned,
+                editedTimestamp = editedTimestamp,
+                attachments = attachments.map { it.map { it.toDomain() } },
+                embeds = embeds.map { it.map { it.toDomain() } },
+                isReply = partial(type == ApiMessageType.Reply),
+                referencedMessage = referencedMessage.map { it?.toDomain() },
+                mentionEveryone = mentionEveryone,
+                mentions = mentions.map { it.map { it.toDomain() } },
+            )
+        }
+        ApiMessageType.GuildMemberJoin -> {
+            DomainMessageMemberJoinPartial(
+                id = id.value,
+                channelId = channelId.value,
+                content = content,
+                author = author.map { it.toDomain() },
+                timestamp = timestamp,
+                pinned = pinned,
+            )
+        }
+        else -> DomainMessageUnknownPartial(
+            id = id.value,
+            channelId = channelId.value,
+            content = content,
+            author = author.map { it.toDomain() },
+            timestamp = timestamp,
+            pinned = pinned,
         )
     }
 }

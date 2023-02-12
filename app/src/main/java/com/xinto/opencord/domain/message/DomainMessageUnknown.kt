@@ -1,10 +1,14 @@
 package com.xinto.opencord.domain.message
 
 import androidx.compose.runtime.Immutable
+import com.github.materiiapps.partial.Partialize
 import com.xinto.opencord.domain.user.DomainUser
+import com.xinto.opencord.util.Timestamp
+import com.xinto.simpleast.Node
 import kotlinx.datetime.Instant
 
 @Immutable
+@Partialize // Is this even able to be partial?
 data class DomainMessageUnknown(
     override val id: Long,
     override val channelId: Long,
@@ -12,4 +16,8 @@ data class DomainMessageUnknown(
     override val pinned: Boolean,
     override val content: String,
     override val author: DomainUser
-) : DomainMessage()
+) : DomainMessage {
+    override val contentNodes: List<Node<Any?>> = emptyList()
+    override val formattedTimestamp: String
+            by lazy { Timestamp.getFormattedTimestamp(timestamp) }
+}

@@ -2,15 +2,12 @@ package com.xinto.opencord.domain.message
 
 import androidx.compose.runtime.Immutable
 import com.github.materiiapps.partial.Partialize
-import com.github.materiiapps.partial.map
 import com.xinto.opencord.domain.attachment.DomainAttachment
-import com.xinto.opencord.domain.attachment.toDomain
 import com.xinto.opencord.domain.embed.DomainEmbed
-import com.xinto.opencord.domain.embed.toDomain
 import com.xinto.opencord.domain.user.DomainUser
-import com.xinto.opencord.domain.user.toDomain
-import com.xinto.opencord.rest.models.message.ApiMessagePartial
 import com.xinto.opencord.util.SimpleAstParser
+import com.xinto.opencord.util.Timestamp
+import com.xinto.simpleast.Node
 import kotlinx.datetime.Instant
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
@@ -28,31 +25,16 @@ data class DomainMessageRegular(
     val attachments: List<DomainAttachment>,
     val embeds: List<DomainEmbed>,
     val isReply: Boolean,
-    val referencedMessage: DomainMessageRegular?,
+    val referencedMessage: DomainMessage?,
     val mentionEveryone: Boolean,
 //    val mentionedRoles: List<DomainRole>,
     val mentions: List<DomainUser>,
-) : DomainMessage(), KoinComponent {
+) : DomainMessage, KoinComponent {
+    override val contentNodes: List<Node<Any?>>
+            by lazy { get<SimpleAstParser>().parse(content, null) }
+    override val formattedTimestamp: String
+            by lazy { Timestamp.getFormattedTimestamp(timestamp) }
+
     val isEdited: Boolean
         get() = editedTimestamp != null
-
-    val contentNodes by lazy { get<SimpleAstParser>().parse(content, null) }
-}
-
-// TODO: turn this into DomainMessagePartial once partial heierarchy is done
-fun ApiMessagePartial.toDomain(): DomainMessageRegularPartial {
-    return DomainMessageRegularPartial(
-        id = id.map { it.value },
-        content = content,
-        channelId = channelId.map { it.value },
-        author = author.map { it.toDomain() },
-        timestamp = timestamp,
-        editedTimestamp = editedTimestamp,
-        attachments = attachments.map { attachments ->
-            attachments.map { it.toDomain() }
-        },
-        embeds = embeds.map { embeds ->
-            embeds.map { it.toDomain() }
-        },
-    )
 }

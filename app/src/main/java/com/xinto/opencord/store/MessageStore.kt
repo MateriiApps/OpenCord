@@ -2,6 +2,7 @@ package com.xinto.opencord.store
 
 import androidx.room.withTransaction
 import com.github.materiiapps.partial.Partial
+import com.github.materiiapps.partial.getOrNull
 import com.xinto.opencord.db.database.CacheDatabase
 import com.xinto.opencord.db.entity.message.EntityMessage
 import com.xinto.opencord.db.entity.message.toEntity
@@ -10,6 +11,7 @@ import com.xinto.opencord.domain.attachment.toDomain
 import com.xinto.opencord.domain.embed.toDomain
 import com.xinto.opencord.domain.message.DomainMessage
 import com.xinto.opencord.domain.message.DomainMessageRegular
+import com.xinto.opencord.domain.message.merge
 import com.xinto.opencord.domain.message.toDomain
 import com.xinto.opencord.domain.user.DomainUser
 import com.xinto.opencord.domain.user.toDomain
@@ -182,17 +184,12 @@ class MessageStoreImpl(
         }
 
         gateway.onEvent<MessageUpdateEvent> { event ->
-            // TODO: @required annotation on partialgen
-            // TODO: getOrNull methods or something on partialgen
-
-            val id = (event.data.id as Partial.Value).value.value
+            val id = event.data.id.value
             val message = cache.messages().getMessage(id)
                 ?.let { constructDomainMessage(it) }
                 ?: return@onEvent
 
-            // FIXME: no way to merge partials with a hierarchy / interfaces
-            val newMessage = (message as? DomainMessageRegular)
-                ?.let { event.data.toDomain().merge(it) }
+            val newMessage = message.merge(event.data.toDomain())
                 ?: return@onEvent
 
             events.emit(MessageEvent.Update(newMessage))
