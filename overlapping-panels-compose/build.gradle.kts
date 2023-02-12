@@ -1,9 +1,12 @@
+@file:Suppress("UnstableApiUsage")
+
 plugins {
     id("com.android.library")
     kotlin("android")
 }
 
 android {
+    namespace = "com.xinto.panels"
     compileSdk = 32
 
     defaultConfig {

@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 plugins {
     id("com.android.application")
     id("com.google.devtools.ksp")
@@ -11,14 +13,13 @@ android {
 
     defaultConfig {
         applicationId = "com.xinto.opencord"
+        namespace = "com.xinto.opencord"
         minSdk = 21
         targetSdk = 33
         versionCode = 1
         versionName = "0.0.1"
 
-        vectorDrawables {
-            useSupportLibrary = true
-        }
+        multiDexEnabled = true
 
         buildConfigField("int", "DISCORD_VERSION_CODE", "126021")
         buildConfigField("String", "DISCORD_VERSION_NAME", "\"126.21 - Stable\"")
@@ -117,6 +118,12 @@ android {
     }
 }
 
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(11))
+    }
+}
+
 dependencies {
     implementation(project(":bottom-dialog-compose"))
     implementation(project(":overlapping-panels-compose"))
@@ -124,7 +131,7 @@ dependencies {
 
     // Use java.time.* on Android <= 8
     // https://developer.android.com/studio/write/java8-support#library-desugaring-versions
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.2.0")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.2")
 
     Dependencies.Koin(this)
     Dependencies.Ktor(this)

@@ -91,18 +91,18 @@ sealed class Dependencies {
     }
 
     object Compose : Dependencies() {
-        const val compilerVersion = "1.3.2"
+        const val compilerVersion = "1.4.2"
 
         const val activity = "androidx.activity:activity-compose:1.6.1"
-        const val animation = "androidx.compose.animation:animation:1.3.2"
+        const val animation = "androidx.compose.animation:animation:1.3.3"
         const val compiler = "androidx.compose.compiler:compiler:$compilerVersion"
         const val foundation = "androidx.compose.foundation:foundation:1.3.1"
         const val material = "androidx.compose.material:material:1.3.1"
         const val material3 = "androidx.compose.material3:material3:1.0.1"
-        const val runtime = "androidx.compose.runtime:runtime:1.3.2"
-        const val ui = "androidx.compose.ui:ui:1.3.2"
-        const val uiText = "androidx.compose.ui:ui-text:1.3.2"
-        const val uiUtil = "androidx.compose.ui:ui-util:1.3.2"
+        const val runtime = "androidx.compose.runtime:runtime:1.3.3"
+        const val ui = "androidx.compose.ui:ui:1.3.3"
+        const val uiText = "androidx.compose.ui:ui-text:1.3.3"
+        const val uiUtil = "androidx.compose.ui:ui-util:1.3.3"
 
         override fun invoke(scope: DependencyHandlerScope) {
             scope {
