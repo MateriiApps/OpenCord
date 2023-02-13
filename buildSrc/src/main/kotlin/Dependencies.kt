@@ -98,7 +98,7 @@ sealed class Dependencies {
         const val compiler = "androidx.compose.compiler:compiler:$compilerVersion"
         const val foundation = "androidx.compose.foundation:foundation:1.3.1"
         const val material = "androidx.compose.material:material:1.3.1"
-        const val material3 = "androidx.compose.material3:material3:1.0.1"
+        const val material3 = "androidx.compose.material3:material3:1.1.0-alpha06"
         const val runtime = "androidx.compose.runtime:runtime:1.3.3"
         const val ui = "androidx.compose.ui:ui:1.3.3"
         const val uiText = "androidx.compose.ui:ui-text:1.3.3"
