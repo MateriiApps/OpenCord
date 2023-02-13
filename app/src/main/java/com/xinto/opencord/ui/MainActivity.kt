@@ -8,8 +8,10 @@ import androidx.compose.runtime.SideEffect
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.xinto.opencord.ui.screens.RootScreen
 import com.xinto.opencord.ui.theme.OpenCordTheme
+import com.xinto.opencord.ui.viewmodel.ChatViewModel
 import com.xinto.opencord.ui.viewmodel.MainViewModel
 import org.koin.android.ext.android.get
+import org.koin.androidx.viewmodel.ext.android.getViewModel
 
 class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel = get()
@@ -32,5 +34,7 @@ class MainActivity : ComponentActivity() {
                 RootScreen()
             }
         }
+        val chatViewModel: ChatViewModel = getViewModel()
+        chatViewModel.load()
     }
 }

@@ -49,6 +49,7 @@ class ChatViewModel(
 
     fun load() {
         viewModelScope.launch {
+            if (persistentDataManager.persistentChannelId == 0L || persistentDataManager.persistentGuildId == 0L) return@launch
             state = State.Loading
 
             try {
