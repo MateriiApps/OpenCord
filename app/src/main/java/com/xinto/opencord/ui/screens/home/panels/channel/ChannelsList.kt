@@ -29,6 +29,16 @@ fun ChannelsList(
             viewModel.collapsedCategories.toImmutableList()
         }
     }
+    val unreadStates by remember(viewModel.unreadStates) {
+        derivedStateOf {
+            viewModel.unreadStates.toImmutableMap()
+        }
+    }
+    val lastMessageIds by remember(viewModel.lastMessageIds) {
+        derivedStateOf {
+            viewModel.lastMessageIds.toImmutableMap()
+        }
+    }
 
     CompositionLocalProvider(LocalAbsoluteTonalElevation provides 1.dp) {
         Surface(
@@ -60,6 +70,8 @@ fun ChannelsList(
                         boostLevel = viewModel.guildBoostLevel,
                         guildName = viewModel.guildName,
                         channels = sortedChannels,
+                        unreadStates = unreadStates,
+                        lastMessageIds = lastMessageIds,
                         collapsedCategories = collapsedCategories,
                         selectedChannelId = viewModel.selectedChannelId,
                     )

@@ -1,9 +1,6 @@
 package com.xinto.opencord.gateway.event
 
-import com.xinto.opencord.gateway.dto.GuildDeleteData
-import com.xinto.opencord.gateway.dto.MessageDeleteData
-import com.xinto.opencord.gateway.dto.Ready
-import com.xinto.opencord.gateway.dto.SessionData
+import com.xinto.opencord.gateway.dto.*
 import com.xinto.opencord.gateway.io.EventName
 import com.xinto.opencord.rest.models.ApiChannel
 import com.xinto.opencord.rest.models.ApiGuild
@@ -86,6 +83,11 @@ class EventDeserializationStrategy(
             EventName.MessageDelete -> {
                 MessageDeleteEvent(
                     data = decoder.decodeSerializableValue(MessageDeleteData.serializer()),
+                )
+            }
+            EventName.MessageAck -> {
+                MessageAckEvent(
+                    data = decoder.decodeSerializableValue(MessageAckData.serializer()),
                 )
             }
             EventName.SessionsReplace -> {

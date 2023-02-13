@@ -6,6 +6,8 @@ import androidx.room.TypeConverters
 import com.xinto.opencord.db.Converters
 import com.xinto.opencord.db.dao.*
 import com.xinto.opencord.db.entity.channel.EntityChannel
+import com.xinto.opencord.db.entity.channel.EntityLastMessageId
+import com.xinto.opencord.db.entity.channel.EntityUnreadState
 import com.xinto.opencord.db.entity.guild.EntityGuild
 import com.xinto.opencord.db.entity.message.EntityAttachment
 import com.xinto.opencord.db.entity.message.EntityEmbed
@@ -21,6 +23,8 @@ import com.xinto.opencord.db.entity.user.EntityUser
         EntityEmbed::class,
         EntityMessage::class,
         EntityUser::class,
+        EntityUnreadState::class,
+        EntityLastMessageId::class,
     ],
     exportSchema = false,
 )
@@ -34,4 +38,7 @@ abstract class CacheDatabase : RoomDatabase() {
     abstract fun embeds(): EmbedsDao
 
     abstract fun users(): UsersDao
+
+    abstract fun unreadStates(): UnreadStatesDao
+    abstract fun lastMessageIds(): LastMessageIdsDao
 }

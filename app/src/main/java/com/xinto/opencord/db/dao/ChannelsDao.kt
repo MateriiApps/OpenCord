@@ -15,7 +15,6 @@ interface ChannelsDao {
     )
     fun insertChannels(channels: List<EntityChannel>)
 
-    // --------------- Inserts ---------------
     @Query("UPDATE channels SET is_pins_stored = :isStored WHERE id = :channelId")
     fun setChannelPinsStored(channelId: Long, isStored: Boolean = true)
 

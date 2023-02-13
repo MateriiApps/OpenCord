@@ -23,6 +23,7 @@ enum class EventName(val eventName: String) {
     MessageCreate("MESSAGE_CREATE"),
     MessageUpdate("MESSAGE_UPDATE"),
     MessageDelete("MESSAGE_DELETE"),
+    MessageAck("MESSAGE_ACK"),
     SessionsReplace("SESSIONS_REPLACE"),
     GuildMemberChunk("GUILD_MEMBER_CHUNK"),
     UserSettingsUpdate("USER_SETTINGS_UPDATE"),

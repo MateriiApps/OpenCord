@@ -1,16 +1,14 @@
 package com.xinto.opencord.store
 
 import androidx.room.withTransaction
-import com.github.materiiapps.partial.Partial
-import com.github.materiiapps.partial.getOrNull
 import com.xinto.opencord.db.database.CacheDatabase
+import com.xinto.opencord.db.entity.channel.EntityLastMessageId
 import com.xinto.opencord.db.entity.message.EntityMessage
 import com.xinto.opencord.db.entity.message.toEntity
 import com.xinto.opencord.db.entity.user.toEntity
 import com.xinto.opencord.domain.attachment.toDomain
 import com.xinto.opencord.domain.embed.toDomain
 import com.xinto.opencord.domain.message.DomainMessage
-import com.xinto.opencord.domain.message.DomainMessageRegular
 import com.xinto.opencord.domain.message.merge
 import com.xinto.opencord.domain.message.toDomain
 import com.xinto.opencord.domain.user.DomainUser
@@ -20,6 +18,7 @@ import com.xinto.opencord.gateway.dto.MessageDeleteData
 import com.xinto.opencord.gateway.event.MessageCreateEvent
 import com.xinto.opencord.gateway.event.MessageDeleteEvent
 import com.xinto.opencord.gateway.event.MessageUpdateEvent
+import com.xinto.opencord.gateway.event.ReadyEvent
 import com.xinto.opencord.gateway.onEvent
 import com.xinto.opencord.rest.models.message.ApiMessage
 import com.xinto.opencord.rest.models.message.toApi
@@ -42,6 +41,8 @@ interface MessageStore {
         around: Long? = null,
         before: Long? = null,
     ): List<DomainMessage>
+
+    suspend fun getLastMessageId(channelId: Long): Long?
 }
 
 class MessageStoreImpl(
@@ -175,9 +176,36 @@ class MessageStoreImpl(
         }
     }
 
+    override suspend fun getLastMessageId(channelId: Long): Long? {
+        return cache.lastMessageIds().getLastMessageId(channelId)?.lastMessageId
+    }
+
     init {
+        gateway.onEvent<ReadyEvent> { event ->
+            val lastMessageIds = event.data.guilds.flatMap { guild ->
+                guild.channels.mapNotNull {
+                    EntityLastMessageId(
+                        channelId = it.id.value,
+                        lastMessageId = it.lastMessageId?.value ?: return@mapNotNull null,
+                    )
+                }
+            }
+
+            cache.lastMessageIds().apply {
+                clear()
+                lastMessageIds.forEach(::setLastMessageId)
+            }
+        }
+
         gateway.onEvent<MessageCreateEvent> { event ->
             val message = event.data
+
+            cache.lastMessageIds().setLastMessageId(
+                EntityLastMessageId(
+                    channelId = message.channelId.value,
+                    lastMessageId = message.id.value,
+                ),
+            )
 
             events.emit(MessageEvent.Add(message.toDomain()))
             storeMessages(listOf(message))

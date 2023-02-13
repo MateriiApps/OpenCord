@@ -25,4 +25,7 @@ data class ApiChannel(
 
     @SerialName("nsfw")
     val nsfw: Boolean = false,
+
+    @SerialName("last_message_id")
+    val lastMessageId: ApiSnowflake? = null,
 )

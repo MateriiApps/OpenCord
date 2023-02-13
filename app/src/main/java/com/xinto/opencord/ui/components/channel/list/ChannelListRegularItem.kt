@@ -22,7 +22,7 @@ fun ChannelListRegularItem(
     title: @Composable () -> Unit,
     icon: @Composable () -> Unit,
     selected: Boolean,
-    showIndicator: Boolean,
+    showUnread: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val indicatorFraction by animateFloatAsState(if (selected) 0.7f else 0.15f)
@@ -33,7 +33,7 @@ fun ChannelListRegularItem(
     ) {
         AnimatedVisibility(
             modifier = Modifier.align(Alignment.CenterStart),
-            visible = showIndicator || selected,
+            visible = selected || showUnread,
             enter = slideInHorizontally(),
             exit = slideOutHorizontally(),
         ) {
