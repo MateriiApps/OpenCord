@@ -2,9 +2,9 @@ package com.xinto.opencord.ui.viewmodel
 
 import androidx.compose.runtime.*
 import androidx.lifecycle.viewModelScope
-import com.xinto.opencord.db.entity.channel.EntityUnreadState
 import com.xinto.opencord.domain.channel.DomainCategoryChannel
 import com.xinto.opencord.domain.channel.DomainChannel
+import com.xinto.opencord.domain.channel.DomainUnreadState
 import com.xinto.opencord.manager.PersistentDataManager
 import com.xinto.opencord.store.*
 import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
@@ -35,7 +35,7 @@ class ChannelsViewModel(
         private set
 
     val channels = mutableStateMapOf<Long, DomainChannel>()
-    val unreadStates = mutableStateMapOf<Long, EntityUnreadState>()
+    val unreadStates = mutableStateMapOf<Long, DomainUnreadState>()
     val collapsedCategories = mutableStateListOf<Long>()
     val lastMessageIds = mutableStateMapOf<Long, Long>()
 

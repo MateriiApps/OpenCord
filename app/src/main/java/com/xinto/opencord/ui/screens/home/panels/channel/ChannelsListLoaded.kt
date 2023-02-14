@@ -26,11 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
-import com.xinto.opencord.db.entity.channel.EntityUnreadState
-import com.xinto.opencord.domain.channel.DomainCategoryChannel
-import com.xinto.opencord.domain.channel.DomainChannel
-import com.xinto.opencord.domain.channel.DomainTextChannel
-import com.xinto.opencord.domain.channel.DomainVoiceChannel
+import com.xinto.opencord.domain.channel.*
 import com.xinto.opencord.ui.components.OCAsyncImage
 import com.xinto.opencord.ui.components.channel.list.ChannelListCategoryItem
 import com.xinto.opencord.ui.components.channel.list.ChannelListRegularItem
@@ -48,7 +44,7 @@ fun ChannelsListLoaded(
     boostLevel: Int,
     guildName: String,
     channels: ImmutableMap<DomainCategoryChannel?, ImmutableList<DomainChannel>>,
-    unreadStates: ImmutableMap<Long, EntityUnreadState>,
+    unreadStates: ImmutableMap<Long, DomainUnreadState>,
     lastMessageIds: ImmutableMap<Long, Long>,
     collapsedCategories: ImmutableList<Long>,
     modifier: Modifier = Modifier

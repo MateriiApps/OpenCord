@@ -1,8 +1,9 @@
 package com.xinto.opencord.gateway.dto
 
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@kotlinx.serialization.Serializable
+@Serializable
 data class MessageAckData(
     @SerialName("ack_type")
     val ackType: Int? = null,

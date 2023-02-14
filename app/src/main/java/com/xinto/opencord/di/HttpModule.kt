@@ -24,7 +24,7 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 private typealias OCLogger = com.xinto.opencord.util.Logger
-private typealias KtorLogger = io.ktor.client.plugins.logging.Logger
+private typealias KtorLogger = Logger
 
 val HttpHeaders.XSuperProperties: String
     get() = "X-Super-Properties"

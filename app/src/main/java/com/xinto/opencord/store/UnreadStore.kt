@@ -3,6 +3,8 @@ package com.xinto.opencord.store
 import androidx.room.withTransaction
 import com.xinto.opencord.db.database.CacheDatabase
 import com.xinto.opencord.db.entity.channel.EntityUnreadState
+import com.xinto.opencord.domain.channel.DomainUnreadState
+import com.xinto.opencord.domain.channel.toDomain
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.event.ChannelDeleteEvent
 import com.xinto.opencord.gateway.event.MessageAckEvent
@@ -13,12 +15,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.filter
 
-typealias UnreadEvent = Event<EntityUnreadState, Nothing, Long>
+typealias UnreadEvent = Event<DomainUnreadState, Nothing, Long>
 
 interface UnreadStore {
     fun observeChannel(channelId: Long): Flow<UnreadEvent>
 
-    suspend fun getChannel(channelId: Long): EntityUnreadState?
+    suspend fun getChannel(channelId: Long): DomainUnreadState?
 }
 
 class UnreadStoreImpl(
@@ -38,8 +40,8 @@ class UnreadStoreImpl(
         }
     }
 
-    override suspend fun getChannel(channelId: Long): EntityUnreadState? {
-        return cache.unreadStates().getUnreadState(channelId)
+    override suspend fun getChannel(channelId: Long): DomainUnreadState? {
+        return cache.unreadStates().getUnreadState(channelId)?.toDomain()
     }
 
     init {
@@ -52,7 +54,7 @@ class UnreadStoreImpl(
                 )
             }
 
-            states.forEach { events.emit(UnreadEvent.Add(it)) }
+            states.forEach { events.emit(UnreadEvent.Add(it.toDomain())) }
             cache.withTransaction {
                 cache.unreadStates().clear()
                 cache.unreadStates().insertUnreadStates(states)
@@ -66,7 +68,7 @@ class UnreadStoreImpl(
                 lastMessageId = event.data.messageId,
             )
 
-            events.emit(UnreadEvent.Add(state))
+            events.emit(UnreadEvent.Add(state.toDomain()))
             cache.unreadStates().insertUnreadStates(listOf(state))
         }
 
