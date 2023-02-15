@@ -19,6 +19,7 @@ import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import coil.request.CachePolicy
 import coil.request.ImageRequest
+import coil.size.Precision
 import coil.size.Size
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.placeholder
@@ -41,7 +42,10 @@ fun OCAsyncImage(
             .data(url)
             .diskCacheKey(url)
             .diskCachePolicy(CachePolicy.ENABLED)
+            .memoryCachePolicy(CachePolicy.ENABLED)
+            .memoryCacheKey(url)
             .size(size)
+            .precision(Precision.EXACT)
             .crossfade(true)
             .build(),
         contentDescription = null,
