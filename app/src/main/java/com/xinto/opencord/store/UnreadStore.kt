@@ -69,7 +69,7 @@ class UnreadStoreImpl(
             )
 
             events.emit(UnreadEvent.Add(state.toDomain()))
-            cache.unreadStates().insertUnreadStates(listOf(state))
+            cache.unreadStates().insertUnreadState(state)
         }
 
         gateway.onEvent<ChannelDeleteEvent> { event ->

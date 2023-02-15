@@ -15,6 +15,12 @@ interface UnreadStatesDao {
     )
     fun insertUnreadStates(states: List<EntityUnreadState>)
 
+    @Insert(
+        onConflict = OnConflictStrategy.REPLACE,
+        entity = EntityUnreadState::class,
+    )
+    fun insertUnreadState(states: EntityUnreadState)
+
     // --------------- Deletes ---------------
     @Query("DELETE FROM unread_states WHERE channel_id = :channelId")
     fun deleteUnreadState(channelId: Long)
