@@ -15,6 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.ui.components.indicator.UnreadIndicator
+import com.xinto.opencord.ui.util.ContentAlpha
+import com.xinto.opencord.ui.util.ProvideContentAlpha
 
 @Composable
 fun ChannelListRegularItem(
@@ -22,7 +24,7 @@ fun ChannelListRegularItem(
     title: @Composable () -> Unit,
     icon: @Composable () -> Unit,
     selected: Boolean,
-    showIndicator: Boolean,
+    showUnread: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val indicatorFraction by animateFloatAsState(if (selected) 0.7f else 0.15f)
@@ -33,7 +35,7 @@ fun ChannelListRegularItem(
     ) {
         AnimatedVisibility(
             modifier = Modifier.align(Alignment.CenterStart),
-            visible = showIndicator || selected,
+            visible = selected || showUnread,
             enter = slideInHorizontally(),
             exit = slideOutHorizontally(),
         ) {
@@ -49,19 +51,21 @@ fun ChannelListRegularItem(
             onClick = onClick,
             tonalElevation = tonalElevation,
         ) {
-            Row(
-                modifier = Modifier.padding(6.dp),
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Box(
-                    modifier = Modifier.size(24.dp),
-                    contentAlignment = Alignment.Center,
+            ProvideContentAlpha(if (selected || showUnread) ContentAlpha.full else ContentAlpha.medium) {
+                Row(
+                    modifier = Modifier.padding(6.dp),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    icon()
-                }
-                ProvideTextStyle(MaterialTheme.typography.titleMedium) {
-                    title()
+                    Box(
+                        modifier = Modifier.size(24.dp),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        icon()
+                    }
+                    ProvideTextStyle(MaterialTheme.typography.titleMedium) {
+                        title()
+                    }
                 }
             }
         }

@@ -4,10 +4,9 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.viewModelScope
 import com.xinto.opencord.domain.channel.DomainCategoryChannel
 import com.xinto.opencord.domain.channel.DomainChannel
+import com.xinto.opencord.domain.channel.DomainUnreadState
 import com.xinto.opencord.manager.PersistentDataManager
-import com.xinto.opencord.store.ChannelStore
-import com.xinto.opencord.store.GuildStore
-import com.xinto.opencord.store.fold
+import com.xinto.opencord.store.*
 import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
 import com.xinto.opencord.util.collectIn
 import com.xinto.opencord.util.getSortedChannels
@@ -19,6 +18,8 @@ class ChannelsViewModel(
     persistentDataManager: PersistentDataManager,
     private val channelStore: ChannelStore,
     private val guildStore: GuildStore,
+    private val messageStore: MessageStore,
+    private val unreadStore: UnreadStore,
 ) : BasePersistenceViewModel(persistentDataManager) {
     sealed interface State {
         object Unselected : State
@@ -30,18 +31,23 @@ class ChannelsViewModel(
     var state by mutableStateOf<State>(State.Unselected)
         private set
 
+    var selectedChannelId by mutableStateOf(0L)
+        private set
+
     val channels = mutableStateMapOf<Long, DomainChannel>()
+    val unreadStates = mutableStateMapOf<Long, DomainUnreadState>()
+    val collapsedCategories = mutableStateListOf<Long>()
+    val lastMessageIds = mutableStateMapOf<Long, Long>()
+
     var guildName by mutableStateOf("")
         private set
     var guildBannerUrl by mutableStateOf<String?>(null)
         private set
     var guildBoostLevel by mutableStateOf(0)
-
-    var selectedChannelId by mutableStateOf(0L)
         private set
-    val collapsedCategories = mutableStateListOf<Long>()
 
     fun load() {
+//        viewModelScope.cancel()
         viewModelScope.launch {
             state = State.Loading
             withContext(Dispatchers.IO) {
@@ -49,13 +55,45 @@ class ChannelsViewModel(
                     val guild = guildStore.fetchGuild(persistentGuildId) ?: return@withContext
                     val guildChannels = channelStore.fetchChannels(persistentGuildId)
                         .associateBy { it.id }
+                    val states = guildChannels.keys
+                        .mapNotNull { unreadStore.getChannel(it) }
+                        .associateBy { it.channelId }
+                    val lastMessages = guildChannels.keys.mapNotNull {
+                        val message = messageStore.getLastMessageId(it) ?: return@mapNotNull null
+                        it to message
+                    }
+
+                    for (channelId in guildChannels.keys) {
+                        unreadStore.observeChannel(channelId).collectIn(viewModelScope) { event ->
+                            event.fold(
+                                onAdd = { unreadStates[it.channelId] = it },
+                                onUpdate = { },
+                                onDelete = { unreadStates.remove(it) },
+                            )
+                        }
+                        messageStore.observeChannel(channelId).collectIn(viewModelScope) { event ->
+                            event.fold(
+                                onAdd = { lastMessageIds[it.channelId] = it.id },
+                                onUpdate = { },
+                                onDelete = { },
+                            )
+                        }
+                    }
 
                     withContext(Dispatchers.Main) {
                         channels.clear()
                         channels.putAll(guildChannels)
+
+                        unreadStates.clear()
+                        unreadStates.putAll(states)
+
+                        lastMessageIds.clear()
+                        lastMessageIds.putAll(lastMessages)
+
                         guildName = guild.name
                         guildBannerUrl = guild.bannerUrl
                         guildBoostLevel = guild.premiumTier
+
                         state = State.Loaded
                     }
                 } catch (e: Exception) {
@@ -90,7 +128,10 @@ class ChannelsViewModel(
             event.fold(
                 onAdd = { channels[it.id] = it },
                 onUpdate = { channels[it.id] = it },
-                onDelete = { channels.remove(it) },
+                onDelete = {
+                    channels.remove(it)
+                    lastMessageIds.remove(it)
+                },
             )
         }
     }

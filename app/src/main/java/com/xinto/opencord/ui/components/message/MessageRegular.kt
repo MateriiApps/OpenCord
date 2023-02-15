@@ -65,13 +65,13 @@ fun MessageRegular(
             ) {
                 if (avatar != null) {
                     Box(
-                        modifier = androidx.compose.ui.Modifier.size(40.dp),
+                        modifier = Modifier.size(40.dp),
                         contentAlignment = Alignment.Center,
                     ) {
                         avatar()
                     }
                 } else {
-                    Spacer(modifier = androidx.compose.ui.Modifier.width(40.dp))
+                    Spacer(modifier = Modifier.width(40.dp))
                 }
                 Column(
                     modifier = Modifier.weight(1f),

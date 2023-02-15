@@ -103,7 +103,7 @@ fun ChannelsListLoading(
                         )
                     },
                     selected = false,
-                    showIndicator = false,
+                    showUnread = false,
                     onClick = {},
                 )
             }

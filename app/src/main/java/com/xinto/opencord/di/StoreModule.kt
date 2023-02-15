@@ -66,10 +66,23 @@ val storeModule = module {
         )
     }
 
+    fun provideUnreadStore(
+        gateway: DiscordGateway,
+        api: DiscordApiService,
+        cacheDatabase: CacheDatabase,
+    ): UnreadStore {
+        return UnreadStoreImpl(
+            gateway = gateway,
+            api = api,
+            cache = cacheDatabase,
+        )
+    }
+
     singleOf(::provideMessageStore)
     singleOf(::provideChannelStore)
     singleOf(::provideGuildStore)
     singleOf(::provideUserSettingsStore)
     singleOf(::provideCurrentUserStore)
     singleOf(::provideSessionStore)
+    singleOf(::provideUnreadStore)
 }

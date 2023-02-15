@@ -60,11 +60,15 @@ val viewModelModule = module {
         persistentDataManager: PersistentDataManager,
         channelStore: ChannelStore,
         guildStore: GuildStore,
+        messageStore: MessageStore,
+        unreadStore: UnreadStore,
     ): ChannelsViewModel {
         return ChannelsViewModel(
             persistentDataManager = persistentDataManager,
             channelStore = channelStore,
             guildStore = guildStore,
+            messageStore = messageStore,
+            unreadStore = unreadStore,
         )
     }
 
