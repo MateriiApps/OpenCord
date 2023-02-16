@@ -8,8 +8,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.ui.viewmodel.ChannelsViewModel
+import kotlinx.collections.immutable.persistentHashMapOf
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.collections.immutable.toImmutableMap
+import kotlinx.collections.immutable.toPersistentHashMap
 
 @Composable
 fun ChannelsList(
@@ -21,7 +22,7 @@ fun ChannelsList(
         derivedStateOf {
             viewModel.getSortedChannels()
                 .mapValues { it.value.toImmutableList() }
-                .toImmutableMap()
+                .toPersistentHashMap()
         }
     }
     val collapsedCategories by remember(viewModel.collapsedCategories) {
@@ -29,14 +30,13 @@ fun ChannelsList(
             viewModel.collapsedCategories.toImmutableList()
         }
     }
-    val unreadStates by remember(viewModel.unreadStates) {
+    val unreadChannels by remember(viewModel.unreadStates, viewModel.lastMessageIds, viewModel.channels) {
         derivedStateOf {
-            viewModel.unreadStates.toImmutableMap()
-        }
-    }
-    val lastMessageIds by remember(viewModel.lastMessageIds) {
-        derivedStateOf {
-            viewModel.lastMessageIds.toImmutableMap()
+            persistentHashMapOf<Long, Boolean>().builder().apply {
+                for (channel in viewModel.channels.values) {
+                    put(channel.id, (viewModel.lastMessageIds[channel.id] ?: 0) > (viewModel.unreadStates[channel.id]?.lastMessageId ?: -1))
+                }
+            }.build()
         }
     }
 
@@ -70,8 +70,7 @@ fun ChannelsList(
                         boostLevel = viewModel.guildBoostLevel,
                         guildName = viewModel.guildName,
                         channels = sortedChannels,
-                        unreadStates = unreadStates,
-                        lastMessageIds = lastMessageIds,
+                        unreadChannels = unreadChannels,
                         collapsedCategories = collapsedCategories,
                         selectedChannelId = viewModel.selectedChannelId,
                     )

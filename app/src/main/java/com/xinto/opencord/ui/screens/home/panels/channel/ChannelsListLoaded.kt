@@ -26,7 +26,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
-import com.xinto.opencord.domain.channel.*
+import com.xinto.opencord.domain.channel.DomainCategoryChannel
+import com.xinto.opencord.domain.channel.DomainChannel
+import com.xinto.opencord.domain.channel.DomainTextChannel
+import com.xinto.opencord.domain.channel.DomainVoiceChannel
 import com.xinto.opencord.ui.components.OCAsyncImage
 import com.xinto.opencord.ui.components.channel.list.ChannelListCategoryItem
 import com.xinto.opencord.ui.components.channel.list.ChannelListRegularItem
@@ -44,8 +47,7 @@ fun ChannelsListLoaded(
     boostLevel: Int,
     guildName: String,
     channels: ImmutableMap<DomainCategoryChannel?, ImmutableList<DomainChannel>>,
-    unreadStates: ImmutableMap<Long, DomainUnreadState>,
-    lastMessageIds: ImmutableMap<Long, Long>,
+    unreadChannels: ImmutableMap<Long, Boolean>,
     collapsedCategories: ImmutableList<Long>,
     modifier: Modifier = Modifier
 ) {
@@ -172,7 +174,7 @@ fun ChannelsListLoaded(
                                     )
                                 },
                                 selected = selectedChannelId == channel.id,
-                                showUnread = (unreadStates[channel.id]?.lastMessageId ?: -1) < (lastMessageIds[channel.id] ?: 0),
+                                showUnread = unreadChannels[channel.id] ?: false,
                                 onClick = {
                                     onChannelSelect(channel.id)
                                 },
