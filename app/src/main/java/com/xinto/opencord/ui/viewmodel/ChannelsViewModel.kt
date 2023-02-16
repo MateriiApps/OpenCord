@@ -11,6 +11,7 @@ import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
 import com.xinto.opencord.util.collectIn
 import com.xinto.opencord.util.getSortedChannels
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -47,7 +48,9 @@ class ChannelsViewModel(
         private set
 
     fun load() {
-//        viewModelScope.cancel()
+        if (persistentGuildId <= 0L) return
+
+        viewModelScope.coroutineContext.cancelChildren()
         viewModelScope.launch {
             state = State.Loading
             withContext(Dispatchers.IO) {

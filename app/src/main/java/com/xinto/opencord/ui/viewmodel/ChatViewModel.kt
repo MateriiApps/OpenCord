@@ -12,8 +12,10 @@ import com.xinto.opencord.store.MessageStore
 import com.xinto.opencord.store.fold
 import com.xinto.opencord.util.collectIn
 import com.xinto.opencord.util.throttle
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ChatViewModel(
     private val messageStore: MessageStore,
@@ -41,34 +43,39 @@ class ChatViewModel(
     var currentUserId by mutableStateOf<Long?>(null)
         private set
 
-    private var job: Job? = null
-
     val startTyping = throttle(9500, viewModelScope) {
         api.startTyping(persistentDataManager.persistentChannelId)
     }
 
     fun load() {
-        viewModelScope.launch {
-            state = State.Loading
+        if (persistentDataManager.persistentChannelId <= 0L || persistentDataManager.persistentGuildId <= 0L) return
 
+        viewModelScope.coroutineContext.cancelChildren()
+
+        state = State.Loading
+        viewModelScope.launch(Dispatchers.IO) {
             try {
+                val channelId = persistentDataManager.persistentChannelId
                 val channel = channelStore.fetchChannel(persistentDataManager.persistentChannelId)
-                    ?: return@launch
-                val channelMessages =
-                    messageStore.fetchMessages(persistentDataManager.persistentChannelId)
+                    ?: throw Error("Failed to load channel $channelId")
+                val channelMessages = messageStore.fetchMessages(persistentDataManager.persistentChannelId)
 
-                channelName = channel.name
-                messages.clear()
-                messages.putAll(channelMessages.associateBy { it.id })
-                state = State.Loaded
+                withContext(Dispatchers.Main) {
+                    channelName = channel.name
+                    messages.clear()
+                    messages.putAll(channelMessages.associateBy { it.id })
+                    state = State.Loaded
+                }
             } catch (t: Throwable) {
                 t.printStackTrace()
-                state = State.Error
+
+                withContext(Dispatchers.Main) {
+                    state = State.Error
+                }
             }
         }
 
-        job?.cancel()
-        job = messageStore
+        messageStore
             .observeChannel(persistentDataManager.persistentChannelId)
             .collectIn(viewModelScope) { event ->
                 event.fold(
@@ -101,9 +108,5 @@ class ChatViewModel(
 
     fun getSortedMessages(): List<DomainMessage> {
         return messages.values.sortedByDescending { it.id }
-    }
-
-    override fun onCleared() {
-        job?.cancel()
     }
 }
