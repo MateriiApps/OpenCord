@@ -2,6 +2,7 @@ package com.xinto.opencord.di
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.RoomDatabase
 import com.xinto.opencord.BuildConfig
 import com.xinto.opencord.db.database.CacheDatabase
 import com.xinto.opencord.util.Logger
@@ -18,19 +19,16 @@ val databaseModule = module {
             .fallbackToDestructiveMigration()
 
         if (BuildConfig.DEBUG) {
-            val blacklist = arrayOf(
-                "BEGIN DEFERRED TRANSACTION",
-                "TRANSACTION SUCCESSFUL",
-                "END TRANSACTION",
-            )
-
             db.setQueryCallback(
-                { sql, args ->
-                    if (sql !in blacklist) {
-                        logger.debug("CacheDatabase", "SQL: $sql")
+                object : RoomDatabase.QueryCallback {
+                    override fun onQuery(sqlQuery: String, bindArgs: List<Any?>) {
+                        if (sqlQuery.contains("TRANSACTION"))
+                            return
 
-                        if (args.isNotEmpty()) {
-                            logger.debug("CacheDatabase", "SQL args: $args")
+                        if (bindArgs.isEmpty()) {
+                            logger.debug("CacheDatabase", "SQL: $sqlQuery")
+                        } else {
+                            logger.debug("CacheDatabase", "SQL: $sqlQuery\nSQL args: $bindArgs")
                         }
                     }
                 },

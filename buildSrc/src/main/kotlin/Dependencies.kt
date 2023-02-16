@@ -73,19 +73,17 @@ sealed class Dependencies {
     }
 
     object AndroidxRoom : Dependencies() {
-        const val version = "2.4.3"
+        const val version = "2.5.0"
 
         const val roomCompiler = "androidx.room:room-compiler:$version"
         const val roomRuntime = "androidx.room:room-runtime:$version"
         const val roomKtx = "androidx.room:room-ktx:$version"
-        const val roomPaging = "androidx.room:room-paging:$version"
 
         override fun invoke(scope: DependencyHandlerScope) {
             scope {
                 ksp(roomCompiler)
                 implementation(roomRuntime)
                 implementation(roomKtx)
-                implementation(roomPaging)
             }
         }
     }
