@@ -47,7 +47,7 @@ class AppActivity : ComponentActivity() {
                         AppDestinations.Main -> HomeScreen(
                             modifier = Modifier.fillMaxSize(),
                             onSettingsClick = { nav.navigate(AppDestinations.Settings) },
-                            onPinsClick = { data: AppDestinations.Pins -> nav.navigate(data) },
+                            onPinsClick = { nav.navigate(AppDestinations.Pins(data = it)) },
                         )
 
                         AppDestinations.Settings -> Settings(

@@ -30,7 +30,7 @@ import org.koin.androidx.compose.getViewModel
 @Composable
 fun HomeScreen(
     onSettingsClick: () -> Unit,
-    onPinsClick: (AppDestinations.Pins) -> Unit,
+    onPinsClick: (PinsScreenData) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val panelState = rememberOverlappingPanelsState(OverlappingPanelsValue.Closed)
@@ -98,7 +98,7 @@ fun HomeScreen(
                         }
                     },
                     onPinsButtonClick = {
-                        onPinsClick(AppDestinations.Pins(PinsScreenData(channelsViewModel.selectedChannelId)))
+                        onPinsClick(PinsScreenData(channelsViewModel.selectedChannelId))
                     },
                     modifier = Modifier
                         .fillMaxSize()
