@@ -52,7 +52,7 @@ fun ApiEmbed.toEntity(messageId: Long, embedIndex: Int): EntityEmbed {
         title = title,
         description = description,
         url = url,
-        color = color?.rgbColor,
+        color = color?.internalColor,
         timestamp = timestamp?.toEpochMilliseconds(),
         authorName = author?.name,
         fields = fields,

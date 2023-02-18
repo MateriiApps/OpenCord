@@ -3,8 +3,10 @@ package com.xinto.opencord.domain.embed
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 import com.xinto.opencord.db.entity.message.EntityEmbed
+import com.xinto.opencord.rest.models.ApiColor
 import com.xinto.opencord.rest.models.embed.ApiEmbed
 import com.xinto.opencord.rest.models.embed.ApiEmbedField
+import com.xinto.opencord.rest.models.toColor
 import kotlinx.datetime.Instant
 
 @Immutable
@@ -23,9 +25,7 @@ fun ApiEmbed.toDomain(): DomainEmbed {
         title = title,
         description = description,
         url = url,
-        color = color?.let {
-            Color(red = it.red, green = it.green, blue = it.blue)
-        },
+        color = color?.toColor(),
         timestamp = timestamp,
         author = author?.name,
         fields = fields,
@@ -37,7 +37,7 @@ fun EntityEmbed.toDomain(): DomainEmbed {
         title = title,
         description = description,
         url = url,
-        color = color?.let { Color(it) },
+        color = color?.let { ApiColor(it).toColor() },
         timestamp = timestamp?.let { Instant.fromEpochMilliseconds(it) },
         author = authorName,
         fields = fields,
