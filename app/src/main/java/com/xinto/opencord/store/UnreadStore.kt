@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.filter
 typealias UnreadEvent = Event<DomainUnreadState, Nothing, Long>
 
 interface UnreadStore {
-    fun observeChannel(channelId: Long): Flow<UnreadEvent>
+    fun observeChannels(channelIds: List<Long>): Flow<UnreadEvent>
 
     suspend fun getChannel(channelId: Long): DomainUnreadState?
 }
@@ -29,12 +29,12 @@ class UnreadStoreImpl(
 ) : UnreadStore {
     private val events = MutableSharedFlow<UnreadEvent>()
 
-    override fun observeChannel(channelId: Long): Flow<UnreadEvent> {
+    override fun observeChannels(channelIds: List<Long>): Flow<UnreadEvent> {
         return events.filter { event ->
             event.fold(
-                onAdd = { it.channelId == channelId },
+                onAdd = { it.channelId in channelIds },
                 onUpdate = { false },
-                onDelete = { it == channelId },
+                onDelete = { it in channelIds },
             )
         }
     }

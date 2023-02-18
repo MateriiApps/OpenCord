@@ -20,6 +20,16 @@ val storeModule = module {
         )
     }
 
+    fun provideLastMessageStore(
+        gateway: DiscordGateway,
+        cacheDatabase: CacheDatabase,
+    ): LastMessageStore {
+        return LastMessageStoreImpl(
+            gateway = gateway,
+            cache = cacheDatabase,
+        )
+    }
+
     fun provideChannelStore(
         gateway: DiscordGateway,
         cache: CacheDatabase,
@@ -79,6 +89,7 @@ val storeModule = module {
     }
 
     singleOf(::provideMessageStore)
+    singleOf(::provideLastMessageStore)
     singleOf(::provideChannelStore)
     singleOf(::provideGuildStore)
     singleOf(::provideUserSettingsStore)

@@ -35,6 +35,12 @@ data class EntityChannel(
     @ColumnInfo(name = "nsfw")
     val nsfw: Boolean,
 
+    @ColumnInfo(
+        name = "last_message_id",
+        defaultValue = "NULL",
+    )
+    val lastMessageId: Long? = null,
+
     // -------- DB relational data -------- //
     @ColumnInfo(name = "is_pins_stored")
     val pinsStored: Boolean,

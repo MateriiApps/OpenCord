@@ -19,7 +19,7 @@ class ChannelsViewModel(
     persistentDataManager: PersistentDataManager,
     private val channelStore: ChannelStore,
     private val guildStore: GuildStore,
-    private val messageStore: MessageStore,
+    private val lastMessageStore: LastMessageStore,
     private val unreadStore: UnreadStore,
 ) : BasePersistenceViewModel(persistentDataManager) {
     sealed interface State {
@@ -58,29 +58,28 @@ class ChannelsViewModel(
                     val guild = guildStore.fetchGuild(persistentGuildId) ?: return@withContext
                     val guildChannels = channelStore.fetchChannels(persistentGuildId)
                         .associateBy { it.id }
+                    val guildChannelIds = guildChannels.keys.toList()
                     val states = guildChannels.keys
                         .mapNotNull { unreadStore.getChannel(it) }
                         .associateBy { it.channelId }
                     val lastMessages = guildChannels.keys.mapNotNull {
-                        val message = messageStore.getLastMessageId(it) ?: return@mapNotNull null
-                        it to message
+                        it to (lastMessageStore.getLastMessageId(it) ?: return@mapNotNull null)
                     }
 
-                    for (channelId in guildChannels.keys) {
-                        unreadStore.observeChannel(channelId).collectIn(viewModelScope) { event ->
-                            event.fold(
-                                onAdd = { unreadStates[it.channelId] = it },
-                                onUpdate = { },
-                                onDelete = { unreadStates.remove(it) },
-                            )
-                        }
-                        messageStore.observeChannel(channelId).collectIn(viewModelScope) { event ->
-                            event.fold(
-                                onAdd = { lastMessageIds[it.channelId] = it.id },
-                                onUpdate = { },
-                                onDelete = { },
-                            )
-                        }
+                    unreadStore.observeChannels(guildChannelIds).collectIn(viewModelScope) { event ->
+                        event.fold(
+                            onAdd = { unreadStates[it.channelId] = it },
+                            onUpdate = { },
+                            onDelete = { unreadStates.remove(it) },
+                        )
+                    }
+
+                    lastMessageStore.observeChannels(guildChannelIds).collectIn(viewModelScope) { event ->
+                        event.fold(
+                            onAdd = { (id, messageId) -> lastMessageIds[id] = messageId },
+                            onUpdate = { },
+                            onDelete = { id -> lastMessageIds.remove(id) },
+                        )
                     }
 
                     withContext(Dispatchers.Main) {
