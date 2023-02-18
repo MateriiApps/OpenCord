@@ -5,6 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.xinto.opencord.db.database.AccountDatabase
+import com.xinto.opencord.db.entity.EntityAccount
 import com.xinto.opencord.domain.login.DomainLogin
 import com.xinto.opencord.domain.login.toDomain
 import com.xinto.opencord.manager.AccountManager
@@ -12,12 +14,15 @@ import com.xinto.opencord.manager.ActivityManager
 import com.xinto.opencord.rest.body.LoginBody
 import com.xinto.opencord.rest.body.TwoFactorBody
 import com.xinto.opencord.rest.service.DiscordAuthService
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class LoginViewModel(
     private val api: DiscordAuthService,
     private val activityManager: ActivityManager,
-    private val accountManager: AccountManager
+    private val accountManager: AccountManager,
+    private val accountDatabase: AccountDatabase,
 ) : ViewModel() {
     lateinit var mfaTicket: String
         private set
@@ -69,8 +74,12 @@ class LoginViewModel(
 
                 when (response) {
                     is DomainLogin.Login -> {
-                        activityManager.startMainActivity()
+                        withContext(Dispatchers.IO) {
+                            accountDatabase.accounts().insertAccount(EntityAccount(token = response.token))
+                        }
+
                         accountManager.currentAccountToken = response.token
+                        activityManager.startMainActivity()
                     }
                     is DomainLogin.TwoFactorAuth -> {
                         mfaTicket = response.ticket

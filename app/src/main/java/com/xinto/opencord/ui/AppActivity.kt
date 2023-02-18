@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.xinto.opencord.db.database.AccountDatabase
 import com.xinto.opencord.db.database.CacheDatabase
 import com.xinto.opencord.ui.navigation.AppDestination
 import com.xinto.opencord.ui.screens.Settings
@@ -23,13 +24,28 @@ import dev.olshevski.navigation.reimagined.AnimatedNavHost
 import dev.olshevski.navigation.reimagined.navigate
 import dev.olshevski.navigation.reimagined.pop
 import dev.olshevski.navigation.reimagined.rememberNavController
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.get
 
 class AppActivity : ComponentActivity() {
+    private val scope = MainScope()
     private val viewModel: MainViewModel = get()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        scope.launch(Dispatchers.IO) {
+            val db = get<CacheDatabase>()
+
+            db.apply {
+                messages().clear()
+                embeds().clear()
+                attachments().clear()
+                users().deleteUnusedUsers()
+            }
+        }
 
         setContent {
             val nav = rememberNavController<AppDestination>(startDestination = AppDestination.Main)
@@ -94,6 +110,7 @@ class AppActivity : ComponentActivity() {
 
     override fun onDestroy() {
         get<CacheDatabase>().close()
+        get<AccountDatabase>().close()
 
         super.onDestroy()
     }

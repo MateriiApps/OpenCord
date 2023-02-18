@@ -1,7 +1,9 @@
 package com.xinto.opencord.di
 
+import com.xinto.opencord.db.database.AccountDatabase
 import com.xinto.opencord.db.database.CacheDatabase
 import com.xinto.opencord.gateway.DiscordGateway
+import com.xinto.opencord.manager.AccountManager
 import com.xinto.opencord.rest.service.DiscordApiService
 import com.xinto.opencord.store.*
 import org.koin.core.module.dsl.singleOf
@@ -62,9 +64,13 @@ val storeModule = module {
 
     fun provideCurrentUserStore(
         gateway: DiscordGateway,
+        accountManager: AccountManager,
+        accountDatabase: AccountDatabase,
     ): CurrentUserStore {
         return CurrentUserStoreImpl(
             gateway = gateway,
+            accountManager = accountManager,
+            accountDatabase = accountDatabase,
         )
     }
 

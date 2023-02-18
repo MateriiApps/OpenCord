@@ -14,6 +14,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.hcaptcha.sdk.HCaptcha
+import com.xinto.opencord.db.database.AccountDatabase
 import com.xinto.opencord.ui.navigation.LoginDestination
 import com.xinto.opencord.ui.screens.login.LoginLandingScreen
 import com.xinto.opencord.ui.screens.login.LoginScreen
@@ -22,15 +23,23 @@ import dev.olshevski.navigation.reimagined.AnimatedNavHost
 import dev.olshevski.navigation.reimagined.navigate
 import dev.olshevski.navigation.reimagined.pop
 import dev.olshevski.navigation.reimagined.rememberNavController
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.get
 import org.koin.core.parameter.parametersOf
 
 class LoginActivity : AppCompatActivity() {
+    private val scope = MainScope()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Preload HCaptcha
-        get<HCaptcha> { parametersOf(this) }
+        scope.launch(Dispatchers.IO) {
+            // Preload modules
+            get<HCaptcha> { parametersOf(this@LoginActivity) }
+            get<AccountDatabase>()
+        }
 
         setContent {
             val nav = rememberNavController<LoginDestination>(startDestination = LoginDestination.Landing)
