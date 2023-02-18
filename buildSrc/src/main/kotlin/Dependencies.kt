@@ -241,6 +241,18 @@ sealed class Dependencies {
         }
     }
 
+    object ReimaginedNav : Dependencies() {
+        const val version = "1.3.1"
+
+        const val reimaginedNavigation = "dev.olshevski.navigation:reimagined:$version"
+
+        override fun invoke(scope: DependencyHandlerScope) {
+            scope {
+                implementation(reimaginedNavigation)
+            }
+        }
+    }
+
     // TODO: use context receivers when they are enabled by default
     // cannot enable them for build.gradle.kts
     abstract operator fun invoke(scope: DependencyHandlerScope)
