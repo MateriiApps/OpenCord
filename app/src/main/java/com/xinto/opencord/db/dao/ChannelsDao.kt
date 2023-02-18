@@ -1,11 +1,7 @@
 package com.xinto.opencord.db.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.xinto.opencord.db.entity.channel.EntityChannel
-import kotlinx.coroutines.delay
 
 @Dao
 interface ChannelsDao {
@@ -22,9 +18,9 @@ interface ChannelsDao {
     )
     fun insertChannels(channels: List<EntityChannel>)
 
-    suspend fun replaceAllChannels(channels: List<EntityChannel>) {
+    @Transaction
+    fun replaceAllChannels(channels: List<EntityChannel>) {
         clear()
-        delay(100) // FIXME: RoomDB not preserving query order
         insertChannels(channels)
     }
 

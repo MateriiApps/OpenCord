@@ -1,11 +1,7 @@
 package com.xinto.opencord.db.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.xinto.opencord.db.entity.guild.EntityGuild
-import kotlinx.coroutines.delay
 
 @Dao
 interface GuildsDao {
@@ -22,9 +18,9 @@ interface GuildsDao {
     )
     fun insertGuilds(guilds: List<EntityGuild>)
 
-    suspend fun replaceAllGuilds(guilds: List<EntityGuild>) {
+    @Transaction
+    fun replaceAllGuilds(guilds: List<EntityGuild>) {
         clear()
-        delay(100) // FIXME: RoomDB not preserving query order
         insertGuilds(guilds)
     }
 
