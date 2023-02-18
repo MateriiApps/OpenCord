@@ -58,6 +58,19 @@ val httpModule = module {
         }
     }
 
+    fun <T : HttpClientEngineConfig> HttpClientConfig<T>.installRetry() {
+        install(HttpRequestRetry) {
+            maxRetries = 5
+            retryIf { _, res -> res.status.value in (500 until 600) }
+            retryOnExceptionIf { _, error ->
+                error is HttpRequestTimeoutException
+            }
+            delayMillis { retryCount ->
+                retryCount * 2000L
+            }
+        }
+    }
+
     fun OkHttpConfig.addStripKtorHeadersInterceptor() {
         addInterceptor { chain ->
             val request = chain.request()
@@ -86,23 +99,11 @@ val httpModule = module {
                 header(HttpHeaders.XSuperProperties, superProperties)
             }
 
-            install(HttpRequestRetry) {
-                maxRetries = 5
-                retryIf { _, httpResponse ->
-                    !httpResponse.status.isSuccess()
-                }
-                retryOnExceptionIf { _, error ->
-                    error is HttpRequestTimeoutException
-                }
-                delayMillis { retry ->
-                    retry * 1000L
-                }
-            }
-
             install(ContentNegotiation) {
                 json(json)
             }
 
+            installRetry()
             installCookies()
             installLogging(logger)
 
@@ -133,23 +134,11 @@ val httpModule = module {
                 header(HttpHeaders.XSuperProperties, superProperties)
             }
 
-            install(HttpRequestRetry) {
-                maxRetries = 5
-                retryIf { _, httpResponse ->
-                    !httpResponse.status.isSuccess()
-                }
-                retryOnExceptionIf { _, error ->
-                    error is HttpRequestTimeoutException
-                }
-                delayMillis { retry ->
-                    retry * 2000L
-                }
-            }
-
             install(ContentNegotiation) {
                 json(json)
             }
 
+            installRetry()
             installCookies()
             installLogging(logger)
 
@@ -177,16 +166,8 @@ val httpModule = module {
                 }
             }
 
-            install(HttpRequestRetry) {
-                maxRetries = 3
-                retryOnExceptionIf { _, error ->
-                    error is HttpRequestTimeoutException
-                }
-                delayMillis { retry ->
-                    retry * 2000L
-                }
-            }
-
+            installRetry()
+            installCookies()
             installLogging(logger)
 
             engine {
