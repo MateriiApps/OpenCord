@@ -75,12 +75,7 @@ class ChannelStoreImpl(
                 events.emit(ChannelEvent.Add(channel.toDomain()))
             }
 
-            cache.runInTransaction {
-                cache.channels().apply {
-                    clear()
-                    insertChannels(channels)
-                }
-            }
+            cache.channels().replaceAllChannels(channels)
         }
 
         gateway.onEvent<ChannelCreateEvent> {
@@ -88,7 +83,7 @@ class ChannelStoreImpl(
                 ?: error("no guild id on channel create event")
 
             events.emit(ChannelEvent.Add(it.data.toDomain()))
-            cache.channels().insertChannels(listOf(it.data.toEntity(guildId)))
+            cache.channels().insertChannel(it.data.toEntity(guildId))
         }
 
         gateway.onEvent<ChannelUpdateEvent> {
@@ -96,7 +91,7 @@ class ChannelStoreImpl(
                 ?: error("no guild id on channel update event")
 
             events.emit(ChannelEvent.Update(it.data.toDomain()))
-            cache.channels().insertChannels(listOf(it.data.toEntity(guildId)))
+            cache.channels().insertChannel(it.data.toEntity(guildId))
         }
 
         gateway.onEvent<ChannelDeleteEvent> {

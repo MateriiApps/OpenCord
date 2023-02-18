@@ -94,8 +94,8 @@ class MessageStoreImpl(
         }
     }
 
-    private fun storeMessages(messages: List<ApiMessage>) {
-        cache.runInTransaction {
+    private suspend fun storeMessages(messages: List<ApiMessage>) {
+        cache.withTransaction {
             cache.users().apply {
                 val users = messages
                     .distinctBy { it.author.id }

@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.xinto.opencord.db.entity.channel.EntityUnreadState
+import kotlinx.coroutines.delay
 
 @Dao
 interface UnreadStatesDao {
@@ -13,13 +14,19 @@ interface UnreadStatesDao {
         onConflict = OnConflictStrategy.REPLACE,
         entity = EntityUnreadState::class,
     )
-    fun insertUnreadStates(states: List<EntityUnreadState>)
+    fun insertState(state: EntityUnreadState)
 
     @Insert(
         onConflict = OnConflictStrategy.REPLACE,
         entity = EntityUnreadState::class,
     )
-    fun insertUnreadState(states: EntityUnreadState)
+    fun insertStates(states: List<EntityUnreadState>)
+
+    suspend fun replaceAllStates(states: List<EntityUnreadState>) {
+        clear()
+        delay(100) // FIXME: RoomDB not preserving query order
+        insertStates(states)
+    }
 
     // --------------- Deletes ---------------
     @Query("DELETE FROM unread_states WHERE channel_id = :channelId")

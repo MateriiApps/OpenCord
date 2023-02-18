@@ -1,6 +1,5 @@
 package com.xinto.opencord.store
 
-import androidx.room.withTransaction
 import com.xinto.opencord.db.database.CacheDatabase
 import com.xinto.opencord.db.entity.channel.EntityUnreadState
 import com.xinto.opencord.domain.channel.DomainUnreadState
@@ -55,10 +54,7 @@ class UnreadStoreImpl(
             }
 
             states.forEach { events.emit(UnreadEvent.Add(it.toDomain())) }
-            cache.withTransaction {
-                cache.unreadStates().clear()
-                cache.unreadStates().insertUnreadStates(states)
-            }
+            cache.unreadStates().replaceAllStates(states)
         }
 
         gateway.onEvent<MessageAckEvent> { event ->
@@ -69,7 +65,7 @@ class UnreadStoreImpl(
             )
 
             events.emit(UnreadEvent.Add(state.toDomain()))
-            cache.unreadStates().insertUnreadState(state)
+            cache.unreadStates().insertState(state)
         }
 
         gateway.onEvent<ChannelDeleteEvent> { event ->

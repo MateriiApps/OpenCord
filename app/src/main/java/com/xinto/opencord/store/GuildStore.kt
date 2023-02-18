@@ -57,23 +57,17 @@ class GuildStoreImpl(
                 events.emit(GuildEvent.Add(guild.toDomain()))
             }
 
-            cache.runInTransaction {
-                cache.guilds().apply {
-                    clear()
-                    insertGuilds(guilds)
-                }
-            }
+            cache.guilds().replaceAllGuilds(guilds)
         }
 
         gateway.onEvent<GuildCreateEvent> {
             events.emit(GuildEvent.Add(it.data.toDomain()))
-
-            cache.guilds().insertGuilds(listOf(it.data.toEntity()))
+            cache.guilds().insertGuild(it.data.toEntity())
         }
 
         gateway.onEvent<GuildUpdateEvent> {
             events.emit(GuildEvent.Update(it.data.toDomain()))
-            cache.guilds().insertGuilds(listOf(it.data.toEntity()))
+            cache.guilds().insertGuild(it.data.toEntity())
         }
 
         gateway.onEvent<GuildDeleteEvent> {

@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.xinto.opencord.db.entity.channel.EntityChannel
+import kotlinx.coroutines.delay
 
 @Dao
 interface ChannelsDao {
@@ -13,7 +14,19 @@ interface ChannelsDao {
         onConflict = OnConflictStrategy.REPLACE,
         entity = EntityChannel::class,
     )
+    fun insertChannel(channel: EntityChannel)
+
+    @Insert(
+        onConflict = OnConflictStrategy.REPLACE,
+        entity = EntityChannel::class,
+    )
     fun insertChannels(channels: List<EntityChannel>)
+
+    suspend fun replaceAllChannels(channels: List<EntityChannel>) {
+        clear()
+        delay(100) // FIXME: RoomDB not preserving query order
+        insertChannels(channels)
+    }
 
     @Query("UPDATE channels SET is_pins_stored = :isStored WHERE id = :channelId")
     fun setChannelPinsStored(channelId: Long, isStored: Boolean = true)
