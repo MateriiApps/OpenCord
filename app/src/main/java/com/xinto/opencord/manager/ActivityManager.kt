@@ -3,7 +3,7 @@ package com.xinto.opencord.manager
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import com.xinto.opencord.ui.MainActivity
+import com.xinto.opencord.ui.AppActivity
 
 interface ActivityManager {
     fun startMainActivity()
@@ -13,7 +13,7 @@ class ActivityManagerImpl(
     private val context: Context
 ) : ActivityManager {
     override fun startMainActivity() {
-        startActivity<MainActivity>()
+        startActivity<AppActivity>()
     }
 
     private inline fun <reified T : Activity> startActivity() {

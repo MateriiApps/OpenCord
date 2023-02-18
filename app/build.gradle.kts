@@ -147,4 +147,5 @@ dependencies {
     Dependencies.Coil(this)
     Dependencies.Partials(this)
     Dependencies.EnumUtil(this)
+    Dependencies.ReimaginedNav(this)
 }

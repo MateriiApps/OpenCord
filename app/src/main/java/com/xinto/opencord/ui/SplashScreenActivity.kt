@@ -17,7 +17,7 @@ class SplashScreenActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         if (accountManager.isLoggedIn) {
-            startActivity(Intent(this, MainActivity::class.java))
+            startActivity(Intent(this, AppActivity::class.java))
         } else {
             startActivity(Intent(this, LoginActivity::class.java))
         }

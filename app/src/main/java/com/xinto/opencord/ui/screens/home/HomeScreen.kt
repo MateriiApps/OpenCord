@@ -13,19 +13,24 @@ import androidx.compose.ui.unit.dp
 import com.xinto.opc.OverlappingPanels
 import com.xinto.opc.OverlappingPanelsValue
 import com.xinto.opc.rememberOverlappingPanelsState
+import com.xinto.opencord.ui.navigation.AppDestinations
+import com.xinto.opencord.ui.navigation.PinsScreenData
 import com.xinto.opencord.ui.screens.home.panels.channel.ChannelsList
 import com.xinto.opencord.ui.screens.home.panels.chat.Chat
 import com.xinto.opencord.ui.screens.home.panels.currentuser.CurrentUser
 import com.xinto.opencord.ui.screens.home.panels.guild.GuildsList
 import com.xinto.opencord.ui.util.animateCornerBasedShapeAsState
-import com.xinto.opencord.ui.viewmodel.*
+import com.xinto.opencord.ui.viewmodel.ChannelsViewModel
+import com.xinto.opencord.ui.viewmodel.ChatViewModel
+import com.xinto.opencord.ui.viewmodel.CurrentUserViewModel
+import com.xinto.opencord.ui.viewmodel.GuildsViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun HomeScreen(
     onSettingsClick: () -> Unit,
-    onPinsClick: () -> Unit,
+    onPinsClick: (AppDestinations.Pins) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val panelState = rememberOverlappingPanelsState(OverlappingPanelsValue.Closed)
@@ -36,7 +41,6 @@ fun HomeScreen(
     val chatViewModel: ChatViewModel = getViewModel()
     val guildsViewModel: GuildsViewModel = getViewModel()
     val channelsViewModel: ChannelsViewModel = getViewModel()
-    val channelPinsViewModel: ChannelPinsViewModel = getViewModel()
 
     Surface(modifier = modifier) {
         OverlappingPanels(
@@ -94,8 +98,7 @@ fun HomeScreen(
                         }
                     },
                     onPinsButtonClick = {
-                        channelPinsViewModel.load()
-                        onPinsClick()
+                        onPinsClick(AppDestinations.Pins(PinsScreenData(channelsViewModel.selectedChannelId)))
                     },
                     modifier = Modifier
                         .fillMaxSize()
