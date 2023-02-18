@@ -3,19 +3,23 @@ package com.xinto.opencord.ui
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.with
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.xinto.opencord.db.database.CacheDatabase
-import com.xinto.opencord.ui.navigation.AppDestinations
+import com.xinto.opencord.ui.navigation.AppDestination
 import com.xinto.opencord.ui.screens.Settings
 import com.xinto.opencord.ui.screens.home.HomeScreen
 import com.xinto.opencord.ui.screens.pins.PinsScreen
 import com.xinto.opencord.ui.theme.OpenCordTheme
 import com.xinto.opencord.ui.viewmodel.MainViewModel
-import dev.olshevski.navigation.reimagined.NavHost
+import dev.olshevski.navigation.reimagined.AnimatedNavHost
 import dev.olshevski.navigation.reimagined.navigate
 import dev.olshevski.navigation.reimagined.pop
 import dev.olshevski.navigation.reimagined.rememberNavController
@@ -28,7 +32,7 @@ class AppActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            val nav = rememberNavController<AppDestinations>(startDestination = AppDestinations.Main)
+            val nav = rememberNavController<AppDestination>(startDestination = AppDestination.Main)
 
             OpenCordTheme {
                 val systemUiController = rememberSystemUiController()
@@ -42,20 +46,42 @@ class AppActivity : ComponentActivity() {
                     )
                 }
 
-                NavHost(controller = nav) { dest ->
+                AnimatedNavHost(
+                    controller = nav,
+                    emptyBackstackPlaceholder = { nav.navigate(AppDestination.Main) },
+                    transitionSpec = { _, _, to ->
+                        if (to == AppDestination.Main) {
+                            slideIntoContainer(
+                                towards = AnimatedContentScope.SlideDirection.Start,
+                                initialOffset = { it },
+                            ) with fadeOut() + slideOutOfContainer(
+                                towards = AnimatedContentScope.SlideDirection.Start,
+                                targetOffset = { it / 3 },
+                            )
+                        } else {
+                            fadeIn() + slideIntoContainer(
+                                towards = AnimatedContentScope.SlideDirection.End,
+                                initialOffset = { it / 3 },
+                            ) with slideOutOfContainer(
+                                towards = AnimatedContentScope.SlideDirection.End,
+                                targetOffset = { it },
+                            )
+                        }
+                    },
+                ) { dest ->
                     when (dest) {
-                        AppDestinations.Main -> HomeScreen(
+                        AppDestination.Main -> HomeScreen(
                             modifier = Modifier.fillMaxSize(),
-                            onSettingsClick = { nav.navigate(AppDestinations.Settings) },
-                            onPinsClick = { nav.navigate(AppDestinations.Pins(data = it)) },
+                            onSettingsClick = { nav.navigate(AppDestination.Settings) },
+                            onPinsClick = { nav.navigate(AppDestination.Pins(data = it)) },
                         )
 
-                        AppDestinations.Settings -> Settings(
+                        AppDestination.Settings -> Settings(
                             modifier = Modifier.fillMaxSize(),
                             onBackClick = { nav.pop() },
                         )
 
-                        is AppDestinations.Pins -> PinsScreen(
+                        is AppDestination.Pins -> PinsScreen(
                             data = dest.data,
                             modifier = Modifier.fillMaxSize(),
                             onBackClick = { nav.pop() },

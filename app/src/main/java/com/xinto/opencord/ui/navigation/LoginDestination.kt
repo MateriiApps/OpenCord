@@ -4,10 +4,10 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-sealed interface LoginDestinations : Parcelable {
+sealed interface LoginDestination : Parcelable {
     @Parcelize
-    object Login : LoginDestinations
+    object Login : LoginDestination
 
     @Parcelize
-    object LoginLanding : LoginDestinations
+    object Landing : LoginDestination
 }

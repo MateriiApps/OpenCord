@@ -13,7 +13,6 @@ import androidx.compose.ui.unit.dp
 import com.xinto.opc.OverlappingPanels
 import com.xinto.opc.OverlappingPanelsValue
 import com.xinto.opc.rememberOverlappingPanelsState
-import com.xinto.opencord.ui.navigation.AppDestinations
 import com.xinto.opencord.ui.navigation.PinsScreenData
 import com.xinto.opencord.ui.screens.home.panels.channel.ChannelsList
 import com.xinto.opencord.ui.screens.home.panels.chat.Chat

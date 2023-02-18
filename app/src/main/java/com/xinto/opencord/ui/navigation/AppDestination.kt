@@ -5,15 +5,15 @@ import androidx.compose.runtime.Immutable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-sealed interface AppDestinations : Parcelable {
+sealed interface AppDestination : Parcelable {
     @Parcelize
-    object Main : AppDestinations
+    object Main : AppDestination
 
     @Parcelize
-    object Settings : AppDestinations
+    object Settings : AppDestination
 
     @Parcelize
-    data class Pins(val data: PinsScreenData) : AppDestinations
+    data class Pins(val data: PinsScreenData) : AppDestination
 }
 
 @Parcelize
