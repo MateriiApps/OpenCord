@@ -30,10 +30,10 @@ fun ApiGuild.toDomain(): DomainGuild {
         id = id.value,
         name = name,
         iconUrl = icon?.let { icon ->
-            DiscordCdnServiceImpl.getGuildIconUrl(id.toString(), icon)
+            DiscordCdnServiceImpl.getGuildIconUrl(id.value, icon)
         },
         bannerUrl = banner?.let { banner ->
-            DiscordCdnServiceImpl.getGuildBannerUrl(id.toString(), banner)
+            DiscordCdnServiceImpl.getGuildBannerUrl(id.value, banner)
         },
         premiumTier = premiumTier,
         premiumSubscriptionCount = premiumSubscriptionCount ?: 0,
@@ -45,10 +45,10 @@ fun EntityGuild.toDomain(): DomainGuild {
         id = id,
         name = name,
         iconUrl = icon?.let { icon ->
-            DiscordCdnServiceImpl.getGuildIconUrl(id.toString(), icon)
+            DiscordCdnServiceImpl.getGuildIconUrl(id, icon)
         },
         bannerUrl = banner?.let { banner ->
-            DiscordCdnServiceImpl.getGuildBannerUrl(id.toString(), banner)
+            DiscordCdnServiceImpl.getGuildBannerUrl(id, banner)
         },
         premiumTier = premiumTier,
         premiumSubscriptionCount = premiumSubscriptionCount ?: 0,

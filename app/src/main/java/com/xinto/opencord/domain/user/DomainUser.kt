@@ -28,7 +28,7 @@ abstract class DomainUser : Mentionable {
 
 fun ApiUser.toDomain(): DomainUser {
     val avatarUrl = avatar
-        ?.let { DiscordCdnServiceImpl.getUserAvatarUrl(id.toString(), it) }
+        ?.let { DiscordCdnServiceImpl.getUserAvatarUrl(id.value, it) }
         ?: DiscordCdnServiceImpl.getDefaultAvatarUrl(discriminator.toInt().rem(5))
 
     return when {
@@ -75,7 +75,7 @@ fun ApiUser.toDomain(): DomainUser {
 
 fun EntityUser.toDomain(): DomainUser {
     val avatarUrl = avatarHash
-        ?.let { DiscordCdnServiceImpl.getUserAvatarUrl(id.toString(), it) }
+        ?.let { DiscordCdnServiceImpl.getUserAvatarUrl(id, it) }
         ?: DiscordCdnServiceImpl.getDefaultAvatarUrl(discriminator.toInt().rem(5))
 
     return DomainUserPublic(

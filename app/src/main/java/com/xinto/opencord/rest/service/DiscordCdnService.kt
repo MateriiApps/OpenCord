@@ -9,18 +9,18 @@ class DiscordCdnServiceImpl : DiscordCdnService {
         private const val BASE = BuildConfig.URL_CDN
 
         fun getDefaultAvatarUrl(avatar: Int): String {
-            return "$BASE/embed/avatars/$avatar.webp?size=100"
+            return "$BASE/embed/avatars/$avatar.png"
         }
 
-        fun getUserAvatarUrl(userId: String, avatarHash: String): String {
+        fun getUserAvatarUrl(userId: Long, avatarHash: String): String {
             return "$BASE/avatars/${userId}/$avatarHash.webp?size=100"
         }
 
-        fun getGuildIconUrl(guildId: String, iconHash: String): String {
+        fun getGuildIconUrl(guildId: Long, iconHash: String): String {
             return "$BASE/icons/$guildId/$iconHash.webp?size=128"
         }
 
-        fun getGuildBannerUrl(guildId: String, iconHash: String): String {
+        fun getGuildBannerUrl(guildId: Long, iconHash: String): String {
             return "$BASE/banners/$guildId/$iconHash.webp?size=1024"
         }
     }

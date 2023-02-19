@@ -16,7 +16,7 @@ data class DomainGuildMember(
 fun ApiGuildMember.toDomain(): DomainGuildMember {
     val avatarUrl = user?.let { user ->
         avatar
-            ?.let { DiscordCdnServiceImpl.getUserAvatarUrl(user.id.toString(), it) }
+            ?.let { DiscordCdnServiceImpl.getUserAvatarUrl(user.id.value, it) }
             ?: DiscordCdnServiceImpl.getDefaultAvatarUrl(user.discriminator.toInt().rem(5))
     }
     return DomainGuildMember(
