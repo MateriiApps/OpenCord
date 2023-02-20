@@ -16,14 +16,8 @@ interface ReactionsDao {
     fun insertReactions(reactions: List<EntityReaction>)
 
     // --------------- Deletes ---------------
-    @Query("UPDATE reactions SET count = count + 1 WHERE message_id = :messageId AND emoji_id = :emojiId AND emoji_name = :emojiName")
-    fun incrementCount(messageId: Long, emojiId: Long?, emojiName: String?)
-
-    @Query("UPDATE reactions SET count = count - 1 WHERE message_id = :messageId AND emoji_id = :emojiId AND emoji_name = :emojiName AND count > 0")
-    fun decrementCount(messageId: Long, emojiId: Long?, emojiName: String?)
-
-    @Query("UPDATE reactions SET me_reacted = :meReacted WHERE message_id = :messageId AND emoji_id = :emojiId AND emoji_name = :emojiName")
-    fun setMeReacted(messageId: Long, emojiId: Long?, emojiName: String?, meReacted: Boolean)
+    @Query("UPDATE reactions SET count = max(0, count + :countDiff), me_reacted = :meReacted WHERE message_id = :messageId AND emoji_id = :emojiId AND emoji_name = :emojiName")
+    fun updateReaction(messageId: Long, emojiId: Long?, emojiName: String?, meReacted: Boolean, countDiff: Int)
 
     // --------------- Deletes ---------------
     @Query("DELETE FROM reactions WHERE message_id = :messageId")

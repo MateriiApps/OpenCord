@@ -222,7 +222,7 @@ fun ChatLoaded(
                                             is DomainUnicodeEmoji -> {
                                                 Text(
                                                     text = reaction.emoji.emoji,
-                                                    fontSize = 14.sp,
+                                                    fontSize = 15.sp,
                                                 )
                                             }
                                             is DomainGuildEmoji -> {

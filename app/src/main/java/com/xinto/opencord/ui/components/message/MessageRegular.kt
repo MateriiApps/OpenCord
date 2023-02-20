@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.ui.components.message.reply.MessageReplyBranch
+import com.google.accompanist.flowlayout.FlowRow as AccompanistFlowRow
 
 @Composable
 fun MessageRegular(
@@ -76,6 +77,7 @@ fun MessageRegular(
                 }
                 Column(
                     modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(6.dp),
                 ) {
                     Column(
                         modifier = Modifier.fillMaxWidth(),
@@ -106,9 +108,9 @@ fun MessageRegular(
                         }
                     }
                     if (reactions != null) {
-                        @OptIn(ExperimentalLayoutApi::class)
-                        FlowRow(
-                            horizontalArrangement = Arrangement.spacedBy(5.dp),
+                        AccompanistFlowRow(
+                            mainAxisSpacing = 5.dp,
+                            crossAxisSpacing = 5.dp,
                         ) {
                             reactions()
                         }

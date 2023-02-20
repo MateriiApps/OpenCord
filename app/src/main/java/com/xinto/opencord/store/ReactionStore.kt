@@ -1,6 +1,5 @@
 package com.xinto.opencord.store
 
-import androidx.room.withTransaction
 import com.xinto.opencord.db.database.CacheDatabase
 import com.xinto.opencord.db.entity.reactions.toEntity
 import com.xinto.opencord.domain.emoji.DomainEmoji
@@ -19,7 +18,7 @@ import kotlinx.coroutines.flow.filter
 
 /**
  * Represents a reaction count being modified (U) or all the reactions being removed from a message (D).
- * "Adding" a reaction cannot be possible since it would require a fetch that no reactions already existed on a message that isn't cached.
+ * "Adding" a reaction cannot be possible since it would require a fetch to verify that no reactions already exist on a message that isn't cached.
  */
 typealias ReactionEvent = Event<Nothing, ReactionUpdateData, ReactionRemoveAllData>
 
@@ -94,10 +93,7 @@ class ReactionStoreImpl(
                 ),
             )
 
-            cache.withTransaction {
-                cache.reactions().incrementCount(messageId, emojiId, emojiName)
-                cache.reactions().setMeReacted(messageId, emojiId, emojiName, meReacted)
-            }
+            cache.reactions().updateReaction(messageId, emojiId, emojiName, meReacted, countDiff = 1)
         }
 
         gateway.onEvent<MessageReactionRemoveEvent> { event ->
@@ -120,10 +116,7 @@ class ReactionStoreImpl(
                 ),
             )
 
-            cache.withTransaction {
-                cache.reactions().decrementCount(messageId, emojiId, emojiName)
-                cache.reactions().setMeReacted(messageId, emojiId, emojiName, meReacted)
-            }
+            cache.reactions().updateReaction(messageId, emojiId, emojiName, meReacted, countDiff = -1)
         }
 
         gateway.onEvent<MessageReactionRemoveAllEvent> { event ->
