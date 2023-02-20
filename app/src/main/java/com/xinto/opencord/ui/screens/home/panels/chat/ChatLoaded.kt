@@ -40,13 +40,12 @@ import com.xinto.opencord.util.ifNotEmptyComposable
 import com.xinto.opencord.util.ifNotNullComposable
 import com.xinto.simpleast.render
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun ChatLoaded(
     messages: ImmutableList<DomainMessage>,
-    reactions: ImmutableMap<Long, SnapshotStateMap<DomainEmojiIdentifier, ChatViewModel.ReactionState>>,
+    reactions: SnapshotStateMap<Long, SnapshotStateMap<DomainEmojiIdentifier, ChatViewModel.ReactionState>>,
     currentUserId: Long?,
     channelName: String,
     userMessage: String,
@@ -221,7 +220,7 @@ fun ChatLoaded(
                                             is DomainUnicodeEmoji -> {
                                                 Text(
                                                     text = reaction.emoji.emoji,
-                                                    fontSize = 15.sp,
+                                                    fontSize = 16.sp,
                                                 )
                                             }
                                             is DomainGuildEmoji -> {

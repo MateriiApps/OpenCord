@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
 import com.xinto.opencord.ui.viewmodel.ChatViewModel
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.collections.immutable.toPersistentHashMap
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -27,9 +26,6 @@ fun Chat(
 ) {
     val sortedMessages by remember(viewModel.messages) {
         derivedStateOf { viewModel.getSortedMessages().toImmutableList() }
-    }
-    val reactions by remember(viewModel.reactions) {
-        derivedStateOf { viewModel.reactions.toPersistentHashMap() }
     }
 
     Scaffold(
@@ -82,7 +78,7 @@ fun Chat(
                 is ChatViewModel.State.Loaded -> {
                     ChatLoaded(
                         messages = sortedMessages,
-                        reactions = reactions,
+                        reactions = viewModel.reactions,
                         currentUserId = viewModel.currentUserId,
                         channelName = viewModel.channelName,
                         userMessage = viewModel.userMessage,
