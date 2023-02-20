@@ -160,11 +160,13 @@ sealed class Dependencies {
 
         const val coilBase = "io.coil-kt:coil:$version"
         const val coilCompose = "io.coil-kt:coil-compose:$version"
+        const val coilGif = "io.coil-kt:coil-gif:$version"
 
         override fun invoke(scope: DependencyHandlerScope) {
             scope {
                 implementation(coilBase)
                 implementation(coilCompose)
+                implementation(coilGif)
             }
         }
     }

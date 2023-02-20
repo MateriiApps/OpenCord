@@ -10,7 +10,7 @@ data class DomainGuildEmoji(
     val animated: Boolean,
 ) : DomainEmoji {
     override val identifier: DomainEmojiIdentifier
-        get() = id.hashCode() * animated.hashCode()
+        get() = id.hashCode()
 
     val url: String
         get() = DiscordCdnServiceImpl.getGuildEmojiUrl(id, animated)

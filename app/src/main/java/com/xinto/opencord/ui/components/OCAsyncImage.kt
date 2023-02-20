@@ -1,5 +1,6 @@
 package com.xinto.opencord.ui.components
 
+import android.os.Build
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.LocalAbsoluteTonalElevation
@@ -15,8 +16,11 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import coil.ImageLoader
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
+import coil.decode.GifDecoder
+import coil.decode.ImageDecoderDecoder
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import coil.size.Precision
@@ -37,7 +41,6 @@ fun OCAsyncImage(
     filterQuality: FilterQuality = DrawScope.DefaultFilterQuality,
 ) {
     SubcomposeAsyncImage(
-        modifier = modifier,
         model = ImageRequest.Builder(LocalContext.current)
             .data(url)
             .diskCacheKey(url)
@@ -49,6 +52,14 @@ fun OCAsyncImage(
             .crossfade(true)
             .build(),
         contentDescription = null,
+        imageLoader = ImageLoader.Builder(LocalContext.current).components {
+            if (Build.VERSION.SDK_INT >= 28) {
+                add(ImageDecoderDecoder.Factory())
+            } else {
+                add(GifDecoder.Factory())
+            }
+        }.build(),
+        modifier = modifier,
         loading = {
             val localElevation = LocalAbsoluteTonalElevation.current
             Box(
