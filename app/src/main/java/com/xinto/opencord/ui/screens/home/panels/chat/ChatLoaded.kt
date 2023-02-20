@@ -40,6 +40,7 @@ import com.xinto.opencord.util.ifNotNullComposable
 import com.xinto.simpleast.render
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun ChatLoaded(
@@ -99,6 +100,16 @@ fun ChatLoaded(
                                 && prevMessage.embeds.isEmpty()
                                 && !message.isReply
                                 && !prevMessage.isReply
+
+                        val messageReactions by remember(reactions[message.id]) {
+                            derivedStateOf {
+                                // TODO: sort by API order instead of count
+                                // this means the index has to be preserved when inserting into db
+                                reactions[message.id]?.values?.asSequence()
+                                    ?.sortedByDescending { it.count }
+                                    ?.toImmutableList()
+                            }
+                        }
 
                         MessageRegular(
                             modifier = Modifier
@@ -198,8 +209,8 @@ fun ChatLoaded(
                                     }
                                 }
                             },
-                            reactions = reactions@{
-                                for ((_, reaction) in reactions[message.id] ?: return@reactions) {
+                            reactions = messageReactions?.ifNotEmptyComposable { reactions ->
+                                for (reaction in reactions) {
                                     MessageReaction(
                                         onClick = {
                                             onMessageReact(message.id, reaction.emoji)
