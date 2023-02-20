@@ -23,5 +23,10 @@ class DiscordCdnServiceImpl : DiscordCdnService {
         fun getGuildBannerUrl(guildId: Long, iconHash: String): String {
             return "$BASE/banners/$guildId/$iconHash.webp?size=1024"
         }
+
+        fun getGuildEmojiUrl(emojiId: Long, animated: Boolean): String {
+            val ext = if (animated) "gif" else "webp"
+            return "$BASE/emojis/$emojiId.$ext?size=64&quality=lossless"
+        }
     }
 }

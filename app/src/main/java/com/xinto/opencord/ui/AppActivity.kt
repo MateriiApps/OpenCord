@@ -42,6 +42,7 @@ class AppActivity : ComponentActivity() {
             db.apply {
                 messages().clear()
                 embeds().clear()
+                reactions().clear()
                 attachments().clear()
                 users().deleteUnusedUsers()
             }

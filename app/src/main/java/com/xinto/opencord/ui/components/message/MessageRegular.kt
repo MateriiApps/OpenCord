@@ -20,7 +20,8 @@ fun MessageRegular(
     author: (@Composable () -> Unit)? = null,
     content: (@Composable () -> Unit)? = null,
     attachments: (@Composable () -> Unit)? = null,
-    embeds: (@Composable () -> Unit)? = null
+    embeds: (@Composable () -> Unit)? = null,
+    reactions: (@Composable () -> Unit)? = null,
 ) {
     val background = if (mentioned) {
         MaterialTheme.colorScheme.secondaryContainer
@@ -103,6 +104,14 @@ fun MessageRegular(
                             verticalArrangement = Arrangement.spacedBy(2.dp),
                         ) {
                             embeds()
+                        }
+                    }
+                    if (reactions != null) {
+                        @OptIn(ExperimentalLayoutApi::class)
+                        FlowRow(
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        ) {
+                            reactions()
                         }
                     }
                 }

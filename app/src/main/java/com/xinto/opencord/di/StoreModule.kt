@@ -14,4 +14,5 @@ val storeModule = module {
     singleOf(::CurrentUserStoreImpl) bind CurrentUserStore::class
     singleOf(::SessionStoreImpl) bind SessionStore::class
     singleOf(::UnreadStoreImpl) bind UnreadStore::class
+    singleOf(::ReactionStoreImpl) bind ReactionStore::class
 }

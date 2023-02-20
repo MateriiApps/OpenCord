@@ -8,9 +8,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.materiiapps.partial.Partial
 import com.xinto.opencord.R
-import com.xinto.opencord.domain.activity.DomainActivityEmoji
 import com.xinto.opencord.domain.activity.types.DomainActivityCustom
 import com.xinto.opencord.domain.activity.types.DomainActivityStreaming
+import com.xinto.opencord.domain.emoji.DomainGuildEmoji
+import com.xinto.opencord.domain.emoji.DomainUnicodeEmoji
 import com.xinto.opencord.domain.usersettings.DomainCustomStatus
 import com.xinto.opencord.domain.usersettings.DomainUserSettingsPartial
 import com.xinto.opencord.domain.usersettings.DomainUserStatus
@@ -102,12 +103,16 @@ class CurrentUserViewModel(
                     name = "Custom Status",
                     status = status.text,
                     createdAt = currentMillis,
-                    emoji = if (status.emojiId == null || status.emojiName == null) null else {
-                        DomainActivityEmoji(
-                            name = status.emojiName,
+                    emoji = when {
+                        status.emojiId != null && status.emojiName != null -> DomainGuildEmoji(
                             id = status.emojiId,
-                            animated = false, // TODO: fix this
+                            name = status.emojiName,
+                            animated = false, // TODO: where can i get this from
                         )
+                        status.emojiName != null -> DomainUnicodeEmoji(
+                            emoji = status.emojiName,
+                        )
+                        else -> null
                     },
                 )
             }

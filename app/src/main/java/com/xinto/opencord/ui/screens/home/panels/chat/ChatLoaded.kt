@@ -14,39 +14,43 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import coil.size.Size
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.attachment.DomainPictureAttachment
 import com.xinto.opencord.domain.attachment.DomainVideoAttachment
+import com.xinto.opencord.domain.emoji.*
 import com.xinto.opencord.domain.message.DomainMessage
 import com.xinto.opencord.domain.message.DomainMessageRegular
+import com.xinto.opencord.ui.components.OCAsyncImage
 import com.xinto.opencord.ui.components.attachment.AttachmentPicture
 import com.xinto.opencord.ui.components.attachment.AttachmentVideo
 import com.xinto.opencord.ui.components.channel.ChatInput
 import com.xinto.opencord.ui.components.embed.Embed
 import com.xinto.opencord.ui.components.embed.EmbedAuthor
 import com.xinto.opencord.ui.components.embed.EmbedField
-import com.xinto.opencord.ui.components.message.MessageAuthor
-import com.xinto.opencord.ui.components.message.MessageAvatar
-import com.xinto.opencord.ui.components.message.MessageContent
-import com.xinto.opencord.ui.components.message.MessageRegular
+import com.xinto.opencord.ui.components.message.*
 import com.xinto.opencord.ui.components.message.reply.MessageReferenced
 import com.xinto.opencord.ui.components.message.reply.MessageReferencedAuthor
 import com.xinto.opencord.ui.components.message.reply.MessageReferencedContent
+import com.xinto.opencord.ui.viewmodel.ChatViewModel
 import com.xinto.opencord.util.ifComposable
 import com.xinto.opencord.util.ifNotEmptyComposable
 import com.xinto.opencord.util.ifNotNullComposable
 import com.xinto.simpleast.render
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.ImmutableMap
 
 @Composable
 fun ChatLoaded(
     messages: ImmutableList<DomainMessage>,
+    reactions: ImmutableMap<Long, ImmutableMap<DomainEmojiIdentifier, ChatViewModel.ReactionState>>,
     currentUserId: Long?,
     channelName: String,
     userMessage: String,
     sendEnabled: Boolean,
     onUserMessageUpdate: (String) -> Unit,
     onUserMessageSend: () -> Unit,
+    onMessageReact: (messageId: Long, emoji: DomainEmoji) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var showMessageMenu by rememberSaveable { mutableStateOf(false) }
@@ -193,8 +197,33 @@ fun ChatLoaded(
                                     }
                                 }
                             },
+                            reactions = reactions@{
+                                for ((_, reaction) in reactions[message.id] ?: return@reactions) {
+                                    MessageReaction(
+                                        onClick = {
+                                            onMessageReact(message.id, reaction.emoji)
+                                        },
+                                        count = reaction.count,
+                                        meReacted = reaction.meReacted,
+                                    ) {
+                                        when (reaction.emoji) {
+                                            is DomainUnicodeEmoji -> {
+                                                Text(text = reaction.emoji.emoji)
+                                            }
+                                            is DomainGuildEmoji -> {
+                                                OCAsyncImage(
+                                                    url = reaction.emoji.url,
+                                                    size = Size(64, 64),
+                                                )
+                                            }
+                                            is DomainUnknownEmoji -> {}
+                                        }
+                                    }
+                                }
+                            },
                         )
                     }
+                    // TODO: render other message types
                     else -> {}
                 }
             }
