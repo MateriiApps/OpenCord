@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.size.Size
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.attachment.DomainPictureAttachment
@@ -208,12 +209,17 @@ fun ChatLoaded(
                                     ) {
                                         when (reaction.emoji) {
                                             is DomainUnicodeEmoji -> {
-                                                Text(text = reaction.emoji.emoji)
+                                                Text(
+                                                    text = reaction.emoji.emoji,
+                                                    fontSize = 14.sp,
+                                                )
                                             }
                                             is DomainGuildEmoji -> {
                                                 OCAsyncImage(
                                                     url = reaction.emoji.url,
                                                     size = Size(64, 64),
+                                                    modifier = Modifier
+                                                        .size(16.dp),
                                                 )
                                             }
                                             is DomainUnknownEmoji -> {}

@@ -76,7 +76,6 @@ fun MessageRegular(
                 }
                 Column(
                     modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
                     Column(
                         modifier = Modifier.fillMaxWidth(),
@@ -109,7 +108,7 @@ fun MessageRegular(
                     if (reactions != null) {
                         @OptIn(ExperimentalLayoutApi::class)
                         FlowRow(
-                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            horizontalArrangement = Arrangement.spacedBy(5.dp),
                         ) {
                             reactions()
                         }
