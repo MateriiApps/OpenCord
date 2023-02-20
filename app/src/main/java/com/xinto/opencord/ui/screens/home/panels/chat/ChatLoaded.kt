@@ -10,6 +10,7 @@ import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
@@ -45,7 +46,7 @@ import kotlinx.collections.immutable.toImmutableList
 @Composable
 fun ChatLoaded(
     messages: ImmutableList<DomainMessage>,
-    reactions: ImmutableMap<Long, ImmutableMap<DomainEmojiIdentifier, ChatViewModel.ReactionState>>,
+    reactions: ImmutableMap<Long, SnapshotStateMap<DomainEmojiIdentifier, ChatViewModel.ReactionState>>,
     currentUserId: Long?,
     channelName: String,
     userMessage: String,
@@ -103,10 +104,8 @@ fun ChatLoaded(
 
                         val messageReactions by remember(reactions[message.id]) {
                             derivedStateOf {
-                                // TODO: sort by API order instead of count
-                                // this means the index has to be preserved when inserting into db
-                                reactions[message.id]?.values?.asSequence()
-                                    ?.sortedByDescending { it.count }
+                                reactions[message.id]?.values
+                                    ?.sortedBy { it.reactionOrder }
                                     ?.toImmutableList()
                             }
                         }
@@ -230,7 +229,7 @@ fun ChatLoaded(
                                                     url = reaction.emoji.url,
                                                     size = Size(64, 64),
                                                     modifier = Modifier
-                                                        .size(16.dp),
+                                                        .size(18.dp),
                                                 )
                                             }
                                             is DomainUnknownEmoji -> {}

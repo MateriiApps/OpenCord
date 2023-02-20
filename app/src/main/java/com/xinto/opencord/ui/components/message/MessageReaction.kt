@@ -26,15 +26,15 @@ fun MessageReaction(
     emote: @Composable () -> Unit,
 ) {
     Surface(
-        tonalElevation = 1.dp,
         shape = MaterialTheme.shapes.small,
-        border = if (meReacted) BorderStroke(1.dp, MaterialTheme.colorScheme.secondary) else null,
-        color = if (meReacted) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.secondaryContainer,
+        border = if (meReacted) BorderStroke(1.dp, MaterialTheme.colorScheme.primary) else null,
+        color = if (meReacted) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.secondaryContainer,
         modifier = modifier
             .clickable(onClick = onClick),
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally),
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(vertical = 5.dp, horizontal = 9.dp),
         ) {
             emote()
@@ -53,7 +53,7 @@ fun MessageReaction(
             ) {
                 Text(
                     text = count.toString(),
-                    fontSize = 14.sp,
+                    fontSize = 16.sp,
                 )
             }
         }

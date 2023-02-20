@@ -30,9 +30,12 @@ data class EntityReaction(
 
     @ColumnInfo(name = "me_reacted")
     val meReacted: Boolean = false,
+
+    @ColumnInfo("reaction_created")
+    val reactionCreated: Long? = System.currentTimeMillis()
 )
 
-fun ApiReaction.toEntity(messageId: Long, messageGuildId: Long?): EntityReaction {
+fun ApiReaction.toEntity(messageId: Long, messageGuildId: Long?, reactionCreated: Long? = System.currentTimeMillis()): EntityReaction {
     return EntityReaction(
         messageId = messageId,
         messageGuildId = messageGuildId,
@@ -41,5 +44,6 @@ fun ApiReaction.toEntity(messageId: Long, messageGuildId: Long?): EntityReaction
         animated = emoji.animated.getOrElse { false },
         count = count,
         meReacted = meReacted,
+        reactionCreated = reactionCreated,
     )
 }

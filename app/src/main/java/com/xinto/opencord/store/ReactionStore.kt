@@ -38,6 +38,9 @@ data class ReactionRemoveAllData(
 interface ReactionStore {
     fun observeChannel(channelId: Long): Flow<ReactionEvent>
 
+    /**
+     * Returns reactions ordered by the index received and/or time from gateway
+     */
     fun getReactions(messageId: Long): List<DomainReaction>
 }
 
@@ -60,6 +63,7 @@ class ReactionStoreImpl(
 
     override fun getReactions(messageId: Long): List<DomainReaction> {
         return cache.reactions().getReactions(messageId)
+            .sortedBy { it.reactionCreated }
             .map { it.toDomain() }
     }
 

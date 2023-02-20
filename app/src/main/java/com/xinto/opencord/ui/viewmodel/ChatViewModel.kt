@@ -38,6 +38,7 @@ class ChatViewModel(
     @Stable
     class ReactionState(
         val emoji: DomainEmoji,
+        val reactionOrder: Long,
         meReacted: Boolean,
         count: Int,
     ) {
@@ -77,8 +78,9 @@ class ChatViewModel(
                     ?: throw Error("Failed to load channel $channelId")
                 val channelMessages = messageStore.fetchMessages(channelId)
                 val channelReactions = channelMessages.associate { msg ->
-                    val messageReactions = reactionStore.getReactions(msg.id).asSequence().map { reaction ->
+                    val messageReactions = reactionStore.getReactions(msg.id).asSequence().mapIndexed { i, reaction ->
                         reaction.emoji.identifier to ReactionState(
+                            reactionOrder = i.toLong(),
                             emoji = reaction.emoji,
                             count = reaction.count,
                             meReacted = reaction.meReacted,
@@ -131,6 +133,7 @@ class ChatViewModel(
                                 count = newCount
                                 meReacted = data.meReacted
                             } ?: ReactionState(
+                                reactionOrder = System.currentTimeMillis(),
                                 emoji = data.emoji,
                                 count = newCount,
                                 meReacted = data.meReacted,

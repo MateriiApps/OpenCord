@@ -124,8 +124,8 @@ class MessageStoreImpl(
 
             cache.reactions().insertReactions(
                 messages.flatMap { msg ->
-                    msg.reactions?.map {
-                        it.toEntity(msg.id.value, msg.guildId?.value)
+                    msg.reactions?.mapIndexed { index, it ->
+                        it.toEntity(msg.id.value, msg.guildId?.value, reactionCreated = index.toLong())
                     } ?: emptyList()
                 },
             )
