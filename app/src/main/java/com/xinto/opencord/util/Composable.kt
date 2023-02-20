@@ -2,8 +2,8 @@ package com.xinto.opencord.util
 
 import androidx.compose.runtime.Composable
 
-fun <T, R> T?.ifNotNullComposable(
-    block: @Composable (T) -> R
+inline fun <T, R> T?.ifNotNullComposable(
+    crossinline block: @Composable (T) -> R
 ): (@Composable () -> R)? {
     return if (this != null) {
         @Composable {
@@ -12,8 +12,8 @@ fun <T, R> T?.ifNotNullComposable(
     } else null
 }
 
-fun <R> Boolean.ifComposable(
-    block: @Composable () -> R
+inline fun <R> Boolean.ifComposable(
+    crossinline block: @Composable () -> R
 ): (@Composable () -> R)? {
     return if (this) {
         @Composable {
@@ -22,8 +22,8 @@ fun <R> Boolean.ifComposable(
     } else null
 }
 
-fun <T, R> List<T>.ifNotEmptyComposable(
-    block: @Composable (List<T>) -> R
+inline fun <T, R> List<T>.ifNotEmptyComposable(
+    crossinline block: @Composable (List<T>) -> R
 ): (@Composable () -> R)? {
     return if (isNotEmpty()) {
         @Composable {
