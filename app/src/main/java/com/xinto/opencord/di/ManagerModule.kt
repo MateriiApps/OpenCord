@@ -1,10 +1,7 @@
 package com.xinto.opencord.di
 
 import android.content.Context
-import com.xinto.opencord.manager.AccountManager
-import com.xinto.opencord.manager.AccountManagerImpl
-import com.xinto.opencord.manager.PersistentDataManager
-import com.xinto.opencord.manager.PersistentDataManagerImpl
+import com.xinto.opencord.manager.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
@@ -27,4 +24,5 @@ val managerModule = module {
 
     single { provideAccountManager(androidContext()) }
     single { providePersistentDataManager(androidContext()) }
+    single<ActivityManager> { ActivityManagerImpl(androidContext()) }
 }
