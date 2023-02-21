@@ -107,10 +107,4 @@ class LoginActivity : AppCompatActivity() {
             }
         }
     }
-
-    override fun onDestroy() {
-        get<AccountDatabase>().close()
-
-        super.onDestroy()
-    }
 }

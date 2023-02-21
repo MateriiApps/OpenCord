@@ -13,7 +13,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.xinto.opencord.db.database.AccountDatabase
 import com.xinto.opencord.db.database.CacheDatabase
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.ui.navigation.AppDestination
@@ -116,9 +115,6 @@ class AppActivity : ComponentActivity() {
         scope.launch(Dispatchers.IO) {
             get<DiscordGateway>().disconnect()
         }
-
-        get<CacheDatabase>().close()
-        get<AccountDatabase>().close()
 
         super.onDestroy()
     }

@@ -1,17 +1,16 @@
 package com.xinto.opencord.ui.viewmodel
 
-import android.content.Intent
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.xinto.opencord.OpenCord
 import com.xinto.opencord.db.database.AccountDatabase
 import com.xinto.opencord.db.entity.EntityAccount
 import com.xinto.opencord.domain.login.DomainLogin
 import com.xinto.opencord.domain.login.toDomain
 import com.xinto.opencord.manager.AccountManager
+import com.xinto.opencord.manager.ActivityManager
 import com.xinto.opencord.rest.body.LoginBody
 import com.xinto.opencord.rest.body.TwoFactorBody
 import com.xinto.opencord.rest.service.DiscordAuthService
@@ -24,7 +23,7 @@ class LoginViewModel(
     private val api: DiscordAuthService,
     private val accountManager: AccountManager,
     private val accountDatabase: AccountDatabase,
-    private val applicationContext: OpenCord,
+    private val activityManager: ActivityManager,
 ) : ViewModel() {
     lateinit var mfaTicket: String
         private set
@@ -57,7 +56,7 @@ class LoginViewModel(
         }
 
         accountManager.currentAccountToken = token
-        startMainActivity()
+        activityManager.startActivity(AppActivity::class)
     }
 
     fun login(captchaToken: String? = null) {
@@ -151,10 +150,5 @@ class LoginViewModel(
     fun dismissMfa() {
         mfaCode = ""
         showMfa = false
-    }
-
-    private fun startMainActivity() {
-        val intent = Intent(applicationContext, AppActivity::class.java)
-        applicationContext.startActivity(intent)
     }
 }
