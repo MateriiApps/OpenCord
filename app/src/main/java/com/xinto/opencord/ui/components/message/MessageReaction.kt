@@ -14,7 +14,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -27,17 +26,17 @@ fun MessageReaction(
     emote: @Composable () -> Unit,
 ) {
     Surface(
+        shape = MaterialTheme.shapes.small,
         border = if (meReacted) BorderStroke(1.dp, MaterialTheme.colorScheme.primary) else null,
         color = if (meReacted) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.secondaryContainer,
         modifier = modifier
-            .padding(bottom = 5.dp)
-            .clip(MaterialTheme.shapes.small)
-            .clickable(onClick = onClick),
+            .padding(bottom = 5.dp),
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally),
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
+                .clickable(onClick = onClick)
                 .padding(vertical = 5.dp, horizontal = 9.dp),
         ) {
             emote()
