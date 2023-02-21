@@ -1,6 +1,7 @@
 package com.xinto.opencord.ui
 
 import android.os.Bundle
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.AnimatedContentScope
@@ -16,12 +17,12 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.hcaptcha.sdk.HCaptcha
 import com.xinto.opencord.db.database.AccountDatabase
 import com.xinto.opencord.ui.navigation.LoginDestination
+import com.xinto.opencord.ui.navigation.back
 import com.xinto.opencord.ui.screens.login.LoginLandingScreen
 import com.xinto.opencord.ui.screens.login.LoginScreen
 import com.xinto.opencord.ui.theme.OpenCordTheme
 import dev.olshevski.navigation.reimagined.AnimatedNavHost
 import dev.olshevski.navigation.reimagined.navigate
-import dev.olshevski.navigation.reimagined.pop
 import dev.olshevski.navigation.reimagined.rememberNavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -43,6 +44,8 @@ class LoginActivity : AppCompatActivity() {
 
         setContent {
             val nav = rememberNavController<LoginDestination>(startDestination = LoginDestination.Landing)
+
+            BackHandler { nav.back() }
 
             OpenCordTheme {
                 val systemUiController = rememberSystemUiController()
@@ -86,7 +89,7 @@ class LoginActivity : AppCompatActivity() {
                     ) { dest ->
                         when (dest) {
                             LoginDestination.Login -> LoginScreen(
-                                onBackClick = { nav.pop() },
+                                onBackClick = { nav.back() },
                             )
 
                             LoginDestination.Landing -> LoginLandingScreen(

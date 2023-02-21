@@ -2,6 +2,7 @@ package com.xinto.opencord.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.fadeIn
@@ -16,13 +17,13 @@ import com.xinto.opencord.db.database.AccountDatabase
 import com.xinto.opencord.db.database.CacheDatabase
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.ui.navigation.AppDestination
+import com.xinto.opencord.ui.navigation.back
 import com.xinto.opencord.ui.screens.Settings
 import com.xinto.opencord.ui.screens.home.HomeScreen
 import com.xinto.opencord.ui.screens.pins.PinsScreen
 import com.xinto.opencord.ui.theme.OpenCordTheme
 import dev.olshevski.navigation.reimagined.AnimatedNavHost
 import dev.olshevski.navigation.reimagined.navigate
-import dev.olshevski.navigation.reimagined.pop
 import dev.olshevski.navigation.reimagined.rememberNavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -50,6 +51,8 @@ class AppActivity : ComponentActivity() {
 
         setContent {
             val nav = rememberNavController<AppDestination>(startDestination = AppDestination.Main)
+
+            BackHandler { nav.back() }
 
             OpenCordTheme {
                 val systemUiController = rememberSystemUiController()
@@ -95,13 +98,13 @@ class AppActivity : ComponentActivity() {
 
                         AppDestination.Settings -> Settings(
                             modifier = Modifier.fillMaxSize(),
-                            onBackClick = { nav.pop() },
+                            onBackClick = { nav.back() },
                         )
 
                         is AppDestination.Pins -> PinsScreen(
                             data = dest.data,
                             modifier = Modifier.fillMaxSize(),
-                            onBackClick = { nav.pop() },
+                            onBackClick = { nav.back() },
                         )
                     }
                 }
