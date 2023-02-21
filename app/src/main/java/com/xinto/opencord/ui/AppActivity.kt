@@ -14,12 +14,12 @@ import androidx.compose.ui.Modifier
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.xinto.opencord.db.database.AccountDatabase
 import com.xinto.opencord.db.database.CacheDatabase
+import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.ui.navigation.AppDestination
 import com.xinto.opencord.ui.screens.Settings
 import com.xinto.opencord.ui.screens.home.HomeScreen
 import com.xinto.opencord.ui.screens.pins.PinsScreen
 import com.xinto.opencord.ui.theme.OpenCordTheme
-import com.xinto.opencord.ui.viewmodel.MainViewModel
 import dev.olshevski.navigation.reimagined.AnimatedNavHost
 import dev.olshevski.navigation.reimagined.navigate
 import dev.olshevski.navigation.reimagined.pop
@@ -31,15 +31,16 @@ import org.koin.android.ext.android.get
 
 class AppActivity : ComponentActivity() {
     private val scope = MainScope()
-    private val viewModel: MainViewModel = get()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         scope.launch(Dispatchers.IO) {
-            val db = get<CacheDatabase>()
+            get<DiscordGateway>().connect()
+        }
 
-            db.apply {
+        scope.launch(Dispatchers.IO) {
+            get<CacheDatabase>().apply {
                 messages().clear()
                 embeds().clear()
                 attachments().clear()
@@ -109,6 +110,10 @@ class AppActivity : ComponentActivity() {
     }
 
     override fun onDestroy() {
+        scope.launch(Dispatchers.IO) {
+            get<DiscordGateway>().disconnect()
+        }
+
         get<CacheDatabase>().close()
         get<AccountDatabase>().close()
 
