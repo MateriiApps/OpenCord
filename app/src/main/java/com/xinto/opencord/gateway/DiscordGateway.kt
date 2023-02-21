@@ -29,6 +29,9 @@ import kotlin.coroutines.CoroutineContext
 
 interface DiscordGateway : CoroutineScope {
     sealed interface State {
+        val active: Boolean
+            get() = this is Started || this is Connected
+
         object Started : State
         object Connected : State
         object Disconnected : State
@@ -57,44 +60,54 @@ class DiscordGatewayImpl(
 
     private lateinit var webSocketSession: DefaultClientWebSocketSession
     private lateinit var zlibInflater: Inflater
-    private var establishConnection = true
 
     private val _events = MutableSharedFlow<Event>()
     override val events = _events.asSharedFlow()
 
-    private val _state = MutableSharedFlow<DiscordGateway.State>()
+    private val _state = MutableSharedFlow<DiscordGateway.State>(replay = 1)
     override val state = _state.asSharedFlow()
 
+    private var resumable: Boolean = false
     private var sequenceNumber: Int = 0
     private lateinit var sessionId: String
 
     override suspend fun connect() {
+        if (_state.replayCache.lastOrNull()?.active == true)
+            return
+
         _state.emit(DiscordGateway.State.Started)
 
-        while (establishConnection) {
-            try {
-                establishConnection = false
+        resumable = false // TODO: add session resuming
+        sequenceNumber = 0
+        sessionId = ""
+        zlibInflater = Inflater()
 
-                zlibInflater = Inflater()
-                webSocketSession = client.webSocketSession(BuildConfig.URL_GATEWAY)
-                sendIdentification()
-                _state.emit(DiscordGateway.State.Connected)
-                listenToSocket()
+        try {
+            webSocketSession = client.webSocketSession(BuildConfig.URL_GATEWAY)
 
-                val reason = withTimeoutOrNull(1500L) {
-                    webSocketSession.closeReason.await()
-                } ?: return
-                val closeCode = CloseCode.fromValue(reason.code.toInt())
-                establishConnection = closeCode.canReconnect
-            } catch (e: Exception) {
-                e.printStackTrace()
+            sendIdentification()
+            _state.emit(DiscordGateway.State.Connected)
+            listenToSocket()
+
+            val reason = withTimeoutOrNull(2000L) {
+                webSocketSession.closeReason.await()
             }
-        }
 
-        _state.emit(DiscordGateway.State.Stopped)
+            if (reason != null) {
+                val closeCode = CloseCode.fromValue(reason.code.toInt())
+                resumable = closeCode.canReconnect
+            }
+
+            _state.emit(DiscordGateway.State.Stopped)
+        } catch (t: Throwable) {
+            logger.error("Gateway", "Failed to connect to gateway", t)
+        }
     }
 
     override suspend fun disconnect() {
+        if (_state.replayCache.lastOrNull()?.active == false)
+            return
+
         logger.debug("Gateway", "Disconnecting")
         webSocketSession.close()
         _state.emit(DiscordGateway.State.Disconnected)
