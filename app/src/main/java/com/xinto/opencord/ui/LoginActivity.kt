@@ -12,6 +12,7 @@ import androidx.compose.material3.LocalAbsoluteTonalElevation
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.hcaptcha.sdk.HCaptcha
@@ -87,6 +88,8 @@ class LoginActivity : AppCompatActivity() {
                             }
                         },
                     ) { dest ->
+                        val uriHandler = LocalUriHandler.current
+
                         when (dest) {
                             LoginDestination.Login -> LoginScreen(
                                 onBackClick = { nav.back() },
@@ -94,7 +97,9 @@ class LoginActivity : AppCompatActivity() {
 
                             LoginDestination.Landing -> LoginLandingScreen(
                                 onLoginClick = { nav.navigate(LoginDestination.Login) },
-                                onRegisterClick = {},
+                                onRegisterClick = {
+                                    uriHandler.openUri("https://discord.com/register")
+                                },
                             )
                         }
                     }
