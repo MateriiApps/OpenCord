@@ -1,28 +1,30 @@
 package com.xinto.opencord.ui.viewmodel
 
+import android.content.Intent
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.xinto.opencord.OpenCord
 import com.xinto.opencord.db.database.AccountDatabase
 import com.xinto.opencord.db.entity.EntityAccount
 import com.xinto.opencord.domain.login.DomainLogin
 import com.xinto.opencord.domain.login.toDomain
 import com.xinto.opencord.manager.AccountManager
-import com.xinto.opencord.manager.ActivityManager
 import com.xinto.opencord.rest.body.LoginBody
 import com.xinto.opencord.rest.body.TwoFactorBody
 import com.xinto.opencord.rest.service.DiscordAuthService
+import com.xinto.opencord.ui.AppActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class LoginViewModel(
     private val api: DiscordAuthService,
-    private val activityManager: ActivityManager,
     private val accountManager: AccountManager,
     private val accountDatabase: AccountDatabase,
+    private val applicationContext: OpenCord,
 ) : ViewModel() {
     lateinit var mfaTicket: String
         private set
@@ -49,6 +51,15 @@ class LoginViewModel(
     var mfaError by mutableStateOf(false)
         private set
 
+    private suspend fun finishLogin(token: String) {
+        withContext(Dispatchers.IO) {
+            accountDatabase.accounts().insertAccount(EntityAccount(token = token))
+        }
+
+        accountManager.currentAccountToken = token
+        startMainActivity()
+    }
+
     fun login(captchaToken: String? = null) {
         viewModelScope.launch {
             showCaptcha = false
@@ -73,14 +84,7 @@ class LoginViewModel(
                 ).toDomain()
 
                 when (response) {
-                    is DomainLogin.Login -> {
-                        withContext(Dispatchers.IO) {
-                            accountDatabase.accounts().insertAccount(EntityAccount(token = response.token))
-                        }
-
-                        accountManager.currentAccountToken = response.token
-                        activityManager.startMainActivity()
-                    }
+                    is DomainLogin.Login -> finishLogin(response.token)
                     is DomainLogin.TwoFactorAuth -> {
                         mfaTicket = response.ticket
                         showMfa = true
@@ -115,10 +119,7 @@ class LoginViewModel(
                     ),
                 ).toDomain()
                 when (response) {
-                    is DomainLogin.Login -> {
-                        activityManager.startMainActivity()
-                        accountManager.currentAccountToken = response.token
-                    }
+                    is DomainLogin.Login -> finishLogin(response.token)
                     is DomainLogin.Captcha -> {
                         showCaptcha = true
                     }
@@ -150,5 +151,10 @@ class LoginViewModel(
     fun dismissMfa() {
         mfaCode = ""
         showMfa = false
+    }
+
+    private fun startMainActivity() {
+        val intent = Intent(applicationContext, AppActivity::class.java)
+        applicationContext.startActivity(intent)
     }
 }

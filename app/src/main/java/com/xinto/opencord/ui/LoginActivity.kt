@@ -1,6 +1,7 @@
 package com.xinto.opencord.ui
 
 import android.os.Bundle
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.AnimatedContentScope
@@ -11,17 +12,18 @@ import androidx.compose.material3.LocalAbsoluteTonalElevation
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.hcaptcha.sdk.HCaptcha
 import com.xinto.opencord.db.database.AccountDatabase
 import com.xinto.opencord.ui.navigation.LoginDestination
+import com.xinto.opencord.ui.navigation.back
 import com.xinto.opencord.ui.screens.login.LoginLandingScreen
 import com.xinto.opencord.ui.screens.login.LoginScreen
 import com.xinto.opencord.ui.theme.OpenCordTheme
 import dev.olshevski.navigation.reimagined.AnimatedNavHost
 import dev.olshevski.navigation.reimagined.navigate
-import dev.olshevski.navigation.reimagined.pop
 import dev.olshevski.navigation.reimagined.rememberNavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -43,6 +45,8 @@ class LoginActivity : AppCompatActivity() {
 
         setContent {
             val nav = rememberNavController<LoginDestination>(startDestination = LoginDestination.Landing)
+
+            BackHandler { nav.back() }
 
             OpenCordTheme {
                 val systemUiController = rememberSystemUiController()
@@ -84,19 +88,29 @@ class LoginActivity : AppCompatActivity() {
                             }
                         },
                     ) { dest ->
+                        val uriHandler = LocalUriHandler.current
+
                         when (dest) {
                             LoginDestination.Login -> LoginScreen(
-                                onBackClick = { nav.pop() },
+                                onBackClick = { nav.back() },
                             )
 
                             LoginDestination.Landing -> LoginLandingScreen(
                                 onLoginClick = { nav.navigate(LoginDestination.Login) },
-                                onRegisterClick = {},
+                                onRegisterClick = {
+                                    uriHandler.openUri("https://discord.com/register")
+                                },
                             )
                         }
                     }
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        get<AccountDatabase>().close()
+
+        super.onDestroy()
     }
 }

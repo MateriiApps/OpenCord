@@ -2,6 +2,7 @@ package com.xinto.opencord.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.fadeIn
@@ -14,15 +15,15 @@ import androidx.compose.ui.Modifier
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.xinto.opencord.db.database.AccountDatabase
 import com.xinto.opencord.db.database.CacheDatabase
+import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.ui.navigation.AppDestination
+import com.xinto.opencord.ui.navigation.back
 import com.xinto.opencord.ui.screens.Settings
 import com.xinto.opencord.ui.screens.home.HomeScreen
 import com.xinto.opencord.ui.screens.pins.PinsScreen
 import com.xinto.opencord.ui.theme.OpenCordTheme
-import com.xinto.opencord.ui.viewmodel.MainViewModel
 import dev.olshevski.navigation.reimagined.AnimatedNavHost
 import dev.olshevski.navigation.reimagined.navigate
-import dev.olshevski.navigation.reimagined.pop
 import dev.olshevski.navigation.reimagined.rememberNavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -31,15 +32,16 @@ import org.koin.android.ext.android.get
 
 class AppActivity : ComponentActivity() {
     private val scope = MainScope()
-    private val viewModel: MainViewModel = get()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         scope.launch(Dispatchers.IO) {
-            val db = get<CacheDatabase>()
+            get<DiscordGateway>().connect()
+        }
 
-            db.apply {
+        scope.launch(Dispatchers.IO) {
+            get<CacheDatabase>().apply {
                 messages().clear()
                 embeds().clear()
                 reactions().clear()
@@ -50,6 +52,8 @@ class AppActivity : ComponentActivity() {
 
         setContent {
             val nav = rememberNavController<AppDestination>(startDestination = AppDestination.Main)
+
+            BackHandler { nav.back() }
 
             OpenCordTheme {
                 val systemUiController = rememberSystemUiController()
@@ -95,13 +99,13 @@ class AppActivity : ComponentActivity() {
 
                         AppDestination.Settings -> Settings(
                             modifier = Modifier.fillMaxSize(),
-                            onBackClick = { nav.pop() },
+                            onBackClick = { nav.back() },
                         )
 
                         is AppDestination.Pins -> PinsScreen(
                             data = dest.data,
                             modifier = Modifier.fillMaxSize(),
-                            onBackClick = { nav.pop() },
+                            onBackClick = { nav.back() },
                         )
                     }
                 }
@@ -110,6 +114,10 @@ class AppActivity : ComponentActivity() {
     }
 
     override fun onDestroy() {
+        scope.launch(Dispatchers.IO) {
+            get<DiscordGateway>().disconnect()
+        }
+
         get<CacheDatabase>().close()
         get<AccountDatabase>().close()
 

@@ -1,5 +1,7 @@
 package com.xinto.opencord.ui.screens.home
 
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -40,6 +42,12 @@ fun HomeScreen(
     val chatViewModel: ChatViewModel = getViewModel()
     val guildsViewModel: GuildsViewModel = getViewModel()
     val channelsViewModel: ChannelsViewModel = getViewModel()
+
+    BackHandler(enabled = panelState.startPanelOpen || panelState.endPanelOpen) {
+        coroutineScope.launch {
+            panelState.closePanels()
+        }
+    }
 
     Surface(modifier = modifier) {
         OverlappingPanels(
@@ -99,10 +107,18 @@ fun HomeScreen(
                     onPinsButtonClick = {
                         onPinsClick(PinsScreenData(channelsViewModel.selectedChannelId))
                     },
+                    viewModel = chatViewModel,
                     modifier = Modifier
+                        .clickable(
+                            enabled = panelState.startPanelOpen || panelState.endPanelOpen,
+                            onClick = {
+                                coroutineScope.launch {
+                                    panelState.closePanels()
+                                }
+                            },
+                        )
                         .fillMaxSize()
                         .clip(shape),
-                    viewModel = chatViewModel,
                 )
             },
             panelEnd = {
