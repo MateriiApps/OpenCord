@@ -8,6 +8,7 @@ import com.xinto.opencord.store.GuildStore
 import com.xinto.opencord.store.fold
 import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
 import com.xinto.opencord.util.collectIn
+import kotlinx.coroutines.launch
 
 class GuildsViewModel(
     guildStore: GuildStore,
@@ -32,6 +33,11 @@ class GuildsViewModel(
     }
 
     init {
+        viewModelScope.launch {
+            guilds.putAll(guildStore.fetchGuilds().associateBy { it.id })
+            state = State.Loaded
+        }
+
         guildStore.observeGuilds().collectIn(viewModelScope) { event ->
             state = State.Loaded
             event.fold(

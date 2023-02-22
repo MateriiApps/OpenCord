@@ -23,6 +23,7 @@ interface GuildStore {
     fun observeGuilds(): Flow<GuildEvent>
 
     suspend fun fetchGuild(guildId: Long): DomainGuild?
+    suspend fun fetchGuilds(): List<DomainGuild>
 }
 
 class GuildStoreImpl(
@@ -46,6 +47,12 @@ class GuildStoreImpl(
     override suspend fun fetchGuild(guildId: Long): DomainGuild? {
         return withContext(Dispatchers.IO) {
             cache.guilds().getGuild(guildId)?.toDomain()
+        }
+    }
+
+    override suspend fun fetchGuilds(): List<DomainGuild> {
+        return withContext(Dispatchers.IO) {
+            cache.guilds().getGuilds().map { it.toDomain() }
         }
     }
 
