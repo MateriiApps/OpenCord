@@ -90,6 +90,21 @@ class EventDeserializationStrategy(
                     data = decoder.decodeSerializableValue(MessageAckData.serializer()),
                 )
             }
+            EventName.MessageReactionAdd -> {
+                MessageReactionAddEvent(
+                    data = decoder.decodeSerializableValue(MessageReactionAddData.serializer()),
+                )
+            }
+            EventName.MessageReactionRemove -> {
+                MessageReactionRemoveEvent(
+                    data = decoder.decodeSerializableValue(MessageReactionRemoveData.serializer()),
+                )
+            }
+            EventName.MessageReactionRemoveAll -> {
+                MessageReactionRemoveAllEvent(
+                    data = decoder.decodeSerializableValue(MessageReactionRemoveAllData.serializer()),
+                )
+            }
             EventName.SessionsReplace -> {
                 SessionsReplaceEvent(
                     data = decoder.decodeSerializableValue(ListSerializer(SessionData.serializer())),

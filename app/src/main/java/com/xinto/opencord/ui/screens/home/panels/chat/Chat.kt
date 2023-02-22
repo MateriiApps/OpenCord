@@ -25,9 +25,7 @@ fun Chat(
     viewModel: ChatViewModel = getViewModel(),
 ) {
     val sortedMessages by remember(viewModel.messages) {
-        derivedStateOf {
-            viewModel.getSortedMessages().toImmutableList()
-        }
+        derivedStateOf { viewModel.getSortedMessages().toImmutableList() }
     }
 
     Scaffold(
@@ -80,12 +78,14 @@ fun Chat(
                 is ChatViewModel.State.Loaded -> {
                     ChatLoaded(
                         messages = sortedMessages,
+                        reactions = viewModel.reactions,
                         currentUserId = viewModel.currentUserId,
                         channelName = viewModel.channelName,
                         userMessage = viewModel.userMessage,
                         sendEnabled = viewModel.sendEnabled,
                         onUserMessageUpdate = viewModel::updateMessage,
                         onUserMessageSend = viewModel::sendMessage,
+                        onMessageReact = { _, _ -> }, // TODO: add reacting support
                         modifier = Modifier.fillMaxSize(),
                     )
                 }

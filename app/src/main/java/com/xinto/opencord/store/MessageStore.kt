@@ -4,6 +4,7 @@ import androidx.room.withTransaction
 import com.xinto.opencord.db.database.CacheDatabase
 import com.xinto.opencord.db.entity.message.EntityMessage
 import com.xinto.opencord.db.entity.message.toEntity
+import com.xinto.opencord.db.entity.reactions.toEntity
 import com.xinto.opencord.db.entity.user.toEntity
 import com.xinto.opencord.domain.attachment.toDomain
 import com.xinto.opencord.domain.embed.toDomain
@@ -63,6 +64,10 @@ class MessageStoreImpl(
         cachedUsers: MutableMap<Long, DomainUser?> = mutableMapOf()
     ): DomainMessage? {
         return cache.withTransaction {
+            val author = cachedUsers.computeIfAbsent(message.authorId) {
+                cache.users().getUser(message.authorId)?.toDomain()
+            } ?: return@withTransaction null
+
             val attachments = if (!message.hasAttachments) null else {
                 cache.attachments().getAttachments(message.id)
             }
@@ -74,10 +79,6 @@ class MessageStoreImpl(
             val embeds = if (!message.hasEmbeds) null else {
                 cache.embeds().getEmbeds(message.id)
             }
-
-            val author = cachedUsers.computeIfAbsent(message.authorId) {
-                cache.users().getUser(message.authorId)?.toDomain()
-            } ?: return@withTransaction null
 
             message.toDomain(
                 author = author,
@@ -118,6 +119,14 @@ class MessageStoreImpl(
                             embedIndex = i,
                         )
                     }
+                },
+            )
+
+            cache.reactions().insertReactions(
+                messages.flatMap { msg ->
+                    msg.reactions?.mapIndexed { index, it ->
+                        it.toEntity(msg.id.value, msg.guildId?.value, reactionCreated = index.toLong())
+                    } ?: emptyList()
                 },
             )
         }

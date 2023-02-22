@@ -24,11 +24,15 @@ enum class EventName(val eventName: String) {
     MessageUpdate("MESSAGE_UPDATE"),
     MessageDelete("MESSAGE_DELETE"),
     MessageAck("MESSAGE_ACK"),
+    MessageReactionAdd("MESSAGE_REACTION_ADD"),
+    MessageReactionRemove("MESSAGE_REACTION_REMOVE"),
+    MessageReactionRemoveAll("MESSAGE_REACTION_REMOVE_ALL"),
     SessionsReplace("SESSIONS_REPLACE"),
     GuildMemberChunk("GUILD_MEMBER_CHUNK"),
     UserSettingsUpdate("USER_SETTINGS_UPDATE"),
     UserSettingsProtoUpdate("USER_SETTINGS_PROTO_UPDATE"),
     PresenceUpdate("PRESENCE_UPDATE");
+    //    MessageReactionRemoveEmoji("MESSAGE_REACTION_REMOVE_EMOJI"),
 
     companion object Serializer : KSerializer<EventName> {
         override val descriptor: SerialDescriptor

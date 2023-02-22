@@ -43,6 +43,7 @@ class AppActivity : ComponentActivity() {
             get<CacheDatabase>().apply {
                 messages().clear()
                 embeds().clear()
+                reactions().clear()
                 attachments().clear()
                 users().deleteUnusedUsers()
             }
