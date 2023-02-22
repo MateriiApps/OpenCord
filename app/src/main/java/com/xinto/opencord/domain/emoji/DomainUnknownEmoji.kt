@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 object DomainUnknownEmoji : DomainEmoji {
     override val identifier: DomainEmojiIdentifier
-        get() = null
+        get() = DomainEmojiIdentifier(null)
 }

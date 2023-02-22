@@ -7,5 +7,5 @@ data class DomainUnicodeEmoji(
     val emoji: String,
 ) : DomainEmoji {
     override val identifier: DomainEmojiIdentifier
-        get() = emoji.hashCode()
+        get() = DomainEmojiIdentifier(emoji.hashCode())
 }
