@@ -192,20 +192,26 @@ class ChannelsViewModel(
         channelStore.observeChannels(persistentGuildId).collectIn(viewModelScope) { event ->
             state = State.Loaded
             event.fold(
-                onAdd = {
-                    if (it is DomainCategoryChannel) {
-                        categoryChannels[it.id] = CategoryItemData(
-                            channel = it,
+                onAdd = { category ->
+                    if (category is DomainCategoryChannel) {
+                        categoryChannels[category.id] = CategoryItemData(
+                            channel = category,
                             collapsed = false,
-                            subChannels = emptyList(),
+                            subChannels = allChannelItems.values.filter { channelItem ->
+                                if (channelItem.channel is DomainCategoryChannel)
+                                    false
+                                else {
+                                    channelItem.channel.parentId == category.id
+                                }
+                            },
                         )
                     } else {
                         val item = ChannelItemData(
-                            channel = it,
+                            channel = category,
                             unreadState = null,
                             lastMessageId = null,
                         )
-                        allChannelItems[it.id] = item
+                        allChannelItems[category.id] = item
                     }
                 },
                 onUpdate = { allChannelItems[it.id]?.channel = it },
