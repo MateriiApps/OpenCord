@@ -7,6 +7,7 @@ import com.xinto.opencord.rest.models.emoji.ApiEmoji
 /**
  * A unique identifier of a [DomainEmoji] that is obtained through [DomainEmoji.identifier]
  */
+@Immutable
 @JvmInline
 value class DomainEmojiIdentifier(private val hashCode: Int?) {
     val exists: Boolean

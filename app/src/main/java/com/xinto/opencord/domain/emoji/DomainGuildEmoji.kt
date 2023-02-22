@@ -12,8 +12,9 @@ data class DomainGuildEmoji(
     override val identifier: DomainEmojiIdentifier
         get() = DomainEmojiIdentifier(id.hashCode())
 
-    val url: String
-        get() = DiscordCdnServiceImpl.getGuildEmojiUrl(id, animated)
+    val url: String by lazy {
+        DiscordCdnServiceImpl.getGuildEmojiUrl(id, animated)
+    }
 
 //    val isDeleted: Boolean
 //        get() = name == null
