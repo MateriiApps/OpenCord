@@ -9,6 +9,7 @@ import com.xinto.opencord.rest.models.ApiAttachment
 import com.xinto.opencord.rest.models.ApiSnowflake
 import com.xinto.opencord.rest.models.embed.ApiEmbed
 import com.xinto.opencord.rest.models.embed.toApi
+import com.xinto.opencord.rest.models.reaction.ApiReaction
 import com.xinto.opencord.rest.models.toApi
 import com.xinto.opencord.rest.models.user.ApiUser
 import com.xinto.opencord.rest.models.user.toApi
@@ -26,6 +27,9 @@ data class ApiMessage(
     @Required
     @SerialName("channel_id")
     val channelId: ApiSnowflake,
+
+    @SerialName("guild_id")
+    val guildId: ApiSnowflake? = null,
 
     @SerialName("timestamp")
     val timestamp: Instant,
@@ -63,6 +67,9 @@ data class ApiMessage(
 
     @SerialName("mentions")
     val mentions: List<ApiUser>,
+
+    @SerialName("reactions")
+    val reactions: List<ApiReaction>? = null,
 )
 
 fun DomainMessage.toApi(): ApiMessage {

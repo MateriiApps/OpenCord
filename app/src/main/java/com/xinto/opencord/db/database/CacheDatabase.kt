@@ -11,6 +11,7 @@ import com.xinto.opencord.db.entity.guild.EntityGuild
 import com.xinto.opencord.db.entity.message.EntityAttachment
 import com.xinto.opencord.db.entity.message.EntityEmbed
 import com.xinto.opencord.db.entity.message.EntityMessage
+import com.xinto.opencord.db.entity.reactions.EntityReaction
 import com.xinto.opencord.db.entity.user.EntityUser
 
 @Database(
@@ -23,19 +24,19 @@ import com.xinto.opencord.db.entity.user.EntityUser
         EntityMessage::class,
         EntityUser::class,
         EntityUnreadState::class,
+        EntityReaction::class,
     ],
     exportSchema = false,
 )
 @TypeConverters(Converters::class)
 abstract class CacheDatabase : RoomDatabase() {
-    abstract fun channels(): ChannelsDao
+    abstract fun users(): UsersDao
     abstract fun guilds(): GuildsDao
+    abstract fun channels(): ChannelsDao
+    abstract fun unreadStates(): UnreadStatesDao
 
     abstract fun messages(): MessagesDao
+    abstract fun reactions(): ReactionsDao
     abstract fun attachments(): AttachmentsDao
     abstract fun embeds(): EmbedsDao
-
-    abstract fun users(): UsersDao
-
-    abstract fun unreadStates(): UnreadStatesDao
 }

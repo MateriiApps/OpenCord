@@ -6,6 +6,8 @@ import com.xinto.opencord.domain.activity.types.DomainActivityGame
 import com.xinto.opencord.domain.activity.types.DomainActivityListening
 import com.xinto.opencord.domain.activity.types.DomainActivityStreaming
 import com.xinto.opencord.rest.models.ApiSnowflake
+import com.xinto.opencord.rest.models.emoji.ApiEmoji
+import com.xinto.opencord.rest.models.emoji.toApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -36,7 +38,7 @@ data class ApiActivity(
     val state: String? = null,
 
     @SerialName("emoji")
-    val emoji: ApiActivityEmoji? = null,
+    val emoji: ApiEmoji? = null,
 
     @SerialName("party")
     val party: ApiActivityParty? = null,
