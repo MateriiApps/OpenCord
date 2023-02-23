@@ -51,7 +51,9 @@ val httpModule = module {
         }
     }
 
-    fun <T : HttpClientEngineConfig> HttpClientConfig<T>.installCookies() {
+    fun <T : HttpClientEngineConfig> HttpClientConfig<T>.installCookies(
+        savedCookies: List<Cookie>? = emptyList()
+    ) {
         install(HttpCookies) {
             // TODO: persist cookies to disk later
             storage = AcceptAllCookiesStorage()

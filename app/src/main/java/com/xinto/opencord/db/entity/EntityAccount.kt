@@ -23,4 +23,7 @@ data class EntityAccount(
 
     @ColumnInfo(name = "avatar_url")
     val avatarUrl: String? = null,
+
+    @ColumnInfo(name = "cookies")
+    val cookies: String? = null,
 )
