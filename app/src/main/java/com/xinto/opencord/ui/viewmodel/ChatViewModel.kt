@@ -14,6 +14,7 @@ import com.xinto.opencord.store.ChannelStore
 import com.xinto.opencord.store.MessageStore
 import com.xinto.opencord.store.ReactionStore
 import com.xinto.opencord.store.fold
+import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
 import com.xinto.opencord.util.collectIn
 import com.xinto.opencord.util.throttle
 import kotlinx.coroutines.Dispatchers
@@ -27,7 +28,7 @@ class ChatViewModel(
     private val channelStore: ChannelStore,
     private val api: DiscordApiService,
     private val persistentDataManager: PersistentDataManager,
-) : ViewModel() {
+) : BasePersistenceViewModel(persistentDataManager) {
     sealed interface State {
         object Unselected : State
         object Loading : State
@@ -169,5 +170,11 @@ class ChatViewModel(
 
     fun getSortedMessages(): List<DomainMessage> {
         return messages.values.sortedByDescending { it.id }
+    }
+
+    init {
+        if (persistentGuildId != 0L && persistentChannelId != 0L) {
+            load()
+        }
     }
 }
