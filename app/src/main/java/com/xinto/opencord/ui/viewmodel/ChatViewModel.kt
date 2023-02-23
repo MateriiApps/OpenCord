@@ -2,7 +2,6 @@ package com.xinto.opencord.ui.viewmodel
 
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateMap
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xinto.opencord.domain.emoji.DomainEmoji
 import com.xinto.opencord.domain.emoji.DomainEmojiIdentifier
@@ -132,12 +131,12 @@ class ChatViewModel(
 
                             state?.apply {
                                 count = newCount
-                                meReacted = data.meReacted
+                                data.meReacted?.let { meReacted = it }
                             } ?: ReactionState(
                                 reactionOrder = System.currentTimeMillis(),
                                 emoji = data.emoji,
                                 count = newCount,
-                                meReacted = data.meReacted,
+                                meReacted = data.meReacted ?: false,
                             )
                         }
                 },

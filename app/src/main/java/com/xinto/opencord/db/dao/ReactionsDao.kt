@@ -19,7 +19,7 @@ interface ReactionsDao {
     @Query(
         "UPDATE reactions SET " +
                 "count = max(0, count + :countDiff), " +
-                "me_reacted = :meReacted, " +
+                "me_reacted = coalesce(:meReacted, me_reacted), " +
                 "reaction_created = CASE " +
                 "  WHEN (count + :countDiff <= 0) THEN NULL " +
                 "  WHEN (reaction_created == NULL) THEN :updateTime " +
@@ -33,7 +33,7 @@ interface ReactionsDao {
         messageId: Long,
         emojiId: Long?,
         emojiName: String?,
-        meReacted: Boolean,
+        meReacted: Boolean?,
         countDiff: Int,
         updateTime: Long? = System.currentTimeMillis()
     )
