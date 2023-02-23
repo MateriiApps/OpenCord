@@ -3,6 +3,7 @@ package com.xinto.opencord.ui.screens.home
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -43,6 +44,8 @@ fun HomeScreen(
     val guildsViewModel: GuildsViewModel = getViewModel()
     val channelsViewModel: ChannelsViewModel = getViewModel()
 
+    val channelsListState = rememberLazyListState()
+
     BackHandler(enabled = panelState.startPanelOpen || panelState.endPanelOpen) {
         coroutineScope.launch {
             panelState.closePanels()
@@ -74,6 +77,7 @@ fun HomeScreen(
                                 .weight(1f),
                             onChannelSelect = chatViewModel::load,
                             viewModel = channelsViewModel,
+                            lazyListState = channelsListState,
                         )
                     }
                     CurrentUser(

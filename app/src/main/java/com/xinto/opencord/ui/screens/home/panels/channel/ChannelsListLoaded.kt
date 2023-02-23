@@ -6,7 +6,9 @@ import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -48,7 +50,8 @@ fun ChannelsListLoaded(
     guildName: String,
     categoryChannels: SnapshotStateMap<Long, ChannelsViewModel.CategoryItemData>,
     noCategoryChannels: SnapshotStateMap<Long, ChannelsViewModel.ChannelItemData>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    lazyListState: LazyListState = rememberLazyListState(),
 ) {
     val sortedCategoryChannels by remember(categoryChannels) {
         derivedStateOf {
@@ -63,6 +66,7 @@ fun ChannelsListLoaded(
 
     LazyColumn(
         modifier = modifier,
+        state = lazyListState,
     ) {
         item(key = "CHANNEL_HEADER") {
             Box(

@@ -1,6 +1,8 @@
 package com.xinto.opencord.ui.screens.home.panels.channel
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.LocalAbsoluteTonalElevation
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -14,7 +16,8 @@ import com.xinto.opencord.ui.viewmodel.ChannelsViewModel
 fun ChannelsList(
     onChannelSelect: () -> Unit,
     viewModel: ChannelsViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    lazyListState: LazyListState = rememberLazyListState(),
 ) {
     CompositionLocalProvider(LocalAbsoluteTonalElevation provides 1.dp) {
         Surface(
@@ -48,6 +51,7 @@ fun ChannelsList(
                         selectedChannelId = viewModel.selectedChannelId,
                         categoryChannels = viewModel.categoryChannels,
                         noCategoryChannels = viewModel.noCategoryChannels,
+                        lazyListState = lazyListState,
                     )
                 }
                 is ChannelsViewModel.State.Error -> {
