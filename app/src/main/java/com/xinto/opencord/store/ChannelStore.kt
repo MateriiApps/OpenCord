@@ -21,6 +21,7 @@ typealias ChannelEvent = Event<DomainChannel, DomainChannel, Long>
 interface ChannelStore {
     fun observeChannel(channelId: Long): Flow<ChannelEvent>
     fun observeChannels(guildId: Long): Flow<ChannelEvent>
+    fun observeChannelsReplace(guildId: Long): Flow<List<DomainChannel>>
 
     suspend fun fetchChannel(channelId: Long): DomainChannel?
     suspend fun fetchChannels(guildId: Long): List<DomainChannel>
@@ -31,6 +32,7 @@ class ChannelStoreImpl(
     private val cache: CacheDatabase,
 ) : ChannelStore {
     private val events = MutableSharedFlow<ChannelEvent>()
+    private val replaceEvents = MutableSharedFlow<List<DomainChannel>>()
 
     override fun observeChannel(channelId: Long): Flow<ChannelEvent> {
         return events.filter { event ->
@@ -49,6 +51,12 @@ class ChannelStoreImpl(
                 onUpdate = { it.guildId == guildId },
                 onDelete = { it == guildId },
             )
+        }
+    }
+
+    override fun observeChannelsReplace(guildId: Long): Flow<List<DomainChannel>> {
+        return replaceEvents.filter {
+            it.getOrNull(0)?.guildId == guildId
         }
     }
 
@@ -71,9 +79,13 @@ class ChannelStoreImpl(
                 guild.channels.map { it.toEntity(guild.id.value) }
             }
 
-            for (channel in channels) {
-                events.emit(ChannelEvent.Add(channel.toDomain()))
-            }
+            val replaceChannels = channels.groupByTo(
+                mutableMapOf(),
+                keySelector = { it.guildId },
+                valueTransform = { it.toDomain() },
+            )
+
+            replaceChannels.values.forEach { replaceEvents.emit(it) }
 
             cache.channels().replaceAllChannels(channels)
         }

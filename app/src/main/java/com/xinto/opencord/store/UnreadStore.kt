@@ -10,14 +10,16 @@ import com.xinto.opencord.gateway.event.MessageAckEvent
 import com.xinto.opencord.gateway.event.ReadyEvent
 import com.xinto.opencord.gateway.onEvent
 import com.xinto.opencord.rest.service.DiscordApiService
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.withContext
 
 typealias UnreadEvent = Event<DomainUnreadState, Nothing, Long>
 
 interface UnreadStore {
-    fun observeChannels(channelIds: List<Long>): Flow<UnreadEvent>
+    fun observeChannel(channelId: Long): Flow<UnreadEvent>
 
     suspend fun getChannel(channelId: Long): DomainUnreadState?
 }
@@ -29,18 +31,20 @@ class UnreadStoreImpl(
 ) : UnreadStore {
     private val events = MutableSharedFlow<UnreadEvent>()
 
-    override fun observeChannels(channelIds: List<Long>): Flow<UnreadEvent> {
+    override fun observeChannel(channelId: Long): Flow<UnreadEvent> {
         return events.filter { event ->
             event.fold(
-                onAdd = { it.channelId in channelIds },
+                onAdd = { it.channelId == channelId },
                 onUpdate = { false },
-                onDelete = { it in channelIds },
+                onDelete = { it == channelId },
             )
         }
     }
 
     override suspend fun getChannel(channelId: Long): DomainUnreadState? {
-        return cache.unreadStates().getUnreadState(channelId)?.toDomain()
+        return withContext(Dispatchers.IO) {
+            cache.unreadStates().getUnreadState(channelId)?.toDomain()
+        }
     }
 
     init {

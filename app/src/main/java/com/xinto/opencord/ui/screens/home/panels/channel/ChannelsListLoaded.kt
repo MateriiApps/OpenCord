@@ -64,7 +64,7 @@ fun ChannelsListLoaded(
     LazyColumn(
         modifier = modifier,
     ) {
-        item {
+        item(key = "CHANNEL_HEADER") {
             Box(
                 modifier = Modifier
                     .fillParentMaxWidth()
@@ -175,11 +175,9 @@ fun ChannelsListLoaded(
                 }
             }
 
-            // TODO: figure out how to remember the sort
             if (!categoryItem.collapsed) {
                 items(
-//                    items = categoryItem.subChannels.values.sortedBy { it.channel.position },
-                    items = categoryItem.subChannels.values.toList(),
+                    items = categoryItem.subChannels.values.sortedBy { it.channel.position },
                     key = { it.channel.id },
                 ) { itemChannel ->
                     ChannelItem(
