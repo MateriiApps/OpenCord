@@ -30,7 +30,6 @@ class ChannelPinsViewModel(
                 state = State.Loading
 
                 val messages = messageStore.fetchPinnedMessages(data.channelId)
-                pins.clear()
                 pins.putAll(messages.map { it.id to it })
 
                 state = State.Loaded

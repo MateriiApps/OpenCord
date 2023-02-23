@@ -11,7 +11,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,8 +29,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
-import com.xinto.opencord.domain.channel.DomainCategoryChannel
-import com.xinto.opencord.domain.channel.DomainChannel
 import com.xinto.opencord.domain.channel.DomainTextChannel
 import com.xinto.opencord.domain.channel.DomainVoiceChannel
 import com.xinto.opencord.ui.components.OCAsyncImage
@@ -35,8 +36,7 @@ import com.xinto.opencord.ui.components.channel.list.ChannelListCategoryItem
 import com.xinto.opencord.ui.components.channel.list.ChannelListRegularItem
 import com.xinto.opencord.ui.util.ContentAlpha
 import com.xinto.opencord.ui.util.ProvideContentAlpha
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.ImmutableMap
+import com.xinto.opencord.ui.viewmodel.ChannelsViewModel
 
 @Composable
 fun ChannelsListLoaded(
@@ -46,15 +46,25 @@ fun ChannelsListLoaded(
     bannerUrl: String?,
     boostLevel: Int,
     guildName: String,
-    channels: ImmutableMap<DomainCategoryChannel?, ImmutableList<DomainChannel>>,
-    unreadChannels: ImmutableMap<Long, Boolean>,
-    collapsedCategories: ImmutableList<Long>,
+    categoryChannels: SnapshotStateMap<Long, ChannelsViewModel.CategoryItemData>,
+    noCategoryChannels: SnapshotStateMap<Long, ChannelsViewModel.ChannelItemData>,
     modifier: Modifier = Modifier
 ) {
+    val sortedCategoryChannels by remember(categoryChannels) {
+        derivedStateOf {
+            categoryChannels.values.sortedBy { it.channel.position }
+        }
+    }
+    val sortedNoCategoryChannels by remember(noCategoryChannels) {
+        derivedStateOf {
+            noCategoryChannels.values.sortedBy { it.channel.position }
+        }
+    }
+
     LazyColumn(
         modifier = modifier,
     ) {
-        item {
+        item(key = "CHANNEL_HEADER") {
             Box(
                 modifier = Modifier
                     .fillParentMaxWidth()
@@ -124,81 +134,100 @@ fun ChannelsListLoaded(
                 }
             }
         }
-        for ((category, categoryChannels) in channels) {
-            //TODO put this in remember
-            val collapsed = collapsedCategories.contains(category?.id)
 
-            if (category != null) {
-                item {
-                    ProvideContentAlpha(ContentAlpha.medium) {
-                        val iconRotation by animateFloatAsState(
-                            targetValue = if (collapsed) -90f else 0f,
-                            animationSpec = spring(
-                                dampingRatio = Spring.DampingRatioMediumBouncy,
-                                stiffness = Spring.StiffnessLow,
-                            ),
-                        )
-                        ChannelListCategoryItem(
-                            modifier = Modifier.padding(
-                                top = 12.dp,
-                                bottom = 4.dp,
-                            ),
-                            title = { Text(category.name.uppercase()) },
-                            icon = {
-                                Icon(
-                                    painter = painterResource(R.drawable.ic_keyboard_arrow_down),
-                                    contentDescription = stringResource(R.string.channels_collapse_category),
-                                    modifier = Modifier.rotate(iconRotation),
-                                )
-                            },
-                            onClick = {
-                                onCategoryClick(category.id)
-                            },
-                        )
-                    }
+        items(sortedNoCategoryChannels, key = { it.channel.id }) { itemChannel ->
+            ChannelItem(
+                itemData = itemChannel,
+                isSelected = selectedChannelId == itemChannel.channel.id,
+                onClick = { onChannelSelect(itemChannel.channel.id) },
+            )
+        }
+
+        for (categoryItem in sortedCategoryChannels) {
+            item(key = categoryItem.channel.id) {
+                ProvideContentAlpha(ContentAlpha.medium) {
+                    val iconRotation by animateFloatAsState(
+                        targetValue = if (categoryItem.collapsed) -90f else 0f,
+                        animationSpec = spring(
+                            dampingRatio = Spring.DampingRatioMediumBouncy,
+                            stiffness = Spring.StiffnessLow,
+                        ),
+                    )
+                    ChannelListCategoryItem(
+                        modifier = Modifier.padding(
+                            top = 12.dp,
+                            bottom = 4.dp,
+                        ),
+                        title = {
+                            Text(categoryItem.channel.name.uppercase())
+                        },
+                        icon = {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_keyboard_arrow_down),
+                                contentDescription = stringResource(R.string.channels_collapse_category),
+                                modifier = Modifier.rotate(iconRotation),
+                            )
+                        },
+                        onClick = {
+                            onCategoryClick(categoryItem.channel.id)
+                        },
+                    )
                 }
             }
 
-            items(categoryChannels) { channel ->
-//                if (channel.canView) {
-                if (!(channel.id != selectedChannelId && collapsed)) {
-                    when (channel) {
-                        is DomainTextChannel -> {
-                            ChannelListRegularItem(
-                                modifier = Modifier.padding(bottom = 2.dp),
-                                title = { Text(channel.name) },
-                                icon = {
-                                    Icon(
-                                        painter = painterResource(R.drawable.ic_tag),
-                                        contentDescription = null,
-                                    )
-                                },
-                                selected = selectedChannelId == channel.id,
-                                showUnread = unreadChannels[channel.id] ?: false,
-                                onClick = {
-                                    onChannelSelect(channel.id)
-                                },
-                            )
-                        }
-                        is DomainVoiceChannel -> {
-                            ChannelListRegularItem(
-                                modifier = Modifier.padding(bottom = 2.dp),
-                                title = { Text(channel.name) },
-                                icon = {
-                                    Icon(
-                                        painter = painterResource(R.drawable.ic_volume_up),
-                                        contentDescription = null,
-                                    )
-                                },
-                                selected = false,
-                                showUnread = false,
-                                onClick = { /*TODO*/ },
-                            )
-                        }
-                        else -> Unit
-                    }
+            if (!categoryItem.collapsed) {
+                items(
+                    items = categoryItem.subChannels.values.sortedBy { it.channel.position },
+                    key = { it.channel.id },
+                ) { itemChannel ->
+                    ChannelItem(
+                        itemData = itemChannel,
+                        isSelected = selectedChannelId == itemChannel.channel.id,
+                        onClick = { onChannelSelect(itemChannel.channel.id) },
+                    )
                 }
             }
         }
+    }
+}
+
+@Composable
+fun ChannelItem(
+    itemData: ChannelsViewModel.ChannelItemData,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+) {
+    when (val channel = itemData.channel) {
+        is DomainTextChannel -> {
+            ChannelListRegularItem(
+                modifier = Modifier.padding(bottom = 2.dp),
+                title = { Text(channel.name) },
+                icon = {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_tag),
+                        contentDescription = null,
+                    )
+                },
+                selected = isSelected,
+                showUnread = itemData.isUnread,
+                onClick = onClick,
+            )
+        }
+        is DomainVoiceChannel -> {
+            ChannelListRegularItem(
+                modifier = Modifier.padding(bottom = 2.dp),
+                title = { Text(channel.name) },
+                icon = {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_volume_up),
+                        contentDescription = null,
+                    )
+                },
+                selected = false,
+                showUnread = false,
+                onClick = { /*TODO*/ },
+            )
+        }
+        else -> Unit
     }
 }

@@ -6,9 +6,11 @@ import com.xinto.opencord.gateway.event.ChannelDeleteEvent
 import com.xinto.opencord.gateway.event.MessageCreateEvent
 import com.xinto.opencord.gateway.event.ReadyEvent
 import com.xinto.opencord.gateway.onEvent
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.withContext
 
 /**
  * A pair of channelId -> lastMessageId
@@ -17,7 +19,7 @@ typealias LastMessageEventData = Pair<Long, Long>
 typealias LastMessageEvent = Event<LastMessageEventData, Nothing, Long>
 
 interface LastMessageStore {
-    fun observeChannels(channelIds: List<Long>): Flow<LastMessageEvent>
+    fun observeChannel(channelId: Long): Flow<LastMessageEvent>
 
     suspend fun getLastMessageId(channelId: Long): Long?
 }
@@ -28,18 +30,20 @@ class LastMessageStoreImpl(
 ) : LastMessageStore {
     private val _events = MutableSharedFlow<LastMessageEvent>()
 
-    override fun observeChannels(channelIds: List<Long>): Flow<LastMessageEvent> {
+    override fun observeChannel(channelId: Long): Flow<LastMessageEvent> {
         return _events.filter { event ->
             event.fold(
-                onAdd = { (id) -> id in channelIds },
+                onAdd = { (id) -> id == channelId },
                 onUpdate = { false },
-                onDelete = { id -> id in channelIds },
+                onDelete = { id -> id == channelId },
             )
         }
     }
 
     override suspend fun getLastMessageId(channelId: Long): Long? {
-        return cache.channels().getLastMessageId(channelId)
+        return withContext(Dispatchers.IO) {
+            cache.channels().getLastMessageId(channelId)
+        }
     }
 
     init {
