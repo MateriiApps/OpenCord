@@ -10,12 +10,12 @@ import org.koin.dsl.module
 val serviceModule = module {
     single<DiscordAuthService> {
         DiscordAuthServiceImpl(
-            client = get(named("auth")),
+            client = get(named("authHttp")),
         )
     }
     single<DiscordApiService> {
         DiscordApiServiceImpl(
-            client = get(named("api")),
+            client = get(named("apiHttp")),
         )
     }
 }

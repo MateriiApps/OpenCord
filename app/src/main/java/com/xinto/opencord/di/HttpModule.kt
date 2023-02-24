@@ -1,6 +1,7 @@
 package com.xinto.opencord.di
 
 import com.xinto.opencord.BuildConfig
+import com.xinto.opencord.manager.AccountCookieManager
 import com.xinto.opencord.manager.AccountManager
 import com.xinto.opencord.provider.PropertyProvider
 import com.xinto.opencord.provider.TelemetryProvider
@@ -51,15 +52,6 @@ val httpModule = module {
         }
     }
 
-    fun <T : HttpClientEngineConfig> HttpClientConfig<T>.installCookies(
-        savedCookies: List<Cookie>? = emptyList()
-    ) {
-        install(HttpCookies) {
-            // TODO: persist cookies to disk later
-            storage = AcceptAllCookiesStorage()
-        }
-    }
-
     fun <T : HttpClientEngineConfig> HttpClientConfig<T>.installRetry() {
         install(HttpRequestRetry) {
             maxRetries = 5
@@ -106,7 +98,6 @@ val httpModule = module {
             }
 
             installRetry()
-            installCookies()
             installLogging(logger)
 
             engine {
@@ -119,8 +110,9 @@ val httpModule = module {
         json: Json,
         logger: OCLogger,
         accountManager: AccountManager,
+        accountCookies: AccountCookieManager,
         telemetryProvider: TelemetryProvider,
-        propertyProvider: PropertyProvider
+        propertyProvider: PropertyProvider,
     ): HttpClient {
         return HttpClient(OkHttp) {
             val superProperties = json
@@ -140,8 +132,11 @@ val httpModule = module {
                 json(json)
             }
 
+            install(HttpCookies) {
+                storage = accountCookies
+            }
+
             installRetry()
-            installCookies()
             installLogging(logger)
 
             engine {
@@ -150,7 +145,10 @@ val httpModule = module {
         }
     }
 
-    fun provideGatewayClient(logger: OCLogger): HttpClient {
+    fun provideGatewayClient(
+        logger: OCLogger,
+        accountCookies: AccountCookieManager,
+    ): HttpClient {
         return HttpClient(OkHttp) {
             defaultRequest {
                 header(HttpHeaders.AcceptEncoding, "gzip")
@@ -168,8 +166,11 @@ val httpModule = module {
                 }
             }
 
+            install(HttpCookies) {
+                storage = accountCookies
+            }
+
             installRetry()
-            installCookies()
             installLogging(logger)
 
             engine {
@@ -179,7 +180,13 @@ val httpModule = module {
     }
 
     singleOf(::provideJson)
-    single(named("auth")) { provideAuthClient(get(), get(), get(), get()) }
-    single(named("api")) { provideApiClient(get(), get(), get(), get(), get()) }
-    single(named("gateway")) { provideGatewayClient(get()) }
+    singleOf(::provideAuthClient) {
+        qualifier = named("authHttp")
+    }
+    singleOf(::provideApiClient) {
+        qualifier = named("apiHttp")
+    }
+    singleOf(::provideGatewayClient) {
+        qualifier = named("gatewayHttp")
+    }
 }

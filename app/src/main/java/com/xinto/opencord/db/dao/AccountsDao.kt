@@ -14,7 +14,7 @@ interface AccountsDao {
 
     // --------------- Updates ---------------
     @Query("UPDATE accounts SET cookies = :cookies WHERE token = :token")
-    fun replaceCookies(token: String, cookies: String)
+    fun setCookies(token: String, cookies: String)
 
     // --------------- Queries ---------------
     @Query("SELECT * FROM accounts WHERE token = :token LIMIT 1")
