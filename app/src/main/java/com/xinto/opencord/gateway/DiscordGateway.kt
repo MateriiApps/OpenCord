@@ -5,6 +5,7 @@ import com.xinto.opencord.gateway.dto.*
 import com.xinto.opencord.gateway.event.Event
 import com.xinto.opencord.gateway.event.EventDeserializationStrategy
 import com.xinto.opencord.gateway.event.ReadyEvent
+import com.xinto.opencord.gateway.io.Capabilities
 import com.xinto.opencord.gateway.io.IncomingPayload
 import com.xinto.opencord.gateway.io.OpCode
 import com.xinto.opencord.gateway.io.OutgoingPayload
@@ -70,6 +71,15 @@ class DiscordGatewayImpl(
     private var resumable: Boolean = false
     private var sequenceNumber: Int = 0
     private lateinit var sessionId: String
+
+    init {
+        onEvent<ReadyEvent> {
+            val newAuthToken = it.data.newAuthToken
+                ?: return@onEvent
+
+            accountManager.currentAccountToken = newAuthToken
+        }
+    }
 
     override suspend fun connect() {
         if (_state.replayCache.lastOrNull()?.active == true)
@@ -202,7 +212,15 @@ class DiscordGatewayImpl(
             opCode = OpCode.Identify,
             data = Identification(
                 token = accountManager.currentAccountToken!!,
-                capabilities = 95,
+                capabilities = arrayOf(
+                    Capabilities.LAZY_USER_NOTES,
+                    Capabilities.NO_AFFINE_USER_IDS,
+                    Capabilities.VERSIONED_READ_STATES,
+                    Capabilities.VERSIONED_USER_GUILD_SETTINGS,
+                    Capabilities.DEDUPLICATE_USER_OBJECTS,
+                    Capabilities.MULTIPLE_GUILD_EXPERIMENT_POPULATIONS,
+                    Capabilities.AUTH_TOKEN_REFRESH,
+                ).fold(0) { a, b -> a or b.value },
                 largeThreshold = 100,
                 compress = true,
                 properties = propertyProvider.identificationProperties,

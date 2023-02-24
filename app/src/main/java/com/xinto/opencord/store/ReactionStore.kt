@@ -27,7 +27,7 @@ data class ReactionUpdateData(
     val channelId: Long,
     val messageId: Long,
     val countDiff: Int,
-    val meReacted: Boolean,
+    val meReacted: Boolean?,
 )
 
 data class ReactionRemoveAllData(
@@ -106,7 +106,7 @@ class ReactionStoreImpl(
             val emojiName = event.data.emoji.name
 
             val currentUserId = currentUserStore.getCurrentUser()?.id
-            val meReacted = event.data.userId.value == currentUserId
+            val meReacted = if (event.data.userId.value == currentUserId) false else null
 
             _events.emit(
                 ReactionEvent.Update(

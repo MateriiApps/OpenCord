@@ -25,7 +25,10 @@ data class Ready(
     val userSettings: ApiUserSettings,
 
     @SerialName("read_state")
-    val readState: ReadState
+    val readState: ReadState,
+
+    @SerialName("auth_token")
+    val newAuthToken: String? = null,
 )
 
 @Serializable

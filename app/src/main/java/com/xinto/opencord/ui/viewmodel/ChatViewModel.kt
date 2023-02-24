@@ -131,12 +131,12 @@ class ChatViewModel(
 
                             state?.apply {
                                 count = newCount
-                                meReacted = data.meReacted
+                                data.meReacted?.let { meReacted = it }
                             } ?: ReactionState(
                                 reactionOrder = System.currentTimeMillis(),
                                 emoji = data.emoji,
                                 count = newCount,
-                                meReacted = data.meReacted,
+                                meReacted = data.meReacted ?: false,
                             )
                         }
                 },
@@ -165,6 +165,18 @@ class ChatViewModel(
     fun updateMessage(message: String) {
         userMessage = message
         startTyping()
+    }
+
+    fun reactToMessage(messageId: Long, emoji: DomainEmoji) {
+        viewModelScope.launch {
+            val meReacted = reactions[messageId]?.get(emoji.identifier)?.meReacted == true
+
+            if (meReacted) {
+                api.removeMeReaction(persistentChannelId, messageId, emoji)
+            } else {
+                api.addMeReaction(persistentChannelId, messageId, emoji)
+            }
+        }
     }
 
     fun getSortedMessages(): List<DomainMessage> {

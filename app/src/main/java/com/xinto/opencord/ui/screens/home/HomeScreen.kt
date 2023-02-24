@@ -13,6 +13,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import com.xinto.opc.OverlappingPanels
 import com.xinto.opc.OverlappingPanelsValue
 import com.xinto.opc.rememberOverlappingPanelsState
@@ -90,8 +91,23 @@ fun HomeScreen(
                 }
             },
             panelCenter = {
+                if (panelState.endPanelOpen || panelState.startPanelOpen) {
+                    Box(
+                        modifier = Modifier
+                            .zIndex(1f)
+                            .fillMaxSize()
+                            .clickable(
+                                onClick = {
+                                    coroutineScope.launch {
+                                        panelState.closePanels()
+                                    }
+                                },
+                            ),
+                    )
+                }
+
                 val shape by animateCornerBasedShapeAsState(
-                    if (panelState.offsetNotZero) {
+                    if (panelState.endPanelOpen || panelState.startPanelOpen) {
                         MaterialTheme.shapes.large
                     } else {
                         RoundedCornerShape(0.dp)
@@ -113,14 +129,6 @@ fun HomeScreen(
                     },
                     viewModel = chatViewModel,
                     modifier = Modifier
-                        .clickable(
-                            enabled = panelState.startPanelOpen || panelState.endPanelOpen,
-                            onClick = {
-                                coroutineScope.launch {
-                                    panelState.closePanels()
-                                }
-                            },
-                        )
                         .fillMaxSize()
                         .clip(shape),
                 )
