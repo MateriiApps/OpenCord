@@ -85,7 +85,7 @@ fun Chat(
                         sendEnabled = viewModel.sendEnabled,
                         onUserMessageUpdate = viewModel::updateMessage,
                         onUserMessageSend = viewModel::sendMessage,
-                        onMessageReact = { _, _ -> }, // TODO: add reacting support
+                        onMessageReact = viewModel::reactToMessage,
                         modifier = Modifier.fillMaxSize(),
                     )
                 }

@@ -167,6 +167,18 @@ class ChatViewModel(
         startTyping()
     }
 
+    fun reactToMessage(messageId: Long, emoji: DomainEmoji) {
+        viewModelScope.launch {
+            val meReacted = reactions[messageId]?.get(emoji.identifier)?.meReacted == true
+
+            if (meReacted) {
+                api.removeMeReaction(persistentChannelId, messageId, emoji)
+            } else {
+                api.addMeReaction(persistentChannelId, messageId, emoji)
+            }
+        }
+    }
+
     fun getSortedMessages(): List<DomainMessage> {
         return messages.values.sortedByDescending { it.id }
     }

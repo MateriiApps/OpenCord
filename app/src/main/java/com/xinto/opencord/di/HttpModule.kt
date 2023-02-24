@@ -92,8 +92,8 @@ val httpModule = module {
         val superProperties = json.encodeToString(propertyProvider.xSuperProperties).encodeBase64()
         return HttpClient(OkHttp) {
             defaultRequest {
-                header(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-                header(HttpHeaders.UserAgent, telemetryProvider.userAgent)
+                contentType(ContentType.Application.Json)
+                userAgent(telemetryProvider.userAgent)
                 header(HttpHeaders.AcceptLanguage, "en-US")
                 header(HttpHeaders.XDiscordLocale, "en-US")
                 header(HttpHeaders.XSuperProperties, superProperties)
@@ -126,9 +126,9 @@ val httpModule = module {
                 .encodeBase64()
 
             defaultRequest {
-                header(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                contentType(ContentType.Application.Json)
+                userAgent(telemetryProvider.userAgent)
                 header(HttpHeaders.Authorization, accountManager.currentAccountToken)
-                header(HttpHeaders.UserAgent, telemetryProvider.userAgent)
                 header(HttpHeaders.AcceptLanguage, "en-US")
                 header(HttpHeaders.XDiscordLocale, "en-US")
                 header(HttpHeaders.XSuperProperties, superProperties)
