@@ -1,6 +1,7 @@
 package com.xinto.opencord.manager
 
 import com.xinto.opencord.db.database.AccountDatabase
+import com.xinto.opencord.util.throttle
 import io.ktor.client.plugins.cookies.*
 import io.ktor.http.*
 import io.ktor.util.*
@@ -53,7 +54,7 @@ class AccountCookieManagerImpl(
             }
         }
 
-        saveCookies()
+        throttledSaveCookies()
     }
 
     override fun close() {
@@ -91,6 +92,8 @@ class AccountCookieManagerImpl(
             this.cookies.addAll(cookies)
         }
     }
+
+    private val throttledSaveCookies = throttle(1000L, coroutineScope, ::saveCookies)
 
     private fun saveCookies() {
         coroutineScope.launch {
