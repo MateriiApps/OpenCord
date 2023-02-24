@@ -15,6 +15,8 @@ import com.xinto.opencord.rest.body.LoginBody
 import com.xinto.opencord.rest.body.TwoFactorBody
 import com.xinto.opencord.rest.service.DiscordAuthService
 import com.xinto.opencord.ui.AppActivity
+import io.ktor.http.*
+import io.ktor.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -25,8 +27,8 @@ class LoginViewModel(
     private val accountDatabase: AccountDatabase,
     private val activityManager: ActivityManager,
 ) : ViewModel() {
-    lateinit var mfaTicket: String
-        private set
+    private lateinit var mfaTicket: String
+    private var secondStageCookies: List<Cookie>? = null
 
     var isLoading by mutableStateOf(false)
         private set
@@ -50,9 +52,18 @@ class LoginViewModel(
     var mfaError by mutableStateOf(false)
         private set
 
-    private suspend fun finishLogin(token: String) {
+    private suspend fun finishLogin(token: String, cookies: List<Cookie>?) {
+        val stringCookies = cookies?.joinToString(",") {
+            renderSetCookieHeader(it).encodeBase64()
+        }
+
         withContext(Dispatchers.IO) {
-            accountDatabase.accounts().insertAccount(EntityAccount(token = token))
+            val account = EntityAccount(
+                token = token,
+                cookies = stringCookies,
+            )
+
+            accountDatabase.accounts().insertAccount(account)
         }
 
         accountManager.currentAccountToken = token
@@ -62,6 +73,7 @@ class LoginViewModel(
     fun login(captchaToken: String? = null) {
         viewModelScope.launch {
             showCaptcha = false
+            secondStageCookies = null
 
             if (username.isEmpty()) {
                 usernameError = true
@@ -74,18 +86,22 @@ class LoginViewModel(
             }
 
             try {
-                val response = api.login(
+                val (apiResponse, cookies) = api.login(
                     LoginBody(
                         login = username,
                         password = password,
                         captchaKey = captchaToken,
                     ),
-                ).toDomain()
+                )
 
-                when (response) {
-                    is DomainLogin.Login -> finishLogin(response.token)
+                when (val response = apiResponse.toDomain()) {
+                    is DomainLogin.Login -> {
+                        finishLogin(response.token, cookies)
+                        secondStageCookies = null
+                    }
                     is DomainLogin.TwoFactorAuth -> {
                         mfaTicket = response.ticket
+                        secondStageCookies = cookies
                         showMfa = true
                     }
                     is DomainLogin.Captcha -> {
@@ -111,14 +127,20 @@ class LoginViewModel(
 
             try {
                 showMfa = false
+
                 val response = api.verifyTwoFactor(
                     TwoFactorBody(
                         code = code,
                         ticket = mfaTicket,
                     ),
+                    secondStageCookies,
                 ).toDomain()
+
                 when (response) {
-                    is DomainLogin.Login -> finishLogin(response.token)
+                    is DomainLogin.Login -> {
+                        finishLogin(response.token, secondStageCookies)
+                        secondStageCookies = null
+                    }
                     is DomainLogin.Captcha -> {
                         showCaptcha = true
                     }
