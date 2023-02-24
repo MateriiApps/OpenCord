@@ -8,7 +8,7 @@ import org.koin.dsl.module
 val gatewayModule = module {
     single<DiscordGateway> {
         DiscordGatewayImpl(
-            client = get(named("gateway")),
+            client = get(named("gatewayHttp")),
             json = get(),
             accountManager = get(),
             propertyProvider = get(),

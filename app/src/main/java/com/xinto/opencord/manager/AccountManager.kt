@@ -9,7 +9,7 @@ interface AccountManager {
 }
 
 class AccountManagerImpl(
-    authPrefs: SharedPreferences
+    authPrefs: SharedPreferences,
 ) : BasePreferenceManager(authPrefs), AccountManager {
     override var currentAccountToken: String?
         get() = getString(USER_TOKEN_KEY, null)
