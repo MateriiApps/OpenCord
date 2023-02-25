@@ -18,10 +18,12 @@ import com.xinto.opc.OverlappingPanels
 import com.xinto.opc.OverlappingPanelsValue
 import com.xinto.opc.rememberOverlappingPanelsState
 import com.xinto.opencord.ui.navigation.PinsScreenData
+import com.xinto.opencord.ui.screens.home.panels.HomeNavButtons
 import com.xinto.opencord.ui.screens.home.panels.channel.ChannelsList
 import com.xinto.opencord.ui.screens.home.panels.chat.Chat
 import com.xinto.opencord.ui.screens.home.panels.currentuser.CurrentUser
 import com.xinto.opencord.ui.screens.home.panels.guild.GuildsList
+import com.xinto.opencord.ui.screens.home.panels.member.MembersList
 import com.xinto.opencord.ui.util.animateCornerBasedShapeAsState
 import com.xinto.opencord.ui.viewmodel.ChannelsViewModel
 import com.xinto.opencord.ui.viewmodel.ChatViewModel
@@ -134,7 +136,25 @@ fun HomeScreen(
                 )
             },
             panelEnd = {
-                // members panel
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    MembersList(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .weight(1f),
+                    )
+                    HomeNavButtons(
+                        modifier = Modifier
+                            .padding(end = 6.dp)
+                            .height(60.dp)
+                            .fillMaxWidth(),
+                        onFriendsClick = { /* TODO */ },
+                        onMentionsClick = { /* TODO */ },
+                        onSearchClick = { /* TODO */ },
+                    )
+                }
             },
         )
     }

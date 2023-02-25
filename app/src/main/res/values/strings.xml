@@ -2,6 +2,9 @@
     <string name="app_name" translatable="false">OpenCord</string>
 
     <string name="navigation_back">Back</string>
+    <string name="nav_open_friends">Open friends list</string>
+    <string name="nav_open_search">Open channel search</string>
+    <string name="nav_open_mentions">View global mentions</string>
 
     <string name="login_landing_title">Welcome to OpenCord!</string>
     <string name="login_landing_subtitle">Join over 0 people who use OpenCord as an alternative to the stock Discord app.</string>
