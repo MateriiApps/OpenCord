@@ -2,6 +2,7 @@ package com.xinto.opencord.ui.screens.home
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -61,7 +62,7 @@ fun HomeScreen(
             panelsState = panelState,
             panelStart = {
                 Column(
-                    modifier = modifier,
+                    modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(6.dp),
                 ) {
                     Row(
@@ -99,6 +100,8 @@ fun HomeScreen(
                             .zIndex(1f)
                             .fillMaxSize()
                             .clickable(
+                                interactionSource = MutableInteractionSource(),
+                                indication = null,
                                 onClick = {
                                     coroutineScope.launch {
                                         panelState.closePanels()
