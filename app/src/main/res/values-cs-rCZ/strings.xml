@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="navigation_back">Zpět</string>
+    <string name="nav_open_friends">Open friends list</string>
+    <string name="nav_open_search">Open channel search</string>
+    <string name="nav_open_mentions">View global mentions</string>
     <string name="login_landing_title">Vítejte v OpenCordu!</string>
     <string name="login_landing_subtitle">Připoj se k více než 0 lidem co používají OpenCord jako alternativu pro výchozí Discord aplikaci.</string>
     <string name="login_login_title">Vítej zpět!</string>

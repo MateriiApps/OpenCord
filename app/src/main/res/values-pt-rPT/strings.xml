@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="navigation_back">Retroceder</string>
+    <string name="nav_open_friends">Open friends list</string>
+    <string name="nav_open_search">Open channel search</string>
+    <string name="nav_open_mentions">View global mentions</string>
     <string name="login_landing_title">Bem-vindo ao OpenCord!</string>
     <string name="login_landing_subtitle">Junte-se a mais de 0 pessoas que usam OpenCord como uma alternativa ao aplicativo padrão Discord.</string>
     <string name="login_login_title">Bem-vindo de volta!</string>

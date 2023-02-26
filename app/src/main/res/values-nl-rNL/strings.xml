@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="navigation_back">Terug</string>
+    <string name="nav_open_friends">Open friends list</string>
+    <string name="nav_open_search">Open channel search</string>
+    <string name="nav_open_mentions">View global mentions</string>
     <string name="login_landing_title">Welcome to OpenCord!</string>
     <string name="login_landing_subtitle">Join over 0 people who use OpenCord as an alternative to the stock Discord app.</string>
     <string name="login_login_title">Welkom terug!</string>

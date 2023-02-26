@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="navigation_back">돌아가기</string>
+    <string name="nav_open_friends">Open friends list</string>
+    <string name="nav_open_search">Open channel search</string>
+    <string name="nav_open_mentions">View global mentions</string>
     <string name="login_landing_title">OpenCord에 오신 걸 환영해요!</string>
     <string name="login_landing_subtitle">Discord 앱을 대체하는 OpenCord를 사용하는 0명과 함께 참가해 보세요.</string>
     <string name="login_login_title">다시 돌아오신 걸 환영해요!</string>

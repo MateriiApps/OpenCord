@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="navigation_back">Takaisin</string>
+    <string name="nav_open_friends">Open friends list</string>
+    <string name="nav_open_search">Open channel search</string>
+    <string name="nav_open_mentions">View global mentions</string>
     <string name="login_landing_title">Tervetuloa OpenCordiin!</string>
     <string name="login_landing_subtitle">Liity yli 0 henkilöön, jotka käyttävät OpenCordia vaihtoehtona viralliselle Discord-sovellukselle.</string>
     <string name="login_login_title">Tervetuloa takaisin!</string>

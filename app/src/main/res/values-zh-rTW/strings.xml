@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="navigation_back">返回</string>
+    <string name="nav_open_friends">Open friends list</string>
+    <string name="nav_open_search">Open channel search</string>
+    <string name="nav_open_mentions">View global mentions</string>
     <string name="login_landing_title">歡迎使用 OpenCord！</string>
     <string name="login_landing_subtitle">和超過 0 位使用者一同加入 OpenCord 代替原生 Discord 應用程式。</string>
     <string name="login_login_title">歡迎回來！</string>

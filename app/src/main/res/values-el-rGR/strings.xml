@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="navigation_back">Πίσω</string>
+    <string name="nav_open_friends">Open friends list</string>
+    <string name="nav_open_search">Open channel search</string>
+    <string name="nav_open_mentions">View global mentions</string>
     <string name="login_landing_title">Καλωσήρθατε στο OpenCord!</string>
     <string name="login_landing_subtitle">Γίνετε ένας από τα 0 άτομα που χρησιμοποιούν το OpenCord ώς μια εναλλακτική έναντι της κανονικής εφαρμογής Discord.</string>
     <string name="login_login_title">Καλωσήρθατε πίσω!</string>
