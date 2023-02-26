@@ -150,7 +150,6 @@ class LoginViewModel(
     }
 
     private suspend fun finishLogin(token: String) {
-        println(cookies)
         val stringCookies = cookies?.joinToString(",") {
             renderSetCookieHeader(it).encodeBase64()
         }

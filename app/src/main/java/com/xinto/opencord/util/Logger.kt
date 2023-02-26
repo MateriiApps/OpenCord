@@ -11,7 +11,7 @@ interface Logger {
 }
 
 class LoggerImpl : Logger {
-    private val fieldRegex = """"(login|password|email|phone|token)":"[^"]+"""".toRegex()
+    private val fieldRegex = """"(login|password|email|phone|token)"\s*:\s*"[^"]+"""".toRegex()
 
     private fun clean(message: String): String {
         return message.replace(fieldRegex) {
