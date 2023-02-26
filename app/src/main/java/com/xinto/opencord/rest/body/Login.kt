@@ -11,12 +11,9 @@ data class LoginBody(
     @SerialName("password")
     val password: String,
 
+    @SerialName("undelete")
+    val undelete: Boolean,
+
     @SerialName("captcha_key")
     val captchaKey: String? = null,
-
-    @SerialName("undelete")
-    val undelete: Boolean = false,
-
-    @SerialName("login_source")
-    val loginSource: String? = null,
 )

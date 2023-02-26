@@ -23,3 +23,19 @@ inline fun throttle(
         }
     }
 }
+
+inline fun <T> throttle(
+    skipMs: Long,
+    coroutineScope: CoroutineScope,
+    crossinline destinationFunction: suspend (T) -> Unit
+): (T) -> Unit {
+    var throttleJob: Job? = null
+    return { arg1 ->
+        if (throttleJob?.isCompleted != false) {
+            throttleJob = coroutineScope.launch {
+                destinationFunction(arg1)
+                delay(skipMs)
+            }
+        }
+    }
+}

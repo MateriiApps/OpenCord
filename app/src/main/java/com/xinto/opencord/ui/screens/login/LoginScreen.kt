@@ -109,7 +109,7 @@ fun LoginScreen(
             Spacer(Modifier.weight(1f))
             Button(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = { viewModel.login() },
+                onClick = { viewModel.login(null) },
                 enabled = !viewModel.isLoading,
             ) {
                 Text(stringResource(R.string.login_action_login))
@@ -151,7 +151,7 @@ fun LoginScreen(
             },
             onDismissRequest = viewModel::dismissMfa,
             confirmButton = {
-                Button(onClick = { viewModel.verifyTwoFactor(viewModel.mfaCode) }) {
+                Button(onClick = viewModel.verify2fa) {
                     Text(stringResource(R.string.login_mfa_confirm))
                 }
             },

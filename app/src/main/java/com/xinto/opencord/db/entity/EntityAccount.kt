@@ -26,4 +26,7 @@ data class EntityAccount(
 
     @ColumnInfo(name = "cookies")
     val cookies: String? = null,
+
+    @ColumnInfo(name = "fingerprint")
+    val fingerprint: String? = null,
 )

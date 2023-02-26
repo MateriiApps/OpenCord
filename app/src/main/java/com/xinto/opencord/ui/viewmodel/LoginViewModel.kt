@@ -15,6 +15,7 @@ import com.xinto.opencord.rest.body.LoginBody
 import com.xinto.opencord.rest.body.TwoFactorBody
 import com.xinto.opencord.rest.service.DiscordAuthService
 import com.xinto.opencord.ui.AppActivity
+import com.xinto.opencord.util.throttle
 import io.ktor.http.*
 import io.ktor.util.*
 import kotlinx.coroutines.Dispatchers
@@ -27,8 +28,9 @@ class LoginViewModel(
     private val accountDatabase: AccountDatabase,
     private val activityManager: ActivityManager,
 ) : ViewModel() {
-    private lateinit var mfaTicket: String
-    private var secondStageCookies: List<Cookie>? = null
+    private var mfaTicket: String? = null
+    private var fingerprint: String? = null
+    private var cookies: List<Cookie>? = null
 
     var isLoading by mutableStateOf(false)
         private set
@@ -52,56 +54,40 @@ class LoginViewModel(
     var mfaError by mutableStateOf(false)
         private set
 
-    private suspend fun finishLogin(token: String, cookies: List<Cookie>?) {
-        val stringCookies = cookies?.joinToString(",") {
-            renderSetCookieHeader(it).encodeBase64()
+    val login = throttle(1000L, viewModelScope) { captchaToken: String? ->
+        showCaptcha = false
+
+        if (username.isEmpty()) {
+            usernameError = true
+            return@throttle
         }
 
-        withContext(Dispatchers.IO) {
-            val account = EntityAccount(
-                token = token,
-                cookies = stringCookies,
-            )
-
-            accountDatabase.accounts().insertAccount(account)
+        if (password.isEmpty()) {
+            passwordError = true
+            return@throttle
         }
 
-        accountManager.currentAccountToken = token
-        activityManager.startActivity(AppActivity::class)
-    }
-
-    fun login(captchaToken: String? = null) {
         viewModelScope.launch {
-            showCaptcha = false
-            secondStageCookies = null
-
-            if (username.isEmpty()) {
-                usernameError = true
-                return@launch
-            }
-
-            if (password.isEmpty()) {
-                passwordError = true
-                return@launch
-            }
-
             try {
-                val (apiResponse, cookies) = api.login(
+                val fingerprint = getFingerprint()
+
+                val response = api.login(
                     LoginBody(
                         login = username,
                         password = password,
+                        undelete = false,
                         captchaKey = captchaToken,
                     ),
-                )
+                    existingCookies = cookies,
+                    xFingerprint = fingerprint,
+                ).toDomain()
 
-                when (val response = apiResponse.toDomain()) {
+                when (response) {
                     is DomainLogin.Login -> {
-                        finishLogin(response.token, cookies)
-                        secondStageCookies = null
+                        finishLogin(response.token)
                     }
                     is DomainLogin.TwoFactorAuth -> {
                         mfaTicket = response.ticket
-                        secondStageCookies = cookies
                         showMfa = true
                     }
                     is DomainLogin.Captcha -> {
@@ -118,28 +104,37 @@ class LoginViewModel(
         }
     }
 
-    fun verifyTwoFactor(code: String) {
+    val verify2fa = throttle(1000L, viewModelScope) {
+        if (mfaCode.isEmpty()) {
+            mfaError = true
+            return@throttle
+        }
+
+        showMfa = false
+
+        if (fingerprint == null || mfaTicket == null) {
+            mfaCode = ""
+            mfaTicket = null
+            return@throttle
+        }
+
         viewModelScope.launch {
-            if (code.isEmpty()) {
-                mfaError = true
-                return@launch
-            }
-
             try {
-                showMfa = false
-
                 val response = api.verifyTwoFactor(
                     TwoFactorBody(
-                        code = code,
-                        ticket = mfaTicket,
+                        code = mfaCode,
+                        ticket = mfaTicket!!,
                     ),
-                    secondStageCookies,
+                    cookies,
+                    fingerprint!!,
                 ).toDomain()
 
                 when (response) {
                     is DomainLogin.Login -> {
-                        finishLogin(response.token, secondStageCookies)
-                        secondStageCookies = null
+                        finishLogin(response.token)
+                    }
+                    is DomainLogin.TwoFactorAuth -> {
+                        error("double mfa")
                     }
                     is DomainLogin.Captcha -> {
                         showCaptcha = true
@@ -147,7 +142,6 @@ class LoginViewModel(
                     is DomainLogin.Error -> {
                         mfaError = true
                     }
-                    else -> {}
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -155,14 +149,54 @@ class LoginViewModel(
         }
     }
 
+    private suspend fun finishLogin(token: String) {
+        println(cookies)
+        val stringCookies = cookies?.joinToString(",") {
+            renderSetCookieHeader(it).encodeBase64()
+        }
+
+        withContext(Dispatchers.IO) {
+            val account = EntityAccount(
+                token = token,
+                cookies = stringCookies,
+                fingerprint = fingerprint,
+            )
+
+            accountDatabase.accounts().insertAccount(account)
+        }
+
+        username = ""
+        password = ""
+        showMfa = false
+        mfaTicket = null
+        fingerprint = null
+        cookies = null
+
+        accountManager.currentAccountToken = token
+        activityManager.startActivity(AppActivity::class)
+    }
+
+    private suspend fun getFingerprint(): String {
+        return this.fingerprint ?: api.getFingerprint().let { (fingerprint, cookies) ->
+            this.fingerprint = fingerprint
+            this.cookies = cookies
+
+            fingerprint
+        }
+    }
+
     fun updateUsername(newUsername: String) {
         username = newUsername
         usernameError = false
+        cookies = null
+        fingerprint = null
     }
 
     fun updatePassword(newPassword: String) {
         password = newPassword
         passwordError = false
+        cookies = null
+        fingerprint = null
     }
 
     fun updateMfaCode(newMFACode: String) {
@@ -170,7 +204,7 @@ class LoginViewModel(
     }
 
     fun dismissMfa() {
-        mfaCode = ""
         showMfa = false
+        mfaCode = ""
     }
 }

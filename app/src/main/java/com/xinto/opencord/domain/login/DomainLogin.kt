@@ -39,8 +39,8 @@ fun ApiLogin.toDomain(): DomainLogin {
             DomainLogin.Login(
                 token = token,
                 mfa = mfa,
-                theme = userSettings?.theme ?: "",
-                locale = userSettings?.locale ?: "",
+                theme = userSettings?.theme!!,
+                locale = userSettings.locale,
             )
         }
         else -> DomainLogin.Error
