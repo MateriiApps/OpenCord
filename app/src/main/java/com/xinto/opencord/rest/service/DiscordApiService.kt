@@ -181,7 +181,7 @@ class DiscordApiServiceImpl(
                     "&roles=$includeRoles" +
                     "&everyone=$includeEveryone" +
                     "&guild_id=${guildId ?: 0}" +
-                    (guildId?.let { "&before=$beforeId" } ?: "")
+                    (beforeId?.let { "&before=$beforeId" } ?: "")
         }
     }
 }

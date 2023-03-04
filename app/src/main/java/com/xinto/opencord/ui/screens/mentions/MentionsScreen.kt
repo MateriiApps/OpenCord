@@ -1,19 +1,20 @@
 package com.xinto.opencord.ui.screens.mentions
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
-import androidx.paging.compose.LazyPagingItems
+import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.xinto.opencord.R
@@ -45,9 +46,6 @@ fun MentionsScreen(
     onBackClick: () -> Unit,
     viewModel: MentionsViewModel = getViewModel(),
 ) {
-    val messages = viewModel.messages.collectAsLazyPagingItems()
-    val listState = messages.rememberLazyListState()
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -63,33 +61,75 @@ fun MentionsScreen(
             )
         },
     ) { paddingValues ->
-        LazyColumn(
-//            state = listState,
-            contentPadding = paddingValues,
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+        val messages = viewModel.messages.collectAsLazyPagingItems()
+        val refreshState = rememberPullRefreshState(
+            refreshing = messages.loadState.refresh == LoadState.Loading,
+            onRefresh = messages::refresh,
+        )
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .pullRefresh(refreshState),
         ) {
-            items(messages, key = { it.id }) { message ->
-                if (message != null) {
-                    MessageTemp(
-                        message = message,
-                        modifier = Modifier.fillParentMaxWidth(),
-                    )
+            LazyColumn(
+                state = rememberLazyListState(),
+                contentPadding = paddingValues,
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                when (messages.loadState.refresh) {
+                    LoadState.Loading -> item {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 16.dp)
+                                .wrapContentWidth(Alignment.CenterHorizontally),
+                        )
+                    }
+                    is LoadState.Error -> item {
+                        Box(
+                            modifier = Modifier
+                                .fillParentMaxSize()
+                                .padding(bottom = 50.dp),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text("Failed to load")
+                        }
+                    }
+                    is LoadState.NotLoading -> {
+                        items(messages, key = { it.id }) { message ->
+                            if (message != null) {
+                                MessageTemp(
+                                    message = message,
+                                    modifier = Modifier.fillParentMaxWidth(),
+                                )
+                            }
+                        }
+                    }
+                }
+
+                when (messages.loadState.append) {
+                    LoadState.Loading -> item {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp)
+                                .wrapContentWidth(Alignment.CenterHorizontally),
+                        )
+                    }
+                    is LoadState.Error -> item {
+                        Text("Failed to load")
+                    }
+                    else -> {}
                 }
             }
-        }
-    }
-}
 
-@Composable
-fun <T : Any> LazyPagingItems<T>.rememberLazyListState(): LazyListState {
-    // After recreation, LazyPagingItems first return 0 items, then the cached items.
-    // This behavior/issue is resetting the LazyListState scroll position.
-    // Below is a workaround. More info: https://issuetracker.google.com/issues/177245496.
-    return when (itemCount) {
-        // Return a different LazyListState instance.
-        0 -> remember(this) { LazyListState(0, 0) }
-        // Return rememberLazyListState (normal case).
-        else -> androidx.compose.foundation.lazy.rememberLazyListState()
+            PullRefreshIndicator(
+                refreshing = messages.loadState.refresh == LoadState.Loading,
+                state = refreshState,
+                modifier = Modifier.align(Alignment.TopCenter),
+            )
+        }
     }
 }
 

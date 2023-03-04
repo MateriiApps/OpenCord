@@ -38,20 +38,16 @@ class MentionsViewModel(
 
     private fun initPager() {
         messages = Pager(
-            config = PAGING_CONFIG,
+            config = PagingConfig(
+                pageSize = 25,
+                prefetchDistance = 25,
+                enablePlaceholders = false,
+                initialLoadSize = 25,
+            ),
             pagingSourceFactory = {
                 MentionsPagingSource(api, includeRoles, includeEveryone, null)
             },
         ).flow.cachedIn(viewModelScope)
-    }
-
-    private companion object {
-        private val PAGING_CONFIG = PagingConfig(
-            pageSize = 25,
-            prefetchDistance = 0,
-            enablePlaceholders = true,
-            initialLoadSize = 25,
-        )
     }
 
     private class MentionsPagingSource(
@@ -60,26 +56,29 @@ class MentionsViewModel(
         private val includeEveryone: Boolean,
         private val guildId: Long?,
     ) : PagingSource<Long, DomainMessage>() {
-        override fun getRefreshKey(state: PagingState<Long, DomainMessage>): Long? {
-            return null
-        }
+        override fun getRefreshKey(state: PagingState<Long, DomainMessage>) = null
 
         override suspend fun load(params: LoadParams<Long>): LoadResult<Long, DomainMessage> {
             return try {
-                val messageId = params.key
+                val beforeMessageId = params.key
                 val messages = api.getUserMentions(
                     includeRoles = includeRoles,
                     includeEveryone = includeEveryone,
                     guildId = guildId,
-                    beforeId = messageId,
+                    beforeId = beforeMessageId,
                 )
 
                 LoadResult.Page(
                     data = messages.map { it.toDomain() },
-                    prevKey = messageId?.minus(1),
-                    nextKey = if (messages.isEmpty()) null else messages.lastOrNull()?.id?.value,
+                    prevKey = null,
+                    nextKey = if (messages.size < params.loadSize) {
+                        null
+                    } else {
+                        messages.lastOrNull()?.id?.value
+                    },
                 )
             } catch (e: Exception) {
+                e.printStackTrace()
                 LoadResult.Error(e)
             }
         }
