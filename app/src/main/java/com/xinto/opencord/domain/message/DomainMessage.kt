@@ -57,7 +57,7 @@ fun ApiMessage.toDomain(): DomainMessage {
                 attachments = attachments.map { it.toDomain() },
                 embeds = embeds.map { it.toDomain() },
                 isReply = type == ApiMessageType.Reply,
-                referencedMessage = referencedMessage?.toDomain() as? DomainMessageRegular,
+                referencedMessage = referencedMessage?.toDomain(),
                 mentionEveryone = mentionEveryone,
                 mentions = mentions.map { it.toDomain() },
             )
@@ -142,7 +142,7 @@ fun EntityMessage.toDomain(
                 attachments = attachments ?: emptyList(),
                 embeds = embeds ?: emptyList(),
                 isReply = type == ApiMessageType.Reply,
-                referencedMessage = referencedMessage as? DomainMessageRegular,
+                referencedMessage = referencedMessage,
                 mentionEveryone = mentionsEveryone,
 //                mentions = mentions.map { it.toDomain() },
                 mentions = emptyList(),
