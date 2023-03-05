@@ -37,9 +37,9 @@ fun MessageRegular(
                 .wrapContentHeight()
                 .padding(
                     start = 8.dp,
-                    top = if (!isMerged) 16.dp else 1.dp,
+                    top = if (!isMerged) 8.dp else 1.dp,
                     end = 8.dp,
-                    bottom = 1.dp,
+                    bottom = 8.dp,
                 ),
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
