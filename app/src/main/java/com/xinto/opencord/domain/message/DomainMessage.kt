@@ -72,7 +72,7 @@ fun ApiMessage.toDomain(): DomainMessage {
                 author = author.toDomain(),
             )
         }
-        else -> DomainMessageUnknown(
+        ApiMessageType.Unknown -> DomainMessageUnknown(
             id = id.value,
             content = content,
             channelId = channelId.value,
@@ -112,7 +112,7 @@ fun ApiMessagePartial.toDomain(): DomainMessagePartial {
                 pinned = pinned,
             )
         }
-        else -> DomainMessageUnknownPartial(
+        ApiMessageType.Unknown, null -> DomainMessageUnknownPartial(
             id = id.value,
             channelId = channelId.value,
             content = content,
@@ -158,7 +158,7 @@ fun EntityMessage.toDomain(
                 author = author,
             )
         }
-        else -> DomainMessageUnknown(
+        ApiMessageType.Unknown, null -> DomainMessageUnknown(
             id = id,
             content = content,
             channelId = channelId,
