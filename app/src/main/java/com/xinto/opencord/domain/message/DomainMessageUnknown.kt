@@ -17,7 +17,9 @@ data class DomainMessageUnknown(
     override val content: String,
     override val author: DomainUser
 ) : DomainMessage {
-    override val contentNodes: List<Node<Any?>> = emptyList()
-    override val formattedTimestamp: String
-            by lazy { Timestamp.getFormattedTimestamp(timestamp) }
+    override val contentNodes = emptyList<Node<Any?>>()
+    override val formattedTimestamp by lazy {
+        Timestamp.getFormattedTimestamp(timestamp)
+    }
+    override val isDeletable get() = true
 }
