@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -109,17 +110,19 @@ fun MessageMenuLoaded(
             }
         }
 
-        val messageMenuItems = arrayOf(
-            Quad("Reply", R.drawable.ic_reply, viewModel::onReply, true),
-            Quad("Edit", R.drawable.ic_edit, viewModel::onEdit, viewModel.isEditable),
-            Quad("Delete", R.drawable.ic_delete, viewModel::onDelete, viewModel.isDeletable),
-            Quad("Copy Message Link", R.drawable.ic_link, viewModel::onCopyLink, true),
-            Quad("Copy Message", R.drawable.ic_file_copy, viewModel::onCopyMessage, true),
-            Quad("Mark Unread", R.drawable.ic_mark_unread, viewModel::onMarkUnread, true),
-            Quad("Pin", R.drawable.ic_pin, viewModel::togglePinned, viewModel.pinState == MessageMenuViewModel.PinState.Pinnable),
-            Quad("Unpin", R.drawable.ic_pin, viewModel::togglePinned, viewModel.pinState == MessageMenuViewModel.PinState.Unpinnable),
-            Quad("Copy ID", R.drawable.ic_file_copy, viewModel::onCopyId, true),
-        )
+        val messageMenuItems = remember(viewModel.isEditable, viewModel.isDeletable, viewModel.pinState) {
+            arrayOf(
+                Quad("Reply", R.drawable.ic_reply, viewModel::onReply, true),
+                Quad("Edit", R.drawable.ic_edit, viewModel::onEdit, viewModel.isEditable),
+                Quad("Delete", R.drawable.ic_delete, viewModel::onDelete, viewModel.isDeletable),
+                Quad("Copy Message Link", R.drawable.ic_link, viewModel::onCopyLink, true),
+                Quad("Copy Message", R.drawable.ic_file_copy, viewModel::onCopyMessage, true),
+                Quad("Mark Unread", R.drawable.ic_mark_unread, viewModel::onMarkUnread, true),
+                Quad("Pin", R.drawable.ic_pin, viewModel::togglePinned, viewModel.pinState == MessageMenuViewModel.PinState.Pinnable),
+                Quad("Unpin", R.drawable.ic_pin, viewModel::togglePinned, viewModel.pinState == MessageMenuViewModel.PinState.Unpinnable),
+                Quad("Copy ID", R.drawable.ic_file_copy, viewModel::onCopyId, true),
+            )
+        }
 
         for ((name, icon, onClick, enabled) in messageMenuItems) {
             if (enabled) {
