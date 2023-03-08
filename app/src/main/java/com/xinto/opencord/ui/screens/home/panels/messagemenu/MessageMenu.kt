@@ -19,7 +19,6 @@ fun MessageMenu(
     sheetState: SheetState = remember {
         SheetState(false, confirmValueChange = { true })
     },
-    // ViewModel scoped to this composable
     viewModel: MessageMenuViewModel =
         getLocalViewModel(parameters = { parametersOf(messageId) }),
 ) {

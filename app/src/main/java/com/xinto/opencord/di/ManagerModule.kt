@@ -28,4 +28,5 @@ val managerModule = module {
     single { providePersistentDataManager(androidContext()) }
     single<ActivityManager> { ActivityManagerImpl(androidContext()) }
     singleOf(::AccountCookieManagerImpl) bind AccountCookieManager::class
+    singleOf(::ClipboardManagerImpl) bind ClipboardManager::class
 }

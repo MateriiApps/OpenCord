@@ -8,22 +8,29 @@ import androidx.lifecycle.viewModelScope
 import com.xinto.opencord.domain.emoji.DomainEmoji
 import com.xinto.opencord.domain.emoji.DomainUnicodeEmoji
 import com.xinto.opencord.domain.message.DomainMessage
+import com.xinto.opencord.manager.ClipboardManager
 import com.xinto.opencord.store.CurrentUserStore
 import com.xinto.opencord.store.MessageStore
 import com.xinto.opencord.store.fold
 import com.xinto.opencord.util.collectIn
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MessageMenuViewModel(
     messageId: Long,
     private val messages: MessageStore,
     private val currentUserStore: CurrentUserStore,
+    private val clipboard: ClipboardManager,
 ) : ViewModel() {
     sealed interface State {
         object Loading : State
         object Loaded : State
         object Closing : State
+    }
+
+    sealed interface PinState {
+        object Pinnable : PinState
+        object Unpinnable : PinState
+        object None : PinState
     }
 
     var state by mutableStateOf<State>(State.Loading)
@@ -35,7 +42,7 @@ class MessageMenuViewModel(
         private set
     var isDeletable by mutableStateOf(false)
         private set
-    var isPinnable by mutableStateOf(false)
+    var pinState by mutableStateOf<PinState>(PinState.None)
         private set
 
     val frequentReactions = mutableListOf<DomainEmoji>()
@@ -45,29 +52,23 @@ class MessageMenuViewModel(
     fun onDelete() {}
 
     fun onCopyLink() {
-
+        // TODO: add guildId to DomainMessage
     }
 
     fun onCopyMessage() {
-
+        clipboard.setText(message?.content ?: return)
     }
 
-    fun onMarkUnread() {
-
-    }
-
-    fun onPin() {
-
-    }
+    fun onMarkUnread() {}
+    fun togglePinned() {}
 
     fun onCopyId() {
-
+        val id = message?.id ?: return
+        clipboard.setText(id.toString())
     }
 
     init {
         viewModelScope.launch {
-            delay(1000)
-
             val message = messages.getMessage(messageId)
             val currentUser = currentUserStore.getCurrentUser()
 
@@ -94,7 +95,7 @@ class MessageMenuViewModel(
             // TODO: channel perms
             isEditable = currentUser.id == message.author.id
             isDeletable = currentUser.id == message.author.id
-            isPinnable = false
+            pinState = PinState.None
             this@MessageMenuViewModel.message = message
             state = State.Loaded
         }

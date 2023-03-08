@@ -116,7 +116,8 @@ fun MessageMenuLoaded(
             Quad("Copy Message Link", R.drawable.ic_link, viewModel::onCopyLink, true),
             Quad("Copy Message", R.drawable.ic_file_copy, viewModel::onCopyMessage, true),
             Quad("Mark Unread", R.drawable.ic_mark_unread, viewModel::onMarkUnread, true),
-            Quad("Pin", R.drawable.ic_pin, viewModel::onPin, viewModel.isPinnable),
+            Quad("Pin", R.drawable.ic_pin, viewModel::togglePinned, viewModel.pinState == MessageMenuViewModel.PinState.Pinnable),
+            Quad("Unpin", R.drawable.ic_pin, viewModel::togglePinned, viewModel.pinState == MessageMenuViewModel.PinState.Unpinnable),
             Quad("Copy ID", R.drawable.ic_file_copy, viewModel::onCopyId, true),
         )
 

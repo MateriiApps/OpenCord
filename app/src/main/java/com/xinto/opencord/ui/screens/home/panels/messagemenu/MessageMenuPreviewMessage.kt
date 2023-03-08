@@ -26,14 +26,21 @@ import com.xinto.opencord.util.ifComposable
 import com.xinto.simpleast.render
 
 @Composable
-fun MessageMenuPreviewMessage(message: DomainMessage) {
+fun MessageMenuPreviewMessage(
+    message: DomainMessage,
+    modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null,
+) {
     when (message) {
         is DomainMessageRegular -> {
             MessageRegular(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
                     .clip(MaterialTheme.shapes.medium)
-                    .clickable { },
+                    .clickable(
+                        enabled = onClick != null,
+                        onClick = onClick ?: {},
+                    ),
                 mentioned = false,
                 reply = message.isReply.ifComposable {
                     val referencedMessage = message.referencedMessage
