@@ -7,7 +7,6 @@ import com.xinto.opencord.domain.embed.DomainEmbed
 import com.xinto.opencord.domain.user.DomainUser
 import com.xinto.opencord.util.SimpleAstParser
 import com.xinto.opencord.util.Timestamp
-import com.xinto.simpleast.Node
 import kotlinx.datetime.Instant
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
@@ -30,10 +29,13 @@ data class DomainMessageRegular(
 //    val mentionedRoles: List<DomainRole>,
     val mentions: List<DomainUser>,
 ) : DomainMessage, KoinComponent {
-    override val contentNodes: List<Node<Any?>>
-            by lazy { get<SimpleAstParser>().parse(content, null) }
-    override val formattedTimestamp: String
-            by lazy { Timestamp.getFormattedTimestamp(timestamp) }
+    override val contentNodes by lazy {
+        get<SimpleAstParser>().parse(content, null)
+    }
+    override val formattedTimestamp by lazy {
+        Timestamp.getFormattedTimestamp(timestamp)
+    }
+    override val isDeletable get() = true
 
     val isEdited: Boolean
         get() = editedTimestamp != null

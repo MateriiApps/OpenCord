@@ -44,7 +44,7 @@ fun Chat(
                 actions = {
                     IconButton(onClick = onPinsButtonClick) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_push_pin),
+                            painter = painterResource(R.drawable.ic_pin),
                             contentDescription = null,
                         )
                     }

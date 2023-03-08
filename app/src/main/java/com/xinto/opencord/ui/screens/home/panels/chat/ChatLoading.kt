@@ -59,7 +59,7 @@ fun ChatLoading(
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(4.dp),
                         ) {
-                            val itemCount = (1..5).random()
+                            val itemCount = remember { (1..5).random() }
                             repeat(itemCount) {
                                 val spaces = remember { (10..30).random() }
                                 Text(

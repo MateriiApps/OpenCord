@@ -41,6 +41,9 @@ interface DomainMessage {
 
     @Skip
     val formattedTimestamp: String
+
+    @Skip
+    val isDeletable: Boolean
 }
 
 fun ApiMessage.toDomain(): DomainMessage {
