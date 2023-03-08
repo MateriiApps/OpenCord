@@ -70,6 +70,10 @@ data class ApiMessage(
 
     @SerialName("reactions")
     val reactions: List<ApiReaction>? = null,
+
+    // Only present on messages sent by self from gateway
+    @SerialName("nonce")
+    val nonce: String? = null,
 )
 
 fun DomainMessage.toApi(): ApiMessage {
