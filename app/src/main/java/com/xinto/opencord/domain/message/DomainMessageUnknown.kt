@@ -8,10 +8,11 @@ import com.xinto.simpleast.Node
 import kotlinx.datetime.Instant
 
 @Immutable
-@Partialize // Is this even able to be partial?
+@Partialize
 data class DomainMessageUnknown(
     override val id: Long,
     override val channelId: Long,
+    override val guildId: Long?,
     override val timestamp: Instant,
     override val pinned: Boolean,
     override val content: String,

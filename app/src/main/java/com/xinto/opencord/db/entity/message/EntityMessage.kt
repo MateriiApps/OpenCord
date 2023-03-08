@@ -21,6 +21,9 @@ data class EntityMessage(
     @ColumnInfo(name = "channel_id")
     val channelId: Long,
 
+    @ColumnInfo(name = "guild_id")
+    val guildId: Long?,
+
     @ColumnInfo(name = "type")
     val type: Int,
 
@@ -64,6 +67,7 @@ fun ApiMessage.toEntity(): EntityMessage {
     return EntityMessage(
         id = id.value,
         channelId = channelId.value,
+        guildId = guildId?.value,
         type = type.value,
         timestamp = timestamp.toEpochMilliseconds(),
         pinned = pinned,

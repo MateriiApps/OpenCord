@@ -14,6 +14,7 @@ import org.koin.core.component.get
 data class DomainMessageMemberJoin(
     override val id: Long,
     override val channelId: Long,
+    override val guildId: Long?,
     override val timestamp: Instant,
     override val pinned: Boolean,
     override val content: String,

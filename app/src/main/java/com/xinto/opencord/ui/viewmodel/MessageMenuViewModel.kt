@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.xinto.opencord.domain.emoji.DomainEmoji
 import com.xinto.opencord.domain.emoji.DomainUnicodeEmoji
 import com.xinto.opencord.domain.message.DomainMessage
+import com.xinto.opencord.domain.message.url
 import com.xinto.opencord.manager.ClipboardManager
 import com.xinto.opencord.manager.ToastManager
 import com.xinto.opencord.store.CurrentUserStore
@@ -55,7 +56,8 @@ class MessageMenuViewModel(
     fun onDelete() {}
 
     fun onCopyLink() {
-        // TODO: add guildId to DomainMessage
+        clipboard.setLink(message?.url ?: return)
+        toasts.showToast("Copied message link!")
     }
 
     fun onCopyMessage() {
@@ -69,7 +71,6 @@ class MessageMenuViewModel(
     fun onCopyId() {
         val id = message?.id ?: return
         clipboard.setText(id.toString())
-
         toasts.showToast("Copied message ID!")
     }
 
