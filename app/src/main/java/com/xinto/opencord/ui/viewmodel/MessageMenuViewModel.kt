@@ -11,6 +11,7 @@ import com.xinto.opencord.domain.message.DomainMessage
 import com.xinto.opencord.domain.message.url
 import com.xinto.opencord.manager.ClipboardManager
 import com.xinto.opencord.manager.ToastManager
+import com.xinto.opencord.rest.service.DiscordApiService
 import com.xinto.opencord.store.CurrentUserStore
 import com.xinto.opencord.store.MessageStore
 import com.xinto.opencord.store.fold
@@ -22,6 +23,7 @@ class MessageMenuViewModel(
     messageId: Long,
     private val messages: MessageStore,
     private val currentUserStore: CurrentUserStore,
+    private val api: DiscordApiService,
     private val clipboard: ClipboardManager,
     private val toasts: ToastManager,
 ) : ViewModel() {
@@ -53,7 +55,18 @@ class MessageMenuViewModel(
 
     fun onReply() {}
     fun onEdit() {}
-    fun onDelete() {}
+
+    fun onDelete() {
+        if (!isDeletable) return
+        val msg = message ?: return
+
+        viewModelScope.launch {
+            api.deleteChannelMessage(
+                channelId = msg.channelId,
+                messageId = msg.id,
+            )
+        }
+    }
 
     fun onCopyLink() {
         clipboard.setLink(message?.url ?: return)
@@ -117,6 +130,8 @@ class MessageMenuViewModel(
         }
 
         currentUserStore.observeCurrentUser().collectIn(viewModelScope) { user ->
+            if (message == null) return@collectIn
+
             pinState = PinState.None
             isDeletable = user.id == message?.author?.id
             isEditable = user.id == message?.author?.id
