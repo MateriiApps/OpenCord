@@ -9,10 +9,12 @@ import com.xinto.opencord.domain.emoji.DomainEmoji
 import com.xinto.opencord.domain.emoji.DomainUnicodeEmoji
 import com.xinto.opencord.domain.message.DomainMessage
 import com.xinto.opencord.manager.ClipboardManager
+import com.xinto.opencord.manager.ToastManager
 import com.xinto.opencord.store.CurrentUserStore
 import com.xinto.opencord.store.MessageStore
 import com.xinto.opencord.store.fold
 import com.xinto.opencord.util.collectIn
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
 class MessageMenuViewModel(
@@ -20,6 +22,7 @@ class MessageMenuViewModel(
     private val messages: MessageStore,
     private val currentUserStore: CurrentUserStore,
     private val clipboard: ClipboardManager,
+    private val toasts: ToastManager,
 ) : ViewModel() {
     sealed interface State {
         object Loading : State
@@ -57,6 +60,7 @@ class MessageMenuViewModel(
 
     fun onCopyMessage() {
         clipboard.setText(message?.content ?: return)
+        toasts.showToast("Copied message!")
     }
 
     fun onMarkUnread() {}
@@ -65,12 +69,15 @@ class MessageMenuViewModel(
     fun onCopyId() {
         val id = message?.id ?: return
         clipboard.setText(id.toString())
+
+        toasts.showToast("Copied message ID!")
     }
 
     init {
         viewModelScope.launch {
+            // replay or wait for gw to connect
+            val currentUser = currentUserStore.observeCurrentUser().firstOrNull()
             val message = messages.getMessage(messageId)
-            val currentUser = currentUserStore.getCurrentUser()
 
             if (message == null || currentUser == null) {
                 state = State.Closing
@@ -92,10 +99,10 @@ class MessageMenuViewModel(
                 },
             )
 
-            // TODO: channel perms
-            isEditable = currentUser.id == message.author.id
-            isDeletable = currentUser.id == message.author.id
+            // TODO: message permissions
             pinState = PinState.None
+            isDeletable = currentUser.id == message.author.id
+            isEditable = currentUser.id == message.author.id
             this@MessageMenuViewModel.message = message
             state = State.Loaded
         }
@@ -106,6 +113,12 @@ class MessageMenuViewModel(
                 onUpdate = { message = it },
                 onDelete = { state = State.Closing },
             )
+        }
+
+        currentUserStore.observeCurrentUser().collectIn(viewModelScope) { user ->
+            pinState = PinState.None
+            isDeletable = user.id == message?.author?.id
+            isEditable = user.id == message?.author?.id
         }
     }
 }

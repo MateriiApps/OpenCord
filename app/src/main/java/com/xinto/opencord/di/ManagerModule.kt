@@ -29,4 +29,5 @@ val managerModule = module {
     single<ActivityManager> { ActivityManagerImpl(androidContext()) }
     singleOf(::AccountCookieManagerImpl) bind AccountCookieManager::class
     singleOf(::ClipboardManagerImpl) bind ClipboardManager::class
+    singleOf(::ToastManagerImpl) bind ToastManager::class
 }

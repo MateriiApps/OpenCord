@@ -31,9 +31,7 @@ fun MessageMenu(
         onDismissRequest = { onDismiss?.invoke() },
     ) {
         when (viewModel.state) {
-            MessageMenuViewModel.State.Loading -> {
-                // TODO: message menu loading
-            }
+            MessageMenuViewModel.State.Loading -> MessageMenuLoading()
             MessageMenuViewModel.State.Loaded -> MessageMenuLoaded(
                 viewModel = viewModel,
             )
