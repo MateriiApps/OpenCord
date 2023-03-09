@@ -5,11 +5,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.material3.SheetValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import com.xinto.opencord.ui.util.getLocalViewModel
 import com.xinto.opencord.ui.viewmodel.MessageMenuViewModel
+import kotlinx.coroutines.launch
 import org.koin.core.parameter.parametersOf
 
 @Composable
@@ -17,18 +18,39 @@ fun MessageMenu(
     messageId: Long,
     onDismiss: (() -> Unit)? = null,
     sheetState: SheetState = remember {
-        SheetState(false, confirmValueChange = { true })
+        SheetState(
+            skipCollapsed = false,
+            initialValue = SheetValue.Hidden,
+            confirmValueChange = { true },
+        )
     },
     viewModel: MessageMenuViewModel =
         getLocalViewModel(parameters = { parametersOf(messageId) }),
 ) {
+    val coroutineScope = rememberCoroutineScope()
+    var firstRender by remember { mutableStateOf(true) }
+
+    LaunchedEffect(sheetState.isVisible) {
+        if (firstRender) {
+            firstRender = false
+        } else if (!sheetState.isVisible) {
+            onDismiss?.invoke()
+        }
+    }
+
     BackHandler {
-        onDismiss?.invoke()
+        coroutineScope.launch {
+            sheetState.hide()
+        }
     }
 
     ModalBottomSheet(
         sheetState = sheetState,
-        onDismissRequest = { onDismiss?.invoke() },
+        onDismissRequest = {
+            coroutineScope.launch {
+                onDismiss?.invoke()
+            }
+        },
     ) {
         when (viewModel.state) {
             MessageMenuViewModel.State.Loading -> MessageMenuLoading()
@@ -36,7 +58,9 @@ fun MessageMenu(
                 viewModel = viewModel,
             )
             MessageMenuViewModel.State.Closing -> {
-                onDismiss?.invoke()
+                LaunchedEffect(Unit) {
+                    sheetState.hide()
+                }
             }
         }
 
