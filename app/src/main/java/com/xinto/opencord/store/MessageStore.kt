@@ -32,6 +32,7 @@ typealias MessageEvent = Event<DomainMessage, DomainMessage, MessageDeleteData>
 
 interface MessageStore {
     fun observeChannel(channelId: Long): Flow<MessageEvent>
+    fun observeMessage(messageId: Long): Flow<MessageEvent>
 
     suspend fun fetchPinnedMessages(channelId: Long): List<DomainMessage>
     suspend fun fetchMessages(
@@ -40,6 +41,8 @@ interface MessageStore {
         around: Long? = null,
         before: Long? = null,
     ): List<DomainMessage>
+
+    suspend fun getMessage(messageId: Long): DomainMessage?
 }
 
 class MessageStoreImpl(
@@ -55,6 +58,16 @@ class MessageStoreImpl(
                 onAdd = { it.channelId == channelId },
                 onUpdate = { it.channelId == channelId },
                 onDelete = { it.channelId.value == channelId },
+            )
+        }
+    }
+
+    override fun observeMessage(messageId: Long): Flow<MessageEvent> {
+        return events.filter { event ->
+            event.fold(
+                onAdd = { it.id == messageId },
+                onUpdate = { it.id == messageId },
+                onDelete = { it.messageId.value == messageId },
             )
         }
     }
@@ -178,6 +191,13 @@ class MessageStoreImpl(
                 storeMessages(messages)
                 messages.map { it.toDomain() }
             }
+        }
+    }
+
+    override suspend fun getMessage(messageId: Long): DomainMessage? {
+        return withContext(Dispatchers.IO) {
+            cache.messages().getMessage(messageId)
+                ?.let { constructDomainMessage(it) }
         }
     }
 

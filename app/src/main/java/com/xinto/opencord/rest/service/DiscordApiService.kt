@@ -13,8 +13,12 @@ import com.xinto.opencord.util.queryParameters
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
+import io.ktor.http.*
+import io.ktor.utils.io.charsets.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.net.URLEncoder
+import kotlin.text.Charsets
 
 interface DiscordApiService {
     suspend fun getChannelPins(channelId: Long): List<ApiMessage>
@@ -27,6 +31,8 @@ interface DiscordApiService {
     ): List<ApiMessage>
 
     suspend fun postChannelMessage(channelId: Long, body: MessageBody)
+    suspend fun deleteChannelMessage(channelId: Long, messageId: Long, reason: String? = null)
+
     suspend fun updateUserSettings(settings: ApiUserSettingsPartial): ApiUserSettings
     suspend fun startTyping(channelId: Long)
 
@@ -37,6 +43,9 @@ interface DiscordApiService {
 class DiscordApiServiceImpl(
     private val client: HttpClient,
 ) : DiscordApiService {
+    private val HttpHeaders.AuditLog
+        get() = "X-Audit-Log-Reason"
+
     override suspend fun getChannelMessages(
         channelId: Long,
         limit: Long,
@@ -69,6 +78,19 @@ class DiscordApiServiceImpl(
             val url = getChannelMessagesUrl(channelId)
             client.post(url) {
                 setBody(body)
+            }
+        }
+    }
+
+    override suspend fun deleteChannelMessage(channelId: Long, messageId: Long, reason: String?) {
+        withContext(Dispatchers.IO) {
+            client.delete(getChannelMessageUrl(channelId, messageId)) {
+                if (reason != null) {
+                    header(
+                        HttpHeaders.AuditLog,
+                        URLEncoder.encode(reason.take(512), Charsets.UTF_8.name),
+                    )
+                }
             }
         }
     }
@@ -123,6 +145,13 @@ class DiscordApiServiceImpl(
                 after?.let { append("after", it.toString()) }
                 limit?.let { append("limit", limit.toString()) }
             }
+        }
+
+        fun getChannelMessageUrl(
+            channelId: Long,
+            messageId: Long,
+        ): String {
+            return "${getChannelUrl(channelId)}/messages/$messageId"
         }
 
         fun getChannelPinsUrl(channelId: Long): String {

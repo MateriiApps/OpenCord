@@ -9,7 +9,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,6 +33,7 @@ import com.xinto.opencord.ui.components.message.*
 import com.xinto.opencord.ui.components.message.reply.MessageReferenced
 import com.xinto.opencord.ui.components.message.reply.MessageReferencedAuthor
 import com.xinto.opencord.ui.components.message.reply.MessageReferencedContent
+import com.xinto.opencord.ui.screens.home.panels.messagemenu.MessageMenu
 import com.xinto.opencord.ui.viewmodel.ChatViewModel
 import com.xinto.opencord.util.ifComposable
 import com.xinto.opencord.util.ifNotEmptyComposable
@@ -55,16 +55,20 @@ fun ChatLoaded(
     onMessageReact: (messageId: Long, emoji: DomainEmoji) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var showMessageMenu by rememberSaveable { mutableStateOf(false) }
+    val listState = rememberLazyListState() // TODO: scroll to target message if jumping
+    var messageMenuTarget by remember { mutableStateOf<Long?>(null) }
 
-    // TODO: scroll to target message if jumping
-    val listState = rememberLazyListState()
-
-    // TODO: toggleable auto scroll by scrolling up
     LaunchedEffect(messages.size) {
         if (listState.firstVisibleItemIndex <= 1) {
             listState.animateScrollToItem(0)
         }
+    }
+
+    if (messageMenuTarget != null) {
+        MessageMenu(
+            messageId = messageMenuTarget!!,
+            onDismiss = { messageMenuTarget = null },
+        )
     }
 
     Column(
@@ -115,7 +119,7 @@ fun ChatLoaded(
                                 .clip(MaterialTheme.shapes.medium)
                                 .combinedClickable(
                                     onClick = {},
-                                    onLongClick = { showMessageMenu = true },
+                                    onLongClick = { messageMenuTarget = message.id },
                                 ),
                             mentioned = mentioned,
                             reply = message.isReply.ifComposable {

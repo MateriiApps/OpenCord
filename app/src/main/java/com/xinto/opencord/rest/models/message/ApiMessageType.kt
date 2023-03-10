@@ -12,6 +12,7 @@ import kotlinx.serialization.encoding.Encoder
 @FromValue
 @Serializable(ApiMessageType.Serializer::class)
 enum class ApiMessageType(val value: Int) {
+    Unknown(-1),
     Default(0),
     GuildMemberJoin(7),
     Reply(19);
@@ -21,7 +22,7 @@ enum class ApiMessageType(val value: Int) {
             get() = PrimitiveSerialDescriptor("ApiMessageType", PrimitiveKind.INT)
 
         override fun deserialize(decoder: Decoder): ApiMessageType {
-            return fromValue(decoder.decodeInt()) ?: Default
+            return fromValue(decoder.decodeInt()) ?: Unknown
         }
 
         override fun serialize(encoder: Encoder, value: ApiMessageType) {
