@@ -1,10 +1,12 @@
 package com.xinto.opencord.gateway
 
+import com.github.materiiapps.partial.Partial
 import com.xinto.opencord.BuildConfig
 import com.xinto.opencord.gateway.dto.*
 import com.xinto.opencord.gateway.event.Event
 import com.xinto.opencord.gateway.event.EventDeserializationStrategy
 import com.xinto.opencord.gateway.event.ReadyEvent
+import com.xinto.opencord.gateway.event.UserSettingsUpdateEvent
 import com.xinto.opencord.gateway.io.Capabilities
 import com.xinto.opencord.gateway.io.IncomingPayload
 import com.xinto.opencord.gateway.io.OpCode
@@ -78,6 +80,15 @@ class DiscordGatewayImpl(
                 ?: return@onEvent
 
             accountManager.currentAccountToken = newAuthToken
+            accountManager.locale = it.data.userSettings.locale
+        }
+
+        onEvent<UserSettingsUpdateEvent> {
+            val locale = it.data.locale
+
+            if (locale is Partial.Value) {
+                accountManager.locale = locale.value
+            }
         }
     }
 

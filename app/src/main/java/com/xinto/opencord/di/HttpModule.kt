@@ -5,6 +5,7 @@ import com.xinto.opencord.manager.AccountCookieManager
 import com.xinto.opencord.manager.AccountManager
 import com.xinto.opencord.provider.PropertyProvider
 import com.xinto.opencord.provider.TelemetryProvider
+import com.xinto.opencord.util.DiscordLocale
 import io.ktor.client.*
 import io.ktor.client.engine.*
 import io.ktor.client.engine.okhttp.*
@@ -84,12 +85,14 @@ val httpModule = module {
         propertyProvider: PropertyProvider,
     ): HttpClient {
         val superProperties = json.encodeToString(propertyProvider.xSuperProperties).encodeBase64()
+        val locale = DiscordLocale.getSystemDiscordLocale()
+
         return HttpClient(OkHttp) {
             defaultRequest {
                 contentType(ContentType.Application.Json)
                 userAgent(telemetryProvider.userAgent)
                 header(HttpHeaders.AcceptLanguage, "en-US")
-                header(HttpHeaders.XDiscordLocale, "en-US")
+                header(HttpHeaders.XDiscordLocale, locale)
                 header(HttpHeaders.XSuperProperties, superProperties)
             }
 
@@ -124,7 +127,7 @@ val httpModule = module {
                 userAgent(telemetryProvider.userAgent)
                 header(HttpHeaders.Authorization, accountManager.currentAccountToken)
                 header(HttpHeaders.AcceptLanguage, "en-US")
-                header(HttpHeaders.XDiscordLocale, "en-US")
+                header(HttpHeaders.XDiscordLocale, accountManager.locale ?: DiscordLocale.getSystemDiscordLocale())
                 header(HttpHeaders.XSuperProperties, superProperties)
             }
 

@@ -29,4 +29,7 @@ data class EntityAccount(
 
     @ColumnInfo(name = "fingerprint")
     val fingerprint: String? = null,
+
+    @ColumnInfo(name = "locale")
+    val locale: String? = null,
 )

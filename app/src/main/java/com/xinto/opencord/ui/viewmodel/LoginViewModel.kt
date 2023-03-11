@@ -84,7 +84,7 @@ class LoginViewModel(
 
                 when (response) {
                     is DomainLogin.Login -> {
-                        finishLogin(response.token)
+                        finishLogin(response.token, response.locale)
                     }
                     is DomainLogin.TwoFactorAuth -> {
                         mfaTicket = response.ticket
@@ -131,7 +131,7 @@ class LoginViewModel(
 
                 when (response) {
                     is DomainLogin.Login -> {
-                        finishLogin(response.token)
+                        finishLogin(response.token, response.locale)
                     }
                     is DomainLogin.TwoFactorAuth -> {
                         error("double mfa")
@@ -149,7 +149,7 @@ class LoginViewModel(
         }
     }
 
-    private suspend fun finishLogin(token: String) {
+    private suspend fun finishLogin(token: String, locale: String) {
         val stringCookies = cookies?.joinToString(",") {
             renderSetCookieHeader(it).encodeBase64()
         }
@@ -159,6 +159,7 @@ class LoginViewModel(
                 token = token,
                 cookies = stringCookies,
                 fingerprint = fingerprint,
+                locale = locale,
             )
 
             accountDatabase.accounts().insertAccount(account)
