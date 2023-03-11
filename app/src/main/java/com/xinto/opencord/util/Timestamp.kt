@@ -17,7 +17,7 @@ object Timestamp : KoinComponent {
 
     private val timeOnlyFormat: SimpleDateFormat
         get() {
-            val pattern = if (DateFormat.is24HourFormat(context)) "HH:mm" else "hh:mmaa"
+            val pattern = if (DateFormat.is24HourFormat(context)) "HH:mm" else "hh:mm aa"
             return SimpleDateFormat(pattern, Locale.getDefault())
         }
 

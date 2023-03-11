@@ -30,20 +30,23 @@ fun ChatInput(
             .fillMaxWidth()
             .heightIn(min = 48.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         OCBasicTextField(
             modifier = Modifier.weight(1f),
             value = value,
             onValueChange = onValueChange,
-            maxLines = 4,
+            maxLines = 7,
             decorationBox = { innerTextField ->
                 CompositionLocalProvider(LocalAbsoluteTonalElevation provides 0.dp) {
                     Surface(
                         modifier = Modifier.weight(1f),
-                        shape = MaterialTheme.shapes.medium,
+                        shape = MaterialTheme.shapes.large,
                     ) {
-                        Box(modifier = Modifier.padding(12.dp)) {
+                        Box(
+                            modifier = Modifier
+                                .padding(16.dp),
+                        ) {
                             innerTextField()
                             CompositionLocalProvider(
                                 LocalContentAlpha provides ContentAlpha.medium,

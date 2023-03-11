@@ -1,9 +1,7 @@
 package com.xinto.opencord.ui.screens.pins
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
@@ -46,7 +44,12 @@ fun PinsScreenLoaded(
     LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(8.dp),
+        contentPadding = PaddingValues(
+            start = 10.dp,
+            end = 10.dp,
+            top = 4.dp,
+            bottom = 10.dp,
+        ),
     ) {
         items(pins) { message ->
             when (message) {
@@ -57,7 +60,10 @@ fun PinsScreenLoaded(
                         tonalElevation = 1.dp,
                     ) {
                         MessageRegular(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { }
+                                .padding(8.dp),
                             reply = message.isReply.ifComposable {
                                 val referencedMessage = message.referencedMessage
                                 if (referencedMessage != null) {

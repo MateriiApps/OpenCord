@@ -24,7 +24,7 @@ fun ChatLoading(
     val shimmer = rememberShimmer(shimmerBounds = ShimmerBounds.View)
     Column(
         modifier = modifier
-            .padding(vertical = 8.dp)
+            .padding(8.dp)
             .verticalScroll(
                 state = rememberScrollState(),
                 enabled = false,
@@ -59,7 +59,7 @@ fun ChatLoading(
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(4.dp),
                         ) {
-                            val itemCount = (1..5).random()
+                            val itemCount = remember { (1..5).random() }
                             repeat(itemCount) {
                                 val spaces = remember { (10..30).random() }
                                 Text(

@@ -105,7 +105,7 @@ fun ChannelsListLoaded(
                     modifier = Modifier
                         .fillMaxWidth()
                         .align(Alignment.TopStart)
-                        .padding(14.dp),
+                        .padding(vertical = 14.dp, horizontal = 18.dp),
                 ) {
                     val boostIcon = when (boostLevel to (bannerUrl != null)) {
                         1 to false -> R.drawable.ic_guild_badge_premium_tier_1

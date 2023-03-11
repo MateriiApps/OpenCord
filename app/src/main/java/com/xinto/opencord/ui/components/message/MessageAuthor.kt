@@ -59,12 +59,12 @@ fun MessageAuthor(
             }
         }
         ProvideContentAlpha(ContentAlpha.low) {
-            Text("·")
             ProvideTextStyle(MaterialTheme.typography.labelSmall) {
+                Text(" ·")
                 Text(timestamp)
             }
             if (isEdited) {
-                Text("·")
+                Text(" ·")
                 Icon(
                     modifier = Modifier
                         .size(12.dp),
