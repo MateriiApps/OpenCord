@@ -27,10 +27,7 @@ class AccountManagerImpl(
             putString(USER_TOKEN_KEY, value)
         }
 
-    private var _locale = currentAccountToken?.let { token ->
-        accounts.accounts().getAccount(token)?.locale
-            ?.let { locale -> DiscordLocale.checkDiscordLocale(locale) }
-    }
+    private var _locale: String? = null
     override var locale: String?
         get() = _locale
         set(value) {
@@ -44,6 +41,15 @@ class AccountManagerImpl(
 
     override val isLoggedIn: Boolean
         get() = currentAccountToken != null
+
+    init {
+        scope.launch {
+            _locale = currentAccountToken?.let { token ->
+                accounts.accounts().getAccount(token)?.locale
+                    ?.let { locale -> DiscordLocale.checkDiscordLocale(locale) }
+            }
+        }
+    }
 
     companion object {
         const val USER_TOKEN_KEY = "user_token"
