@@ -57,8 +57,8 @@ fun GuildsListLoading(
 
         Divider(
             modifier = Modifier
-                .fillMaxWidth(0.55f)
-                .padding(bottom = 4.dp)
+                .fillMaxWidth(0.6f)
+                .padding(bottom = 4.dp, top = 6.dp)
                 .clip(MaterialTheme.shapes.medium),
             thickness = 2.dp,
             color = MaterialTheme.colorScheme.outline,

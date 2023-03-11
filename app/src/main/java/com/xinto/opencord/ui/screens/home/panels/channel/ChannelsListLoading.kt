@@ -23,7 +23,7 @@ fun ChannelsListLoading(
     modifier: Modifier = Modifier,
 ) {
     val shimmer = rememberShimmer(shimmerBounds = ShimmerBounds.View)
-    Column(modifier = modifier) {
+    Column(modifier = modifier.padding(8.dp)) {
         val items = remember { (5..20).random() }
         Row(
             horizontalArrangement = Arrangement.spacedBy(6.dp),
@@ -48,7 +48,7 @@ fun ChannelsListLoading(
                     .background(shimmerColor),
                 text = guildName,
                 fontWeight = FontWeight.SemiBold,
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleSmall,
             )
         }
         repeat(items) { itemIndex ->
