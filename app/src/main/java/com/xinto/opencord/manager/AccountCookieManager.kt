@@ -97,8 +97,10 @@ class AccountCookieManagerImpl(
 
     private fun saveCookies() {
         coroutineScope.launch {
-            val stringCookies = cookies.joinToString(",") {
-                renderSetCookieHeader(it).encodeBase64()
+            val stringCookies = mutex.withLock {
+                cookies.joinToString(",") {
+                    renderSetCookieHeader(it).encodeBase64()
+                }
             }
 
             accountDatabase.accounts().setCookies(accountManager.currentAccountToken!!, stringCookies)
