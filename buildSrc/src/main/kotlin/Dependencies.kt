@@ -117,6 +117,18 @@ sealed class Dependencies {
         }
     }
 
+    object Paging : Dependencies() {
+        const val runtime = "androidx.paging:paging-runtime:3.1.1"
+        const val compose = "androidx.paging:paging-compose:1.0.0-alpha18"
+
+        override fun invoke(scope: DependencyHandlerScope) {
+            scope {
+                implementation(runtime)
+                implementation(compose)
+            }
+        }
+    }
+
     object Accompanist : Dependencies() {
         const val version = "0.28.0"
 

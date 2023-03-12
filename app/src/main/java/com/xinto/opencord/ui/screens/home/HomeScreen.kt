@@ -37,6 +37,9 @@ import org.koin.androidx.compose.getViewModel
 fun HomeScreen(
     onSettingsClick: () -> Unit,
     onPinsClick: (PinsScreenData) -> Unit,
+    onSearchClick: () -> Unit,
+    onMentionsClick: () -> Unit,
+    onFriendsClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val panelState = rememberOverlappingPanelsState(OverlappingPanelsValue.Closed)
@@ -157,9 +160,9 @@ fun HomeScreen(
                             .padding(end = 6.dp)
                             .height(60.dp)
                             .fillMaxWidth(),
-                        onFriendsClick = { /* TODO */ },
-                        onMentionsClick = { /* TODO */ },
-                        onSearchClick = { /* TODO */ },
+                        onFriendsClick = onFriendsClick,
+                        onMentionsClick = onMentionsClick,
+                        onSearchClick = onSearchClick,
                     )
                 }
             },

@@ -17,6 +17,7 @@ import com.xinto.opencord.ui.navigation.AppDestination
 import com.xinto.opencord.ui.navigation.back
 import com.xinto.opencord.ui.screens.Settings
 import com.xinto.opencord.ui.screens.home.HomeScreen
+import com.xinto.opencord.ui.screens.mentions.MentionsScreen
 import com.xinto.opencord.ui.screens.pins.PinsScreen
 import com.xinto.opencord.ui.theme.OpenCordTheme
 import com.xinto.opencord.ui.util.SystemBarsControl
@@ -83,12 +84,19 @@ class AppActivity : ComponentActivity() {
                     when (dest) {
                         AppDestination.Main -> HomeScreen(
                             modifier = Modifier.fillMaxSize(),
-                            onSettingsClick = { nav.navigate(AppDestination.Settings) },
                             onPinsClick = { nav.navigate(AppDestination.Pins(data = it)) },
+                            onSettingsClick = { nav.navigate(AppDestination.Settings) },
+                            onMentionsClick = { nav.navigate(AppDestination.Mentions) },
+                            onFriendsClick = { /* TODO */ },
+                            onSearchClick = { /* TODO */ },
                         )
 
                         AppDestination.Settings -> Settings(
                             modifier = Modifier.fillMaxSize(),
+                            onBackClick = { nav.back() },
+                        )
+
+                        AppDestination.Mentions -> MentionsScreen(
                             onBackClick = { nav.back() },
                         )
 

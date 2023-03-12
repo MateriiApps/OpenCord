@@ -38,6 +38,13 @@ interface DiscordApiService {
 
     suspend fun addMeReaction(channelId: Long, messageId: Long, emoji: DomainEmoji)
     suspend fun removeMeReaction(channelId: Long, messageId: Long, emoji: DomainEmoji)
+
+    suspend fun getUserMentions(
+        includeRoles: Boolean,
+        includeEveryone: Boolean,
+        guildId: Long? = null,
+        beforeId: Long? = null,
+    ): List<ApiMessage>
 }
 
 class DiscordApiServiceImpl(
@@ -122,7 +129,18 @@ class DiscordApiServiceImpl(
             val url = getModifyReactionUrl(channelId, messageId, emoji, "@me")
             client.delete(url)
         }
+    }
 
+    override suspend fun getUserMentions(
+        includeRoles: Boolean,
+        includeEveryone: Boolean,
+        guildId: Long?,
+        beforeId: Long?,
+    ): List<ApiMessage> {
+        return withContext(Dispatchers.IO) {
+            client.get(getUserMentionsUrl(includeRoles, includeEveryone, guildId, beforeId))
+                .body()
+        }
     }
 
     private companion object {
@@ -180,6 +198,19 @@ class DiscordApiServiceImpl(
                 is DomainUnknownEmoji -> error("cannot remove an unknown emoji")
             }
             return "${getChannelUrl(channelId)}/messages/$messageId/reactions/$emojiId/$user"
+        }
+
+        fun getUserMentionsUrl(
+            includeRoles: Boolean,
+            includeEveryone: Boolean,
+            guildId: Long? = null,
+            beforeId: Long? = null,
+        ): String {
+            return "$BASE/users/@me/mentions?limit=25" +
+                    "&roles=$includeRoles" +
+                    "&everyone=$includeEveryone" +
+                    "&guild_id=${guildId ?: 0}" +
+                    (beforeId?.let { "&before=$beforeId" } ?: "")
         }
     }
 }

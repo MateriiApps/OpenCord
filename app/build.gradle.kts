@@ -143,6 +143,7 @@ dependencies {
     Dependencies.AndroidxRoom(this)
     Dependencies.Material(this)
     Dependencies.Compose(this)
+    Dependencies.Paging(this)
     Dependencies.Accompanist(this)
     Dependencies.Shimmer(this)
     Dependencies.Coil(this)

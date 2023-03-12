@@ -12,4 +12,5 @@ val viewModelModule = module {
     viewModelOf(::ChannelPinsViewModel)
     viewModelOf(::CurrentUserViewModel)
     viewModelOf(::MessageMenuViewModel)
+    viewModelOf(::MentionsViewModel)
 }

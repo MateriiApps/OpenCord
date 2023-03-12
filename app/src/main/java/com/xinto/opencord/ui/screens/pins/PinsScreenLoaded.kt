@@ -59,10 +59,8 @@ fun PinsScreenLoaded(
         contentPadding = CompositePaddingValues(
             contentPadding,
             PaddingValues(
-                start = 14.dp,
-                end = 10.dp,
-                top = 4.dp,
-                bottom = 4.dp,
+                horizontal = 10.dp,
+                vertical = 4.dp,
             ),
         ),
     ) {
