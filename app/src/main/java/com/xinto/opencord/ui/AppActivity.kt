@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.core.view.WindowCompat
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.xinto.opencord.db.database.CacheDatabase
 import com.xinto.opencord.gateway.DiscordGateway
@@ -21,6 +23,7 @@ import com.xinto.opencord.ui.screens.Settings
 import com.xinto.opencord.ui.screens.home.HomeScreen
 import com.xinto.opencord.ui.screens.pins.PinsScreen
 import com.xinto.opencord.ui.theme.OpenCordTheme
+import com.xinto.opencord.ui.util.rememberGestureNavEnabled
 import dev.olshevski.navigation.reimagined.AnimatedNavHost
 import dev.olshevski.navigation.reimagined.navigate
 import dev.olshevski.navigation.reimagined.rememberNavController
@@ -34,6 +37,7 @@ class AppActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         scope.launch(Dispatchers.IO) {
             get<DiscordGateway>().connect()
@@ -56,14 +60,21 @@ class AppActivity : ComponentActivity() {
 
             OpenCordTheme {
                 val systemUiController = rememberSystemUiController()
-                val isLight = false
+                val isGestureEnabled = rememberGestureNavEnabled()
                 val surface = MaterialTheme.colorScheme.surface
+                val isLight = false
 
                 SideEffect {
                     systemUiController.setSystemBarsColor(
                         color = surface,
                         darkIcons = isLight,
                     )
+
+                    if (isGestureEnabled) {
+                        systemUiController.setNavigationBarColor(
+                            color = Color.Transparent,
+                        )
+                    }
                 }
 
                 AnimatedNavHost(
