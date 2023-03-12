@@ -3,33 +3,48 @@ package com.xinto.opencord.ui.viewmodel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import com.xinto.opencord.domain.message.DomainMessage
 import com.xinto.opencord.domain.message.toDomain
+import com.xinto.opencord.manager.PersistentDataManager
+import com.xinto.opencord.manager.ToastManager
 import com.xinto.opencord.rest.service.DiscordApiService
+import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
 import kotlinx.coroutines.flow.emptyFlow
 
 class MentionsViewModel(
+    persistentDataManager: PersistentDataManager,
+    private val toasts: ToastManager,
     val api: DiscordApiService,
-) : ViewModel() {
+) : BasePersistenceViewModel(persistentDataManager) {
     var includeRoles by mutableStateOf(true)
         private set
     var includeEveryone by mutableStateOf(true)
+        private set
+    var includeAllServers by mutableStateOf(true)
         private set
 
     var messages by mutableStateOf(emptyFlow<PagingData<DomainMessage>>())
         private set
 
-    fun toggleIncludeRoles() {
+    fun toggleRoles() {
         includeRoles = !includeRoles
         initPager()
     }
 
-    fun toggleIncludeEveryone() {
+    fun toggleEveryone() {
         includeEveryone = !includeEveryone
         initPager()
+    }
+
+    fun toggleCurrentServer() {
+        if (includeAllServers && persistentGuildId <= 0) {
+            toasts.showToast("No server currently selected!")
+        } else {
+            includeAllServers = !includeAllServers
+            initPager()
+        }
     }
 
     init {
@@ -45,7 +60,8 @@ class MentionsViewModel(
                 initialLoadSize = 25,
             ),
             pagingSourceFactory = {
-                MentionsPagingSource(api, includeRoles, includeEveryone, null)
+                val guildId = if (!includeAllServers) persistentGuildId else null
+                MentionsPagingSource(api, includeRoles, includeEveryone, guildId)
             },
         ).flow.cachedIn(viewModelScope)
     }

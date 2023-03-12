@@ -1,5 +1,6 @@
 package com.xinto.opencord.ui.screens.mentions
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -8,11 +9,15 @@ import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -39,6 +44,7 @@ import com.xinto.opencord.util.ifComposable
 import com.xinto.opencord.util.ifNotEmptyComposable
 import com.xinto.opencord.util.ifNotNullComposable
 import com.xinto.simpleast.render
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -46,6 +52,87 @@ fun MentionsScreen(
     onBackClick: () -> Unit,
     viewModel: MentionsViewModel = getViewModel(),
 ) {
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+    val filterMenuState = rememberSheetState()
+    val scope = rememberCoroutineScope()
+
+    if (filterMenuState.isVisible || filterMenuState.targetValue != SheetValue.Hidden) {
+        ModalBottomSheet(
+            sheetState = filterMenuState,
+            onDismissRequest = {
+                scope.launch {
+                    filterMenuState.hide()
+                }
+            },
+        ) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
+                    .padding(bottom = 30.dp),
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(start = 8.dp, bottom = 12.dp),
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_filter),
+                        contentDescription = null,
+                        modifier = Modifier.size(25.dp),
+                    )
+
+                    Text(
+                        text = "Mention Filters",
+                        style = MaterialTheme.typography.labelLarge,
+                    )
+                }
+
+                Divider(thickness = 1.dp)
+
+                val filterItems = remember(
+                    viewModel.includeEveryone,
+                    viewModel.includeRoles,
+                    viewModel.includeAllServers,
+                ) {
+                    arrayOf(
+                        Triple("Include @everyone mentions", viewModel.includeEveryone, viewModel::toggleEveryone),
+                        Triple("Include role mentions", viewModel.includeRoles, viewModel::toggleRoles),
+                        Triple("Include mentions from all servers", viewModel.includeAllServers, viewModel::toggleCurrentServer),
+                    )
+                }
+
+                for ((name, isEnabled, onClick) in filterItems) {
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(MaterialTheme.shapes.medium)
+                            .clickable(onClick = onClick)
+                            .padding(vertical = 2.dp)
+                            .padding(start = 6.dp),
+                    ) {
+                        Text(
+                            text = name,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier
+                                .padding(end = 8.dp)
+                                .weight(1f, fill = false),
+                        )
+
+                        Checkbox(
+                            checked = isEnabled,
+                            onCheckedChange = { onClick() },
+                        )
+                    }
+                }
+            }
+        }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -58,6 +145,21 @@ fun MentionsScreen(
                         )
                     }
                 },
+                actions = {
+                    IconButton(
+                        onClick = {
+                            scope.launch {
+                                filterMenuState.show()
+                            }
+                        },
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_filter),
+                            contentDescription = "Open mention filters",
+                        )
+                    }
+                },
+                scrollBehavior = scrollBehavior,
             )
         },
     ) { paddingValues ->
@@ -70,12 +172,18 @@ fun MentionsScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .pullRefresh(refreshState),
+                .pullRefresh(refreshState)
+                .padding(paddingValues),
         ) {
             LazyColumn(
                 state = rememberLazyListState(),
-                contentPadding = paddingValues,
                 verticalArrangement = Arrangement.spacedBy(8.dp),
+                contentPadding = PaddingValues(
+                    start = 10.dp,
+                    end = 10.dp,
+                    top = 4.dp,
+                    bottom = 10.dp,
+                ),
             ) {
                 when (messages.loadState.refresh) {
                     LoadState.Loading -> item {
@@ -99,7 +207,7 @@ fun MentionsScreen(
                     is LoadState.NotLoading -> {
                         items(messages, key = { it.id }) { message ->
                             if (message != null) {
-                                MessageTemp(
+                                MentionsPageMessage(
                                     message = message,
                                     modifier = Modifier.fillParentMaxWidth(),
                                 )
@@ -134,7 +242,7 @@ fun MentionsScreen(
 }
 
 @Composable
-fun MessageTemp(message: DomainMessage, modifier: Modifier) {
+private fun MentionsPageMessage(message: DomainMessage, modifier: Modifier) {
     when (message) {
         is DomainMessageRegular -> {
             Surface(
@@ -143,7 +251,10 @@ fun MessageTemp(message: DomainMessage, modifier: Modifier) {
                 tonalElevation = 1.dp,
             ) {
                 MessageRegular(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { }
+                        .padding(8.dp),
                     reply = message.isReply.ifComposable {
                         val referencedMessage = message.referencedMessage
                         if (referencedMessage != null) {
