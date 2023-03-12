@@ -1,8 +1,8 @@
 package com.xinto.opencord.ui.screens.mentions
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.with
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -151,13 +151,20 @@ fun MentionsScreen(
                             modifier = Modifier,
                         )
 
-                        AnimatedVisibility(
-                            visible = !viewModel.includeAllServers && viewModel.currentGuildName != null,
-                            enter = slideInVertically { it * 2 },
-                            exit = slideOutVertically { it * 2 },
+                        val serverName = if (!viewModel.includeAllServers && viewModel.currentGuildName != null) {
+                            viewModel.currentGuildName ?: ""
+                        } else {
+                            "All servers"
+                        }
+
+                        AnimatedContent(
+                            targetState = serverName,
+                            transitionSpec = {
+                                slideIntoContainer(AnimatedContentScope.SlideDirection.Up) with slideOutOfContainer(AnimatedContentScope.SlideDirection.Up)
+                            },
                         ) {
                             Text(
-                                text = viewModel.currentGuildName ?: "",
+                                text = serverName,
                                 style = MaterialTheme.typography.bodyMedium,
                                 modifier = Modifier
                                     .alpha(ContentAlpha.medium)
