@@ -55,12 +55,12 @@ fun ChannelsListLoaded(
 ) {
     val sortedCategoryChannels by remember(categoryChannels) {
         derivedStateOf {
-            categoryChannels.values.sortedBy { it.channel.position }
+            categoryChannels.values.sortedWith { a, b -> a.channel compareTo b.channel }
         }
     }
     val sortedNoCategoryChannels by remember(noCategoryChannels) {
         derivedStateOf {
-            noCategoryChannels.values.sortedBy { it.channel.position }
+            noCategoryChannels.values.sortedWith { a, b -> a.channel compareTo b.channel }
         }
     }
 
@@ -72,7 +72,8 @@ fun ChannelsListLoaded(
             Box(
                 modifier = Modifier
                     .fillParentMaxWidth()
-                    .height(IntrinsicSize.Min),
+                    .height(IntrinsicSize.Min)
+                    .padding(bottom = 8.dp),
             ) {
                 if (bannerUrl != null) {
                     OCAsyncImage(
@@ -105,7 +106,7 @@ fun ChannelsListLoaded(
                     modifier = Modifier
                         .fillMaxWidth()
                         .align(Alignment.TopStart)
-                        .padding(vertical = 14.dp, horizontal = 18.dp),
+                        .padding(top = 14.dp, start = 18.dp, end = 18.dp),
                 ) {
                     val boostIcon = when (boostLevel to (bannerUrl != null)) {
                         1 to false -> R.drawable.ic_guild_badge_premium_tier_1
@@ -159,8 +160,8 @@ fun ChannelsListLoaded(
                     )
                     ChannelListCategoryItem(
                         modifier = Modifier.padding(
-                            top = 12.dp,
-                            bottom = 4.dp,
+                            top = 14.dp,
+                            bottom = 2.dp,
                         ),
                         title = {
                             Text(categoryItem.channel.name.uppercase())
@@ -181,7 +182,7 @@ fun ChannelsListLoaded(
 
             if (!categoryItem.collapsed) {
                 items(
-                    items = categoryItem.subChannels.values.sortedBy { it.channel.position },
+                    items = categoryItem.subChannels.values.sortedWith { a, b -> a.channel compareTo b.channel },
                     key = { it.channel.id },
                 ) { itemChannel ->
                     ChannelItem(

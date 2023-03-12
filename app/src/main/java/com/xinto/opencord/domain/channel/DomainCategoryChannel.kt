@@ -9,4 +9,6 @@ data class DomainCategoryChannel(
     override val name: String,
     override val position: Int,
     override val parentId: Long? = null,
-) : DomainChannel()
+) : DomainChannel() {
+    override val sortingPriority: Short get() = 0
+}

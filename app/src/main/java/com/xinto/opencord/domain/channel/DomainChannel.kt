@@ -16,19 +16,23 @@ abstract class DomainChannel : Comparable<DomainChannel>, Mentionable {
     override val formattedMention
         get() = "<#$id>"
 
+    /**
+     * The sorting priority of this channel type (lower is better).
+     * Should always return the same for each type.
+     * https://github.com/discord/discord-api-docs/issues/4613#issuecomment-1059997612
+     */
+    abstract val sortingPriority: Short
+
     override fun compareTo(other: DomainChannel): Int {
-        val thisPositionInList = sortedChannelTypes.indexOf(this::class)
-        val otherPositionInList = sortedChannelTypes.indexOf(other::class)
+        val typeCmp = this.sortingPriority compareTo other.sortingPriority
 
-        return thisPositionInList.compareTo(otherPositionInList)
-    }
+        return if (typeCmp != 0) typeCmp else {
+            val posCmp = this.position compareTo other.position
 
-    companion object {
-        private val sortedChannelTypes = listOf(
-            DomainAnnouncementChannel::class,
-            DomainTextChannel::class,
-            DomainVoiceChannel::class,
-        )
+            if (posCmp != 0) posCmp else {
+                this.id compareTo other.id
+            }
+        }
     }
 }
 

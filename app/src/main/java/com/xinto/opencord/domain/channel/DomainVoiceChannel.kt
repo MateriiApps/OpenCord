@@ -9,4 +9,6 @@ data class DomainVoiceChannel(
     override val name: String,
     override val position: Int,
     override val parentId: Long?,
-) : DomainChannel()
+) : DomainChannel() {
+    override val sortingPriority: Short get() = 3
+}

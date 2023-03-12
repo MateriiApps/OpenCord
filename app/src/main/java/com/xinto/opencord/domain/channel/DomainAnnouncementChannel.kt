@@ -10,4 +10,6 @@ data class DomainAnnouncementChannel(
     override val position: Int,
     override val parentId: Long?,
     val nsfw: Boolean,
-) : DomainChannel()
+) : DomainChannel() {
+    override val sortingPriority: Short get() = 2
+}
