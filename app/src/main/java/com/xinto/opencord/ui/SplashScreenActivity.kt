@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.WindowCompat
 import com.xinto.opencord.manager.AccountManager
 import com.xinto.opencord.manager.ActivityManager
 import org.koin.android.ext.android.inject
@@ -15,7 +14,6 @@ class SplashScreenActivity : ComponentActivity() {
     private val activityManager: ActivityManager by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        WindowCompat.setDecorFitsSystemWindows(window, false)
         installSplashScreen()
         super.onCreate(savedInstanceState)
 

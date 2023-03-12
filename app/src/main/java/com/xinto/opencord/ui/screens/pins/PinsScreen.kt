@@ -18,6 +18,8 @@ import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
 import com.xinto.opencord.ui.navigation.PinsScreenData
 import com.xinto.opencord.ui.util.ContentAlpha
+import com.xinto.opencord.ui.util.VoidablePaddingValues
+import com.xinto.opencord.ui.util.paddingOrGestureNav
 import com.xinto.opencord.ui.viewmodel.ChannelPinsViewModel
 import kotlinx.collections.immutable.toImmutableList
 import org.koin.androidx.compose.getViewModel
@@ -77,22 +79,23 @@ fun PinsScreen(
                 PinsScreenLoading(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(paddingValues),
+                        .paddingOrGestureNav(paddingValues),
                 )
             }
             is ChannelPinsViewModel.State.Loaded -> {
                 PinsScreenLoaded(
+                    pins = pins,
+                    contentPadding = VoidablePaddingValues(paddingValues, top = false),
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(paddingValues),
-                    pins = pins,
+                        .paddingOrGestureNav(paddingValues),
                 )
             }
             is ChannelPinsViewModel.State.Error -> {
                 PinsScreenError(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(paddingValues),
+                        .paddingOrGestureNav(paddingValues),
                 )
             }
         }

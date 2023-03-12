@@ -64,7 +64,7 @@ fun HomeScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .navigationBarsPadding(),
+                        .systemBarsPadding(),
                     verticalArrangement = Arrangement.spacedBy(6.dp),
                 ) {
                     Row(
@@ -144,7 +144,7 @@ fun HomeScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .navigationBarsPadding(),
+                        .systemBarsPadding(),
                     verticalArrangement = Arrangement.spacedBy(6.dp),
                 ) {
                     MembersList(
