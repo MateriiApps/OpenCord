@@ -10,19 +10,24 @@ import com.xinto.opencord.domain.message.toDomain
 import com.xinto.opencord.manager.PersistentDataManager
 import com.xinto.opencord.manager.ToastManager
 import com.xinto.opencord.rest.service.DiscordApiService
+import com.xinto.opencord.store.GuildStore
 import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.launch
 
 class MentionsViewModel(
     persistentDataManager: PersistentDataManager,
+    guilds: GuildStore,
     private val toasts: ToastManager,
-    val api: DiscordApiService,
+    private val api: DiscordApiService,
 ) : BasePersistenceViewModel(persistentDataManager) {
     var includeRoles by mutableStateOf(true)
         private set
     var includeEveryone by mutableStateOf(true)
         private set
     var includeAllServers by mutableStateOf(true)
+        private set
+    var currentGuildName by mutableStateOf<String?>(null)
         private set
 
     var messages by mutableStateOf(emptyFlow<PagingData<DomainMessage>>())
@@ -49,6 +54,15 @@ class MentionsViewModel(
 
     init {
         initPager()
+
+        if (persistentGuildId > 0) {
+            viewModelScope.launch {
+                val guild = guilds.fetchGuild(persistentGuildId)
+                    ?: return@launch
+
+                currentGuildName = guild.name
+            }
+        }
     }
 
     private fun initPager() {

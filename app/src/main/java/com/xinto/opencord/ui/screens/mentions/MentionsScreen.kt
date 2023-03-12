@@ -1,5 +1,8 @@
 package com.xinto.opencord.ui.screens.mentions
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,7 +16,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -39,6 +44,9 @@ import com.xinto.opencord.ui.components.message.MessageRegular
 import com.xinto.opencord.ui.components.message.reply.MessageReferenced
 import com.xinto.opencord.ui.components.message.reply.MessageReferencedAuthor
 import com.xinto.opencord.ui.components.message.reply.MessageReferencedContent
+import com.xinto.opencord.ui.util.CompositePaddingValues
+import com.xinto.opencord.ui.util.ContentAlpha
+import com.xinto.opencord.ui.util.VoidablePaddingValues
 import com.xinto.opencord.ui.viewmodel.MentionsViewModel
 import com.xinto.opencord.util.ifComposable
 import com.xinto.opencord.util.ifNotEmptyComposable
@@ -136,7 +144,29 @@ fun MentionsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Recent mentions") },
+                title = {
+                    Column {
+                        Text(
+                            text = "Recent mentions",
+                            modifier = Modifier,
+                        )
+
+                        AnimatedVisibility(
+                            visible = !viewModel.includeAllServers && viewModel.currentGuildName != null,
+                            enter = slideInVertically { it * 2 },
+                            exit = slideOutVertically { it * 2 },
+                        ) {
+                            Text(
+                                text = viewModel.currentGuildName ?: "",
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier
+                                    .alpha(ContentAlpha.medium)
+                                    .offset(y = (-2).dp)
+                                    .padding(bottom = 1.dp),
+                            )
+                        }
+                    }
+                },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
@@ -162,6 +192,8 @@ fun MentionsScreen(
                 scrollBehavior = scrollBehavior,
             )
         },
+        modifier = Modifier
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { paddingValues ->
         val messages = viewModel.messages.collectAsLazyPagingItems()
         val refreshState = rememberPullRefreshState(
@@ -173,26 +205,30 @@ fun MentionsScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .pullRefresh(refreshState)
-                .padding(paddingValues),
+                .padding(VoidablePaddingValues(paddingValues, bottom = false)),
         ) {
             LazyColumn(
                 state = rememberLazyListState(),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(
-                    start = 10.dp,
-                    end = 10.dp,
-                    top = 4.dp,
-                    bottom = 10.dp,
+                contentPadding = CompositePaddingValues(
+                    VoidablePaddingValues(paddingValues, top = false, left = false, right = false),
+                    PaddingValues(
+                        horizontal = 10.dp,
+                        vertical = 4.dp,
+                    ),
                 ),
             ) {
                 when (messages.loadState.refresh) {
-                    LoadState.Loading -> item {
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 16.dp)
-                                .wrapContentWidth(Alignment.CenterHorizontally),
-                        )
+                    LoadState.Loading -> {} // Handled by PullRefreshIndicator
+                    is LoadState.NotLoading -> {
+                        items(messages, key = { it.id }) { message ->
+                            if (message != null) {
+                                MentionsPageMessage(
+                                    message = message,
+                                    modifier = Modifier.fillParentMaxWidth(),
+                                )
+                            }
+                        }
                     }
                     is LoadState.Error -> item {
                         Box(
@@ -202,16 +238,6 @@ fun MentionsScreen(
                             contentAlignment = Alignment.Center,
                         ) {
                             Text("Failed to load")
-                        }
-                    }
-                    is LoadState.NotLoading -> {
-                        items(messages, key = { it.id }) { message ->
-                            if (message != null) {
-                                MentionsPageMessage(
-                                    message = message,
-                                    modifier = Modifier.fillParentMaxWidth(),
-                                )
-                            }
                         }
                     }
                 }
