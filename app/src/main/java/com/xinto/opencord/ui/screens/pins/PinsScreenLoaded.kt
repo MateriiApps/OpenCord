@@ -1,6 +1,6 @@
 package com.xinto.opencord.ui.screens.pins
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -8,7 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -31,6 +31,7 @@ import com.xinto.opencord.ui.components.message.reply.MessageReferenced
 import com.xinto.opencord.ui.components.message.reply.MessageReferencedAuthor
 import com.xinto.opencord.ui.components.message.reply.MessageReferencedContent
 import com.xinto.opencord.ui.screens.home.panels.messagemenu.MessageMenu
+import com.xinto.opencord.ui.util.CompositePaddingValues
 import com.xinto.opencord.util.ifComposable
 import com.xinto.opencord.util.ifNotEmptyComposable
 import com.xinto.opencord.util.ifNotNullComposable
@@ -39,6 +40,7 @@ import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun PinsScreenLoaded(
+    contentPadding: PaddingValues,
     pins: ImmutableList<DomainMessage>,
     modifier: Modifier = Modifier,
 ) {
@@ -54,11 +56,14 @@ fun PinsScreenLoaded(
     LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(
-            start = 10.dp,
-            end = 10.dp,
-            top = 4.dp,
-            bottom = 10.dp,
+        contentPadding = CompositePaddingValues(
+            contentPadding,
+            PaddingValues(
+                start = 14.dp,
+                end = 10.dp,
+                top = 4.dp,
+                bottom = 4.dp,
+            ),
         ),
     ) {
         items(pins) { message ->

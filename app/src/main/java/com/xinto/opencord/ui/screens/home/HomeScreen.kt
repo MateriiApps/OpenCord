@@ -62,7 +62,9 @@ fun HomeScreen(
             panelsState = panelState,
             panelStart = {
                 Column(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .systemBarsPadding(),
                     verticalArrangement = Arrangement.spacedBy(6.dp),
                 ) {
                     Row(
@@ -140,7 +142,9 @@ fun HomeScreen(
             },
             panelEnd = {
                 Column(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .systemBarsPadding(),
                     verticalArrangement = Arrangement.spacedBy(6.dp),
                 ) {
                     MembersList(

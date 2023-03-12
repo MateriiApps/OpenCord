@@ -81,20 +81,22 @@ fun Chat(
         },
     ) { paddingValues ->
         Surface(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
+            modifier = Modifier.fillMaxSize(),
             tonalElevation = 2.dp,
         ) {
             when (viewModel.state) {
                 is ChatViewModel.State.Unselected -> {
                     ChatUnselected(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues),
                     )
                 }
                 is ChatViewModel.State.Loading -> {
                     ChatLoading(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues),
                     )
                 }
                 is ChatViewModel.State.Loaded -> {
@@ -108,12 +110,16 @@ fun Chat(
                         onUserMessageUpdate = viewModel::updateMessage,
                         onUserMessageSend = viewModel::sendMessage,
                         onMessageReact = viewModel::reactToMessage,
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues),
                     )
                 }
                 is ChatViewModel.State.Error -> {
                     ChatError(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues),
                     )
                 }
             }
