@@ -9,12 +9,10 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.with
 import androidx.compose.material3.LocalAbsoluteTonalElevation
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import androidx.core.view.WindowCompat
 import com.hcaptcha.sdk.HCaptcha
 import com.xinto.opencord.db.database.AccountDatabase
 import com.xinto.opencord.ui.navigation.LoginDestination
@@ -22,6 +20,7 @@ import com.xinto.opencord.ui.navigation.back
 import com.xinto.opencord.ui.screens.login.LoginLandingScreen
 import com.xinto.opencord.ui.screens.login.LoginScreen
 import com.xinto.opencord.ui.theme.OpenCordTheme
+import com.xinto.opencord.ui.util.SystemBarsControl
 import dev.olshevski.navigation.reimagined.AnimatedNavHost
 import dev.olshevski.navigation.reimagined.navigate
 import dev.olshevski.navigation.reimagined.rememberNavController
@@ -36,6 +35,7 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         scope.launch(Dispatchers.IO) {
             // Preload modules
@@ -49,16 +49,7 @@ class LoginActivity : AppCompatActivity() {
             BackHandler { nav.back() }
 
             OpenCordTheme {
-                val systemUiController = rememberSystemUiController()
-                val useDarkIcons = false
-                val surface = MaterialTheme.colorScheme.surface
-
-                SideEffect {
-                    systemUiController.setSystemBarsColor(
-                        color = surface,
-                        darkIcons = useDarkIcons,
-                    )
-                }
+                SystemBarsControl()
 
                 CompositionLocalProvider(LocalAbsoluteTonalElevation provides 1.dp) {
                     AnimatedNavHost(
