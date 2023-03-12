@@ -30,6 +30,7 @@ import com.xinto.opencord.ui.components.message.MessageRegular
 import com.xinto.opencord.ui.components.message.reply.MessageReferenced
 import com.xinto.opencord.ui.components.message.reply.MessageReferencedAuthor
 import com.xinto.opencord.ui.components.message.reply.MessageReferencedContent
+import com.xinto.opencord.ui.screens.home.panels.messagemenu.MessageMenu
 import com.xinto.opencord.util.ifComposable
 import com.xinto.opencord.util.ifNotEmptyComposable
 import com.xinto.opencord.util.ifNotNullComposable
@@ -41,6 +42,15 @@ fun PinsScreenLoaded(
     pins: ImmutableList<DomainMessage>,
     modifier: Modifier = Modifier,
 ) {
+    var messageMenuTarget by remember { mutableStateOf<Long?>(null) }
+
+    if (messageMenuTarget != null) {
+        MessageMenu(
+            messageId = messageMenuTarget!!,
+            onDismiss = { messageMenuTarget = null },
+        )
+    }
+
     LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -62,7 +72,10 @@ fun PinsScreenLoaded(
                         MessageRegular(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clickable { }
+                                .combinedClickable(
+                                    onClick = {},
+                                    onLongClick = { messageMenuTarget = message.id },
+                                )
                                 .padding(8.dp),
                             reply = message.isReply.ifComposable {
                                 val referencedMessage = message.referencedMessage
