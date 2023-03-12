@@ -182,7 +182,7 @@ fun ChannelsListLoaded(
 
             if (!categoryItem.collapsed) {
                 items(
-                    items = categoryItem.subChannels.values.sortedWith { a, b -> a.channel compareTo b.channel },
+                    items = categoryItem.channelsSorted,
                     key = { it.channel.id },
                 ) { itemChannel ->
                     ChannelItem(

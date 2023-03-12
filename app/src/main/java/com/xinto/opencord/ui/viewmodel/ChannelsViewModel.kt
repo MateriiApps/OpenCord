@@ -54,8 +54,17 @@ class ChannelsViewModel(
     ) {
         var channel by mutableStateOf(channel)
         var collapsed by mutableStateOf(collapsed)
-        var subChannels = mutableStateMapOf<Long, ChannelItemData>()
-            .apply { subChannels?.also { putAll(subChannels.associateBy { it.channel.id }) } }
+        var channels = mutableStateMapOf<Long, ChannelItemData>()
+
+        val channelsSorted by derivedStateOf {
+            channels.values.sortedWith { a, b -> a.channel compareTo b.channel }
+        }
+
+        init {
+            if (subChannels != null) {
+                channels.putAll(subChannels.associateBy { it.channel.id })
+            }
+        }
     }
 
     var state by mutableStateOf<State>(State.Unselected)
@@ -142,11 +151,11 @@ class ChannelsViewModel(
 
                         // Remove from old category
                         if (allChannelItems[channel.id]?.channel?.parentId != null) {
-                            categoryChannels[channel.id]?.subChannels?.remove(channel.id)
+                            categoryChannels[channel.id]?.channels?.remove(channel.id)
                         }
 
                         allChannelItems[channel.id] = item
-                        channel.parentId?.let { categoryChannels[it]?.subChannels?.set(it, item) }
+                        channel.parentId?.let { categoryChannels[it]?.channels?.set(it, item) }
                     }
                 },
                 onUpdate = { channel ->
@@ -175,7 +184,7 @@ class ChannelsViewModel(
 
                     if (categoryId != null) {
                         allChannelItems.remove(it)
-                        categoryChannels[categoryId]?.subChannels?.remove(it)
+                        categoryChannels[categoryId]?.channels?.remove(it)
                     }
                 },
             )
@@ -206,7 +215,7 @@ class ChannelsViewModel(
 
                     if (categoryId != null) {
                         allChannelItems.remove(it)
-                        categoryChannels[categoryId]?.subChannels?.remove(it)
+                        categoryChannels[categoryId]?.channels?.remove(it)
                         item.cancelJobs()
                     }
                 },
