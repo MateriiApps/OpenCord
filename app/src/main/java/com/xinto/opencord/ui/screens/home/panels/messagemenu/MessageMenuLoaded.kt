@@ -10,12 +10,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.size.Size
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.emoji.DomainGuildEmoji
 import com.xinto.opencord.domain.emoji.DomainUnicodeEmoji
 import com.xinto.opencord.domain.emoji.DomainUnknownEmoji
-import com.xinto.opencord.ui.components.OCAsyncImage
+import com.xinto.opencord.ui.components.OCImage
+import com.xinto.opencord.ui.components.OCSize
 import com.xinto.opencord.ui.viewmodel.MessageMenuViewModel
 import com.xinto.opencord.util.Quad
 
@@ -74,9 +74,9 @@ fun MessageMenuLoaded(
                                 )
                             }
                             is DomainGuildEmoji -> {
-                                OCAsyncImage(
+                                OCImage(
                                     url = emoji.url,
-                                    size = Size(64, 64),
+                                    size = OCSize(64, 64),
                                     modifier = Modifier
                                         .size(18.dp),
                                 )

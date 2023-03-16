@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.channel.DomainTextChannel
 import com.xinto.opencord.domain.channel.DomainVoiceChannel
-import com.xinto.opencord.ui.components.OCAsyncImage
+import com.xinto.opencord.ui.components.OCImage
 import com.xinto.opencord.ui.components.channel.list.ChannelListCategoryItem
 import com.xinto.opencord.ui.components.channel.list.ChannelListRegularItem
 import com.xinto.opencord.ui.util.ContentAlpha
@@ -76,7 +76,7 @@ fun ChannelsListLoaded(
                     .padding(bottom = 8.dp),
             ) {
                 if (bannerUrl != null) {
-                    OCAsyncImage(
+                    OCImage(
                         modifier = Modifier
                             .fillParentMaxWidth()
                             .clip(MaterialTheme.shapes.large)

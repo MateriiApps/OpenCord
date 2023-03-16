@@ -7,7 +7,7 @@ import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.unit.sp
 import com.xinto.opencord.BuildConfig
-import com.xinto.opencord.ui.components.OCAsyncImage
+import com.xinto.opencord.ui.components.OCImage
 
 @Composable
 fun messageInlineContent(): Map<String, InlineTextContent> {
@@ -20,7 +20,7 @@ fun messageInlineContent(): Map<String, InlineTextContent> {
                 placeholderVerticalAlign = PlaceholderVerticalAlign.Center,
             ),
         ) { emoteId ->
-            OCAsyncImage(
+            OCImage(
                 url = "${BuildConfig.URL_CDN}/emojis/$emoteId",
             )
         },

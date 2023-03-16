@@ -14,8 +14,8 @@ import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.usersettings.DomainCustomStatus
 import com.xinto.opencord.domain.usersettings.DomainUserStatus
-import com.xinto.opencord.ui.components.OCAsyncImage
 import com.xinto.opencord.ui.components.OCBadgeBox
+import com.xinto.opencord.ui.components.OCImage
 import com.xinto.opencord.ui.components.indicator.UserStatusIcon
 import com.xinto.opencord.util.ifNotNullComposable
 
@@ -40,7 +40,7 @@ fun CurrentUserLoaded(
                     )
                 },
             ) {
-                OCAsyncImage(
+                OCImage(
                     modifier = Modifier
                         .size(40.dp)
                         .clip(CircleShape),

@@ -4,17 +4,17 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import coil.size.Size
-import com.xinto.opencord.ui.components.OCAsyncImage
+import com.xinto.opencord.ui.components.OCImage
+import com.xinto.opencord.ui.components.OCSize
 
 @Composable
 fun MessageAvatar(
     url: String,
     modifier: Modifier = Modifier,
 ) {
-    OCAsyncImage(
+    OCImage(
         url = url,
-        size = Size(100, 100),
+        size = OCSize(100, 100),
         modifier = modifier
             .clip(CircleShape),
     )

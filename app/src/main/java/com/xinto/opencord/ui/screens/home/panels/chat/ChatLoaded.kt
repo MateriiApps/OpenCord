@@ -15,14 +15,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.size.Size
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.attachment.DomainPictureAttachment
 import com.xinto.opencord.domain.attachment.DomainVideoAttachment
 import com.xinto.opencord.domain.emoji.*
 import com.xinto.opencord.domain.message.DomainMessage
 import com.xinto.opencord.domain.message.DomainMessageRegular
-import com.xinto.opencord.ui.components.OCAsyncImage
+import com.xinto.opencord.ui.components.OCImage
+import com.xinto.opencord.ui.components.OCSize
 import com.xinto.opencord.ui.components.attachment.AttachmentPicture
 import com.xinto.opencord.ui.components.attachment.AttachmentVideo
 import com.xinto.opencord.ui.components.channel.ChatInput
@@ -228,9 +228,9 @@ fun ChatLoaded(
                                                 )
                                             }
                                             is DomainGuildEmoji -> {
-                                                OCAsyncImage(
+                                                OCImage(
                                                     url = reaction.emoji.url,
-                                                    size = Size(64, 64),
+                                                    size = OCSize(64, 64),
                                                     modifier = Modifier
                                                         .size(18.dp),
                                                 )

@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.LocalAbsoluteTonalElevation
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.surfaceColorAtElevation
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -30,48 +30,59 @@ import com.google.accompanist.placeholder.placeholder
 import com.google.accompanist.placeholder.shimmer
 
 @Composable
-fun OCAsyncImage(
+fun OCImage(
     url: String?,
     modifier: Modifier = Modifier,
-    size: Size = Size.ORIGINAL,
+    size: OCSize = OCSize.ORIGINAL,
     alignment: Alignment = Alignment.Center,
     contentScale: ContentScale = ContentScale.Fit,
     alpha: Float = DefaultAlpha,
     colorFilter: ColorFilter? = null,
     filterQuality: FilterQuality = DrawScope.DefaultFilterQuality,
 ) {
+    val context = LocalContext.current
+    val model by remember(url, size) {
+        derivedStateOf {
+            ImageRequest.Builder(context)
+                .data(url)
+                .diskCacheKey(url)
+                .diskCachePolicy(CachePolicy.ENABLED)
+                .memoryCachePolicy(CachePolicy.ENABLED)
+                .memoryCacheKey(url)
+                .size(size.size ?: Size.ORIGINAL)
+                .precision(Precision.EXACT)
+                .crossfade(true)
+                .build()
+        }
+    }
+    val imageLoader by remember {
+        derivedStateOf {
+            ImageLoader.Builder(context).components {
+                if (Build.VERSION.SDK_INT >= 28) {
+                    add(ImageDecoderDecoder.Factory())
+                } else {
+                    add(GifDecoder.Factory())
+                }
+            }.build()
+        }
+    }
+
     SubcomposeAsyncImage(
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(url)
-            .diskCacheKey(url)
-            .diskCachePolicy(CachePolicy.ENABLED)
-            .memoryCachePolicy(CachePolicy.ENABLED)
-            .memoryCacheKey(url)
-            .size(size)
-            .precision(Precision.EXACT)
-            .crossfade(true)
-            .build(),
+        model = model,
         contentDescription = null,
-        imageLoader = ImageLoader.Builder(LocalContext.current).components {
-            if (Build.VERSION.SDK_INT >= 28) {
-                add(ImageDecoderDecoder.Factory())
-            } else {
-                add(GifDecoder.Factory())
-            }
-        }.build(),
+        imageLoader = imageLoader,
         modifier = modifier,
         loading = {
-            val localElevation = LocalAbsoluteTonalElevation.current
             Box(
                 modifier = modifier
                     .placeholder(
                         visible = true,
                         color = MaterialTheme.colorScheme.surfaceColorAtElevation(
-                            elevation = localElevation + 2.dp,
+                            elevation = LocalAbsoluteTonalElevation.current + 2.dp,
                         ),
                         highlight = PlaceholderHighlight.shimmer(
                             highlightColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
-                                elevation = localElevation + 3.dp,
+                                elevation = LocalAbsoluteTonalElevation.current + 3.dp,
                             ),
                         ),
                     )
@@ -87,4 +98,15 @@ fun OCAsyncImage(
         colorFilter = colorFilter,
         filterQuality = filterQuality,
     )
+}
+
+@JvmInline
+@Immutable
+value class OCSize(val size: Size?) {
+    constructor(width: Int, height: Int)
+            : this(Size(width, height))
+
+    companion object {
+        val ORIGINAL = OCSize(Size.ORIGINAL)
+    }
 }
