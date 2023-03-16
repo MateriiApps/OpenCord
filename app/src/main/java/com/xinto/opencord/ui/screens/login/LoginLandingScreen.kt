@@ -16,9 +16,10 @@ import com.xinto.opencord.R
 fun LoginLandingScreen(
     onLoginClick: () -> Unit,
     onRegisterClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier,
     ) { paddingValues ->
         Column(
             modifier = Modifier

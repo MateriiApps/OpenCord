@@ -58,6 +58,7 @@ import org.koin.androidx.compose.getViewModel
 @Composable
 fun MentionsScreen(
     onBackClick: () -> Unit,
+    modifier: Modifier = Modifier,
     viewModel: MentionsViewModel = getViewModel(),
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
@@ -199,7 +200,7 @@ fun MentionsScreen(
                 scrollBehavior = scrollBehavior,
             )
         },
-        modifier = Modifier
+        modifier = modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { paddingValues ->
         val messages = viewModel.messages.collectAsLazyPagingItems()

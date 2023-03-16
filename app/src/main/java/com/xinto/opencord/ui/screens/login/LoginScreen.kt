@@ -26,11 +26,12 @@ import org.koin.androidx.compose.getViewModel
 @Composable
 fun LoginScreen(
     onBackClick: () -> Unit,
+    modifier: Modifier = Modifier,
     viewModel: LoginViewModel = getViewModel(),
 ) {
     val context = LocalContext.current
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier,
         topBar = {
             Column(modifier = Modifier.fillMaxWidth()) {
                 TopAppBar(

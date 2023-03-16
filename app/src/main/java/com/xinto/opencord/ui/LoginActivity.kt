@@ -8,8 +8,11 @@ import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.with
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.material3.LocalAbsoluteTonalElevation
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
@@ -84,6 +87,9 @@ class LoginActivity : AppCompatActivity() {
                         when (dest) {
                             LoginDestination.Login -> LoginScreen(
                                 onBackClick = { nav.back() },
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .imePadding(),
                             )
 
                             LoginDestination.Landing -> LoginLandingScreen(
@@ -91,6 +97,9 @@ class LoginActivity : AppCompatActivity() {
                                 onRegisterClick = {
                                     uriHandler.openUri("https://discord.com/register")
                                 },
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .imePadding(),
                             )
                         }
                     }

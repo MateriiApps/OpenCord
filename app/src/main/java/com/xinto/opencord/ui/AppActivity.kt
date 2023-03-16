@@ -9,6 +9,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.with
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import com.xinto.opencord.db.database.CacheDatabase
@@ -83,7 +84,9 @@ class AppActivity : ComponentActivity() {
                 ) { dest ->
                     when (dest) {
                         AppDestination.Main -> HomeScreen(
-                            modifier = Modifier.fillMaxSize(),
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .imePadding(),
                             onPinsClick = { nav.navigate(AppDestination.Pins(data = it)) },
                             onSettingsClick = { nav.navigate(AppDestination.Settings) },
                             onMentionsClick = { nav.navigate(AppDestination.Mentions) },
@@ -92,17 +95,24 @@ class AppActivity : ComponentActivity() {
                         )
 
                         AppDestination.Settings -> Settings(
-                            modifier = Modifier.fillMaxSize(),
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .imePadding(),
                             onBackClick = { nav.back() },
                         )
 
                         AppDestination.Mentions -> MentionsScreen(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .imePadding(),
                             onBackClick = { nav.back() },
                         )
 
                         is AppDestination.Pins -> PinsScreen(
                             data = dest.data,
-                            modifier = Modifier.fillMaxSize(),
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .imePadding(),
                             onBackClick = { nav.back() },
                         )
                     }
