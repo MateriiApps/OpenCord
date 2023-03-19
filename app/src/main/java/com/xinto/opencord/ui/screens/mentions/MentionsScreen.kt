@@ -44,13 +44,8 @@ import com.xinto.opencord.ui.components.message.MessageRegular
 import com.xinto.opencord.ui.components.message.reply.MessageReferenced
 import com.xinto.opencord.ui.components.message.reply.MessageReferencedAuthor
 import com.xinto.opencord.ui.components.message.reply.MessageReferencedContent
-import com.xinto.opencord.ui.util.CompositePaddingValues
-import com.xinto.opencord.ui.util.ContentAlpha
-import com.xinto.opencord.ui.util.VoidablePaddingValues
+import com.xinto.opencord.ui.util.*
 import com.xinto.opencord.ui.viewmodel.MentionsViewModel
-import com.xinto.opencord.util.ifComposable
-import com.xinto.opencord.util.ifNotEmptyComposable
-import com.xinto.opencord.util.ifNotNullComposable
 import com.xinto.simpleast.render
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel

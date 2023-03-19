@@ -9,7 +9,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,13 +28,14 @@ fun RegularGuildItem(
 ) {
     val indicatorFraction by animateFloatAsState(if (selected) 0.8f else 0.15f)
     val imageCornerRadius by animateIntAsState(if (selected) 25 else 50)
+    val indicatorVisible by remember { derivedStateOf { showIndicator || selected } }
 
     Box(
         modifier = modifier.height(48.dp),
     ) {
         AnimatedVisibility(
             modifier = Modifier.align(Alignment.CenterStart),
-            visible = showIndicator || selected,
+            visible = indicatorVisible,
             enter = slideInHorizontally(),
             exit = slideOutHorizontally(),
         ) {

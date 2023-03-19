@@ -1,12 +1,15 @@
 package com.xinto.opencord.ui.components.message
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.ui.components.message.reply.MessageReplyBranch
@@ -23,15 +26,21 @@ fun MessageRegular(
     embeds: (@Composable () -> Unit)? = null,
     reactions: (@Composable () -> Unit)? = null,
 ) {
-    val background = if (mentioned) {
-        MaterialTheme.colorScheme.secondaryContainer
-    } else {
-        Color.Unspecified
+    val backgroundColor = MaterialTheme.colorScheme.secondaryContainer
+
+    val isMerged by remember {
+        derivedStateOf {
+            author == null && avatar == null
+        }
     }
 
-    val isMerged = author == null && avatar == null
-
-    Box(modifier = modifier.background(background)) {
+    Box(
+        modifier = modifier
+            .drawBehind {
+                val color = if (mentioned) backgroundColor else Color.Unspecified
+                drawRect(color)
+            },
+    ) {
         Column(
             modifier = Modifier
                 .wrapContentHeight()

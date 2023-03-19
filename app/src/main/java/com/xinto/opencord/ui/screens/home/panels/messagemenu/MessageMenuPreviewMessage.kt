@@ -22,7 +22,7 @@ import com.xinto.opencord.ui.components.message.reply.MessageReferencedAuthor
 import com.xinto.opencord.ui.components.message.reply.MessageReferencedContent
 import com.xinto.opencord.ui.util.ContentAlpha
 import com.xinto.opencord.ui.util.ProvideContentAlpha
-import com.xinto.opencord.util.ifComposable
+import com.xinto.opencord.ui.util.ifComposable
 import com.xinto.simpleast.render
 
 @Composable

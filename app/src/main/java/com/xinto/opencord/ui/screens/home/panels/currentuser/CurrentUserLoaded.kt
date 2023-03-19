@@ -17,7 +17,7 @@ import com.xinto.opencord.domain.usersettings.DomainUserStatus
 import com.xinto.opencord.ui.components.OCBadgeBox
 import com.xinto.opencord.ui.components.OCImage
 import com.xinto.opencord.ui.components.indicator.UserStatusIcon
-import com.xinto.opencord.util.ifNotNullComposable
+import com.xinto.opencord.ui.util.ifNotNullComposable
 
 @Composable
 fun CurrentUserLoaded(

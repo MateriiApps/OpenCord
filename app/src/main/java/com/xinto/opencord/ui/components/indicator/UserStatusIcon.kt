@@ -2,6 +2,9 @@ package com.xinto.opencord.ui.components.indicator
 
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -14,13 +17,17 @@ fun UserStatusIcon(
     isStreaming: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    val statusIcon = if (isStreaming)
-        R.drawable.ic_status_streaming
-    else when (userStatus) {
-        DomainUserStatus.Online -> R.drawable.ic_status_online
-        DomainUserStatus.Invisible -> R.drawable.ic_status_invisible
-        DomainUserStatus.Idle -> R.drawable.ic_status_idle
-        DomainUserStatus.Dnd -> R.drawable.ic_status_dnd
+    val statusIcon by remember(isStreaming, userStatus) {
+        derivedStateOf {
+            if (isStreaming)
+                R.drawable.ic_status_streaming
+            else when (userStatus) {
+                DomainUserStatus.Online -> R.drawable.ic_status_online
+                DomainUserStatus.Invisible -> R.drawable.ic_status_invisible
+                DomainUserStatus.Idle -> R.drawable.ic_status_idle
+                DomainUserStatus.Dnd -> R.drawable.ic_status_dnd
+            }
+        }
     }
 
     Icon(

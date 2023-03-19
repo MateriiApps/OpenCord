@@ -32,9 +32,9 @@ import com.xinto.opencord.ui.components.message.reply.MessageReferencedAuthor
 import com.xinto.opencord.ui.components.message.reply.MessageReferencedContent
 import com.xinto.opencord.ui.screens.home.panels.messagemenu.MessageMenu
 import com.xinto.opencord.ui.util.CompositePaddingValues
-import com.xinto.opencord.util.ifComposable
-import com.xinto.opencord.util.ifNotEmptyComposable
-import com.xinto.opencord.util.ifNotNullComposable
+import com.xinto.opencord.ui.util.ifComposable
+import com.xinto.opencord.ui.util.ifNotEmptyComposable
+import com.xinto.opencord.ui.util.ifNotNullComposable
 import com.xinto.simpleast.render
 import kotlinx.collections.immutable.ImmutableList
 

@@ -10,7 +10,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -51,7 +53,9 @@ fun ChannelListRegularItem(
             onClick = onClick,
             tonalElevation = tonalElevation,
         ) {
-            ProvideContentAlpha(if (selected || showUnread) ContentAlpha.full else ContentAlpha.medium) {
+            val showIndicator by remember { derivedStateOf { selected || showUnread } }
+
+            ProvideContentAlpha(if (showIndicator) ContentAlpha.full else ContentAlpha.medium) {
                 Row(
                     modifier = Modifier.padding(6.dp),
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
