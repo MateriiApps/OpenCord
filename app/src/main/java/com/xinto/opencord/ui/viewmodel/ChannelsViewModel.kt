@@ -11,6 +11,8 @@ import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
 import com.xinto.opencord.util.collectIn
 import kotlinx.coroutines.*
 
+
+@Stable
 class ChannelsViewModel(
     persistentDataManager: PersistentDataManager,
     private val channelStore: ChannelStore,

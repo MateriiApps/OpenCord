@@ -1,9 +1,6 @@
 package com.xinto.opencord.ui.viewmodel
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateMapOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xinto.opencord.domain.message.DomainMessage
@@ -14,6 +11,7 @@ import com.xinto.opencord.ui.navigation.PinsScreenData
 import com.xinto.opencord.util.collectIn
 import kotlinx.coroutines.launch
 
+@Stable
 class ChannelPinsViewModel(
     val data: PinsScreenData,
     messageStore: MessageStore,

@@ -1,6 +1,7 @@
 package com.xinto.opencord.ui.viewmodel
 
 import androidx.annotation.DrawableRes
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -25,6 +26,7 @@ import com.xinto.opencord.util.collectIn
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 
+@Stable
 class CurrentUserViewModel(
     private val gateway: DiscordGateway,
     private val sessionStore: SessionStore,

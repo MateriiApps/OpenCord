@@ -1,5 +1,6 @@
 package com.xinto.opencord.ui.viewmodel
 
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -22,6 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+@Stable
 class LoginViewModel(
     private val api: DiscordAuthService,
     private val accountManager: AccountManager,

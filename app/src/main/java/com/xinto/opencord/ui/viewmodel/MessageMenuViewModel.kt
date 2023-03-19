@@ -1,5 +1,6 @@
 package com.xinto.opencord.ui.viewmodel
 
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -19,6 +20,7 @@ import com.xinto.opencord.util.collectIn
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
+@Stable
 class MessageMenuViewModel(
     messageId: Long,
     private val messages: MessageStore,

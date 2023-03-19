@@ -1,5 +1,6 @@
 package com.xinto.opencord.ui.viewmodel
 
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -15,6 +16,7 @@ import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 
+@Stable
 class MentionsViewModel(
     persistentDataManager: PersistentDataManager,
     guilds: GuildStore,

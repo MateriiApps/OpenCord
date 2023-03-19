@@ -21,6 +21,7 @@ import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+@Stable
 class ChatViewModel(
     private val messageStore: MessageStore,
     private val reactionStore: ReactionStore,
