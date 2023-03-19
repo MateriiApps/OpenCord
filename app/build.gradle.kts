@@ -32,6 +32,14 @@ android {
             "URL_GATEWAY",
             "\"wss://gateway.discord.gg/?encoding=json&v=9&compress=zlib-stream\"",
         )
+
+        val languages = project.projectDir.resolve("src/main/res")
+            .listFiles { f -> f.isDirectory }
+            ?.mapNotNull { it.name.split("values-").getOrNull(1) }
+            ?: error("could not get res values folders")
+
+        // Limit 3rd party strings to just the languages we support
+        resourceConfigurations += languages
     }
 
     buildTypes {
