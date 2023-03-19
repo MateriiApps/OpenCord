@@ -1,6 +1,7 @@
 package com.xinto.opencord.domain.message
 
 import androidx.compose.runtime.Immutable
+import androidx.compose.ui.text.AnnotatedString
 import com.github.materiiapps.partial.*
 import com.xinto.opencord.BuildConfig
 import com.xinto.opencord.db.entity.message.EntityMessage
@@ -14,7 +15,8 @@ import com.xinto.opencord.rest.models.message.ApiMessage
 import com.xinto.opencord.rest.models.message.ApiMessagePartial
 import com.xinto.opencord.rest.models.message.ApiMessageType
 import com.xinto.opencord.rest.models.message.fromValue
-import com.xinto.simpleast.Node
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.datetime.Instant
 
 @Immutable
@@ -39,7 +41,7 @@ interface DomainMessage {
     val author: DomainUser
 
     @Skip
-    val contentNodes: List<Node<Any?>>
+    val contentRendered: AnnotatedString
 
     @Skip
     val formattedTimestamp: String
@@ -63,8 +65,8 @@ fun ApiMessage.toDomain(): DomainMessage {
                 timestamp = timestamp,
                 pinned = pinned,
                 editedTimestamp = editedTimestamp,
-                attachments = attachments.map { it.toDomain() },
-                embeds = embeds.map { it.toDomain() },
+                attachments = attachments.map { it.toDomain() }.toImmutableList(),
+                embeds = embeds.map { it.toDomain() }.toImmutableList(),
                 isReply = type == ApiMessageType.Reply,
                 referencedMessage = referencedMessage?.toDomain(),
                 mentionEveryone = mentionEveryone,
@@ -106,8 +108,8 @@ fun ApiMessagePartial.toDomain(): DomainMessagePartial {
                 timestamp = timestamp,
                 pinned = pinned,
                 editedTimestamp = editedTimestamp,
-                attachments = attachments.map { it.map { it.toDomain() } },
-                embeds = embeds.map { it.map { it.toDomain() } },
+                attachments = attachments.map { it.map { it.toDomain() }.toImmutableList() },
+                embeds = embeds.map { it.map { it.toDomain() }.toImmutableList() },
                 isReply = partial(type == ApiMessageType.Reply),
                 referencedMessage = referencedMessage.map { it?.toDomain() },
                 mentionEveryone = mentionEveryone,
@@ -154,8 +156,8 @@ fun EntityMessage.toDomain(
                 timestamp = Instant.fromEpochMilliseconds(timestamp),
                 pinned = pinned,
                 editedTimestamp = editedTimestamp?.let { Instant.fromEpochMilliseconds(it) },
-                attachments = attachments ?: emptyList(),
-                embeds = embeds ?: emptyList(),
+                attachments = attachments?.toImmutableList() ?: persistentListOf(),
+                embeds = embeds?.toImmutableList() ?: persistentListOf(),
                 isReply = type == ApiMessageType.Reply,
                 referencedMessage = referencedMessage,
                 mentionEveryone = mentionsEveryone,

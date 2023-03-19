@@ -21,7 +21,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
@@ -46,7 +45,6 @@ import com.xinto.opencord.ui.components.message.reply.MessageReferencedAuthor
 import com.xinto.opencord.ui.components.message.reply.MessageReferencedContent
 import com.xinto.opencord.ui.util.*
 import com.xinto.opencord.ui.viewmodel.MentionsViewModel
-import com.xinto.simpleast.render
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
@@ -296,10 +294,7 @@ private fun MentionsPageMessage(message: DomainMessage, modifier: Modifier) {
                                 },
                                 content = {
                                     MessageReferencedContent(
-                                        text = render(
-                                            nodes = referencedMessage.contentNodes,
-                                            renderContext = null,
-                                        ).toAnnotatedString(),
+                                        text = referencedMessage.contentRendered,
                                     )
                                 },
                             )
@@ -320,13 +315,9 @@ private fun MentionsPageMessage(message: DomainMessage, modifier: Modifier) {
                             isBot = message.author.bot,
                         )
                     },
-                    content = message.contentNodes.ifNotEmptyComposable { nodes ->
+                    content = {
                         MessageContent(
-                            text = render(
-                                builder = AnnotatedString.Builder(),
-                                nodes = nodes,
-                                renderContext = null,
-                            ).toAnnotatedString(),
+                            text = message.contentRendered,
                         )
                     },
                     embeds = message.embeds.ifNotEmptyComposable { embeds ->

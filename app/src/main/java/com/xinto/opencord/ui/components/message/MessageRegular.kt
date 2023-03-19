@@ -1,5 +1,6 @@
 package com.xinto.opencord.ui.components.message
 
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
@@ -18,6 +19,7 @@ import com.xinto.opencord.ui.components.message.reply.MessageReplyBranch
 fun MessageRegular(
     modifier: Modifier = Modifier,
     mentioned: Boolean = false,
+    onLongClick: (() -> Unit)? = null,
     reply: (@Composable () -> Unit)? = null,
     avatar: (@Composable () -> Unit)? = null,
     author: (@Composable () -> Unit)? = null,
@@ -36,6 +38,7 @@ fun MessageRegular(
 
     Box(
         modifier = modifier
+            .combinedClickable(onClick = {}, onLongClick = onLongClick)
             .drawBehind {
                 val color = if (mentioned) backgroundColor else Color.Unspecified
                 drawRect(color)

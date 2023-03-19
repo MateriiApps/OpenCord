@@ -1,22 +1,17 @@
 package com.xinto.opencord.ui.screens.home.panels.chat
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
+import com.xinto.opencord.ui.screens.home.panels.chatinput.ChatInput
 import com.xinto.opencord.ui.viewmodel.ChatViewModel
-import kotlinx.collections.immutable.toImmutableList
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -27,10 +22,6 @@ fun Chat(
     modifier: Modifier = Modifier,
     viewModel: ChatViewModel = getViewModel(),
 ) {
-    val sortedMessages by remember(viewModel.messages) {
-        derivedStateOf { viewModel.getSortedMessages().toImmutableList() }
-    }
-
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -100,20 +91,30 @@ fun Chat(
                     )
                 }
                 is ChatViewModel.State.Loaded -> {
-                    ChatLoaded(
-                        messages = sortedMessages,
-                        reactions = viewModel.reactions,
-                        currentUserId = viewModel.currentUserId,
-                        channelName = viewModel.channelName,
-                        userMessage = viewModel.userMessage,
-                        sendEnabled = viewModel.sendEnabled,
-                        onUserMessageUpdate = viewModel::updateMessage,
-                        onUserMessageSend = viewModel::sendMessage,
-                        onMessageReact = viewModel::reactToMessage,
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(paddingValues),
-                    )
+                    ) {
+                        ChatLoaded(
+                            viewModel = viewModel,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .weight(1f),
+                        )
+
+                        ChatInput(
+                            modifier = Modifier.padding(
+                                start = 8.dp,
+                                end = 8.dp,
+                                bottom = 4.dp,
+                            ),
+                            hint = {
+                                Text(stringResource(R.string.chat_input_hint, viewModel.channelName))
+                            },
+                        )
+                    }
                 }
                 is ChatViewModel.State.Error -> {
                     ChatError(

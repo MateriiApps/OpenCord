@@ -23,7 +23,6 @@ import com.xinto.opencord.ui.components.message.reply.MessageReferencedContent
 import com.xinto.opencord.ui.util.ContentAlpha
 import com.xinto.opencord.ui.util.ProvideContentAlpha
 import com.xinto.opencord.ui.util.ifComposable
-import com.xinto.simpleast.render
 
 @Composable
 fun MessageMenuPreviewMessage(
@@ -54,10 +53,7 @@ fun MessageMenuPreviewMessage(
                             },
                             content = {
                                 MessageReferencedContent(
-                                    text = render(
-                                        nodes = referencedMessage.contentNodes,
-                                        renderContext = null,
-                                    ).toAnnotatedString(),
+                                    text = message.contentRendered,
                                 )
                             },
                         )
@@ -79,12 +75,9 @@ fun MessageMenuPreviewMessage(
                     )
                 },
                 content = {
-                    if (message.contentNodes.isNotEmpty()) {
+                    if (message.contentRendered.isNotEmpty()) {
                         MessageContent(
-                            text = render(
-                                nodes = message.contentNodes,
-                                renderContext = null,
-                            ).toAnnotatedString(),
+                            text = message.contentRendered,
                         )
                     } else {
                         ProvideContentAlpha(ContentAlpha.high) {

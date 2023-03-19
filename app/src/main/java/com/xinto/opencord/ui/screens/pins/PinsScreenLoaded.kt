@@ -11,7 +11,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.attachment.DomainPictureAttachment
@@ -35,7 +34,6 @@ import com.xinto.opencord.ui.util.CompositePaddingValues
 import com.xinto.opencord.ui.util.ifComposable
 import com.xinto.opencord.ui.util.ifNotEmptyComposable
 import com.xinto.opencord.ui.util.ifNotNullComposable
-import com.xinto.simpleast.render
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
@@ -90,12 +88,9 @@ fun PinsScreenLoaded(
                                         author = {
                                             MessageReferencedAuthor(author = referencedMessage.author.username)
                                         },
-                                        content = {
+                                        content = referencedMessage.contentRendered.ifNotEmptyComposable {
                                             MessageReferencedContent(
-                                                text = render(
-                                                    nodes = referencedMessage.contentNodes,
-                                                    renderContext = null,
-                                                ).toAnnotatedString(),
+                                                text = referencedMessage.contentRendered,
                                             )
                                         },
                                     )
@@ -116,13 +111,9 @@ fun PinsScreenLoaded(
                                     isBot = message.author.bot,
                                 )
                             },
-                            content = message.contentNodes.ifNotEmptyComposable { nodes ->
+                            content = message.contentRendered.ifNotEmptyComposable {
                                 MessageContent(
-                                    text = render(
-                                        builder = AnnotatedString.Builder(),
-                                        nodes = nodes,
-                                        renderContext = null,
-                                    ).toAnnotatedString(),
+                                    text = message.contentRendered,
                                 )
                             },
                             embeds = message.embeds.ifNotEmptyComposable { embeds ->

@@ -1,10 +1,10 @@
 package com.xinto.opencord.domain.message
 
 import androidx.compose.runtime.Immutable
+import androidx.compose.ui.text.buildAnnotatedString
 import com.github.materiiapps.partial.Partialize
 import com.xinto.opencord.domain.user.DomainUser
 import com.xinto.opencord.util.Timestamp
-import com.xinto.simpleast.Node
 import kotlinx.datetime.Instant
 
 @Immutable
@@ -18,7 +18,7 @@ data class DomainMessageUnknown(
     override val content: String,
     override val author: DomainUser
 ) : DomainMessage {
-    override val contentNodes = emptyList<Node<Any?>>()
+    override val contentRendered get() = buildAnnotatedString {}
     override val formattedTimestamp by lazy {
         Timestamp.getFormattedTimestamp(timestamp)
     }

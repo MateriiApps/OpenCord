@@ -39,3 +39,18 @@ inline fun <L : Collection<I>, I> L.ifNotEmptyComposable(
         null
     }
 }
+
+@Composable
+inline fun <T: CharSequence> T.ifNotEmptyComposable(
+    crossinline block: @Composable (T) -> Unit,
+): (@Composable () -> Unit)? {
+    val isNotEmpty by remember { derivedStateOf { isNotEmpty() } }
+
+    return if (isNotEmpty) {
+        remember(this) {
+            @Composable { block(this) }
+        }
+    } else {
+        null
+    }
+}
