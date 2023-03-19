@@ -62,7 +62,7 @@ fun MentionsScreen(
     viewModel: MentionsViewModel = getViewModel(),
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-    val filterMenuState = rememberSheetState()
+    val filterMenuState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
 
     if (filterMenuState.isVisible || filterMenuState.targetValue != SheetValue.Hidden) {
