@@ -1,5 +1,8 @@
 package com.xinto.opencord.ui.components.indicator
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.with
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -30,10 +33,15 @@ fun UserStatusIcon(
         }
     }
 
-    Icon(
-        modifier = modifier,
-        painter = painterResource(statusIcon),
-        contentDescription = null,
-        tint = Color.Unspecified,
-    )
+    AnimatedContent(
+        targetState = statusIcon,
+        transitionSpec = { slideIntoContainer(AnimatedContentScope.SlideDirection.Up) with slideOutOfContainer(AnimatedContentScope.SlideDirection.Up) },
+    ) { icon ->
+        Icon(
+            modifier = modifier,
+            painter = painterResource(icon),
+            contentDescription = null,
+            tint = Color.Unspecified,
+        )
+    }
 }

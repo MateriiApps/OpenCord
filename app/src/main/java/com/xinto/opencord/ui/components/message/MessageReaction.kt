@@ -52,7 +52,7 @@ fun MessageReaction(
 
                     slideIntoContainer(direction) with slideOutOfContainer(direction)
                 },
-            ) {
+            ) { count ->
                 Text(
                     text = count.toString(),
                     fontSize = 16.sp,
