@@ -18,6 +18,7 @@ import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.ui.navigation.AppDestination
 import com.xinto.opencord.ui.navigation.back
 import com.xinto.opencord.ui.screens.Settings
+import com.xinto.opencord.ui.screens.SettingsCategory
 import com.xinto.opencord.ui.screens.home.HomeScreen
 import com.xinto.opencord.ui.screens.pins.PinsScreen
 import com.xinto.opencord.ui.theme.OpenCordTheme
@@ -96,15 +97,21 @@ class AppActivity : ComponentActivity() {
                             onPinsClick = { nav.navigate(AppDestination.Pins(data = it)) },
                         )
 
-                        AppDestination.Settings -> Settings(
-                            modifier = Modifier.fillMaxSize(),
-                            onBackClick = { nav.back() },
-                        )
-
                         is AppDestination.Pins -> PinsScreen(
                             data = dest.data,
                             modifier = Modifier.fillMaxSize(),
                             onBackClick = { nav.back() },
+                        )
+
+                        AppDestination.Settings -> Settings(
+                            modifier = Modifier.fillMaxSize(),
+                            onBackClick = { nav.back() },
+                            onCategoryClick = { nav.navigate(it) },
+                        )
+
+                        is AppDestination.Settings -> SettingsCategory(
+                            dest = dest,
+                            onClickBack = { nav.back() },
                         )
                     }
                 }

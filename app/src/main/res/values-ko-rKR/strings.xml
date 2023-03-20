@@ -36,4 +36,16 @@
     <string name="current_user_set_status">사용자 지정 상태를 설정해 보세요</string>
     <string name="current_user_clear_status">상태 초기화</string>
     <string name="accounts_open">계정 전환기 열기</string>
+    <string name="notifications">Notifications</string>
+    <string name="connections">Connections</string>
+    <string name="appearance">Appearance</string>
+    <string name="accessibility">Accessibility</string>
+    <string name="language">Language</string>
+    <string name="privacy_safety"><![CDATA[Privacy & safety]]></string>
+    <string name="user_profile">User profile</string>
+    <string name="voice_video"><![CDATA[Voice & video]]></string>
+    <string name="account">Account</string>
+    <string name="sync_across_clients">Sync across clients</string>
+    <string name="devices">Devices</string>
+    <string name="friend_requests">Friend Requests</string>
 </resources>
