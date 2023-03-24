@@ -26,8 +26,9 @@ class ChatInputViewModel(
 
     fun sendMessage() {
         val content = pendingContent
+        pendingContent = ""
+
         if (content.isBlank()) {
-            pendingContent = ""
             return
         }
 
