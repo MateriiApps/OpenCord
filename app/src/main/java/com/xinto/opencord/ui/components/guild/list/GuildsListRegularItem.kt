@@ -28,7 +28,7 @@ fun RegularGuildItem(
 ) {
     val indicatorFraction by animateFloatAsState(if (selected) 0.8f else 0.15f)
     val imageCornerRadius by animateIntAsState(if (selected) 25 else 50)
-    val indicatorVisible by remember { derivedStateOf { showIndicator || selected } }
+    val indicatorVisible by remember(showIndicator, selected) { derivedStateOf { showIndicator || selected } }
 
     Box(
         modifier = modifier.height(48.dp),

@@ -31,13 +31,14 @@ fun ChannelListRegularItem(
 ) {
     val indicatorFraction by animateFloatAsState(if (selected) 0.7f else 0.15f)
     val tonalElevation by animateDpAsState(if (selected) 5.dp else 0.dp)
+    val showIndicator by remember(selected, showUnread) { derivedStateOf { selected || showUnread } }
 
     Box(
         modifier = modifier.height(36.dp),
     ) {
         AnimatedVisibility(
             modifier = Modifier.align(Alignment.CenterStart),
-            visible = selected || showUnread,
+            visible = showIndicator,
             enter = slideInHorizontally(),
             exit = slideOutHorizontally(),
         ) {
@@ -53,7 +54,6 @@ fun ChannelListRegularItem(
             onClick = onClick,
             tonalElevation = tonalElevation,
         ) {
-            val showIndicator by remember { derivedStateOf { selected || showUnread } }
 
             ProvideContentAlpha(if (showIndicator) ContentAlpha.full else ContentAlpha.medium) {
                 Row(

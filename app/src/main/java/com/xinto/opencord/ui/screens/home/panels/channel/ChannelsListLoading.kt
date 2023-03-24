@@ -6,6 +6,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,7 +25,7 @@ fun ChannelsListLoading(
 ) {
     val shimmer = rememberShimmer(shimmerBounds = ShimmerBounds.View)
     Column(modifier = modifier.padding(8.dp)) {
-        val items = remember { (5..20).random() }
+        val itemCount = remember { (5..20).random() }
         Row(
             horizontalArrangement = Arrangement.spacedBy(6.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -51,8 +52,9 @@ fun ChannelsListLoading(
                 style = MaterialTheme.typography.titleSmall,
             )
         }
-        repeat(items) { itemIndex ->
-            val isCategory = remember { itemIndex == 0 || (0..6).random() == 1 }
+
+        for (i in 0 until itemCount) key(i) {
+            val isCategory = remember { i == 0 || (0..6).random() == 1 }
             if (isCategory) {
                 ChannelListCategoryItem(
                     modifier = Modifier.padding(
@@ -84,13 +86,12 @@ fun ChannelsListLoading(
                 ChannelListRegularItem(
                     modifier = Modifier.padding(bottom = 2.dp),
                     title = {
-                        val title = remember { " ".repeat((15..30).random()) }
                         Text(
                             modifier = Modifier
                                 .shimmer(shimmer)
                                 .clip(MaterialTheme.shapes.medium)
                                 .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)),
-                            text = title,
+                            text = remember { " ".repeat((15..30).random()) },
                         )
                     },
                     icon = {

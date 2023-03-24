@@ -8,6 +8,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -55,15 +56,14 @@ fun ChatLoading(
                 },
                 content = {
                     val rowCount = remember { (1..3).random() }
-                    repeat(rowCount) {
+                    for (i in 0 until rowCount) key(i) {
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(4.dp),
                         ) {
                             val itemCount = remember { (1..5).random() }
-                            repeat(itemCount) {
-                                val spaces = remember { (10..30).random() }
+                            for (j in 0 until itemCount) key(j) {
                                 Text(
-                                    text = " ".repeat(spaces),
+                                    text = remember { " ".repeat((10..30).random()) },
                                     modifier = Modifier
                                         .shimmer(shimmer)
                                         .padding(top = 8.dp)

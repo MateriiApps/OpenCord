@@ -35,9 +35,8 @@ fun CurrentUserLoading(
             )
         },
         username = {
-            val spaces = remember { (15..30).random() }
             Text(
-                text = " ".repeat(spaces),
+                text = remember { " ".repeat((15..30).random()) },
                 modifier = Modifier
                     .shimmer(shimmer)
                     .clip(MaterialTheme.shapes.medium)

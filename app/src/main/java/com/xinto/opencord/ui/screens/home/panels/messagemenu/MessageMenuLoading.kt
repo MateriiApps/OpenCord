@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -54,11 +55,13 @@ fun MessageMenuLoading() {
                     )
                 },
                 content = {
-                    repeat(remember { (1..3).random() }) {
+                    val lineCount = remember { (1..3).random() }
+                    for (i in 0 until lineCount) key(i) {
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(4.dp),
                         ) {
-                            repeat(remember { (1..5).random() }) {
+                            val blockCount = remember { (1..5).random() }
+                            for (j in 0 until blockCount) key(j) {
                                 Text(
                                     text = remember { " ".repeat((10..30).random()) },
                                     modifier = Modifier
@@ -99,7 +102,8 @@ fun MessageMenuLoading() {
             }
         }
 
-        repeat(remember { (4..8).random() }) {
+        val itemCount = remember { (4..8).random() }
+        for (i in 0 until itemCount) key(i) {
             Surface(
                 shape = MaterialTheme.shapes.medium,
             ) {
