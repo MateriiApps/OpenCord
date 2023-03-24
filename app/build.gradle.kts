@@ -134,7 +134,6 @@ java {
 }
 
 dependencies {
-    implementation(project(":overlapping-panels-compose"))
     implementation(project(":simpleast-compose"))
 
     // Use java.time.* on Android <= 8
@@ -158,4 +157,5 @@ dependencies {
     Dependencies.Partials(this)
     Dependencies.EnumUtil(this)
     Dependencies.ReimaginedNav(this)
+    Dependencies.Panels(this)
 }

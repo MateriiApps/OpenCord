@@ -267,6 +267,18 @@ sealed class Dependencies {
         }
     }
 
+    object Panels : Dependencies() {
+        const val version = "1.0.0"
+
+        const val panels = "io.github.materiiapps.panels:panels:$version"
+
+        override fun invoke(scope: DependencyHandlerScope) {
+            scope {
+                implementation(panels)
+            }
+        }
+    }
+
     // TODO: use context receivers when they are enabled by default
     // cannot enable them for build.gradle.kts
     abstract operator fun invoke(scope: DependencyHandlerScope)

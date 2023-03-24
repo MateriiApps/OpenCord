@@ -23,4 +23,3 @@ pluginManagement {
 rootProject.name = "OpenCord"
 include(":app")
 include(":simpleast-compose")
-include(":overlapping-panels-compose")
