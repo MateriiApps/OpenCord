@@ -20,5 +20,6 @@ fun AttachmentPicture(
         size = OCSize(width, height),
         modifier = modifier.clip(MaterialTheme.shapes.small),
         contentScale = ContentScale.Fit,
+        memoryCaching = false,
     )
 }

@@ -28,6 +28,11 @@ import coil.size.Size
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.placeholder
 import com.google.accompanist.placeholder.shimmer
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+
+@OptIn(ExperimentalCoroutinesApi::class)
+private val IMAGE_DISPATCHER = Dispatchers.IO.limitedParallelism(5)
 
 @Composable
 fun OCImage(
@@ -39,15 +44,18 @@ fun OCImage(
     alpha: Float = DefaultAlpha,
     colorFilter: ColorFilter? = null,
     filterQuality: FilterQuality = DrawScope.DefaultFilterQuality,
+    memoryCaching: Boolean = true,
 ) {
     val context = LocalContext.current
-    val model by remember(url, size) {
+
+    val model by remember(url, size, memoryCaching) {
         derivedStateOf {
             ImageRequest.Builder(context)
                 .data(url)
+                .dispatcher(IMAGE_DISPATCHER)
                 .diskCacheKey(url)
                 .diskCachePolicy(CachePolicy.ENABLED)
-                .memoryCachePolicy(CachePolicy.ENABLED)
+                .memoryCachePolicy(if (memoryCaching) CachePolicy.ENABLED else CachePolicy.READ_ONLY)
                 .memoryCacheKey(url)
                 .size(size.size ?: Size.ORIGINAL)
                 .precision(Precision.EXACT)
