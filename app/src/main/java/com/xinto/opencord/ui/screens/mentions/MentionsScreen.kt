@@ -11,9 +11,7 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -43,6 +41,7 @@ import com.xinto.opencord.ui.components.message.MessageRegular
 import com.xinto.opencord.ui.components.message.reply.MessageReferenced
 import com.xinto.opencord.ui.components.message.reply.MessageReferencedAuthor
 import com.xinto.opencord.ui.components.message.reply.MessageReferencedContent
+import com.xinto.opencord.ui.screens.home.panels.messagemenu.MessageMenu
 import com.xinto.opencord.ui.util.*
 import com.xinto.opencord.ui.viewmodel.MentionsViewModel
 import kotlinx.coroutines.launch
@@ -54,9 +53,18 @@ fun MentionsScreen(
     modifier: Modifier = Modifier,
     viewModel: MentionsViewModel = getViewModel(),
 ) {
+    var messageMenuTarget by remember { mutableStateOf<Long?>(null) }
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val filterMenuState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
+
+
+    if (messageMenuTarget != null) {
+        MessageMenu(
+            messageId = messageMenuTarget!!,
+            onDismiss = { messageMenuTarget = null },
+        )
+    }
 
     if (filterMenuState.isVisible || filterMenuState.targetValue != SheetValue.Hidden) {
         ModalBottomSheet(
@@ -226,6 +234,7 @@ fun MentionsScreen(
                             if (message != null) {
                                 MentionsPageMessage(
                                     message = message,
+                                    onLongClick = { messageMenuTarget = message.id },
                                     modifier = Modifier.fillParentMaxWidth(),
                                 )
                             }
@@ -269,7 +278,11 @@ fun MentionsScreen(
 }
 
 @Composable
-private fun MentionsPageMessage(message: DomainMessage, modifier: Modifier) {
+private fun MentionsPageMessage(
+    message: DomainMessage,
+    onLongClick: () -> Unit,
+    modifier: Modifier,
+) {
     when (message) {
         is DomainMessageRegular -> {
             Surface(
@@ -278,9 +291,9 @@ private fun MentionsPageMessage(message: DomainMessage, modifier: Modifier) {
                 tonalElevation = 1.dp,
             ) {
                 MessageRegular(
+                    onLongClick = onLongClick,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { }
                         .padding(8.dp),
                     reply = message.isReply.ifComposable {
                         val referencedMessage = message.referencedMessage
