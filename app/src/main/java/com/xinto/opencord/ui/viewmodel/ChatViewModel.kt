@@ -49,7 +49,10 @@ class ChatViewModel(
     inner class MessageItem(
         message: DomainMessage,
         reactions: List<ReactionState>? = null,
+        topMerged: Boolean = false,
     ) {
+        var topMerged by mutableStateOf(topMerged)
+        var bottomMerged by mutableStateOf(false)
         var message by mutableStateOf(message)
         var reactions = mutableStateMapOf<DomainEmojiIdentifier, ReactionState>()
             .apply { reactions?.let { putAll(it.map { r -> r.emoji.identifier to r }) } }
@@ -111,6 +114,15 @@ class ChatViewModel(
                     )
                 }
 
+                for (i in 0 until (messageItems.size - 1)) {
+                    val curMessage = messageItems[i]
+                    val prevMessage = messageItems[i + 1]
+
+                    val canMerge = canMessagesMerge(curMessage.message, prevMessage.message)
+                    curMessage.topMerged = canMerge
+                    prevMessage.bottomMerged = canMerge
+                }
+
                 withContext(Dispatchers.Main) {
                     channelName = channel.name
 
@@ -130,16 +142,36 @@ class ChatViewModel(
 
         messageStore.observeChannel(channelId).collectIn(viewModelScope) { event ->
             event.fold(
-                onAdd = {
-                    sortedMessages.add(0, MessageItem(it))
+                onAdd = { msg ->
+                    val topMessage = sortedMessages.getOrNull(0)
+                    val canMerge = canMessagesMerge(msg, topMessage?.message)
+
+                    sortedMessages.getOrNull(0)?.bottomMerged = canMerge
+                    sortedMessages.add(0, MessageItem(msg, topMerged = canMerge))
                 },
                 onUpdate = { msg ->
-                    getMessageItemIndex(msg.id)
-                        ?.let { sortedMessages.getOrNull(it)?.message = msg }
+                    val i = getMessageItemIndex(msg.id)
+                        ?: return@fold
+
+                    val topMessage = sortedMessages.getOrNull(i + 1)
+                    val bottomMessage = sortedMessages.getOrNull(i - 1)
+                    val canMerge = canMessagesMerge(bottomMessage?.message, topMessage?.message)
+
+                    topMessage?.bottomMerged = canMerge
+                    bottomMessage?.topMerged = canMerge
+                    sortedMessages.getOrNull(i)?.message = msg
                 },
                 onDelete = { data ->
-                    getMessageItemIndex(data.messageId.value)
-                        ?.let { sortedMessages.removeAt(it) }
+                    val i = getMessageItemIndex(data.messageId.value)
+                        ?: return@fold
+
+                    val topMessage = sortedMessages.getOrNull(i + 1)
+                    val bottomMessage = sortedMessages.getOrNull(i - 1)
+                    val canMerge = canMessagesMerge(bottomMessage?.message, topMessage?.message)
+
+                    topMessage?.bottomMerged = canMerge
+                    bottomMessage?.topMerged = canMerge
+                    sortedMessages.removeAt(i)
                 },
             )
         }
@@ -193,5 +225,18 @@ class ChatViewModel(
         if (persistentGuildId != 0L && persistentChannelId != 0L) {
             load()
         }
+    }
+
+    private fun canMessagesMerge(message: DomainMessage?, prevMessage: DomainMessage?): Boolean {
+        return message != null && prevMessage != null
+                && message.author.id == prevMessage.author.id
+                && prevMessage is DomainMessageRegular
+                && message is DomainMessageRegular
+                && !message.isReply
+                && (message.timestamp - prevMessage.timestamp).inWholeMinutes < 1
+                && message.attachments.isEmpty()
+                && prevMessage.attachments.isEmpty()
+                && message.embeds.isEmpty()
+                && prevMessage.embeds.isEmpty()
     }
 }

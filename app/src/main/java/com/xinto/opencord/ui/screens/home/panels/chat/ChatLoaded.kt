@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
@@ -67,32 +67,9 @@ fun ChatLoaded(
         modifier = modifier,
         reverseLayout = true,
     ) {
-        itemsIndexed(viewModel.sortedMessages, key = { _, m -> m.message.id }) { i, item ->
+        items(viewModel.sortedMessages, key = { it.message.id }) { item ->
             when (val message = item.message) {
                 is DomainMessageRegular -> {
-                    val prevMessage by remember {
-                        derivedStateOf(referentialEqualityPolicy()) {
-                            viewModel.sortedMessages.getOrNull(i + 1)?.message
-                        }
-                    }
-
-                    val canMerge by remember {
-                        derivedStateOf {
-                            val prevMessage1 = prevMessage
-
-                            prevMessage1 != null
-                                    && message.author.id == prevMessage1.author.id
-                                    && prevMessage1 is DomainMessageRegular
-                                    && !message.isReply
-                                    && !prevMessage1.isReply
-                                    && (message.timestamp - prevMessage1.timestamp).inWholeMinutes < 1
-                                    && message.attachments.isEmpty()
-                                    && prevMessage1.attachments.isEmpty()
-                                    && message.embeds.isEmpty()
-                                    && prevMessage1.embeds.isEmpty()
-                        }
-                    }
-
                     val messageReactions by remember {
                         derivedStateOf {
                             item.reactions.values
@@ -107,6 +84,8 @@ fun ChatLoaded(
                         modifier = Modifier
                             .fillMaxWidth(),
                         mentioned = item.meMentioned,
+                        topMerged = item.topMerged,
+                        bottomMerged = item.bottomMerged,
                         reply = message.isReply.ifComposable {
                             if (message.referencedMessage != null) {
                                 MessageReferenced(
@@ -128,10 +107,10 @@ fun ChatLoaded(
                                 }
                             }
                         },
-                        avatar = if (canMerge) null else { ->
+                        avatar = if (item.topMerged) null else { ->
                             MessageAvatar(url = message.author.avatarUrl)
                         },
-                        author = if (canMerge) null else { ->
+                        author = if (item.topMerged) null else { ->
                             MessageAuthor(
                                 author = message.author.username,
                                 timestamp = message.formattedTimestamp,
