@@ -52,6 +52,7 @@ fun ApiChannel.toEntity(guildId: Long): EntityChannel {
         position = position,
         parentId = parentId?.value,
         nsfw = nsfw,
+        lastMessageId = lastMessageId?.value,
         pinsStored = false,
     )
 }

@@ -109,14 +109,13 @@ class ChannelsViewModel(
                     val guild = guildStore.fetchGuild(persistentGuildId)
                         ?: return@withContext
 
-                    replaceChannels(channelStore.fetchChannels(persistentGuildId))
-
                     withContext(Dispatchers.Main) {
                         guildName = guild.name
                         guildBannerUrl = guild.bannerUrl
                         guildBoostLevel = guild.premiumTier
-                        state = State.Loaded
                     }
+
+                    replaceChannels(channelStore.fetchChannels(persistentGuildId))
                 } catch (e: Exception) {
                     e.printStackTrace()
                     withContext(Dispatchers.Main) {
@@ -272,15 +271,18 @@ class ChannelsViewModel(
             .filterValues { it.channel.parentId == null }
 
         withContext(Dispatchers.Main) {
-            allChannelItems.values.forEach { it.cancelJobs() }
-            allChannelItems.clear()
-            allChannelItems.putAll(channelItems)
+            synchronized(state) { // Needed or the old cached items can overwrite the new items from gw
+                allChannelItems.values.forEach { it.cancelJobs() }
+                allChannelItems.clear()
+                allChannelItems.putAll(channelItems)
 
-            categoryChannels.clear()
-            categoryChannels.putAll(categoryItems)
+                categoryChannels.clear()
+                categoryChannels.putAll(categoryItems)
 
-            noCategoryChannels.clear()
-            noCategoryChannels.putAll(noCategoryItems)
+                noCategoryChannels.clear()
+                noCategoryChannels.putAll(noCategoryItems)
+                state = State.Loaded
+            }
         }
     }
 
