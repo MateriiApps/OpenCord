@@ -30,17 +30,27 @@ class ChannelsViewModel(
     @Stable
     class ChannelItemData(
         channel: DomainChannel,
-        unreadState: DomainUnreadState?,
-        lastMessageId: Long?,
         var unreadListenerJob: Job?,
         var lastMessageListenerJob: Job?,
+        private var lastUnreadMessageId: Long? = null,
+        private var lastChannelMessageId: Long? = null,
     ) {
-        var channel by mutableStateOf(channel)
-        var unreadState by mutableStateOf(unreadState)
-        var lastMessageId by mutableStateOf(lastMessageId)
+        private val _isUnread: Boolean
+            get() = (lastChannelMessageId ?: 0) > (lastUnreadMessageId ?: 0)
 
-        val isUnread: Boolean
-            get() = (lastMessageId ?: 0) > (unreadState?.lastMessageId ?: 0)
+        var channel by mutableStateOf(channel)
+        var isUnread by mutableStateOf(_isUnread)
+            private set
+
+        fun updateUnreadState(unreadState: DomainUnreadState?) {
+            lastUnreadMessageId = unreadState?.lastMessageId
+            isUnread = _isUnread
+        }
+
+        fun updateLastMessageId(lastMessageId: Long?) {
+            lastChannelMessageId = lastMessageId
+            isUnread = _isUnread
+        }
 
         fun cancelJobs() {
             unreadListenerJob?.cancel()
@@ -200,17 +210,15 @@ class ChannelsViewModel(
 
         val item = ChannelItemData(
             channel = channel,
-            unreadState = unreadStore.getChannel(channel.id),
-            lastMessageId = lastMessageStore.getLastMessageId(channel.id),
             unreadListenerJob = null,
             lastMessageListenerJob = null,
+            lastUnreadMessageId = unreadStore.getChannel(channel.id)?.lastMessageId,
+            lastChannelMessageId = lastMessageStore.getLastMessageId(channel.id),
         )
 
         item.unreadListenerJob = unreadStore.observeChannel(channel.id).collectIn(viewModelScope) { event ->
             event.fold(
-                onAdd = {
-                    item.unreadState = it
-                },
+                onAdd = item::updateUnreadState,
                 onUpdate = { },
                 onDelete = {
                     val categoryId = item.channel.parentId
@@ -226,9 +234,7 @@ class ChannelsViewModel(
 
         item.lastMessageListenerJob = lastMessageStore.observeChannel(channel.id).collectIn(viewModelScope) { event ->
             event.fold(
-                onAdd = { (_, messageId) ->
-                    item.lastMessageId = messageId
-                },
+                onAdd = { (_, messageId) -> item.updateLastMessageId(messageId) },
                 onUpdate = { },
                 onDelete = { /* Handled by UnreadStore listener */ },
             )
