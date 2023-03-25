@@ -19,6 +19,8 @@ import com.xinto.opencord.ui.components.message.reply.MessageReplyBranch
 fun MessageRegular(
     modifier: Modifier = Modifier,
     mentioned: Boolean = false,
+    shape: Shape = MaterialTheme.shapes.large,
+    onClick: (() -> Unit)? = null,
     onLongClick: (() -> Unit)? = null,
     reply: (@Composable () -> Unit)? = null,
     avatar: (@Composable () -> Unit)? = null,
@@ -37,11 +39,16 @@ fun MessageRegular(
     }
 
     Box(
-        modifier = modifier
-            .combinedClickable(onClick = {}, onLongClick = onLongClick)
+        modifier = Modifier
+            .clip(shape)
+            .combinedClickable(
+                enabled = onClick != null || onLongClick != null,
+                onClick = {},
+                onLongClick = onLongClick,
+            )
+            .then(modifier)
             .drawBehind {
-                val color = if (mentioned) backgroundColor else Color.Unspecified
-                drawRect(color)
+                drawRect(if (mentioned) backgroundColor else Color.Unspecified)
             },
     ) {
         Column(

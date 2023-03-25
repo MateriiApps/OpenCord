@@ -1,6 +1,5 @@
 package com.xinto.opencord.ui.screens.pins
 
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -71,12 +70,9 @@ fun PinsScreenLoaded(
                         tonalElevation = 1.dp,
                     ) {
                         MessageRegular(
+                            onLongClick = { messageMenuTarget = message.id },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .combinedClickable(
-                                    onClick = {},
-                                    onLongClick = { messageMenuTarget = message.id },
-                                )
                                 .padding(8.dp),
                             reply = message.isReply.ifComposable {
                                 val referencedMessage = message.referencedMessage
