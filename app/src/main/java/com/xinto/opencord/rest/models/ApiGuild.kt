@@ -24,5 +24,5 @@ data class ApiGuild(
     val premiumSubscriptionCount: Int? = null,
 
     @SerialName("channels")
-    val channels: List<ApiChannel>,
+    val channels: List<ApiChannel>? = null,
 )

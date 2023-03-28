@@ -49,7 +49,7 @@ class LastMessageStoreImpl(
     init {
         gateway.onEvent<ReadyEvent> { event ->
             for (guild in event.data.guilds) {
-                for (channel in guild.channels) {
+                for (channel in guild.channels ?: continue) {
                     val lastMessageId = channel.lastMessageId ?: continue
                     _events.emit(LastMessageEvent.Add(channel.id.value to lastMessageId.value))
                 }

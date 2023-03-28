@@ -76,7 +76,7 @@ class ChannelStoreImpl(
     init {
         gateway.onEvent<ReadyEvent> { event ->
             val channels = event.data.guilds.flatMap { guild ->
-                guild.channels.map { it.toEntity(guild.id.value) }
+                guild.channels?.map { it.toEntity(guild.id.value) } ?: emptyList()
             }
 
             val replaceChannels = channels.groupByTo(
