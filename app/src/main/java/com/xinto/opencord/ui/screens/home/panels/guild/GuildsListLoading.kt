@@ -21,7 +21,6 @@ import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 import com.xinto.opencord.R
-import com.xinto.opencord.ui.components.guild.list.GuildsListItemText
 import com.xinto.opencord.ui.components.guild.list.RegularGuildItem
 
 @Composable
@@ -45,15 +44,13 @@ fun GuildsListLoading(
             showIndicator = false,
             onClick = {},
         ) {
-            GuildsListItemText {
-                Icon(
-                    modifier = Modifier
-                        .size(32.dp)
-                        .align(Alignment.Center),
-                    painter = painterResource(R.drawable.ic_discord_logo),
-                    contentDescription = stringResource(R.string.guilds_home),
-                )
-            }
+            Icon(
+                modifier = Modifier
+                    .size(32.dp)
+                    .align(Alignment.Center),
+                painter = painterResource(R.drawable.ic_discord_logo),
+                contentDescription = stringResource(R.string.guilds_home),
+            )
         }
 
         Divider(
