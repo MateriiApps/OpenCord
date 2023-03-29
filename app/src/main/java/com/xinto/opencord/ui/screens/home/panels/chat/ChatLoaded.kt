@@ -37,8 +37,8 @@ import com.xinto.opencord.ui.screens.home.panels.messagemenu.MessageMenu
 import com.xinto.opencord.ui.util.ifComposable
 import com.xinto.opencord.ui.util.ifNotEmptyComposable
 import com.xinto.opencord.ui.util.ifNotNullComposable
+import com.xinto.opencord.ui.util.toUnsafeImmutableList
 import com.xinto.opencord.ui.viewmodel.ChatViewModel
-import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun ChatLoaded(
@@ -74,7 +74,7 @@ fun ChatLoaded(
                         derivedStateOf {
                             item.reactions.values
                                 .sortedBy { it.reactionOrder }
-                                .toImmutableList()
+                                .toUnsafeImmutableList()
                                 .takeIf { it.isNotEmpty() }
                         }
                     }
