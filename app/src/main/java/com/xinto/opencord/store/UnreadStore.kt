@@ -7,38 +7,64 @@ import com.xinto.opencord.domain.channel.toDomain
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.gateway.event.ChannelDeleteEvent
 import com.xinto.opencord.gateway.event.MessageAckEvent
+import com.xinto.opencord.gateway.event.MessageCreateEvent
 import com.xinto.opencord.gateway.event.ReadyEvent
 import com.xinto.opencord.gateway.onEvent
-import com.xinto.opencord.rest.service.DiscordApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 typealias UnreadEvent = Event<DomainUnreadState, Nothing, Long>
+typealias MentionCountEvent = Event<Int, Int, Nothing>
 
 interface UnreadStore {
-    fun observeChannel(channelId: Long): Flow<UnreadEvent>
+    /**
+     * Observes new unread states for a channel.
+     * Flow event details:
+     * - Add -> A full replacement of an unread state
+     * - Update -> Does not exist
+     * - Delete -> Deletion of the observed channel (channelId)
+     */
+    fun observeUnreadState(channelId: Long): Flow<UnreadEvent>
+
+    /**
+     * Observes a change in the mention count for a channel.
+     * Flow event details:
+     * - Add -> The new replacement mention count
+     * - Update -> The difference (+/-) in mention count
+     * - Delete -> Does not exist
+     */
+    fun observeMentionCount(channelId: Long): Flow<MentionCountEvent>
 
     suspend fun getChannel(channelId: Long): DomainUnreadState?
 }
 
 class UnreadStoreImpl(
     gateway: DiscordGateway,
-    private val api: DiscordApiService,
     private val cache: CacheDatabase,
 ) : UnreadStore {
-    private val events = MutableSharedFlow<UnreadEvent>()
+    private val _unreadEvents = MutableSharedFlow<UnreadEvent>()
+    private val _mentionCountEvents = MutableSharedFlow<Pair<Long, MentionCountEvent>>()
 
-    override fun observeChannel(channelId: Long): Flow<UnreadEvent> {
-        return events.filter { event ->
+    private var currentUserId: Long? = null
+
+    override fun observeUnreadState(channelId: Long): Flow<UnreadEvent> {
+        return _unreadEvents.filter { event ->
             event.fold(
                 onAdd = { it.channelId == channelId },
                 onUpdate = { false },
                 onDelete = { it == channelId },
             )
         }
+    }
+
+    override fun observeMentionCount(channelId: Long): Flow<MentionCountEvent> {
+        return _mentionCountEvents
+            .filter { (eventGuildId) -> channelId == eventGuildId }
+            .map { (_, event) -> event }
     }
 
     override suspend fun getChannel(channelId: Long): DomainUnreadState? {
@@ -57,8 +83,23 @@ class UnreadStoreImpl(
                 )
             }
 
-            states.forEach { events.emit(UnreadEvent.Add(it.toDomain())) }
+            currentUserId = event.data.user.id.value
+            states.forEach { _unreadEvents.emit(UnreadEvent.Add(it.toDomain())) }
             cache.unreadStates().replaceAllStates(states)
+        }
+
+        gateway.onEvent<MessageCreateEvent> { event ->
+            val meMentioned = when {
+                event.data.mentionEveryone -> true
+                event.data.mentions.any { it.id.value == currentUserId } -> true
+                else -> false
+            }
+
+            if (meMentioned) {
+                val channelId = event.data.channelId.value
+                _mentionCountEvents.emit(channelId to MentionCountEvent.Update(1))
+                cache.unreadStates().incrementMentionCount(channelId)
+            }
         }
 
         gateway.onEvent<MessageAckEvent> { event ->
@@ -68,14 +109,14 @@ class UnreadStoreImpl(
                 lastMessageId = event.data.messageId,
             )
 
-            events.emit(UnreadEvent.Add(state.toDomain()))
+            _unreadEvents.emit(UnreadEvent.Add(state.toDomain()))
             cache.unreadStates().insertState(state)
         }
 
         gateway.onEvent<ChannelDeleteEvent> { event ->
             val channelId = event.data.id.value
 
-            events.emit(UnreadEvent.Delete(channelId))
+            _unreadEvents.emit(UnreadEvent.Delete(channelId))
             cache.unreadStates().deleteUnreadState(channelId)
         }
     }

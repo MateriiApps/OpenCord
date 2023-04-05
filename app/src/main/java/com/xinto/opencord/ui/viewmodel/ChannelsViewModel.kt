@@ -30,8 +30,10 @@ class ChannelsViewModel(
     @Stable
     class ChannelItemData(
         channel: DomainChannel,
-        var unreadListenerJob: Job?,
-        var lastMessageListenerJob: Job?,
+        mentionCount: Int,
+        var unreadListenerJob: Job? = null,
+        var lastMessageListenerJob: Job? = null,
+        var mentionCountListenerJob: Job? = null,
         private var lastUnreadMessageId: Long? = null,
         private var lastChannelMessageId: Long? = null,
     ) {
@@ -39,22 +41,25 @@ class ChannelsViewModel(
             get() = (lastChannelMessageId ?: 0) > (lastUnreadMessageId ?: 0)
 
         var channel by mutableStateOf(channel)
+        var mentionCount by mutableStateOf(mentionCount)
         var isUnread by mutableStateOf(_isUnread)
             private set
 
         fun updateUnreadState(unreadState: DomainUnreadState?) {
             lastUnreadMessageId = unreadState?.lastMessageId
+            mentionCount = unreadState?.mentionCount ?: 0
             isUnread = _isUnread
         }
 
         fun updateLastMessageId(lastMessageId: Long?) {
-            lastChannelMessageId = lastMessageId
+            this.lastChannelMessageId = lastMessageId
             isUnread = _isUnread
         }
 
         fun cancelJobs() {
             unreadListenerJob?.cancel()
             lastMessageListenerJob?.cancel()
+            mentionCountListenerJob?.cancel()
         }
     }
 
@@ -207,15 +212,15 @@ class ChannelsViewModel(
             error("cannot make channel item from category channel")
         }
 
+        val unreadState = unreadStore.getChannel(channel.id)
         val item = ChannelItemData(
             channel = channel,
-            unreadListenerJob = null,
-            lastMessageListenerJob = null,
-            lastUnreadMessageId = unreadStore.getChannel(channel.id)?.lastMessageId,
+            mentionCount = unreadState?.mentionCount ?: 0,
+            lastUnreadMessageId = unreadState?.lastMessageId,
             lastChannelMessageId = lastMessageStore.getLastMessageId(channel.id),
         )
 
-        item.unreadListenerJob = unreadStore.observeChannel(channel.id).collectIn(viewModelScope) { event ->
+        item.unreadListenerJob = unreadStore.observeUnreadState(channel.id).collectIn(viewModelScope) { event ->
             event.fold(
                 onAdd = item::updateUnreadState,
                 onUpdate = { },
@@ -236,6 +241,14 @@ class ChannelsViewModel(
                 onAdd = { (_, messageId) -> item.updateLastMessageId(messageId) },
                 onUpdate = { },
                 onDelete = { /* Handled by UnreadStore listener */ },
+            )
+        }
+
+        item.mentionCountListenerJob = unreadStore.observeMentionCount(channel.id).collectIn(viewModelScope) { event ->
+            event.fold(
+                onAdd = { item.mentionCount = it },
+                onUpdate = { item.mentionCount += it },
+                onDelete = {},
             )
         }
 

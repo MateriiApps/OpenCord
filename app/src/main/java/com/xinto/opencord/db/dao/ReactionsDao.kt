@@ -15,7 +15,7 @@ interface ReactionsDao {
     )
     fun insertReactions(reactions: List<EntityReaction>)
 
-    // --------------- Deletes ---------------
+    // --------------- Updates ---------------
     @Query(
         "UPDATE reactions SET " +
                 "count = max(0, count + :countDiff), " +
@@ -35,7 +35,7 @@ interface ReactionsDao {
         emojiName: String?,
         meReacted: Boolean?,
         countDiff: Int,
-        updateTime: Long? = System.currentTimeMillis()
+        updateTime: Long? = System.currentTimeMillis(),
     )
 
     // --------------- Deletes ---------------
