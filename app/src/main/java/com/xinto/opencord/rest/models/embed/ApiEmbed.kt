@@ -24,6 +24,9 @@ data class ApiEmbed(
     @SerialName("timestamp")
     val timestamp: Instant? = null,
 
+    @SerialName("image")
+    val image: ApiEmbedMedia? = null,
+
     @SerialName("author")
     val author: ApiEmbedAuthor? = null,
 
@@ -39,6 +42,7 @@ fun DomainEmbed.toApi(): ApiEmbed {
         color = color?.toApi(),
         timestamp = timestamp,
         author = author?.let { ApiEmbedAuthor(name = it) },
+        image = image,
         fields = fields,
     )
 }

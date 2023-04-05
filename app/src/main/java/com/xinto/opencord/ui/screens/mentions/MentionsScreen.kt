@@ -334,12 +334,21 @@ private fun MentionsPageMessage(
                         )
                     },
                     embeds = message.embeds.ifNotEmptyComposable { embeds ->
-                        for (embed in embeds) {
+                        for (embed in embeds) key(embed) {
                             Embed(
                                 title = embed.title,
                                 description = embed.description,
                                 color = embed.color,
                                 author = embed.author.ifNotNullComposable { EmbedAuthor(name = it) },
+                                image = embed.image.ifNotNullComposable {
+                                    AttachmentPicture(
+                                        url = it.displayUrl,
+                                        width = it.width ?: 500,
+                                        height = it.height ?: 500,
+                                        modifier = Modifier
+                                            .heightIn(max = 400.dp),
+                                    )
+                                },
                                 fields = embed.fields.ifNotNullComposable {
                                     for (field in it) {
                                         EmbedField(
@@ -352,7 +361,7 @@ private fun MentionsPageMessage(
                         }
                     },
                     attachments = message.attachments.ifNotEmptyComposable { attachments ->
-                        for (attachment in attachments) {
+                        for (attachment in attachments) key(attachment) {
                             when (attachment) {
                                 is DomainPictureAttachment -> {
                                     AttachmentPicture(

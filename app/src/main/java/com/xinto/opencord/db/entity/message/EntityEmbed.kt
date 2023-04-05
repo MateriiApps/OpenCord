@@ -1,10 +1,10 @@
 package com.xinto.opencord.db.entity.message
 
 import androidx.room.ColumnInfo
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Index
-import com.xinto.opencord.rest.models.embed.ApiEmbed
-import com.xinto.opencord.rest.models.embed.ApiEmbedField
+import com.xinto.opencord.rest.models.embed.*
 
 @Entity(
     tableName = "embeds",
@@ -41,6 +41,9 @@ data class EntityEmbed(
     @ColumnInfo(name = "author_name")
     val authorName: String?,
 
+    @Embedded(prefix = "image_")
+    val image: ApiEmbedMedia?,
+
     @ColumnInfo(name = "fields")
     val fields: List<ApiEmbedField>?,
 )
@@ -55,6 +58,7 @@ fun ApiEmbed.toEntity(messageId: Long, embedIndex: Int): EntityEmbed {
         color = color?.internalColor,
         timestamp = timestamp?.toEpochMilliseconds(),
         authorName = author?.name,
+        image = image,
         fields = fields,
     )
 }

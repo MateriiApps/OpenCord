@@ -21,6 +21,7 @@ fun Embed(
     color: Color?,
     modifier: Modifier = Modifier,
     author: (@Composable () -> Unit)? = null,
+    image: (@Composable () -> Unit)? = null,
     fields: (@Composable () -> Unit)? = null,
     footer: (@Composable () -> Unit)? = null,
 ) {
@@ -34,7 +35,6 @@ fun Embed(
 
         Column(
             modifier = Modifier
-                .height(IntrinsicSize.Min)
                 .fillMaxWidth()
                 .drawBehind {
                     if (color != null) {
@@ -68,6 +68,9 @@ fun Embed(
                 ) {
                     fields()
                 }
+            }
+            if (image != null) {
+                image()
             }
             if (footer != null) {
                 footer()
