@@ -8,10 +8,7 @@ import com.xinto.opencord.domain.message.DomainMessage
 import com.xinto.opencord.domain.message.DomainMessageRegular
 import com.xinto.opencord.manager.PersistentDataManager
 import com.xinto.opencord.rest.service.DiscordApiService
-import com.xinto.opencord.store.ChannelStore
-import com.xinto.opencord.store.MessageStore
-import com.xinto.opencord.store.ReactionStore
-import com.xinto.opencord.store.fold
+import com.xinto.opencord.store.*
 import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
 import com.xinto.opencord.util.collectIn
 import kotlinx.coroutines.Dispatchers
@@ -24,6 +21,7 @@ class ChatViewModel(
     private val messageStore: MessageStore,
     private val reactionStore: ReactionStore,
     private val channelStore: ChannelStore,
+    private val currentUserStore: CurrentUserStore,
     private val api: DiscordApiService,
     private val persistentDataManager: PersistentDataManager,
 ) : BasePersistenceViewModel(persistentDataManager) {
@@ -224,6 +222,10 @@ class ChatViewModel(
     init {
         if (persistentGuildId != 0L && persistentChannelId != 0L) {
             load()
+        }
+
+        currentUserStore.observeCurrentUser().collectIn(viewModelScope) { user ->
+            currentUserId = user.id
         }
     }
 
