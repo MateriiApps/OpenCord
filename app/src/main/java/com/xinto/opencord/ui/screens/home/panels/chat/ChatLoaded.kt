@@ -125,6 +125,7 @@ fun ChatLoaded(
                             for (embed in embeds) key(embed) {
                                 Embed(
                                     title = embed.title,
+                                    url = embed.url,
                                     description = embed.description,
                                     color = embed.color,
                                     author = embed.author.ifNotNullComposable {
