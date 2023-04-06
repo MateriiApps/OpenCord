@@ -41,7 +41,7 @@ fun DomainEmbed.toApi(): ApiEmbed {
         url = url,
         color = color?.toApi(),
         timestamp = timestamp,
-        author = author?.let { ApiEmbedAuthor(name = it) },
+        author = author,
         image = image,
         fields = fields,
     )

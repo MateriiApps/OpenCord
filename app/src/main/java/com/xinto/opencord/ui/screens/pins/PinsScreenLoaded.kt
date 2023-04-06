@@ -118,7 +118,13 @@ fun PinsScreenLoaded(
                                         title = embed.title,
                                         description = embed.description,
                                         color = embed.color,
-                                        author = embed.author.ifNotNullComposable { EmbedAuthor(name = it) },
+                                        author = embed.author.ifNotNullComposable {
+                                            EmbedAuthor(
+                                                name = it.name,
+                                                url = it.url,
+                                                iconUrl = it.iconUrl,
+                                            )
+                                        },
                                         image = embed.image.ifNotNullComposable {
                                             AttachmentPicture(
                                                 url = it.displayUrl,

@@ -5,7 +5,9 @@ import androidx.compose.ui.graphics.Color
 import com.xinto.opencord.db.entity.message.EntityEmbed
 import com.xinto.opencord.rest.models.ApiColor
 import com.xinto.opencord.rest.models.embed.ApiEmbed
+import com.xinto.opencord.rest.models.embed.ApiEmbedAuthor
 import com.xinto.opencord.rest.models.embed.ApiEmbedField
+import com.xinto.opencord.rest.models.embed.ApiEmbedMedia
 import com.xinto.opencord.rest.models.toColor
 import com.xinto.opencord.ui.util.toUnsafeImmutableList
 import kotlinx.collections.immutable.ImmutableList
@@ -18,7 +20,7 @@ data class DomainEmbed(
     val url: String?,
     val color: Color?,
     val timestamp: Instant?,
-    val author: String?,
+    val author: ApiEmbedAuthor?,
     val image: ApiEmbedMedia?,
     val fields: ImmutableList<ApiEmbedField>?,
 )
@@ -30,7 +32,7 @@ fun ApiEmbed.toDomain(): DomainEmbed {
         url = url,
         color = color?.toColor(),
         timestamp = timestamp,
-        author = author?.name,
+        author = author,
         image = image,
         fields = fields?.toUnsafeImmutableList(),
     )
@@ -43,7 +45,7 @@ fun EntityEmbed.toDomain(): DomainEmbed {
         url = url,
         color = color?.let { ApiColor(it).toColor() },
         timestamp = timestamp?.let { Instant.fromEpochMilliseconds(it) },
-        author = authorName,
+        author = author,
         image = image,
         fields = fields?.toUnsafeImmutableList(),
     )

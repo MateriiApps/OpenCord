@@ -38,8 +38,8 @@ data class EntityEmbed(
     @ColumnInfo(name = "timestamp")
     val timestamp: Long?,
 
-    @ColumnInfo(name = "author_name")
-    val authorName: String?,
+    @Embedded(prefix = "author_")
+    val author: ApiEmbedAuthor?,
 
     @Embedded(prefix = "image_")
     val image: ApiEmbedMedia?,
@@ -57,7 +57,7 @@ fun ApiEmbed.toEntity(messageId: Long, embedIndex: Int): EntityEmbed {
         url = url,
         color = color?.internalColor,
         timestamp = timestamp?.toEpochMilliseconds(),
-        authorName = author?.name,
+        author = author,
         image = image,
         fields = fields,
     )

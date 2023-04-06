@@ -1,9 +1,6 @@
 package com.xinto.opencord.ui.screens.home.panels.chat
 
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -130,7 +127,13 @@ fun ChatLoaded(
                                     title = embed.title,
                                     description = embed.description,
                                     color = embed.color,
-                                    author = embed.author.ifNotNullComposable { EmbedAuthor(name = it) },
+                                    author = embed.author.ifNotNullComposable {
+                                        EmbedAuthor(
+                                            name = it.name,
+                                            url = it.url,
+                                            iconUrl = it.iconUrl,
+                                        )
+                                    },
                                     image = embed.image.ifNotNullComposable {
                                         AttachmentPicture(
                                             url = it.displayUrl,
