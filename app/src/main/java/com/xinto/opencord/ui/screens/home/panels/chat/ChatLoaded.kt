@@ -1,6 +1,9 @@
 package com.xinto.opencord.ui.screens.home.panels.chat
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -26,6 +29,7 @@ import com.xinto.opencord.ui.components.attachment.AttachmentVideo
 import com.xinto.opencord.ui.components.embed.Embed
 import com.xinto.opencord.ui.components.embed.EmbedAuthor
 import com.xinto.opencord.ui.components.embed.EmbedField
+import com.xinto.opencord.ui.components.embed.EmbedFooter
 import com.xinto.opencord.ui.components.message.*
 import com.xinto.opencord.ui.components.message.reply.MessageReferenced
 import com.xinto.opencord.ui.components.message.reply.MessageReferencedAuthor
@@ -151,6 +155,13 @@ fun ChatLoaded(
                                                 value = field.value,
                                             )
                                         }
+                                    },
+                                    footer = embed.footer.ifNotNullComposable {
+                                        EmbedFooter(
+                                            text = it.text,
+                                            iconUrl = it.displayUrl,
+                                            timestamp = it.formattedTimestamp,
+                                        )
                                     },
                                 )
                             }

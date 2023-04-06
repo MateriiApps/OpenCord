@@ -34,6 +34,7 @@ import com.xinto.opencord.ui.components.attachment.AttachmentVideo
 import com.xinto.opencord.ui.components.embed.Embed
 import com.xinto.opencord.ui.components.embed.EmbedAuthor
 import com.xinto.opencord.ui.components.embed.EmbedField
+import com.xinto.opencord.ui.components.embed.EmbedFooter
 import com.xinto.opencord.ui.components.message.MessageAuthor
 import com.xinto.opencord.ui.components.message.MessageAvatar
 import com.xinto.opencord.ui.components.message.MessageContent
@@ -363,6 +364,13 @@ private fun MentionsPageMessage(
                                             value = field.value,
                                         )
                                     }
+                                },
+                                footer = embed.footer.ifNotNullComposable {
+                                    EmbedFooter(
+                                        text = it.text,
+                                        iconUrl = it.displayUrl,
+                                        timestamp = it.formattedTimestamp,
+                                    )
                                 },
                             )
                         }

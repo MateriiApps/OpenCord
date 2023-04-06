@@ -41,6 +41,9 @@ data class EntityEmbed(
     @Embedded(prefix = "author_")
     val author: ApiEmbedAuthor?,
 
+    @Embedded(prefix = "footer_")
+    val footer: ApiEmbedFooter?,
+
     @Embedded(prefix = "image_")
     val image: ApiEmbedMedia?,
 
@@ -57,8 +60,9 @@ fun ApiEmbed.toEntity(messageId: Long, embedIndex: Int): EntityEmbed {
         url = url,
         color = color?.internalColor,
         timestamp = timestamp?.toEpochMilliseconds(),
-        author = author,
+        footer = footer,
         image = image,
+        author = author,
         fields = fields,
     )
 }

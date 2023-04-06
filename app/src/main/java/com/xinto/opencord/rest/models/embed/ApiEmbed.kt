@@ -24,6 +24,9 @@ data class ApiEmbed(
     @SerialName("timestamp")
     val timestamp: Instant? = null,
 
+    @SerialName("footer")
+    val footer: ApiEmbedFooter? = null,
+
     @SerialName("image")
     val image: ApiEmbedMedia? = null,
 
@@ -40,8 +43,9 @@ fun DomainEmbed.toApi(): ApiEmbed {
         description = description,
         url = url,
         color = color?.toApi(),
-        timestamp = timestamp,
+        timestamp = footer?.timestamp,
         author = author,
+        footer = footer?.toApi(),
         image = image,
         fields = fields,
     )
