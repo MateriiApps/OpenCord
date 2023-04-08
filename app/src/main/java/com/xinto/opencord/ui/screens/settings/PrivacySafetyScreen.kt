@@ -1,50 +1,27 @@
 package com.xinto.opencord.ui.screens.settings
 
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.material3.RadioButton
+import com.xinto.opencord.ui.screens.RadioSetting
+import com.xinto.opencord.ui.screens.radioSection
 import com.xinto.opencord.ui.screens.section
-import com.xinto.opencord.ui.screens.setting
 import com.xinto.opencord.ui.screens.switchSetting
 
+enum class PrivacySafetyOption(
+    override val label: String,
+    override val description: String
+) : RadioSetting {
+    KEEP_ME_SAFE("Keep me safe", "Scan direct messages from everyone"),
+    FRIENDS_ONLY("My friends are nice", "Scan direct messages from everyone unless they are a friend"),
+    DO_NOT_SCAN("Do not scan", "Direct messages will not be scanned for explicit content"),
+}
+
 context(LazyListScope)
-fun privacySafetySettingsScreen() {
-    section("Safe Direct Messaging") {
-        setting(
-            label = "Keep me safe",
-            description = "Scan direct messages from everyone",
-            onClick = {},
-            trailingContent = {
-                RadioButton(
-                    selected = true,
-                    onClick = { /*TODO*/ },
-                )
-            },
-        )
-
-        setting(
-            label = "My friends are nice",
-            description = "Scan direct messages from everyone unless they are a friend",
-            onClick = {},
-            trailingContent = {
-                RadioButton(
-                    selected = false,
-                    onClick = { /*TODO*/ },
-                )
-            },
-        )
-
-        setting(
-            label = "Do not scan",
-            description = "Direct messages will not be scanned for explicit content",
-            onClick = {},
-            trailingContent = {
-                RadioButton(
-                    selected = false,
-                    onClick = { /*TODO*/ },
-                )
-            },
-        )
-    }
+fun privacySafetyScreen() {
+    radioSection(
+        label = "Safe Direct Messaging",
+        value = PrivacySafetyOption.FRIENDS_ONLY,
+        onOptionClick = { },
+    )
 
     section("Server Privacy Defaults") {
         switchSetting(

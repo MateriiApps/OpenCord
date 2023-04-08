@@ -30,10 +30,11 @@ sealed interface AppDestination : Parcelable {
         CONNECTIONS(R.string.connections, R.drawable.ic_link),
         FRIEND_REQUESTS(R.string.friend_requests, R.drawable.ic_person_add),
         VOICE_VIDEO(R.string.voice_video, R.drawable.ic_settings_voice),
-        NOTIFICATIONS(R.string.notifications, R.drawable.ic_notifications),
         APPEARANCE(R.string.appearance, R.drawable.ic_palette),
         ACCESSIBILITY(R.string.accessibility, R.drawable.ic_settings_accessibility),
-        LANGUAGE(R.string.language, R.drawable.ic_language);
+        LANGUAGE(R.string.language, R.drawable.ic_language),
+        WEB_BROWSER(R.string.web_browser, R.drawable.ic_web),
+        NOTIFICATIONS(R.string.notifications, R.drawable.ic_notifications);
 
         @Parcelize
         companion object : AppDestination

@@ -1,23 +1,19 @@
 package com.xinto.opencord.ui.screens.settings
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
 import com.xinto.opencord.ui.screens.section
 import com.xinto.opencord.ui.screens.setting
+import com.xinto.opencord.ui.screens.sliderSetting
 import com.xinto.opencord.ui.screens.switchSetting
 
 context(LazyListScope)
-fun voiceSettingsScreen() {
+fun voiceScreen() {
     section("Input") {
         setting(
             label = "Input Mode",
@@ -45,30 +41,13 @@ fun voiceSettingsScreen() {
     }
 
     section("Output") {
-        item {
-            Row(
-                modifier = Modifier
-                    .fillParentMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_volume_mute),
-                    contentDescription = null,
-                )
-                Slider(
-                    modifier = Modifier.weight(1f, true),
-                    value = 0.6f,
-                    valueRange = 0f..1f,
-                    onValueChange = {},
-                )
-                Icon(
-                    painter = painterResource(R.drawable.ic_volume_up),
-                    contentDescription = null,
-                )
-            }
-        }
+        sliderSetting(
+            value = 0.6f,
+            valueRange = 0f..1f,
+            onValueChange = {},
+            leadingIcon = R.drawable.ic_volume_mute,
+            trailingIcon = R.drawable.ic_volume_up,
+        )
     }
 
     section("Overlay") {

@@ -16,19 +16,13 @@ import com.xinto.opencord.ui.screens.section
 import com.xinto.opencord.ui.screens.setting
 
 context(LazyListScope)
-fun accountSettingsScreen() {
+fun accountScreen() {
     section("Account Information") {
         setting(
             label = "Username",
             onClick = {},
         ) {
             Text("opencord#1234")
-        }
-        setting(
-            label = "Name",
-            onClick = {},
-        ) {
-            Text("opencord")
         }
         setting(
             label = "Email",
@@ -40,23 +34,22 @@ fun accountSettingsScreen() {
             label = "Phone",
             onClick = {},
         ) {
-            Text("+1 123 456 7890")
+
         }
         setting(
             label = "Password",
             onClick = {},
         )
-    }
 
-    section("Two-Factor Authentication") {
-        item {
-            OutlinedButton(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                onClick = { /*TODO*/ },
-            ) {
-                Text("Enable Two-Factor authentication")
-            }
-        }
+        setting(
+            label = "Two-factor authentication",
+            onClick = {},
+            trailingContent = {
+                OutlinedButton(onClick = {}) {
+                    Text("Enable")
+                }
+            },
+        )
     }
 
     section("Account Management") {
@@ -85,5 +78,4 @@ fun accountSettingsScreen() {
             }
         }
     }
-
 }

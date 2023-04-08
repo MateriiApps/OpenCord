@@ -61,4 +61,6 @@
     <string name="sync_across_clients">Sync across clients</string>
     <string name="devices">Devices</string>
     <string name="friend_requests">Friend Requests</string>
+    <string name="logout">Logout</string>
+    <string name="web_browser">Web Browser</string>
 </resources>

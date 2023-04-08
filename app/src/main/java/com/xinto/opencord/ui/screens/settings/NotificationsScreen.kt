@@ -5,7 +5,7 @@ import com.xinto.opencord.ui.screens.setting
 import com.xinto.opencord.ui.screens.switchSetting
 
 context(LazyListScope)
-fun notificationSettingsScreen() {
+fun notificationScreen() {
     switchSetting(
         label = "In-app notifications",
         description = "Show notifications in the app",

@@ -5,7 +5,7 @@ import com.xinto.opencord.ui.screens.section
 import com.xinto.opencord.ui.screens.switchSetting
 
 context(LazyListScope)
-fun friendRequestsSettingsScreen() {
+fun friendRequestsScreen() {
     section("Who Can Send You A Friend Request") {
         switchSetting(
             label = "Everyone",
