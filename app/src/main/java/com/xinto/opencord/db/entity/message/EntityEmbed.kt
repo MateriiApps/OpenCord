@@ -44,8 +44,14 @@ data class EntityEmbed(
     @Embedded(prefix = "footer_")
     val footer: ApiEmbedFooter?,
 
+    @Embedded(prefix = "thumbnail_")
+    val thumbnail: ApiEmbedImage?,
+
     @Embedded(prefix = "image_")
-    val image: ApiEmbedMedia?,
+    val image: ApiEmbedImage?,
+
+    @Embedded(prefix = "video_")
+    val video: ApiEmbedVideo?,
 
     @ColumnInfo(name = "fields")
     val fields: List<ApiEmbedField>?,
@@ -61,7 +67,9 @@ fun ApiEmbed.toEntity(messageId: Long, embedIndex: Int): EntityEmbed {
         color = color?.internalColor,
         timestamp = timestamp?.toEpochMilliseconds(),
         footer = footer,
+        thumbnail = thumbnail,
         image = image,
+        video = video,
         author = author,
         fields = fields,
     )

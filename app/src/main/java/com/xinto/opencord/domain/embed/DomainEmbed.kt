@@ -18,7 +18,9 @@ data class DomainEmbed(
     val color: Color?,
     val author: ApiEmbedAuthor?,
     val footer: DomainEmbedFooter?,
-    val image: ApiEmbedMedia?,
+    val thumbnail: ApiEmbedImage?,
+    val image: ApiEmbedImage?,
+    val video: ApiEmbedVideo?,
     val fields: ImmutableList<ApiEmbedField>?,
 )
 
@@ -30,7 +32,9 @@ fun ApiEmbed.toDomain(): DomainEmbed {
         color = color?.toColor(),
         author = author,
         footer = footer?.toDomain(timestamp),
+        thumbnail = thumbnail,
         image = image,
+        video = video,
         fields = fields?.toUnsafeImmutableList(),
     )
 }
@@ -45,7 +49,9 @@ fun EntityEmbed.toDomain(): DomainEmbed {
         footer = footer?.toDomain(
             timestamp = timestamp?.let { Instant.fromEpochMilliseconds(it) },
         ),
+        thumbnail = thumbnail,
         image = image,
+        video = video,
         fields = fields?.toUnsafeImmutableList(),
     )
 }

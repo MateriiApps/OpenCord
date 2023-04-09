@@ -26,10 +26,7 @@ import com.xinto.opencord.ui.components.OCImage
 import com.xinto.opencord.ui.components.OCSize
 import com.xinto.opencord.ui.components.attachment.AttachmentPicture
 import com.xinto.opencord.ui.components.attachment.AttachmentVideo
-import com.xinto.opencord.ui.components.embed.Embed
-import com.xinto.opencord.ui.components.embed.EmbedAuthor
-import com.xinto.opencord.ui.components.embed.EmbedField
-import com.xinto.opencord.ui.components.embed.EmbedFooter
+import com.xinto.opencord.ui.components.embed.*
 import com.xinto.opencord.ui.components.message.*
 import com.xinto.opencord.ui.components.message.reply.MessageReferenced
 import com.xinto.opencord.ui.components.message.reply.MessageReferencedAuthor
@@ -139,7 +136,7 @@ fun ChatLoaded(
                                             iconUrl = it.iconUrl,
                                         )
                                     },
-                                    image = embed.image.ifNotNullComposable {
+                                    media = embed.image.ifNotNullComposable {
                                         AttachmentPicture(
                                             url = it.displayUrl,
                                             width = it.width ?: 500,
@@ -147,9 +144,15 @@ fun ChatLoaded(
                                             modifier = Modifier
                                                 .heightIn(max = 400.dp),
                                         )
+                                    } ?: embed.video.ifNotNullComposable {
+                                        EmbedVideo(
+                                            video = it,
+                                            videoPublicUrl = embed.url,
+                                            thumbnail = embed.thumbnail,
+                                        )
                                     },
                                     fields = embed.fields.ifNotNullComposable {
-                                        for (field in it) {
+                                        for (field in it) key(field) {
                                             EmbedField(
                                                 name = field.name,
                                                 value = field.value,

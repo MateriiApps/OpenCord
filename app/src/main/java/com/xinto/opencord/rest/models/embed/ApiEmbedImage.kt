@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ApiEmbedMedia(
+data class ApiEmbedImage(
     @SerialName("url")
     val url: String,
 

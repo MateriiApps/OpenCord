@@ -27,8 +27,14 @@ data class ApiEmbed(
     @SerialName("footer")
     val footer: ApiEmbedFooter? = null,
 
+    @SerialName("thumbnail")
+    val thumbnail: ApiEmbedImage? = null,
+
     @SerialName("image")
-    val image: ApiEmbedMedia? = null,
+    val image: ApiEmbedImage? = null,
+
+    @SerialName("video")
+    val video: ApiEmbedVideo? = null,
 
     @SerialName("author")
     val author: ApiEmbedAuthor? = null,
@@ -46,7 +52,9 @@ fun DomainEmbed.toApi(): ApiEmbed {
         timestamp = footer?.timestamp,
         author = author,
         footer = footer?.toApi(),
+        thumbnail = thumbnail,
         image = image,
+        video = video,
         fields = fields,
     )
 }

@@ -1,6 +1,9 @@
 package com.xinto.opencord.ui.components.embed
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
@@ -27,7 +30,7 @@ fun Embed(
     color: Color?,
     modifier: Modifier = Modifier,
     author: (@Composable () -> Unit)? = null,
-    image: (@Composable () -> Unit)? = null,
+    media: (@Composable () -> Unit)? = null,
     fields: (@Composable () -> Unit)? = null,
     footer: (@Composable () -> Unit)? = null,
 ) {
@@ -92,8 +95,8 @@ fun Embed(
                     fields()
                 }
             }
-            if (image != null) {
-                image()
+            if (media != null) {
+                media()
             }
             if (footer != null) {
                 footer()
