@@ -1,8 +1,11 @@
 package com.xinto.opencord.ui.components.embed
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Color
+import android.view.MotionEvent
 import android.webkit.WebSettings
+import android.webkit.WebView
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -29,7 +32,16 @@ fun SpotifyEmbed(
                 setGeolocationEnabled(false)
             }
         },
+        factory = { ScrollableWebView(it) },
         modifier = Modifier
             .height(if (isSpotifyTrack) 80.dp else 500.dp),
     )
+}
+
+private class ScrollableWebView(context: Context) : WebView(context) {
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        requestDisallowInterceptTouchEvent(true)
+        return super.onTouchEvent(event)
+    }
 }
