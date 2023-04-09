@@ -46,4 +46,11 @@ data class DomainMessageRegular(
 
     val isEdited: Boolean
         get() = editedTimestamp != null
+
+    // Collapse twitter embeds into a single visible embed with multiple images
+    val isTwitterMultiImageMessage by lazy {
+        embeds.isNotEmpty()
+                && embeds.first().url?.startsWith("https://twitter.com/") ?: false
+                && embeds.all { it.image != null && it.url == embeds.first().url }
+    }
 }

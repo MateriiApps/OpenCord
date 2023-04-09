@@ -8,7 +8,10 @@ import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
@@ -16,6 +19,8 @@ import com.xinto.opencord.domain.attachment.DomainPictureAttachment
 import com.xinto.opencord.domain.attachment.DomainVideoAttachment
 import com.xinto.opencord.domain.message.DomainMessage
 import com.xinto.opencord.domain.message.DomainMessageRegular
+import com.xinto.opencord.ui.components.OCImage
+import com.xinto.opencord.ui.components.OCSize
 import com.xinto.opencord.ui.components.attachment.AttachmentPicture
 import com.xinto.opencord.ui.components.attachment.AttachmentVideo
 import com.xinto.opencord.ui.components.embed.*
@@ -111,7 +116,9 @@ fun PinsScreenLoaded(
                                 )
                             },
                             embeds = message.embeds.ifNotEmptyComposable { embeds ->
-                                for (embed in embeds) key(embed) {
+                                val renderedEmbeds = if (message.isTwitterMultiImageMessage) listOf(embeds.first()) else embeds
+
+                                for (embed in renderedEmbeds) key(embed) {
                                     if (embed.isVideoOnlyEmbed) {
                                         val video = embed.video!!
                                         AttachmentVideo(
@@ -141,20 +148,48 @@ fun PinsScreenLoaded(
                                                     iconUrl = it.iconUrl,
                                                 )
                                             },
-                                            media = embed.image.ifNotNullComposable {
-                                                AttachmentPicture(
-                                                    url = it.sizedUrl,
-                                                    width = it.width ?: 500,
-                                                    height = it.height ?: 500,
-                                                    modifier = Modifier
-                                                        .heightIn(max = 400.dp),
-                                                )
-                                            } ?: embed.video.ifNotNullComposable {
-                                                EmbedVideo(
-                                                    video = it,
-                                                    videoPublicUrl = embed.url,
-                                                    thumbnail = embed.thumbnail,
-                                                )
+                                            media = if (!message.isTwitterMultiImageMessage) {
+                                                embed.image.ifNotNullComposable {
+                                                    AttachmentPicture(
+                                                        url = it.sizedUrl,
+                                                        width = it.width ?: 500,
+                                                        height = it.height ?: 500,
+                                                        modifier = Modifier
+                                                            .heightIn(max = 400.dp),
+                                                    )
+                                                } ?: embed.video.ifNotNullComposable {
+                                                    EmbedVideo(
+                                                        video = it,
+                                                        videoPublicUrl = embed.url,
+                                                        thumbnail = embed.thumbnail,
+                                                    )
+                                                }
+                                            } else {
+                                                {
+                                                    @OptIn(ExperimentalLayoutApi::class)
+                                                    FlowRow(
+                                                        horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterHorizontally),
+                                                        maxItemsInEachRow = 2,
+                                                        modifier = Modifier
+                                                            .clip(MaterialTheme.shapes.small),
+                                                    ) {
+                                                        for ((i, twitterEmbed) in embeds.withIndex()) key(twitterEmbed.image) {
+                                                            val image = twitterEmbed.image!!
+                                                            val isLastRow = i >= embeds.size - 2 // needed or parent clipping breaks
+
+                                                            OCImage(
+                                                                url = image.sizedUrl,
+                                                                size = OCSize(image.width ?: 500, image.height ?: 500),
+                                                                contentScale = ContentScale.FillWidth,
+                                                                memoryCaching = false,
+                                                                modifier = Modifier
+                                                                    .fillMaxWidth(0.48f)
+                                                                    .heightIn(max = 350.dp)
+                                                                    .padding(bottom = if (isLastRow) 0.dp else 5.dp),
+                                                            )
+                                                        }
+                                                    }
+                                                }
                                             },
                                             thumbnail = embed.thumbnail.ifNotNullComposable {
                                                 AttachmentPicture(
