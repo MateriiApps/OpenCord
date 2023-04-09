@@ -15,8 +15,8 @@ import com.xinto.opencord.rest.models.message.ApiMessage
 import com.xinto.opencord.rest.models.message.ApiMessagePartial
 import com.xinto.opencord.rest.models.message.ApiMessageType
 import com.xinto.opencord.rest.models.message.fromValue
+import com.xinto.opencord.ui.util.toUnsafeImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.datetime.Instant
 
 @Immutable
@@ -65,8 +65,8 @@ fun ApiMessage.toDomain(): DomainMessage {
                 timestamp = timestamp,
                 pinned = pinned,
                 editedTimestamp = editedTimestamp,
-                attachments = attachments.map { it.toDomain() }.toImmutableList(),
-                embeds = embeds.map { it.toDomain() }.toImmutableList(),
+                attachments = attachments.map { it.toDomain() }.toUnsafeImmutableList(),
+                embeds = embeds.map { it.toDomain() }.toUnsafeImmutableList(),
                 isReply = type == ApiMessageType.Reply,
                 referencedMessage = referencedMessage?.toDomain(),
                 mentionEveryone = mentionEveryone,
@@ -108,8 +108,8 @@ fun ApiMessagePartial.toDomain(): DomainMessagePartial {
                 timestamp = timestamp,
                 pinned = pinned,
                 editedTimestamp = editedTimestamp,
-                attachments = attachments.map { it.map { it.toDomain() }.toImmutableList() },
-                embeds = embeds.map { it.map { it.toDomain() }.toImmutableList() },
+                attachments = attachments.map { it.map { it.toDomain() }.toUnsafeImmutableList() },
+                embeds = embeds.map { it.map { it.toDomain() }.toUnsafeImmutableList() },
                 isReply = partial(type == ApiMessageType.Reply),
                 referencedMessage = referencedMessage.map { it?.toDomain() },
                 mentionEveryone = mentionEveryone,
@@ -156,8 +156,8 @@ fun EntityMessage.toDomain(
                 timestamp = Instant.fromEpochMilliseconds(timestamp),
                 pinned = pinned,
                 editedTimestamp = editedTimestamp?.let { Instant.fromEpochMilliseconds(it) },
-                attachments = attachments?.toImmutableList() ?: persistentListOf(),
-                embeds = embeds?.toImmutableList() ?: persistentListOf(),
+                attachments = attachments?.toUnsafeImmutableList() ?: persistentListOf(),
+                embeds = embeds?.toUnsafeImmutableList() ?: persistentListOf(),
                 isReply = type == ApiMessageType.Reply,
                 referencedMessage = referencedMessage,
                 mentionEveryone = mentionsEveryone,

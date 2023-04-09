@@ -1,17 +1,17 @@
 package com.xinto.opencord.ui.screens.home.panels.chat
 
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,9 +26,7 @@ import com.xinto.opencord.ui.components.OCImage
 import com.xinto.opencord.ui.components.OCSize
 import com.xinto.opencord.ui.components.attachment.AttachmentPicture
 import com.xinto.opencord.ui.components.attachment.AttachmentVideo
-import com.xinto.opencord.ui.components.embed.Embed
-import com.xinto.opencord.ui.components.embed.EmbedAuthor
-import com.xinto.opencord.ui.components.embed.EmbedField
+import com.xinto.opencord.ui.components.embed.*
 import com.xinto.opencord.ui.components.message.*
 import com.xinto.opencord.ui.components.message.reply.MessageReferenced
 import com.xinto.opencord.ui.components.message.reply.MessageReferencedAuthor
@@ -37,8 +35,8 @@ import com.xinto.opencord.ui.screens.home.panels.messagemenu.MessageMenu
 import com.xinto.opencord.ui.util.ifComposable
 import com.xinto.opencord.ui.util.ifNotEmptyComposable
 import com.xinto.opencord.ui.util.ifNotNullComposable
+import com.xinto.opencord.ui.util.toUnsafeImmutableList
 import com.xinto.opencord.ui.viewmodel.ChatViewModel
-import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun ChatLoaded(
@@ -67,37 +65,14 @@ fun ChatLoaded(
         modifier = modifier,
         reverseLayout = true,
     ) {
-        itemsIndexed(viewModel.sortedMessages, key = { _, m -> m.message.id }) { i, item ->
+        items(viewModel.sortedMessages, key = { it.message.id }) { item ->
             when (val message = item.message) {
                 is DomainMessageRegular -> {
-                    val prevMessage by remember {
-                        derivedStateOf(referentialEqualityPolicy()) {
-                            viewModel.sortedMessages.getOrNull(i + 1)?.message
-                        }
-                    }
-
-                    val canMerge by remember {
-                        derivedStateOf {
-                            val prevMessage1 = prevMessage
-
-                            prevMessage1 != null
-                                    && message.author.id == prevMessage1.author.id
-                                    && prevMessage1 is DomainMessageRegular
-                                    && !message.isReply
-                                    && !prevMessage1.isReply
-                                    && (message.timestamp - prevMessage1.timestamp).inWholeMinutes < 1
-                                    && message.attachments.isEmpty()
-                                    && prevMessage1.attachments.isEmpty()
-                                    && message.embeds.isEmpty()
-                                    && prevMessage1.embeds.isEmpty()
-                        }
-                    }
-
                     val messageReactions by remember {
                         derivedStateOf {
                             item.reactions.values
                                 .sortedBy { it.reactionOrder }
-                                .toImmutableList()
+                                .toUnsafeImmutableList()
                                 .takeIf { it.isNotEmpty() }
                         }
                     }
@@ -107,6 +82,8 @@ fun ChatLoaded(
                         modifier = Modifier
                             .fillMaxWidth(),
                         mentioned = item.meMentioned,
+                        topMerged = item.topMerged,
+                        bottomMerged = item.bottomMerged,
                         reply = message.isReply.ifComposable {
                             if (message.referencedMessage != null) {
                                 MessageReferenced(
@@ -128,10 +105,10 @@ fun ChatLoaded(
                                 }
                             }
                         },
-                        avatar = if (canMerge) null else { ->
+                        avatar = if (item.topMerged) null else { ->
                             MessageAvatar(url = message.author.avatarUrl)
                         },
-                        author = if (canMerge) null else { ->
+                        author = if (item.topMerged) null else { ->
                             MessageAuthor(
                                 author = message.author.username,
                                 timestamp = message.formattedTimestamp,
@@ -146,25 +123,111 @@ fun ChatLoaded(
                             )
                         },
                         embeds = message.embeds.ifNotEmptyComposable { embeds ->
-                            for (embed in embeds) {
-                                Embed(
-                                    title = embed.title,
-                                    description = embed.description,
-                                    color = embed.color,
-                                    author = embed.author.ifNotNullComposable { EmbedAuthor(name = it) },
-                                    fields = embed.fields.ifNotNullComposable {
-                                        for (field in it) {
-                                            EmbedField(
-                                                name = field.name,
-                                                value = field.value,
+                            val renderedEmbeds = if (message.isTwitterMultiImageMessage) listOf(embeds.first()) else embeds
+
+                            for (embed in renderedEmbeds) key(embed) {
+                                if (embed.isVideoOnlyEmbed) {
+                                    val video = embed.video!!
+                                    AttachmentVideo(
+                                        url = video.proxyUrl!!,
+                                        modifier = Modifier
+                                            .heightIn(max = 400.dp)
+                                            .aspectRatio(
+                                                ratio = video.aspectRatio,
+                                                matchHeightConstraintsFirst = true,
+                                            ),
+                                    )
+                                } else if (embed.isSpotifyEmbed) {
+                                    SpotifyEmbed(
+                                        embedUrl = embed.spotifyEmbedUrl!!,
+                                        isSpotifyTrack = embed.isSpotifyTrack,
+                                    )
+                                } else {
+                                    Embed(
+                                        title = embed.title,
+                                        url = embed.url,
+                                        description = embed.description,
+                                        color = embed.color,
+                                        author = embed.author.ifNotNullComposable {
+                                            EmbedAuthor(
+                                                name = it.name,
+                                                url = it.url,
+                                                iconUrl = it.iconUrl,
                                             )
-                                        }
-                                    },
-                                )
+                                        },
+                                        media = if (!message.isTwitterMultiImageMessage) {
+                                            embed.image.ifNotNullComposable {
+                                                AttachmentPicture(
+                                                    url = it.sizedUrl,
+                                                    width = it.width ?: 500,
+                                                    height = it.height ?: 500,
+                                                    modifier = Modifier
+                                                        .heightIn(max = 400.dp),
+                                                )
+                                            } ?: embed.video.ifNotNullComposable {
+                                                EmbedVideo(
+                                                    video = it,
+                                                    videoPublicUrl = embed.url,
+                                                    thumbnail = embed.thumbnail,
+                                                )
+                                            }
+                                        } else {
+                                            {
+                                                @OptIn(ExperimentalLayoutApi::class)
+                                                FlowRow(
+                                                    horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterHorizontally),
+                                                    maxItemsInEachRow = 2,
+                                                    modifier = Modifier
+                                                        .clip(MaterialTheme.shapes.small),
+                                                ) {
+                                                    for ((i, twitterEmbed) in embeds.withIndex()) key(twitterEmbed.image) {
+                                                        val image = twitterEmbed.image!!
+                                                        val isLastRow = i >= embeds.size - 2 // needed or parent clipping breaks
+
+                                                        OCImage(
+                                                            url = image.sizedUrl,
+                                                            size = OCSize(image.width ?: 500, image.height ?: 500),
+                                                            contentScale = ContentScale.FillWidth,
+                                                            memoryCaching = false,
+                                                            modifier = Modifier
+                                                                .fillMaxWidth(0.48f)
+                                                                .heightIn(max = 350.dp)
+                                                                .padding(bottom = if (isLastRow) 0.dp else 5.dp),
+                                                        )
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        thumbnail = embed.thumbnail.ifNotNullComposable {
+                                            AttachmentPicture(
+                                                url = it.sizedUrl,
+                                                width = it.width ?: 256,
+                                                height = it.height ?: 256,
+                                                modifier = Modifier
+                                                    .size(45.dp),
+                                            )
+                                        },
+                                        fields = embed.fields.ifNotNullComposable {
+                                            for (field in it) key(field) {
+                                                EmbedField(
+                                                    name = field.name,
+                                                    value = field.value,
+                                                )
+                                            }
+                                        },
+                                        footer = embed.footer.ifNotNullComposable {
+                                            EmbedFooter(
+                                                text = it.text,
+                                                iconUrl = it.displayUrl,
+                                                timestamp = it.formattedTimestamp,
+                                            )
+                                        },
+                                    )
+                                }
                             }
                         },
                         attachments = message.attachments.ifNotEmptyComposable { attachments ->
-                            for (attachment in attachments) {
+                            for (attachment in attachments) key(attachment) {
                                 when (attachment) {
                                     is DomainPictureAttachment -> {
                                         AttachmentPicture(

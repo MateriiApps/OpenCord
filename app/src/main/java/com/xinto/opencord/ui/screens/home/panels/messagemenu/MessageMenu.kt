@@ -28,6 +28,12 @@ fun MessageMenu(
         }
     }
 
+    LaunchedEffect(viewModel.state) {
+        if (viewModel.state == MessageMenuViewModel.State.Closing) {
+            onDismiss?.invoke()
+        }
+    }
+
     ModalBottomSheet(
         sheetState = sheetState,
         onDismissRequest = {

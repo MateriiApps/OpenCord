@@ -215,6 +215,7 @@ fun ChannelItem(
                 },
                 selected = isSelected,
                 showUnread = itemData.isUnread,
+                mentionCount = itemData.mentionCount,
                 onClick = onClick,
             )
         }

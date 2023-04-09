@@ -4,16 +4,10 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ApiEmbedAuthor(
+data class ApiEmbedProvider(
     @SerialName("name")
-    val name: String,
+    val name: String? = null,
 
     @SerialName("url")
     val url: String? = null,
-
-    @SerialName("icon_url")
-    val iconUrl: String? = null,
-
-    @SerialName("proxy_icon_url")
-    val proxyIconUrl: String? = null,
 )

@@ -24,6 +24,10 @@ interface UnreadStatesDao {
         insertStates(states)
     }
 
+    // --------------- Updates ---------------
+    @Query("UPDATE unread_states SET mention_count = coalesce(mention_count, 0) + 1 WHERE channel_id = :channelId")
+    fun incrementMentionCount(channelId: Long)
+
     // --------------- Deletes ---------------
     @Query("DELETE FROM unread_states WHERE channel_id = :channelId")
     fun deleteUnreadState(channelId: Long)

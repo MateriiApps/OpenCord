@@ -15,13 +15,15 @@ data class DomainGuild(
     val premiumSubscriptionCount: Int,
 ) {
     val iconText by lazy {
-        name.split(ICON_TEXT_REGEX)
-            .map { it[0] }
-            .joinToString()
+        ICON_TEXT_REGEX.findAll(name)
+            .joinToString("") { it.groupValues[1] }
+            .take(4)
+            .takeIf(String::isNotEmpty)
+            ?: name.firstOrNull { !it.isWhitespace() }.toString()
     }
 
     companion object {
-        val ICON_TEXT_REGEX = """\s+""".toRegex()
+        val ICON_TEXT_REGEX = """(?:^|\s)([\P{Cc}\P{Cs}\P{Cn}])""".toRegex()
     }
 }
 

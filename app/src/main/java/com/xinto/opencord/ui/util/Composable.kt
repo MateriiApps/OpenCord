@@ -7,8 +7,18 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 
-inline fun <C : @Composable () -> Unit> Boolean.ifComposable(block: C): C? =
-    if (this) block else null
+@Composable
+inline fun Boolean.ifComposable(
+    crossinline block: @Composable () -> Unit,
+): (@Composable () -> Unit)? {
+    return if (this) {
+        remember {
+            @Composable { block() }
+        }
+    } else {
+        null
+    }
+}
 
 @Composable
 inline fun <T> T?.ifNotNullComposable(

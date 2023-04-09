@@ -5,13 +5,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.ui.components.message.reply.MessageReplyBranch
 
@@ -19,6 +18,10 @@ import com.xinto.opencord.ui.components.message.reply.MessageReplyBranch
 fun MessageRegular(
     modifier: Modifier = Modifier,
     mentioned: Boolean = false,
+    topMerged: Boolean = false,
+    bottomMerged: Boolean = false,
+    shape: Shape = MaterialTheme.shapes.large,
+    onClick: (() -> Unit)? = null,
     onLongClick: (() -> Unit)? = null,
     reply: (@Composable () -> Unit)? = null,
     avatar: (@Composable () -> Unit)? = null,
@@ -30,18 +33,17 @@ fun MessageRegular(
 ) {
     val backgroundColor = MaterialTheme.colorScheme.secondaryContainer
 
-    val isMerged by remember {
-        derivedStateOf {
-            author == null && avatar == null
-        }
-    }
-
     Box(
-        modifier = modifier
-            .combinedClickable(onClick = {}, onLongClick = onLongClick)
+        modifier = Modifier
+            .clip(shape)
+            .combinedClickable(
+                enabled = onClick != null || onLongClick != null,
+                onClick = {},
+                onLongClick = onLongClick,
+            )
+            .then(modifier)
             .drawBehind {
-                val color = if (mentioned) backgroundColor else Color.Unspecified
-                drawRect(color)
+                drawRect(if (mentioned) backgroundColor else Color.Unspecified)
             },
     ) {
         Column(
@@ -49,9 +51,9 @@ fun MessageRegular(
                 .wrapContentHeight()
                 .padding(
                     start = 8.dp,
-                    top = if (!isMerged) 8.dp else 1.dp,
+                    top = if (!topMerged) 8.dp else 1.5.dp,
                     end = 8.dp,
-                    bottom = 8.dp,
+                    bottom = if (!bottomMerged) 8.dp else 1.5.dp,
                 ),
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {

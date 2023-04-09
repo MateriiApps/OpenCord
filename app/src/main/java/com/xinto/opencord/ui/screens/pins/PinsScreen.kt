@@ -20,8 +20,8 @@ import com.xinto.opencord.ui.navigation.PinsScreenData
 import com.xinto.opencord.ui.util.ContentAlpha
 import com.xinto.opencord.ui.util.VoidablePaddingValues
 import com.xinto.opencord.ui.util.paddingOrGestureNav
+import com.xinto.opencord.ui.util.toUnsafeImmutableList
 import com.xinto.opencord.ui.viewmodel.ChannelPinsViewModel
-import kotlinx.collections.immutable.toImmutableList
 import org.koin.androidx.compose.getViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -37,7 +37,7 @@ fun PinsScreen(
         derivedStateOf {
             viewModel.messages.values
                 .sortedByDescending { it.timestamp }
-                .toImmutableList()
+                .toUnsafeImmutableList()
         }
     }
 

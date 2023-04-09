@@ -58,8 +58,8 @@ class ChannelPinsViewModel(
 
         messageStore.observeChannel(data.channelId).collectIn(viewModelScope) { event ->
             event.fold(
-                onAdd = { messages[it.id] = it },
-                onUpdate = { messages[it.id] = it },
+                onAdd = {},
+                onUpdate = { messages.replace(it.id, it) },
                 onDelete = { messages.remove(it.messageId.value) },
             )
         }
