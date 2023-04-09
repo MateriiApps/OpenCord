@@ -54,7 +54,7 @@ fun HomeScreen(
     }
 
     val centerPanelShape by animateCornerBasedShapeAsState(
-        if (panelState.targetValue != SwipePanelsValue.Center) {
+        if (panelState.currentValue != SwipePanelsValue.Center || panelState.targetValue != SwipePanelsValue.Center) {
             MaterialTheme.shapes.large
         } else {
             RoundedCornerShape(0.dp)
