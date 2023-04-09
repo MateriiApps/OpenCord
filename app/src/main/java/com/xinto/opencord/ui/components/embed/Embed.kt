@@ -1,9 +1,6 @@
 package com.xinto.opencord.ui.components.embed
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
@@ -31,6 +28,7 @@ fun Embed(
     modifier: Modifier = Modifier,
     author: (@Composable () -> Unit)? = null,
     media: (@Composable () -> Unit)? = null,
+    thumbnail: (@Composable () -> Unit)? = null,
     fields: (@Composable () -> Unit)? = null,
     footer: (@Composable () -> Unit)? = null,
 ) {
@@ -57,36 +55,52 @@ fun Embed(
                 .padding(start = 16.dp, top = 14.dp, end = 14.dp, bottom = 14.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            if (author != null) {
-                author()
-            }
-            if (title != null) {
-                if (url == null) {
-                    Text(
-                        text = title,
-                        style = MaterialTheme.typography.labelLarge,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                } else {
-                    val uriHandler = LocalUriHandler.current
-                    ClickableText(
-                        text = buildAnnotatedString { append(title) },
-                        style = MaterialTheme.typography.labelLarge.copy(
-                            textDecoration = TextDecoration.Underline,
-                            color = MaterialTheme.colorScheme.primary,
-                        ),
-                        overflow = TextOverflow.Ellipsis,
-                        onClick = {
-                            uriHandler.openUri(url)
-                        },
-                    )
+            Row {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 10.dp),
+                ) {
+                    if (author != null) {
+                        author()
+                    }
+
+                    if (title != null) {
+                        if (url == null) {
+                            Text(
+                                text = title,
+                                style = MaterialTheme.typography.labelLarge,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                        } else {
+                            val uriHandler = LocalUriHandler.current
+                            ClickableText(
+                                text = buildAnnotatedString { append(title) },
+                                style = MaterialTheme.typography.labelLarge.copy(
+                                    textDecoration = TextDecoration.Underline,
+                                    color = MaterialTheme.colorScheme.primary,
+                                ),
+                                overflow = TextOverflow.Ellipsis,
+                                onClick = {
+                                    uriHandler.openUri(url)
+                                },
+                            )
+                        }
+                    }
+
+                    if (description != null) {
+                        ProvideTextStyle(MaterialTheme.typography.bodySmall) {
+                            Text(description)
+                        }
+                    }
+                }
+
+                if (thumbnail != null) {
+                    thumbnail()
                 }
             }
-            if (description != null) {
-                ProvideTextStyle(MaterialTheme.typography.bodySmall) {
-                    Text(description)
-                }
-            }
+
             if (fields != null) {
                 Column(
                     modifier = Modifier.fillMaxWidth(),
@@ -95,9 +109,11 @@ fun Embed(
                     fields()
                 }
             }
+
             if (media != null) {
                 media()
             }
+
             if (footer != null) {
                 footer()
             }

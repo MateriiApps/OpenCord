@@ -360,6 +360,15 @@ private fun MentionsPageMessage(
                                         thumbnail = embed.thumbnail,
                                     )
                                 },
+                                thumbnail = embed.thumbnail.ifNotNullComposable {
+                                    AttachmentPicture(
+                                        url = it.displayUrl,
+                                        width = it.width ?: 256,
+                                        height = it.height ?: 256,
+                                        modifier = Modifier
+                                            .size(45.dp),
+                                    )
+                                },
                                 fields = embed.fields.ifNotNullComposable {
                                     for (field in it) key(field) {
                                         EmbedField(
