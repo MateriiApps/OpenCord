@@ -19,16 +19,15 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.web.LoadingState
 import com.google.accompanist.web.WebView
 import com.google.accompanist.web.rememberWebViewState
-import com.xinto.opencord.rest.models.embed.ApiEmbedImage
-import com.xinto.opencord.rest.models.embed.ApiEmbedVideo
+import com.xinto.opencord.rest.models.embed.ApiEmbedMedia
 import com.xinto.opencord.ui.components.attachment.AttachmentPicture
 import com.xinto.opencord.ui.util.ContentAlpha
 
 @Composable
 fun EmbedVideo(
-    video: ApiEmbedVideo,
+    video: ApiEmbedMedia,
     videoPublicUrl: String?,
-    thumbnail: ApiEmbedImage?,
+    thumbnail: ApiEmbedMedia?,
 ) {
     var pressedLoad by remember { mutableStateOf(false) }
     val webViewState = rememberWebViewState(video.url)
@@ -52,7 +51,7 @@ fun EmbedVideo(
             // Background thumbnail fill
             if (thumbnail != null && webViewState.lastLoadedUrl == null) {
                 AttachmentPicture(
-                    url = thumbnail.displayUrl,
+                    url = thumbnail.sizedUrl,
                     width = thumbnail.width ?: 500,
                     height = thumbnail.height ?: 500,
                     modifier = Modifier
@@ -66,7 +65,7 @@ fun EmbedVideo(
                     modifier = Modifier
                         .heightIn(max = 400.dp)
                         .aspectRatio(
-                            ratio = (video.width?.toFloat() ?: 1f) / (video.height?.toFloat() ?: 1f),
+                            ratio = video.aspectRatio,
                             matchHeightConstraintsFirst = true,
                         ),
                 )
@@ -137,7 +136,7 @@ fun EmbedVideo(
                     Modifier
                         .heightIn(max = 400.dp)
                         .aspectRatio(
-                            ratio = (video.width?.toFloat() ?: 1f) / (video.height?.toFloat() ?: 1f),
+                            ratio = video.aspectRatio,
                             matchHeightConstraintsFirst = true,
                         )
                 } else {

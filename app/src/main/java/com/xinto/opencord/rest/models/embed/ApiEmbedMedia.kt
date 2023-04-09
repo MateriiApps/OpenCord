@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ApiEmbedImage(
+data class ApiEmbedMedia(
     @SerialName("url")
     val url: String,
 
@@ -18,7 +18,11 @@ data class ApiEmbedImage(
     @SerialName("width")
     val width: Int? = null,
 ) {
-    val displayUrl: String by lazy {
+    /**
+     * Calculates the proxy url with size or raw url if none
+     * Only used for images
+     */
+    val sizedUrl: String by lazy {
         if (proxyUrl != null) {
             val params = queryParameters(2) {
                 width?.also { append("width", it.toString()) }
@@ -29,4 +33,7 @@ data class ApiEmbedImage(
             url
         }
     }
+
+    val aspectRatio: Float
+        get() = (width?.toFloat() ?: 1f) / (height?.toFloat() ?: 1f)
 }

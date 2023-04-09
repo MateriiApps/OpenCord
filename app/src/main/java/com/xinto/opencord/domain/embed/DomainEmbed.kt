@@ -18,11 +18,15 @@ data class DomainEmbed(
     val color: Color?,
     val author: ApiEmbedAuthor?,
     val footer: DomainEmbedFooter?,
-    val thumbnail: ApiEmbedImage?,
-    val image: ApiEmbedImage?,
-    val video: ApiEmbedVideo?,
+    val thumbnail: ApiEmbedMedia?,
+    val image: ApiEmbedMedia?,
+    val video: ApiEmbedMedia?,
     val fields: ImmutableList<ApiEmbedField>?,
-)
+) {
+    // Determines that this should be displayed like an attachment
+    val isVideoOnlyEmbed: Boolean
+        get() = video?.proxyUrl != null
+}
 
 fun ApiEmbed.toDomain(): DomainEmbed {
     return DomainEmbed(

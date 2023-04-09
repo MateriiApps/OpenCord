@@ -45,13 +45,13 @@ data class EntityEmbed(
     val footer: ApiEmbedFooter?,
 
     @Embedded(prefix = "thumbnail_")
-    val thumbnail: ApiEmbedImage?,
+    val thumbnail: ApiEmbedMedia?,
 
     @Embedded(prefix = "image_")
-    val image: ApiEmbedImage?,
+    val image: ApiEmbedMedia?,
 
     @Embedded(prefix = "video_")
-    val video: ApiEmbedVideo?,
+    val video: ApiEmbedMedia?,
 
     @ColumnInfo(name = "fields")
     val fields: List<ApiEmbedField>?,

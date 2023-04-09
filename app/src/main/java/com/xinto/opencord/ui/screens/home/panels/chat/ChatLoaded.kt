@@ -124,58 +124,71 @@ fun ChatLoaded(
                         },
                         embeds = message.embeds.ifNotEmptyComposable { embeds ->
                             for (embed in embeds) key(embed) {
-                                Embed(
-                                    title = embed.title,
-                                    url = embed.url,
-                                    description = embed.description,
-                                    color = embed.color,
-                                    author = embed.author.ifNotNullComposable {
-                                        EmbedAuthor(
-                                            name = it.name,
-                                            url = it.url,
-                                            iconUrl = it.iconUrl,
-                                        )
-                                    },
-                                    media = embed.image.ifNotNullComposable {
-                                        AttachmentPicture(
-                                            url = it.displayUrl,
-                                            width = it.width ?: 500,
-                                            height = it.height ?: 500,
-                                            modifier = Modifier
-                                                .heightIn(max = 400.dp),
-                                        )
-                                    } ?: embed.video.ifNotNullComposable {
-                                        EmbedVideo(
-                                            video = it,
-                                            videoPublicUrl = embed.url,
-                                            thumbnail = embed.thumbnail,
-                                        )
-                                    },
-                                    thumbnail = embed.thumbnail.ifNotNullComposable {
-                                        AttachmentPicture(
-                                            url = it.displayUrl,
-                                            width = it.width ?: 256,
-                                            height = it.height ?: 256,
-                                            modifier = Modifier
-                                                .size(45.dp),
-                                        )
-                                    },
-                                    fields = embed.fields.ifNotNullComposable {
-                                        for (field in it) key(field) {
-                                            EmbedField(
-                                                name = field.name,
-                                                value = field.value,
+                                if (embed.isVideoOnlyEmbed) {
+                                    val video = embed.video!!
+                                    AttachmentVideo(
+                                        url = video.proxyUrl!!,
+                                        modifier = Modifier
+                                            .heightIn(max = 400.dp)
+                                            .aspectRatio(
+                                                ratio = video.aspectRatio,
+                                                matchHeightConstraintsFirst = true,
+                                            ),
+                                    )
+                                } else {
+                                    Embed(
+                                        title = embed.title,
+                                        url = embed.url,
+                                        description = embed.description,
+                                        color = embed.color,
+                                        author = embed.author.ifNotNullComposable {
+                                            EmbedAuthor(
+                                                name = it.name,
+                                                url = it.url,
+                                                iconUrl = it.iconUrl,
                                             )
-                                        }
-                                    },
-                                    footer = embed.footer.ifNotNullComposable {
-                                        EmbedFooter(
-                                            text = it.text,
-                                            iconUrl = it.displayUrl,
-                                            timestamp = it.formattedTimestamp,
-                                        )
-                                    },
-                                )
+                                        },
+                                        media = embed.image.ifNotNullComposable {
+                                            AttachmentPicture(
+                                                url = it.sizedUrl,
+                                                width = it.width ?: 500,
+                                                height = it.height ?: 500,
+                                                modifier = Modifier
+                                                    .heightIn(max = 400.dp),
+                                            )
+                                        } ?: embed.video.ifNotNullComposable {
+                                            EmbedVideo(
+                                                video = it,
+                                                videoPublicUrl = embed.url,
+                                                thumbnail = embed.thumbnail,
+                                            )
+                                        },
+                                        thumbnail = embed.thumbnail.ifNotNullComposable {
+                                            AttachmentPicture(
+                                                url = it.sizedUrl,
+                                                width = it.width ?: 256,
+                                                height = it.height ?: 256,
+                                                modifier = Modifier
+                                                    .size(45.dp),
+                                            )
+                                        },
+                                        fields = embed.fields.ifNotNullComposable {
+                                            for (field in it) key(field) {
+                                                EmbedField(
+                                                    name = field.name,
+                                                    value = field.value,
+                                                )
+                                            }
+                                        },
+                                        footer = embed.footer.ifNotNullComposable {
+                                            EmbedFooter(
+                                                text = it.text,
+                                                iconUrl = it.displayUrl,
+                                                timestamp = it.formattedTimestamp,
+                                            )
+                                        },
+                                    )
+                                }
                             }
                         },
                         attachments = message.attachments.ifNotEmptyComposable { attachments ->

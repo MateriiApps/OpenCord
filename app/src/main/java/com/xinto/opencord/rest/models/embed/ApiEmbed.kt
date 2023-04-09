@@ -28,13 +28,13 @@ data class ApiEmbed(
     val footer: ApiEmbedFooter? = null,
 
     @SerialName("thumbnail")
-    val thumbnail: ApiEmbedImage? = null,
+    val thumbnail: ApiEmbedMedia? = null,
 
     @SerialName("image")
-    val image: ApiEmbedImage? = null,
+    val image: ApiEmbedMedia? = null,
 
     @SerialName("video")
-    val video: ApiEmbedVideo? = null,
+    val video: ApiEmbedMedia? = null,
 
     @SerialName("author")
     val author: ApiEmbedAuthor? = null,
