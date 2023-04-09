@@ -344,6 +344,11 @@ private fun MentionsPageMessage(
                                             matchHeightConstraintsFirst = true,
                                         ),
                                 )
+                            } else if (embed.isSpotifyEmbed) {
+                                SpotifyEmbed(
+                                    embedUrl = embed.spotifyEmbedUrl!!,
+                                    isSpotifyTrack = embed.isSpotifyTrack,
+                                )
                             } else {
                                 Embed(
                                     title = embed.title,

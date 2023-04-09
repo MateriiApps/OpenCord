@@ -39,8 +39,11 @@ data class ApiEmbed(
     @SerialName("author")
     val author: ApiEmbedAuthor? = null,
 
+    @SerialName("provider")
+    val provider: ApiEmbedProvider? = null,
+
     @SerialName("fields")
-    val fields: List<ApiEmbedField>? = null
+    val fields: List<ApiEmbedField>? = null,
 )
 
 fun DomainEmbed.toApi(): ApiEmbed {
@@ -55,6 +58,7 @@ fun DomainEmbed.toApi(): ApiEmbed {
         thumbnail = thumbnail,
         image = image,
         video = video,
+        provider = provider,
         fields = fields,
     )
 }

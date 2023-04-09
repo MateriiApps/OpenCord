@@ -53,6 +53,9 @@ data class EntityEmbed(
     @Embedded(prefix = "video_")
     val video: ApiEmbedMedia?,
 
+    @Embedded(prefix = "provider_")
+    val provider: ApiEmbedProvider?,
+
     @ColumnInfo(name = "fields")
     val fields: List<ApiEmbedField>?,
 )
@@ -71,6 +74,7 @@ fun ApiEmbed.toEntity(messageId: Long, embedIndex: Int): EntityEmbed {
         image = image,
         video = video,
         author = author,
+        provider = provider,
         fields = fields,
     )
 }

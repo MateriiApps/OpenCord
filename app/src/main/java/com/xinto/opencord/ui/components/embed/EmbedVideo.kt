@@ -1,6 +1,7 @@
 package com.xinto.opencord.ui.components.embed
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.webkit.WebSettings
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -123,6 +124,7 @@ fun EmbedVideo(
                 state = webViewState,
                 captureBackPresses = false,
                 onCreated = { webView ->
+                    webView.setBackgroundColor(Color.TRANSPARENT)
                     webView.settings.apply {
                         @SuppressLint("SetJavaScriptEnabled")
                         javaScriptEnabled = true
@@ -134,6 +136,7 @@ fun EmbedVideo(
                 },
                 modifier = if (shouldDisplayWebView) {
                     Modifier
+                        .clip(MaterialTheme.shapes.small)
                         .heightIn(max = 400.dp)
                         .aspectRatio(
                             ratio = video.aspectRatio,

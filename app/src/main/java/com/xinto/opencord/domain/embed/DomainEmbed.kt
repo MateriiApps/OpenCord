@@ -21,11 +21,27 @@ data class DomainEmbed(
     val thumbnail: ApiEmbedMedia?,
     val image: ApiEmbedMedia?,
     val video: ApiEmbedMedia?,
+    val provider: ApiEmbedProvider?,
     val fields: ImmutableList<ApiEmbedField>?,
 ) {
     // Determines that this should be displayed like an attachment
     val isVideoOnlyEmbed: Boolean
         get() = video?.proxyUrl != null
+
+    val isSpotifyEmbed: Boolean
+        get() = provider?.url == "https://spotify.com/"
+
+    val isSpotifyTrack: Boolean
+        get() = url?.startsWith("https://open.spotify.com/track") ?: false
+
+    val spotifyEmbedUrl: String? by lazy {
+        if (!isSpotifyEmbed) return@lazy null
+
+        url?.replace(
+            "https://open.spotify.com/",
+            "https://open.spotify.com/embed/",
+        )
+    }
 }
 
 fun ApiEmbed.toDomain(): DomainEmbed {
@@ -39,6 +55,7 @@ fun ApiEmbed.toDomain(): DomainEmbed {
         thumbnail = thumbnail,
         image = image,
         video = video,
+        provider = provider,
         fields = fields?.toUnsafeImmutableList(),
     )
 }
@@ -56,6 +73,7 @@ fun EntityEmbed.toDomain(): DomainEmbed {
         thumbnail = thumbnail,
         image = image,
         video = video,
+        provider = provider,
         fields = fields?.toUnsafeImmutableList(),
     )
 }
