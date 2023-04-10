@@ -23,6 +23,7 @@ import com.google.accompanist.web.rememberWebViewState
 import com.xinto.opencord.rest.models.embed.ApiEmbedMedia
 import com.xinto.opencord.ui.components.attachment.AttachmentPicture
 import com.xinto.opencord.ui.util.ContentAlpha
+import com.xinto.opencord.ui.util.ScrollableWebView
 
 @Composable
 fun EmbedVideo(
@@ -134,6 +135,7 @@ fun EmbedVideo(
                         setGeolocationEnabled(false)
                     }
                 },
+                factory = { ScrollableWebView(it) },
                 modifier = if (shouldDisplayWebView) {
                     Modifier
                         .clip(MaterialTheme.shapes.small)
