@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.xinto.opencord.ui.navigation.PinsScreenData
@@ -26,7 +27,6 @@ import com.xinto.opencord.ui.viewmodel.ChannelsViewModel
 import com.xinto.opencord.ui.viewmodel.ChatViewModel
 import com.xinto.opencord.ui.viewmodel.CurrentUserViewModel
 import com.xinto.opencord.ui.viewmodel.GuildsViewModel
-import io.github.materiiapps.panels.PanelsDefaults
 import io.github.materiiapps.panels.SwipePanels
 import io.github.materiiapps.panels.SwipePanelsValue
 import io.github.materiiapps.panels.rememberSwipePanelsState
@@ -53,38 +53,19 @@ fun HomeScreen(
         panelState.close()
     }
 
-    val centerPanelShape by animateCornerBasedShapeAsState(
-        if (panelState.currentValue != SwipePanelsValue.Center || panelState.targetValue != SwipePanelsValue.Center) {
-            MaterialTheme.shapes.large
-        } else {
-            RoundedCornerShape(0.dp)
-        },
-    )
-
     SwipePanels(
+        state = panelState,
+        inBetweenPadding = 6.dp,
         modifier = modifier
             .background(MaterialTheme.colorScheme.surface)
             .fillMaxSize(),
-        state = panelState,
-        colors = PanelsDefaults.colors(
-            startPanelBackground = MaterialTheme.colorScheme.surface,
-            centerPanelBackground = MaterialTheme.colorScheme.surface,
-            endPanelBackground = MaterialTheme.colorScheme.surface,
-        ),
-        shapes = PanelsDefaults.shapes(
-            startPanelShape = MaterialTheme.shapes.medium,
-            centerPanelShape = centerPanelShape,
-            endPanelShape = MaterialTheme.shapes.medium,
-        ),
-        paddings = PanelsDefaults.paddings(
-            startPanelPadding = PaddingValues(end = 6.dp),
-            endPanelPadding = PaddingValues(start = 6.dp),
-        ),
         start = {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .systemBarsPadding(),
+                    .systemBarsPadding()
+                    .clip(MaterialTheme.shapes.medium)
+                    .padding(start = 6.dp),
                 verticalArrangement = Arrangement.spacedBy(6.dp),
             ) {
                 Row(
@@ -130,6 +111,14 @@ fun HomeScreen(
                 )
             }
 
+            val centerPanelShape by animateCornerBasedShapeAsState(
+                if (panelState.currentValue != SwipePanelsValue.Center || panelState.targetValue != SwipePanelsValue.Center) {
+                    MaterialTheme.shapes.large
+                } else {
+                    RoundedCornerShape(0.dp)
+                },
+            )
+
             Chat(
                 onChannelsButtonClick = panelState::openStart,
                 onMembersButtonClick = panelState::openEnd,
@@ -138,7 +127,8 @@ fun HomeScreen(
                 },
                 viewModel = chatViewModel,
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .clip(centerPanelShape),
             )
 
         },
@@ -146,7 +136,9 @@ fun HomeScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .systemBarsPadding(),
+                    .systemBarsPadding()
+                    .clip(MaterialTheme.shapes.medium)
+                    .padding(end = 6.dp),
                 verticalArrangement = Arrangement.spacedBy(6.dp),
             ) {
                 MembersList(

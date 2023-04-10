@@ -3,7 +3,7 @@ package com.xinto.opencord.ui.components.guild.list
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,8 +22,8 @@ fun GuildsListHeaderItem(
     ) {
         Icon(
             modifier = Modifier
-                .size(32.dp),
-            tint = LocalContentColor.current,
+                .size(35.dp),
+            tint = MaterialTheme.colorScheme.primary,
             painter = painterResource(R.drawable.ic_discord_logo),
             contentDescription = stringResource(R.string.guilds_home),
         )
