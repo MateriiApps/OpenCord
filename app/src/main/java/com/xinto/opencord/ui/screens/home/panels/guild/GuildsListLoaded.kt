@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.xinto.opencord.domain.guild.DomainGuild
 import com.xinto.opencord.ui.components.guild.list.GuildsListHeaderItem
 import com.xinto.opencord.ui.components.guild.list.GuildsListItemImage
-import com.xinto.opencord.ui.components.guild.list.GuildsListItemText
+import com.xinto.opencord.ui.components.guild.list.GuildsListTextItem
 import com.xinto.opencord.ui.components.guild.list.RegularGuildItem
 import kotlinx.collections.immutable.ImmutableList
 
@@ -68,7 +68,7 @@ fun GuildsListLoaded(
                         url = guild.iconUrl,
                     )
                 } else {
-                    GuildsListItemText(
+                    GuildsListTextItem(
                         iconText = guild.iconText,
                     )
                 }

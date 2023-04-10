@@ -10,12 +10,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun GuildsListItemText(
+fun GuildsListTextItem(
     iconText: String,
     modifier: Modifier = Modifier,
 ) {
@@ -30,6 +31,7 @@ fun GuildsListItemText(
             val baseTextSize = LocalDensity.current.run { maxWidth.toSp() } * 0.9f
             var scaledTextSize by remember(iconText) { mutableStateOf(baseTextSize) }
             var hasOverflowed by remember(iconText) { mutableStateOf(false) }
+            var shouldDisplay by remember { mutableStateOf(false) }
 
             Text(
                 text = iconText,
@@ -41,12 +43,16 @@ fun GuildsListItemText(
                 maxLines = if (hasOverflowed) 2 else 1,
                 softWrap = true,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(if (hasOverflowed) 6.dp else 4.dp),
+                modifier = Modifier
+                    .padding(if (hasOverflowed) 6.dp else 4.dp)
+                    .alpha(if (shouldDisplay) 1f else 0f),
                 onTextLayout = { layout ->
                     if (layout.hasVisualOverflow) {
                         scaledTextSize *= 0.9f
                     } else if (layout.lineCount > 1) {
                         hasOverflowed = true
+                    } else {
+                        shouldDisplay = true
                     }
                 },
             )
