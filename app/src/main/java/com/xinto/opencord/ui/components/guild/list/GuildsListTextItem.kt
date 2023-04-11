@@ -3,7 +3,6 @@ package com.xinto.opencord.ui.components.guild.list
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -36,7 +35,7 @@ fun GuildsListTextItem(
             Text(
                 text = iconText,
                 style = MaterialTheme.typography.headlineSmall,
-                color = LocalContentColor.current,
+                color = MaterialTheme.colorScheme.primary,
                 fontSize = scaledTextSize,
                 letterSpacing = scaledTextSize * if (hasOverflowed) 0.15f else 0f,
                 lineHeight = scaledTextSize * if (hasOverflowed) 1.15f else 1f,
