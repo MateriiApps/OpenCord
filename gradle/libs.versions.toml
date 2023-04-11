@@ -19,7 +19,6 @@ androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscree
 androidx-preferences = { group = "androidx.preference", name = "preference", version = "1.2.0" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
-androidx-room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-compose-activity = { group = "androidx.activity", name = "activity-compose", version = "1.6.1" }
 androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "compose" }
@@ -47,16 +46,16 @@ navreimagined = { group = "dev.olshevski.navigation", name = "reimagined", versi
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version = "0.4.0" }
 kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version = "1.4.1" }
 kotlinx-immutable-collections = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version = "0.3.5" }
-ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref="ktor" }
-ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref="ktor" }
-ktor-client-websockets = { group = "io.ktor", name = "ktor-client-websockets", version.ref="ktor" }
-ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref="ktor" }
-ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref="ktor" }
-ktor-serialization-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref="ktor" }
+ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
+ktor-client-websockets = { group = "io.ktor", name = "ktor-client-websockets", version.ref = "ktor" }
+ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
+ktor-serialization-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
 [bundles]
 androidx-core = ["androidx-core", "androidx-core-splashscreen", "androidx-preferences"]
-androidx-room = ["androidx-room-ktx", "androidx-room-runtime", "androidx-room-paging"]
+androidx-room = ["androidx-room-ktx", "androidx-room-runtime"]
 androidx-compose = ["androidx-compose-activity", "androidx-compose-foundation", "androidx-compose-material", "androidx-compose-material3"]
 androidx-paging = ["androidx-paging-runtime", "androidx-paging-compose"]
 androidx-media3 = ["androidx-media3-exo", "androidx-media3-exo-dash", "androidx-media3-ui"]

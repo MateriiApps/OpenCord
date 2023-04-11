@@ -155,4 +155,5 @@ dependencies {
 
     ksp(libs.materii.partial.ksp)
     ksp(libs.materii.enumutil.ksp)
+    ksp(libs.androidx.room.compiler)
 }
