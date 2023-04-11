@@ -400,7 +400,6 @@ private fun MentionsPageMessage(
                                                         url = image.sizedUrl,
                                                         size = OCSize(image.width ?: 500, image.height ?: 500),
                                                         contentScale = ContentScale.FillWidth,
-                                                        memoryCaching = false,
                                                         modifier = Modifier
                                                             .fillMaxWidth(0.48f)
                                                             .heightIn(max = 350.dp)

@@ -44,7 +44,7 @@ fun OCImage(
     alpha: Float = DefaultAlpha,
     colorFilter: ColorFilter? = null,
     filterQuality: FilterQuality = DrawScope.DefaultFilterQuality,
-    memoryCaching: Boolean = true,
+    memoryCaching: Boolean = false,
 ) {
     val context = LocalContext.current
 

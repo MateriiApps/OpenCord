@@ -188,7 +188,6 @@ fun ChatLoaded(
                                                             url = image.sizedUrl,
                                                             size = OCSize(image.width ?: 500, image.height ?: 500),
                                                             contentScale = ContentScale.FillWidth,
-                                                            memoryCaching = false,
                                                             modifier = Modifier
                                                                 .fillMaxWidth(0.48f)
                                                                 .heightIn(max = 350.dp)
@@ -271,6 +270,7 @@ fun ChatLoaded(
                                                 OCImage(
                                                     url = reaction.emoji.url,
                                                     size = OCSize(64, 64),
+                                                    memoryCaching = true,
                                                     modifier = Modifier
                                                         .size(18.dp),
                                                 )

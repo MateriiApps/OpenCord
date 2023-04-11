@@ -14,6 +14,7 @@ fun MessageAvatar(
 ) {
     OCImage(
         url = url,
+        memoryCaching = true,
         size = OCSize(100, 100),
         modifier = modifier
             .clip(CircleShape),

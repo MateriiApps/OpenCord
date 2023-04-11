@@ -12,7 +12,9 @@ fun GuildsListItemImage(
     modifier: Modifier = Modifier,
 ) {
     OCImage(
-        modifier = modifier.size(48.dp),
         url = url,
+        memoryCaching = true,
+        modifier = modifier
+            .size(48.dp),
     )
 }

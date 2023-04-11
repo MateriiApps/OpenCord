@@ -77,12 +77,13 @@ fun ChannelsListLoaded(
             ) {
                 if (bannerUrl != null) {
                     OCImage(
+                        url = bannerUrl,
+                        memoryCaching = true,
+                        contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .fillParentMaxWidth()
                             .clip(MaterialTheme.shapes.large)
                             .height(150.dp),
-                        url = bannerUrl,
-                        contentScale = ContentScale.Crop,
                     )
                     Box(
                         modifier = Modifier

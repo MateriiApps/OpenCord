@@ -4,7 +4,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import com.xinto.opencord.ui.components.OCImage
 import com.xinto.opencord.ui.components.OCSize
 
@@ -18,8 +17,7 @@ fun AttachmentPicture(
     OCImage(
         url = url,
         size = OCSize(width, height),
-        modifier = modifier.clip(MaterialTheme.shapes.small),
-        contentScale = ContentScale.Fit,
-        memoryCaching = false,
+        modifier = modifier
+            .clip(MaterialTheme.shapes.small),
     )
 }

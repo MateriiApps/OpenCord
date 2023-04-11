@@ -41,10 +41,11 @@ fun CurrentUserLoaded(
                 },
             ) {
                 OCImage(
+                    url = avatarUrl,
+                    memoryCaching = true,
                     modifier = Modifier
                         .size(40.dp)
                         .clip(CircleShape),
-                    url = avatarUrl,
                 )
             }
         },

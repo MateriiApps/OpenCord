@@ -34,7 +34,6 @@ fun EmbedFooter(
                 modifier = Modifier
                     .size(24.dp)
                     .clip(CircleShape),
-                memoryCaching = false,
             )
         }
 

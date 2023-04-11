@@ -35,7 +35,6 @@ fun EmbedAuthor(
         if (iconUrl != null) {
             OCImage(
                 url = iconUrl,
-                memoryCaching = false,
                 size = OCSize(64, 64),
                 modifier = Modifier
                     .size(18.dp)

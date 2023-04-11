@@ -27,6 +27,7 @@ fun messageInlineContent(): ImmutableMap<String, InlineTextContent> {
             ) { emoteId ->
                 OCImage(
                     url = "${BuildConfig.URL_CDN}/emojis/$emoteId",
+                    memoryCaching = true,
                 )
             },
         )
