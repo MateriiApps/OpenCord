@@ -3,8 +3,6 @@ package com.xinto.opencord.ui.screens.login
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.*
@@ -71,7 +69,7 @@ fun LoginScreen(
                     text = stringResource(R.string.login_login_title),
                     style = MaterialTheme.typography.displaySmall,
                 )
-                CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+                CompositionLocalProvider(LocalContentColor provides LocalContentColor.current.copy(alpha = 0.7f)) {
                     Text(
                         text = stringResource(R.string.login_login_subtitle),
                         style = MaterialTheme.typography.bodyMedium,

@@ -1,0 +1,83 @@
+[versions]
+ktor = "2.2.4"
+room = "2.5.1"
+compose = "1.4.1"
+compose-compiler = "1.4.4"
+accompanist = "0.30.1"
+coil = "2.3.0"
+androidx-media3 = "1.0.0"
+materii-panels = "1.0.1"
+materii-partial = "1.1.0"
+materii-enumutil = "1.0.0"
+agp = "7.4.1"
+kotlin = "1.8.10"
+ksp = "1.8.10-1.0.9"
+
+[libraries]
+androidx-core = { group = "androidx.core", name = "core-ktx", version = "1.9.0" }
+androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version = "1.0.0" }
+androidx-preferences = { group = "androidx.preference", name = "preference", version = "1.2.0" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+androidx-room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+androidx-compose-activity = { group = "androidx.activity", name = "activity-compose", version = "1.6.1" }
+androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "compose" }
+androidx-compose-material = { group = "androidx.compose.material", name = "material", version.ref = "compose" }
+androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version = "1.1.0-beta02" }
+androidx-paging-runtime = { group = "androidx.paging", name = "paging-runtime", version = "3.1.1" }
+androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", version = "1.0.0-alpha18" }
+androidx-media3-exo = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "androidx-media3" }
+androidx-media3-exo-dash = { group = "androidx.media3", name = "media3-exoplayer-dash", version.ref = "androidx-media3" }
+androidx-media3-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "androidx-media3" }
+accompanist-systemui = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompanist" }
+accompanist-placeholder = { group = "com.google.accompanist", name = "accompanist-placeholder", version.ref = "accompanist" }
+accompanist-webview = { group = "com.google.accompanist", name = "accompanist-webview", version.ref = "accompanist" }
+shimmer = { group = "com.valentinilk.shimmer", name = "compose-shimmer", version = "1.0.3" }
+coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+coil-gif = { group = "io.coil-kt", name = "coil-gif", version.ref = "coil" }
+koin-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version = "3.4.3" }
+hcaptcha = { group = "com.github.hcaptcha", name = "hcaptcha-android-sdk", version = "3.8.0" }
+materii-panels = { group = "io.github.materiiapps.panels", name = "panels", version.ref = "materii-panels" }
+materii-partial = { group = "io.github.materiiapps", name = "partial", version.ref = "materii-partial" }
+materii-partial-ksp = { group = "io.github.materiiapps", name = "partial-ksp", version.ref = "materii-partial" }
+materii-enumutil = { group = "io.github.materiiapps", name = "enumutil", version.ref = "materii-enumutil" }
+materii-enumutil-ksp = { group = "io.github.materiiapps", name = "enumutil-ksp", version.ref = "materii-enumutil" }
+navreimagined = { group = "dev.olshevski.navigation", name = "reimagined", version = "1.3.1" }
+kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version = "0.4.0" }
+kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version = "1.4.1" }
+kotlinx-immutable-collections = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version = "0.3.5" }
+ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref="ktor" }
+ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref="ktor" }
+ktor-client-websockets = { group = "io.ktor", name = "ktor-client-websockets", version.ref="ktor" }
+ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref="ktor" }
+ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref="ktor" }
+ktor-serialization-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref="ktor" }
+
+[bundles]
+androidx-core = ["androidx-core", "androidx-core-splashscreen", "androidx-preferences"]
+androidx-room = ["androidx-room-ktx", "androidx-room-runtime", "androidx-room-paging"]
+androidx-compose = ["androidx-compose-activity", "androidx-compose-foundation", "androidx-compose-material", "androidx-compose-material3"]
+androidx-paging = ["androidx-paging-runtime", "androidx-paging-compose"]
+androidx-media3 = ["androidx-media3-exo", "androidx-media3-exo-dash", "androidx-media3-ui"]
+accompanist = ["accompanist-systemui", "accompanist-placeholder", "accompanist-webview"]
+coil = ["coil-compose", "coil-gif"]
+materii = ["materii-panels", "materii-partial", "materii-enumutil"]
+kotlinx = ["kotlinx-datetime", "kotlinx-serialization", "kotlinx-immutable-collections"]
+ktor = [
+    "ktor-client-core",
+    "ktor-client-okhttp",
+    "ktor-client-websockets",
+    "ktor-client-websockets",
+    "ktor-client-content-negotiation",
+    "ktor-client-logging",
+    "ktor-serialization-json"
+]
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version = "1.5.0" }
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

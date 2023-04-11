@@ -1,11 +1,11 @@
 @file:Suppress("UnstableApiUsage")
 
 plugins {
-    id("com.android.application")
-    id("com.google.devtools.ksp")
-    kotlin("android")
-    kotlin("plugin.parcelize")
-    kotlin("plugin.serialization")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlin.parcelize)
 }
 
 android {
@@ -77,7 +77,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = Dependencies.Compose.compilerVersion
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
 
     androidComponents {
@@ -136,24 +136,23 @@ dependencies {
 
     // Use java.time.* on Android <= 8
     // https://developer.android.com/studio/write/java8-support#library-desugaring-versions
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.2")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
 
-    Dependencies.Koin(this)
-    Dependencies.Ktor(this)
-    Dependencies.KotlinX(this)
-    Dependencies.HCaptcha(this)
-    Dependencies.AndroidxCore(this)
-    Dependencies.AndroidxPreferences(this)
-    Dependencies.AndroidxMedia3(this)
-    Dependencies.AndroidxRoom(this)
-    Dependencies.Material(this)
-    Dependencies.Compose(this)
-    Dependencies.Paging(this)
-    Dependencies.Accompanist(this)
-    Dependencies.Shimmer(this)
-    Dependencies.Coil(this)
-    Dependencies.Partials(this)
-    Dependencies.EnumUtil(this)
-    Dependencies.ReimaginedNav(this)
-    Dependencies.Panels(this)
+    implementation(libs.bundles.androidx.core)
+    implementation(libs.bundles.androidx.compose)
+    implementation(libs.bundles.androidx.room)
+    implementation(libs.bundles.androidx.paging)
+    implementation(libs.bundles.androidx.media3)
+    implementation(libs.bundles.accompanist)
+    implementation(libs.bundles.coil)
+    implementation(libs.bundles.materii)
+    implementation(libs.bundles.kotlinx)
+    implementation(libs.bundles.ktor)
+    implementation(libs.koin.compose)
+    implementation(libs.navreimagined)
+    implementation(libs.hcaptcha)
+    implementation(libs.shimmer)
+
+    ksp(libs.materii.partial.ksp)
+    ksp(libs.materii.enumutil.ksp)
 }

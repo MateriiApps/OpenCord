@@ -38,7 +38,7 @@ inline fun <reified T : ViewModel> getLocalViewModel(
 
     return getViewModel(
         qualifier = qualifier,
-        owner = owner,
+        viewModelStoreOwner = owner,
         scope = scope,
         parameters = parameters,
     )

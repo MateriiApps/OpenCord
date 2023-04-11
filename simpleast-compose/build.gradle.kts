@@ -1,8 +1,8 @@
 @file:Suppress("UnstableApiUsage")
 
 plugins {
-    id("com.android.library")
-    kotlin("android")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
 }
 
 android {
@@ -48,5 +48,5 @@ kotlin {
 }
 
 dependencies {
-    implementation(Dependencies.Compose.uiText)
+    implementation(libs.androidx.compose.foundation)
 }

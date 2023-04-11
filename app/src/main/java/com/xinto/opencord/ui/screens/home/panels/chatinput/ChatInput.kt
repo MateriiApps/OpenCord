@@ -4,8 +4,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Send
 import androidx.compose.material3.*
@@ -71,7 +69,7 @@ private fun InputInnerTextField(
             ) {
                 innerTextField()
                 CompositionLocalProvider(
-                    LocalContentAlpha provides ContentAlpha.medium,
+                    LocalContentColor provides LocalContentColor.current.copy(alpha = 0.7f),
                     LocalTextStyle provides MaterialTheme.typography.bodyMedium,
                 ) {
                     if (isEmpty) {
