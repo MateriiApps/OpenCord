@@ -152,6 +152,7 @@ dependencies {
     implementation(libs.navreimagined)
     implementation(libs.hcaptcha)
     implementation(libs.shimmer)
+    implementation(libs.zooomable)
 
     ksp(libs.materii.partial.ksp)
     ksp(libs.materii.enumutil.ksp)

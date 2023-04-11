@@ -52,7 +52,15 @@ class AppActivity : ComponentActivity() {
         }
 
         setContent {
-            val nav = rememberNavController<AppDestination>(startDestination = AppDestination.Main)
+//            val nav = rememberNavController<AppDestination>(startDestination = AppDestination.Main)
+            val nav = rememberNavController<AppDestination>(
+                startDestination = AppDestination.ImageViewer(
+                    ImageViewerData(
+                        "https://cdn.discordapp.com/attachments/885886674352091186/1095388993971040316/IMG_8424.jpg",
+                        "IMG_8424.jpg",
+                    ),
+                ),
+            )
 
             BackHandler { nav.back() }
 
@@ -114,6 +122,14 @@ class AppActivity : ComponentActivity() {
                                 .fillMaxSize()
                                 .imePadding(),
                             onBackClick = { nav.back() },
+                        )
+
+                        is AppDestination.ImageViewer -> ImageViewerScreen(
+                            data = dest.data,
+                            onBackClick = { nav.back() },
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .imePadding(),
                         )
                     }
                 }

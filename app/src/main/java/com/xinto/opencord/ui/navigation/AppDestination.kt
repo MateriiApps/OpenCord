@@ -22,12 +22,22 @@ sealed interface AppDestination : Parcelable {
 
     @Parcelize
     data class Pins(val data: PinsScreenData) : AppDestination
+
+    @Parcelize
+    data class ImageViewer(val data: ImageViewerData) : AppDestination
 }
 
 @Parcelize
 @Immutable
 data class PinsScreenData(
     val channelId: Long,
+) : Parcelable
+
+@Parcelize
+@Immutable
+data class ImageViewerData(
+    val url: String,
+    val title: String? = null,
 ) : Parcelable
 
 context(Activity)
