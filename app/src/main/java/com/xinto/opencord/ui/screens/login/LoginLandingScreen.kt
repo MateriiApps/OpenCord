@@ -1,8 +1,6 @@
 package com.xinto.opencord.ui.screens.login
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -38,7 +36,7 @@ fun LoginLandingScreen(
                     style = MaterialTheme.typography.displaySmall,
                     textAlign = TextAlign.Center,
                 )
-                CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+                CompositionLocalProvider(LocalContentColor provides LocalContentColor.current.copy(alpha = 0.7f)) {
                     Text(
                         text = stringResource(R.string.login_landing_subtitle),
                         style = MaterialTheme.typography.bodyMedium,

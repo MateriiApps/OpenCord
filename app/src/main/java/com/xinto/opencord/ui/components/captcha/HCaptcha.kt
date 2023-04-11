@@ -5,7 +5,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.platform.LocalContext
 import com.hcaptcha.sdk.HCaptcha
 import com.hcaptcha.sdk.HCaptchaError
-import org.koin.androidx.compose.get
+import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
 
 @Composable
@@ -14,7 +14,7 @@ fun HCaptcha(
     onFailure: (HCaptchaError, code: Int) -> Unit,
 ) {
     val context = LocalContext.current
-    val captcha: HCaptcha = get { parametersOf(context) }
+    val captcha: HCaptcha = koinInject { parametersOf(context) }
     DisposableEffect(captcha) {
         captcha.verifyWithHCaptcha()
             .addOnSuccessListener {
