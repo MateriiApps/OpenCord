@@ -37,6 +37,7 @@ class AccountCookieManagerImpl(
                 cleanupCookies(date.timestamp)
             }
 
+            @Suppress("INVISIBLE_MEMBER")
             cookies.filter { it.matches(requestUrl) }
         }
     }
@@ -45,8 +46,12 @@ class AccountCookieManagerImpl(
         mutex.withLock {
             if (cookie.name.isBlank()) return@withLock
 
+            @Suppress("INVISIBLE_MEMBER")
             cookies.removeAll { it.name == cookie.name && it.matches(requestUrl) }
+
+            @Suppress("INVISIBLE_MEMBER")
             cookies.add(cookie.fillDefaults(requestUrl))
+
             cookie.expires?.timestamp?.let { expires ->
                 if (oldestCookie > expires) {
                     oldestCookie = expires
@@ -105,49 +110,5 @@ class AccountCookieManagerImpl(
 
             accountDatabase.accounts().setCookies(accountManager.currentAccountToken!!, stringCookies)
         }
-    }
-
-    // STOP MAKING EVERYTHING INTERNAL FOR FUCKS SAKE
-    // https://github.com/ktorio/ktor/blob/32c1888b7ea9e9fb553c28e73157393cbbe54108/ktor-client/ktor-client-core/common/src/io/ktor/client/plugins/cookies/CookiesStorage.kt#L33
-    private fun Cookie.matches(requestUrl: Url): Boolean {
-        val domain = domain?.toLowerCasePreservingASCIIRules()?.trimStart('.')
-            ?: error("Domain field should have the default value")
-
-        val path = with(path) {
-            val current = path ?: error("Path field should have the default value")
-            if (current.endsWith('/')) current else "$path/"
-        }
-
-        val host = requestUrl.host.toLowerCasePreservingASCIIRules()
-        val requestPath = let {
-            val pathInRequest = requestUrl.encodedPath
-            if (pathInRequest.endsWith('/')) pathInRequest else "$pathInRequest/"
-        }
-
-        if (host != domain && (hostIsIp(host) || !host.endsWith(".$domain"))) {
-            return false
-        }
-
-        if (path != "/" &&
-            requestPath != path &&
-            !requestPath.startsWith(path)
-        ) return false
-
-        return !(secure && !requestUrl.protocol.isSecure())
-    }
-
-    // https://github.com/ktorio/ktor/blob/32c1888b7ea9e9fb553c28e73157393cbbe54108/ktor-client/ktor-client-core/common/src/io/ktor/client/plugins/cookies/CookiesStorage.kt#L60
-    private fun Cookie.fillDefaults(requestUrl: Url): Cookie {
-        var result = this
-
-        if (result.path?.startsWith("/") != true) {
-            result = result.copy(path = requestUrl.encodedPath)
-        }
-
-        if (result.domain.isNullOrBlank()) {
-            result = result.copy(domain = requestUrl.host)
-        }
-
-        return result
     }
 }
