@@ -14,4 +14,5 @@ val viewModelModule = module {
     viewModelOf(::MessageMenuViewModel)
     viewModelOf(::MentionsViewModel)
     viewModelOf(::ChatInputViewModel)
+    viewModelOf(::ImageViewerViewModel)
 }

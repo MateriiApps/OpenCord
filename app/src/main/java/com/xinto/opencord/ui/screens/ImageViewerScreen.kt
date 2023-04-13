@@ -31,14 +31,18 @@ import coil.size.Precision
 import com.xinto.opencord.R
 import com.xinto.opencord.ui.navigation.ImageViewerData
 import com.xinto.opencord.ui.util.ContentAlpha
+import com.xinto.opencord.ui.viewmodel.ImageViewerViewModel
 import net.engawapg.lib.zoomable.rememberZoomState
 import net.engawapg.lib.zoomable.zoomable
+import org.koin.androidx.compose.getViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun ImageViewerScreen(
     data: ImageViewerData,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: ImageViewerViewModel = getViewModel(parameters = { parametersOf(data) }),
 ) {
     var showTopBar by remember { mutableStateOf(true) }
     val topBarOffset by animateFloatAsState(targetValue = if (showTopBar) 0f else -1f)
@@ -54,9 +58,9 @@ fun ImageViewerScreen(
                 Column {
                     Text("View image")
 
-                    if (data.title != null) {
+                    if (data.fileName != null) {
                         Text(
-                            text = data.title,
+                            text = data.fileName,
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier
                                 .alpha(ContentAlpha.medium)
@@ -75,7 +79,7 @@ fun ImageViewerScreen(
                 }
             },
             actions = {
-                IconButton(onClick = {}) {
+                IconButton(onClick = viewModel::downloadImage) {
                     Icon(
                         painter = painterResource(R.drawable.ic_download),
                         contentDescription = "Download image",
@@ -83,7 +87,7 @@ fun ImageViewerScreen(
                             .size(26.dp),
                     )
                 }
-                IconButton(onClick = {}) {
+                IconButton(onClick = viewModel::copyUrlToClipboard) {
                     Icon(
                         painter = painterResource(R.drawable.ic_link),
                         contentDescription = "Copy image link",
@@ -91,7 +95,7 @@ fun ImageViewerScreen(
                             .size(26.dp),
                     )
                 }
-                IconButton(onClick = {}) {
+                IconButton(onClick = viewModel::openInBrowser) {
                     Icon(
                         painter = painterResource(R.drawable.ic_open),
                         contentDescription = "Open in browser",
@@ -107,9 +111,10 @@ fun ImageViewerScreen(
             modifier = Modifier
                 .zIndex(1f)
                 .align(Alignment.TopStart)
-                .background(Color.Transparent)
+                .background(Color.Transparent) // Sets absolute container transparent
                 .offset { IntOffset(x = 0, y = (64.dp.toPx() * topBarOffset).toInt()) }
                 .drawBehind {
+                    // Colors background of the part that has an offset
                     drawRect(Color.Black.copy(alpha = 0.8f))
                 },
         )
@@ -130,7 +135,7 @@ fun ImageViewerScreen(
 }
 
 @Composable
-fun ZoomableImage(
+private fun ZoomableImage(
     url: String,
     modifier: Modifier = Modifier,
 ) {

@@ -37,7 +37,7 @@ data class PinsScreenData(
 @Immutable
 data class ImageViewerData(
     val url: String,
-    val title: String? = null,
+    val fileName: String? = null,
 ) : Parcelable
 
 context(Activity)
