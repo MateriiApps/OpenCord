@@ -17,6 +17,7 @@ import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.ui.navigation.AppDestination
 import com.xinto.opencord.ui.navigation.ImageViewerData
 import com.xinto.opencord.ui.navigation.back
+import com.xinto.opencord.ui.screens.ImageViewerScreen
 import com.xinto.opencord.ui.screens.Settings
 import com.xinto.opencord.ui.screens.home.HomeScreen
 import com.xinto.opencord.ui.screens.mentions.MentionsScreen
