@@ -33,4 +33,5 @@ val managerModule = module {
     singleOf(::AccountCookieManagerImpl) bind AccountCookieManager::class
     singleOf(::ClipboardManagerImpl) bind ClipboardManager::class
     singleOf(::ToastManagerImpl) bind ToastManager::class
+    singleOf(::DownloadManagerImpl) bind DownloadManager::class
 }
