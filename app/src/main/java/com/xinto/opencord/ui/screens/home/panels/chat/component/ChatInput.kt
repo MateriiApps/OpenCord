@@ -12,18 +12,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.ui.components.OCBasicTextField
-import com.xinto.opencord.ui.viewmodel.ChatInputViewModel
-import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun HomeChatPanelInput(
     modifier: Modifier = Modifier,
     hint: @Composable () -> Unit,
-    viewModel: ChatInputViewModel = getViewModel(),
+    text: String,
+    onTextChange: (String) -> Unit,
+    onSend: () -> Unit,
 ) {
-    val isEmpty by remember { derivedStateOf { viewModel.pendingContent.isEmpty() } }
-    val sendEnabled by remember { derivedStateOf { !isEmpty && viewModel.sendEnabled } }
-
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -33,73 +30,39 @@ fun HomeChatPanelInput(
     ) {
         OCBasicTextField(
             modifier = Modifier.weight(1f),
-            value = viewModel.pendingContent,
-            onValueChange = viewModel::setPendingMessage,
+            value = text,
+            onValueChange = onTextChange,
             maxLines = 7,
             decorationBox = { innerTextField ->
-                InputInnerTextField(
-                    isEmpty = isEmpty,
-                    hint = hint,
-                    innerTextField = innerTextField,
-                )
-            },
-        )
-
-        AnimatedSendButton(
-            visible = sendEnabled,
-            enabled = viewModel.sendEnabled,
-            onClick = viewModel::sendMessage,
-        )
-    }
-}
-
-@Composable
-private fun InputInnerTextField(
-    isEmpty: Boolean,
-    hint: @Composable () -> Unit,
-    innerTextField: @Composable () -> Unit,
-) {
-    CompositionLocalProvider(LocalAbsoluteTonalElevation provides 0.dp) {
-        Surface(
-            shape = MaterialTheme.shapes.large,
-        ) {
-            Box(
-                modifier = Modifier
-                    .padding(16.dp),
-            ) {
-                innerTextField()
-                CompositionLocalProvider(
-                    LocalContentColor provides LocalContentColor.current.copy(alpha = 0.7f),
-                    LocalTextStyle provides MaterialTheme.typography.bodyMedium,
-                ) {
-                    if (isEmpty) {
-                        hint()
+                Surface(shape = MaterialTheme.shapes.large) {
+                    Box(
+                        modifier = Modifier
+                            .padding(16.dp),
+                    ) {
+                        innerTextField()
+                        CompositionLocalProvider(
+                            LocalContentColor provides LocalContentColor.current.copy(alpha = 0.7f),
+                            LocalTextStyle provides MaterialTheme.typography.bodyMedium,
+                        ) {
+                            if (text.isEmpty()) {
+                                hint()
+                            }
+                        }
                     }
                 }
-            }
-        }
-    }
-}
-
-@Composable
-private fun AnimatedSendButton(
-    visible: Boolean,
-    enabled: Boolean,
-    onClick: () -> Unit,
-) {
-    AnimatedVisibility(
-        visible = visible,
-        enter = slideInHorizontally { it * 2 },
-        exit = slideOutHorizontally { it * 2 },
-    ) {
-        FilledIconButton(
-            onClick = onClick,
-            enabled = enabled,
+            },
+        )
+        AnimatedVisibility(
+            visible = text.isNotEmpty(),
+            enter = slideInHorizontally { it * 2 },
+            exit = slideOutHorizontally { it * 2 },
         ) {
-            Icon(
-                imageVector = Icons.Rounded.Send,
-                contentDescription = null,
-            )
+            FilledIconButton(onClick = onSend) {
+                Icon(
+                    imageVector = Icons.Rounded.Send,
+                    contentDescription = null,
+                )
+            }
         }
     }
 }

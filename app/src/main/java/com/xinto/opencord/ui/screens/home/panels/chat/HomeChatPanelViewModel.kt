@@ -6,11 +6,13 @@ import androidx.lifecycle.viewModelScope
 import com.xinto.opencord.domain.emoji.DomainEmoji
 import com.xinto.opencord.domain.message.DomainMessage
 import com.xinto.opencord.domain.message.DomainMessageRegular
+import com.xinto.opencord.rest.body.MessageBody
 import com.xinto.opencord.rest.service.DiscordApiService
 import com.xinto.opencord.store.*
 import com.xinto.opencord.ui.screens.home.panels.chat.model.MessageItem
 import com.xinto.opencord.ui.screens.home.panels.chat.model.ReactionState
 import com.xinto.opencord.util.collectIn
+import com.xinto.opencord.util.throttle
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.flattenMerge
 import kotlinx.coroutines.flow.last
@@ -39,6 +41,13 @@ class HomeChatPanelViewModel(
     // Reverse sorted (decreasing) message list
     val sortedMessages = mutableStateListOf<MessageItem>()
 
+    var inputText by mutableStateOf("")
+        private set
+
+    private val startTyping = throttle(9500, viewModelScope) {
+        api.startTyping(persistentDataStore.observeCurrentChannel().last())
+    }
+
     private fun getMessageItemIndex(messageId: Long): Int? {
         return sortedMessages
             .binarySearch { messageId compareTo it.message.id }
@@ -57,6 +66,25 @@ class HomeChatPanelViewModel(
             } else {
                 api.addMeReaction(channelId, messageId, emoji)
             }
+        }
+    }
+
+    fun updateInputText(input: String) {
+        inputText = input
+        startTyping()
+    }
+
+    fun sendMessage() {
+        val message = MessageBody(
+            content = inputText,
+        )
+
+        viewModelScope.launch {
+            val channelId = persistentDataStore.observeCurrentChannel().last()
+            api.postChannelMessage(
+                channelId = channelId,
+                body = message,
+            )
         }
     }
 

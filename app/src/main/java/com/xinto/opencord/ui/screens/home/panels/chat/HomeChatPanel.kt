@@ -29,7 +29,10 @@ fun HomeChatPanel(modifier: Modifier = Modifier) {
         onMessageReact = viewModel::reactToMessage,
         onPinsButtonClick = { /*TODO*/ },
         onMembersButtonClick = { /*TODO*/ },
-        onChannelsButtonClick = { /*TODO*/ }
+        onChannelsButtonClick = { /*TODO*/ },
+        inputText = viewModel.inputText,
+        onInputTextChange = viewModel::updateInputText,
+        onInputTextSend = viewModel::sendMessage
     )
 }
 
@@ -42,6 +45,9 @@ fun HomeChatPanel(
     onPinsButtonClick: () -> Unit,
     onMembersButtonClick: () -> Unit,
     onChannelsButtonClick: () -> Unit,
+    inputText: String,
+    onInputTextChange: (String) -> Unit,
+    onInputTextSend: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -136,6 +142,9 @@ fun HomeChatPanel(
                             hint = {
                                 Text(stringResource(R.string.chat_input_hint, channelName))
                             },
+                            text = inputText,
+                            onTextChange = onInputTextChange,
+                            onSend = onInputTextSend,
                         )
                     }
                 }
