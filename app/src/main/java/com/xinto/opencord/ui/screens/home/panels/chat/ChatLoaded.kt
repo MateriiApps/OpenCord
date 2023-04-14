@@ -1,5 +1,7 @@
 package com.xinto.opencord.ui.screens.home.panels.chat
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -32,17 +34,16 @@ import com.xinto.opencord.ui.components.message.reply.MessageReferenced
 import com.xinto.opencord.ui.components.message.reply.MessageReferencedAuthor
 import com.xinto.opencord.ui.components.message.reply.MessageReferencedContent
 import com.xinto.opencord.ui.screens.home.panels.messagemenu.MessageMenu
-import com.xinto.opencord.ui.util.ifComposable
-import com.xinto.opencord.ui.util.ifNotEmptyComposable
-import com.xinto.opencord.ui.util.ifNotNullComposable
-import com.xinto.opencord.ui.util.toUnsafeImmutableList
+import com.xinto.opencord.ui.util.*
 import com.xinto.opencord.ui.viewmodel.ChatViewModel
+import com.xinto.opencord.ui.viewmodel.NavigationViewModel
 
 @Composable
 fun ChatLoaded(
     viewModel: ChatViewModel,
     modifier: Modifier = Modifier,
     onUsernameClicked: ((userId: Long) -> Unit)? = null,
+    navigation: NavigationViewModel = findViewModelInTree(),
 ) {
     val listState = rememberLazyListState() // TODO: scroll to target message if jumping
     var messageMenuTarget by remember { mutableStateOf<Long?>(null) }
@@ -161,6 +162,7 @@ fun ChatLoaded(
                                                     url = it.sizedUrl,
                                                     width = it.width ?: 500,
                                                     height = it.height ?: 500,
+                                                    onClick = { navigation.openImageViewer(it.sizedUrl) },
                                                     modifier = Modifier
                                                         .heightIn(max = 400.dp),
                                                 )
@@ -191,7 +193,12 @@ fun ChatLoaded(
                                                             modifier = Modifier
                                                                 .fillMaxWidth(0.48f)
                                                                 .heightIn(max = 350.dp)
-                                                                .padding(bottom = if (isLastRow) 0.dp else 5.dp),
+                                                                .padding(bottom = if (isLastRow) 0.dp else 5.dp)
+                                                                .clickable(
+                                                                    indication = null,
+                                                                    interactionSource = remember { MutableInteractionSource() },
+                                                                    onClick = { navigation.openImageViewer(image.sizedUrl) },
+                                                                ),
                                                         )
                                                     }
                                                 }
@@ -202,6 +209,7 @@ fun ChatLoaded(
                                                 url = it.sizedUrl,
                                                 width = it.width ?: 256,
                                                 height = it.height ?: 256,
+                                                onClick = { navigation.openImageViewer(it.sizedUrl) },
                                                 modifier = Modifier
                                                     .size(45.dp),
                                             )
@@ -230,11 +238,12 @@ fun ChatLoaded(
                                 when (attachment) {
                                     is DomainPictureAttachment -> {
                                         AttachmentPicture(
-                                            modifier = Modifier
-                                                .heightIn(max = 400.dp),
                                             url = attachment.proxyUrl,
                                             width = attachment.width,
                                             height = attachment.height,
+                                            onClick = { navigation.openImageViewer(attachment) },
+                                            modifier = Modifier
+                                                .heightIn(max = 400.dp),
                                         )
                                     }
                                     is DomainVideoAttachment -> {
