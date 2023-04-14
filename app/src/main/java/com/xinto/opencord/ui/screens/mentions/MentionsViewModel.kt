@@ -4,25 +4,25 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import com.xinto.opencord.domain.message.DomainMessage
 import com.xinto.opencord.domain.message.toDomain
-import com.xinto.opencord.manager.PersistentDataManager
 import com.xinto.opencord.manager.ToastManager
 import com.xinto.opencord.rest.service.DiscordApiService
 import com.xinto.opencord.store.GuildStore
-import com.xinto.opencord.ui.viewmodel.BasePersistenceViewModel
+import com.xinto.opencord.store.PersistentDataStore
+import com.xinto.opencord.util.collectIn
 import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.launch
 
 @Stable
 class MentionsViewModel(
-    persistentDataManager: PersistentDataManager,
     guilds: GuildStore,
+    persistentDataStore: PersistentDataStore,
     private val toasts: ToastManager,
     private val api: DiscordApiService,
-) : BasePersistenceViewModel(persistentDataManager) {
+) : ViewModel() {
     var includeRoles by mutableStateOf(true)
         private set
     var includeEveryone by mutableStateOf(true)
@@ -35,6 +35,8 @@ class MentionsViewModel(
     var messages by mutableStateOf(emptyFlow<PagingData<DomainMessage>>())
         private set
 
+    private var guildId = 0L
+
     fun toggleRoles() {
         includeRoles = !includeRoles
         initPager()
@@ -46,7 +48,7 @@ class MentionsViewModel(
     }
 
     fun toggleCurrentServer() {
-        if (includeAllServers && persistentGuildId <= 0) {
+        if (includeAllServers && guildId <= 0) {
             toasts.showToast("No server currently selected!")
         } else {
             includeAllServers = !includeAllServers
@@ -57,14 +59,17 @@ class MentionsViewModel(
     init {
         initPager()
 
-        if (persistentGuildId > 0) {
-            viewModelScope.launch {
-                val guild = guilds.fetchGuild(persistentGuildId)
-                    ?: return@launch
+        persistentDataStore.observeCurrentGuild()
+            .collectIn(viewModelScope) {
+                guildId = it
+
+                if (it <= 0) return@collectIn
+
+                val guild = guilds.fetchGuild(guildId)
+                    ?: return@collectIn
 
                 currentGuildName = guild.name
             }
-        }
     }
 
     private fun initPager() {
@@ -76,7 +81,7 @@ class MentionsViewModel(
                 initialLoadSize = 25,
             ),
             pagingSourceFactory = {
-                val guildId = if (!includeAllServers) persistentGuildId else null
+                val guildId = if (!includeAllServers) guildId else null
                 MentionsPagingSource(api, includeRoles, includeEveryone, guildId)
             },
         ).flow.cachedIn(viewModelScope)
