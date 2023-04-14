@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -16,26 +17,47 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
+import com.xinto.opencord.domain.message.DomainMessage
 import com.xinto.opencord.ui.navigation.PinsScreenData
+import com.xinto.opencord.ui.screens.pins.state.PinsScreenError
+import com.xinto.opencord.ui.screens.pins.state.PinsScreenLoaded
+import com.xinto.opencord.ui.screens.pins.state.PinsScreenLoading
 import com.xinto.opencord.ui.util.ContentAlpha
 import com.xinto.opencord.ui.util.VoidablePaddingValues
 import com.xinto.opencord.ui.util.paddingOrGestureNav
 import com.xinto.opencord.ui.util.toUnsafeImmutableList
-import com.xinto.opencord.ui.viewmodel.ChannelPinsViewModel
 import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
 fun PinsScreen(
     data: PinsScreenData,
+    modifier: Modifier,
+    onBackClick: () -> Unit,
+) {
+    val viewModel: PinsScreenViewModel = koinViewModel { parametersOf(data) }
+    PinsScreen(
+        onBackClick = onBackClick,
+        state = viewModel.state,
+        modifier = modifier,
+        messages = viewModel.messages,
+        channelName = viewModel.channelName
+    )
+}
+
+@Composable
+fun PinsScreen(
+    state: PinsScreenState,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: ChannelPinsViewModel = getViewModel { parametersOf(data) }
+    messages: SnapshotStateMap<Long, DomainMessage>,
+    channelName: String?,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-    val pins by remember(viewModel.messages) {
+    val pins by remember(messages) {
         derivedStateOf {
-            viewModel.messages.values
+            messages.values
                 .sortedByDescending { it.timestamp }
                 .toUnsafeImmutableList()
         }
@@ -50,9 +72,9 @@ fun PinsScreen(
                     Column {
                         Text(stringResource(R.string.pins_title))
 
-                        if (viewModel.channelName != null) {
+                        if (channelName != null) {
                             Text(
-                                text = "#${viewModel.channelName}",
+                                text = "#${channelName}",
                                 style = MaterialTheme.typography.bodyMedium,
                                 modifier = Modifier
                                     .alpha(ContentAlpha.medium)
@@ -74,15 +96,15 @@ fun PinsScreen(
             )
         },
     ) { paddingValues ->
-        when (viewModel.state) {
-            is ChannelPinsViewModel.State.Loading -> {
+        when (state) {
+            is PinsScreenState.Loading -> {
                 PinsScreenLoading(
                     modifier = Modifier
                         .fillMaxSize()
                         .paddingOrGestureNav(paddingValues),
                 )
             }
-            is ChannelPinsViewModel.State.Loaded -> {
+            is PinsScreenState.Loaded -> {
                 PinsScreenLoaded(
                     pins = pins,
                     contentPadding = VoidablePaddingValues(paddingValues, top = false),
@@ -91,7 +113,7 @@ fun PinsScreen(
                         .paddingOrGestureNav(paddingValues),
                 )
             }
-            is ChannelPinsViewModel.State.Error -> {
+            is PinsScreenState.Error -> {
                 PinsScreenError(
                     modifier = Modifier
                         .fillMaxSize()

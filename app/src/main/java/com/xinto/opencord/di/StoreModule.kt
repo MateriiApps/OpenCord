@@ -15,4 +15,5 @@ val storeModule = module {
     singleOf(::SessionStoreImpl) bind SessionStore::class
     singleOf(::UnreadStoreImpl) bind UnreadStore::class
     singleOf(::ReactionStoreImpl) bind ReactionStore::class
+    singleOf(::PersistentDataStoreImpl) bind PersistentDataStore::class
 }

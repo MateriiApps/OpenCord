@@ -4,8 +4,8 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.*
+import com.xinto.opencord.ui.screens.home.panels.messagemenu.state.MessageMenuLoaded
 import com.xinto.opencord.ui.util.getLocalViewModel
-import com.xinto.opencord.ui.viewmodel.MessageMenuViewModel
 import kotlinx.coroutines.launch
 import org.koin.core.parameter.parametersOf
 
@@ -29,7 +29,7 @@ fun MessageMenu(
     }
 
     LaunchedEffect(viewModel.state) {
-        if (viewModel.state == MessageMenuViewModel.State.Closing) {
+        if (viewModel.state == HomeMessageMenuPanelState.Closing) {
             onDismiss?.invoke()
         }
     }
@@ -43,11 +43,11 @@ fun MessageMenu(
         },
     ) {
         when (viewModel.state) {
-            MessageMenuViewModel.State.Loading -> MessageMenuLoading()
-            MessageMenuViewModel.State.Loaded -> MessageMenuLoaded(
+            HomeMessageMenuPanelState.Loading -> MessageMenuLoading()
+            HomeMessageMenuPanelState.Loaded -> MessageMenuLoaded(
                 viewModel = viewModel,
             )
-            MessageMenuViewModel.State.Closing -> {
+            HomeMessageMenuPanelState.Closing -> {
                 LaunchedEffect(Unit) {
                     sheetState.hide()
                 }

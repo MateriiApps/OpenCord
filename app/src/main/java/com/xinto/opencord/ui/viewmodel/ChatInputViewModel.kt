@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.xinto.opencord.manager.PersistentDataManager
 import com.xinto.opencord.rest.body.MessageBody
 import com.xinto.opencord.rest.service.DiscordApiService
-import com.xinto.opencord.ui.viewmodel.base.BasePersistenceViewModel
 import com.xinto.opencord.util.throttle
 import kotlinx.coroutines.launch
 

@@ -44,7 +44,6 @@ import com.xinto.opencord.ui.components.message.reply.MessageReferencedAuthor
 import com.xinto.opencord.ui.components.message.reply.MessageReferencedContent
 import com.xinto.opencord.ui.screens.home.panels.messagemenu.MessageMenu
 import com.xinto.opencord.ui.util.*
-import com.xinto.opencord.ui.viewmodel.MentionsViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
