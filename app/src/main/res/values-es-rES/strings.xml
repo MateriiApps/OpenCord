@@ -4,9 +4,9 @@
     <string name="nav_open_friends">Abrir la lista de amigos</string>
     <string name="nav_open_search">Abrir el buscador de canales</string>
     <string name="nav_open_mentions">Ver las menciones globales</string>
-    <string name="login_landing_title">¡Bienvenido a OpenCord!</string>
+    <string name="login_landing_title">¡Te damos la bienvenida a OpenCord!</string>
     <string name="login_landing_subtitle">Únete a más de 0 personas que utilizan OpenCord como alternativa a la aplicación de Discord.</string>
-    <string name="login_login_title">¡Hola de nuevo!</string>
+    <string name="login_login_title">¡Te damos la bienvenida!</string>
     <string name="login_login_subtitle">¡Nos alegramos mucho de volver a verte!</string>
     <string name="login_action_login">Iniciar sesión</string>
     <string name="login_action_register">Registrarse</string>

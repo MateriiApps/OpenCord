@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="navigation_back">Kembali</string>
-    <string name="nav_open_friends">Open friends list</string>
-    <string name="nav_open_search">Open channel search</string>
-    <string name="nav_open_mentions">View global mentions</string>
+    <string name="nav_open_friends">Buka daftar teman</string>
+    <string name="nav_open_search">Buka pencarian channel</string>
+    <string name="nav_open_mentions">Tampilkan sebutan global</string>
     <string name="login_landing_title">Selamat datang ke OpenCord!</string>
     <string name="login_landing_subtitle">Bergabunglah dengan lebih dari 0 orang yang menggunakan OpenCord sebagai alternatif dari aplikasi Discord biasa.</string>
     <string name="login_login_title">Selamat datang kembali!</string>

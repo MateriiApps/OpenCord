@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="navigation_back">Назад</string>
-    <string name="nav_open_friends">Open friends list</string>
-    <string name="nav_open_search">Open channel search</string>
-    <string name="nav_open_mentions">View global mentions</string>
+    <string name="nav_open_friends">Открыть список друзей</string>
+    <string name="nav_open_search">Поиск канала</string>
+    <string name="nav_open_mentions">Просмотр глобальных упоминаний</string>
     <string name="login_landing_title">Добро пожаловать в OpenCord!</string>
     <string name="login_landing_subtitle">Присоединяйтесь к более чем 0 людям, которые используют OpenCord в качестве альтернативы стандартному приложению Discord.</string>
     <string name="login_login_title">С возвращением!</string>
@@ -18,7 +18,7 @@
     <string name="login_mfa_cancel">Отмена</string>
     <string name="chat_title">#%1$s</string>
     <string name="chat_unselected_message">Пожалуйста, выберите канал.</string>
-    <string name="chat_input_hint">Сообщение #%1$s</string>
+    <string name="chat_input_hint">Написать #%1$s</string>
     <string name="chat_loading_error">Произошла ошибка при загрузке чата.</string>
     <string name="chat_bot_label">БОТ</string>
     <string name="channel_unselected_message">Пожалуйста, выберите сервер.</string>

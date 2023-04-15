@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="navigation_back">Назад</string>
-    <string name="nav_open_friends">Open friends list</string>
-    <string name="nav_open_search">Open channel search</string>
-    <string name="nav_open_mentions">View global mentions</string>
+    <string name="nav_open_friends">Відкрити список друзів</string>
+    <string name="nav_open_search">Пошук каналу</string>
+    <string name="nav_open_mentions">Переглянути глобальні згадки</string>
     <string name="login_landing_title">Вітаємо в OpenCord!</string>
-    <string name="login_landing_subtitle">Приєднуйтесь до понад 0 людей, які використовують OpenCord як альтернативу стандартній програмі Discord.</string>
+    <string name="login_landing_subtitle">Приєднуйтесь до 0 людей, які використовують OpenCord як альтернативу клієнту Discord.</string>
     <string name="login_login_title">З поверненням!</string>
     <string name="login_login_subtitle">Ми дуже раді бачити вас знову!</string>
     <string name="login_action_login">Увійти</string>
     <string name="login_action_register">Зареєструватися</string>
     <string name="login_field_username">Ел. пошта або номер телефону</string>
     <string name="login_field_password">Пароль</string>
-    <string name="login_mfa_title">Потрібен 2FA!</string>
+    <string name="login_mfa_title">Потрібно пройти 2FA!</string>
     <string name="login_mfa_code">2FA або резервний код</string>
     <string name="login_mfa_confirm">Підтвердити</string>
     <string name="login_mfa_cancel">Скасувати</string>
     <string name="chat_title">#%1$s</string>
     <string name="chat_unselected_message">Виберіть канал.</string>
-    <string name="chat_input_hint">Повідомлення #%1$s</string>
+    <string name="chat_input_hint">Повідомлення до #%1$s</string>
     <string name="chat_loading_error">Під час завантаження чату сталася помилка.</string>
     <string name="chat_bot_label">БОТ</string>
     <string name="channel_unselected_message">Виберіть сервер.</string>
@@ -32,7 +32,7 @@
     <string name="timestamp_yesterday">Вчора о %1$s</string>
     <string name="message_reply_unknown">Невідоме повідомлення.</string>
     <string name="guilds_home">Головна</string>
-    <string name="guild_boost_level">Рівень буста сервера</string>
+    <string name="guild_boost_level">Рівень бусту сервера</string>
     <string name="current_user_set_status">Встановити користувацький статус</string>
     <string name="current_user_clear_status">Очистити статус</string>
     <string name="accounts_open">Відкрити перемикач акаунтів</string>
