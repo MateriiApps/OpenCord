@@ -2,7 +2,11 @@ package com.xinto.opencord.ui.screens.home.panels.user
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.domain.usersettings.DomainCustomStatus
@@ -11,10 +15,14 @@ import com.xinto.opencord.ui.screens.home.panels.user.component.CurrentUserSheet
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun HomeUserPanel(modifier: Modifier = Modifier) {
+fun HomeUserPanel(
+    modifier: Modifier = Modifier,
+    onSettingsClick: () -> Unit
+) {
     val viewModel: HomeUserPanelViewModel = koinViewModel()
     HomeUserPanel(
-        onSettingsClick = {},
+        modifier = modifier,
+        onSettingsClick = onSettingsClick,
         state = viewModel.state,
         avatarUrl = viewModel.avatarUrl,
         username = viewModel.username,

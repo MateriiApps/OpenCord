@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.ui.screens.home.panels.channel.model.CategoryItemData
 import com.xinto.opencord.ui.screens.home.panels.channel.model.ChannelItemData
+import com.xinto.opencord.ui.screens.home.panels.channel.state.ChannelsListLoaded
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

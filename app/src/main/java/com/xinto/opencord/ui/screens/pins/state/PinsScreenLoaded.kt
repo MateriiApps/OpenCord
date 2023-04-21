@@ -31,7 +31,7 @@ import com.xinto.opencord.ui.components.message.MessageRegular
 import com.xinto.opencord.ui.components.message.reply.MessageReferenced
 import com.xinto.opencord.ui.components.message.reply.MessageReferencedAuthor
 import com.xinto.opencord.ui.components.message.reply.MessageReferencedContent
-import com.xinto.opencord.ui.screens.home.panels.messagemenu.MessageMenu
+import com.xinto.opencord.ui.screens.home.panels.messagemenu.HomeMessageMenu
 import com.xinto.opencord.ui.util.CompositePaddingValues
 import com.xinto.opencord.ui.util.ifComposable
 import com.xinto.opencord.ui.util.ifNotEmptyComposable
@@ -47,7 +47,7 @@ fun PinsScreenLoaded(
     var messageMenuTarget by remember { mutableStateOf<Long?>(null) }
 
     if (messageMenuTarget != null) {
-        MessageMenu(
+        HomeMessageMenu(
             messageId = messageMenuTarget!!,
             onDismiss = { messageMenuTarget = null },
         )

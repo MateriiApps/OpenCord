@@ -9,6 +9,8 @@ import dev.olshevski.navigation.reimagined.pop
 import dev.olshevski.navigation.reimagined.replaceAll
 import kotlinx.parcelize.Parcelize
 
+typealias AppNavigator = NavController<AppDestination>
+
 @Parcelize
 sealed interface AppDestination : Parcelable {
     @Parcelize

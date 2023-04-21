@@ -10,11 +10,11 @@ import kotlinx.coroutines.launch
 import org.koin.core.parameter.parametersOf
 
 @Composable
-fun MessageMenu(
+fun HomeMessageMenu(
     messageId: Long,
     onDismiss: (() -> Unit)? = null,
     sheetState: SheetState = rememberModalBottomSheetState(),
-    viewModel: MessageMenuViewModel =
+    viewModel: HomeMessageMenuPanelViewModel =
         getLocalViewModel(parameters = { parametersOf(messageId) }),
 ) {
     val coroutineScope = rememberCoroutineScope()

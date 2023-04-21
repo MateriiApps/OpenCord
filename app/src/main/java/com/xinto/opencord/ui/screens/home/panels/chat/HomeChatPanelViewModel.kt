@@ -38,6 +38,9 @@ class HomeChatPanelViewModel(
     var currentUserId by mutableStateOf<Long?>(null)
         private set
 
+    var channelId = 0L
+        private set
+
     // Reverse sorted (decreasing) message list
     val sortedMessages = mutableStateListOf<MessageItem>()
 
@@ -212,6 +215,10 @@ class HomeChatPanelViewModel(
                     },
                 )
             }
+
+        persistentDataStore.observeCurrentChannel().collectIn(viewModelScope) {
+            channelId = it
+        }
 
         currentUserStore.observeCurrentUser().collectIn(viewModelScope) { user ->
             currentUserId = user.id

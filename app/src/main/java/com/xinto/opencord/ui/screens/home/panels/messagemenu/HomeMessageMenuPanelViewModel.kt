@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
 @Stable
-class MessageMenuViewModel(
+class HomeMessageMenuPanelViewModel(
     messageId: Long,
     private val messages: MessageStore,
     private val currentUserStore: CurrentUserStore,
@@ -29,12 +29,6 @@ class MessageMenuViewModel(
     private val clipboard: ClipboardManager,
     private val toasts: ToastManager,
 ) : ViewModel() {
-
-    sealed interface PinState {
-        object Pinnable : PinState
-        object Unpinnable : PinState
-        object None : PinState
-    }
 
     var state by mutableStateOf<HomeMessageMenuPanelState>(HomeMessageMenuPanelState.Loading)
         private set
@@ -45,7 +39,7 @@ class MessageMenuViewModel(
         private set
     var isDeletable by mutableStateOf(false)
         private set
-    var pinState by mutableStateOf<PinState>(PinState.None)
+    var pinState by mutableStateOf<HomeMessageMenuPinState>(HomeMessageMenuPinState.None)
         private set
 
     val frequentReactions = mutableListOf<DomainEmoji>()
@@ -111,10 +105,10 @@ class MessageMenuViewModel(
             )
 
             // TODO: message permissions
-            pinState = PinState.None
+            pinState = HomeMessageMenuPinState.None
             isDeletable = currentUser.id == message.author.id
             isEditable = currentUser.id == message.author.id
-            this@MessageMenuViewModel.message = message
+            this@HomeMessageMenuPanelViewModel.message = message
             state = HomeMessageMenuPanelState.Loaded
         }
 
@@ -129,7 +123,7 @@ class MessageMenuViewModel(
         currentUserStore.observeCurrentUser().collectIn(viewModelScope) { user ->
             if (message == null) return@collectIn
 
-            pinState = PinState.None
+            pinState = HomeMessageMenuPinState.None
             isDeletable = user.id == message?.author?.id
             isEditable = user.id == message?.author?.id
         }

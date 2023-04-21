@@ -1,25 +1,34 @@
 package com.xinto.opencord.ui.screens.home.panels.chat
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
 import com.xinto.opencord.domain.emoji.DomainEmoji
+import com.xinto.opencord.ui.navigation.PinsScreenData
+import com.xinto.opencord.ui.screens.home.panels.chat.component.HomeChatPanelInput
+import com.xinto.opencord.ui.screens.home.panels.chat.component.HomeChatPanelTopBar
+import com.xinto.opencord.ui.screens.home.panels.chat.model.MessageItem
 import com.xinto.opencord.ui.screens.home.panels.chat.state.ChatError
 import com.xinto.opencord.ui.screens.home.panels.chat.state.ChatLoaded
-import com.xinto.opencord.ui.screens.home.panels.chat.component.HomeChatPanelInput
-import com.xinto.opencord.ui.screens.home.panels.chat.model.MessageItem
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun HomeChatPanel(modifier: Modifier = Modifier) {
+fun HomeChatPanel(
+    modifier: Modifier = Modifier,
+    onPinsButtonClick: (PinsScreenData) -> Unit,
+    onMembersButtonClick: () -> Unit,
+    onChannelsButtonClick: () -> Unit,
+) {
     val viewModel: HomeChatPanelViewModel = koinViewModel()
     HomeChatPanel(
         modifier = modifier,
@@ -27,9 +36,11 @@ fun HomeChatPanel(modifier: Modifier = Modifier) {
         channelName = viewModel.channelName,
         messages = viewModel.sortedMessages,
         onMessageReact = viewModel::reactToMessage,
-        onPinsButtonClick = { /*TODO*/ },
-        onMembersButtonClick = { /*TODO*/ },
-        onChannelsButtonClick = { /*TODO*/ },
+        onPinsButtonClick = {
+            onPinsButtonClick(PinsScreenData(viewModel.channelId))
+        },
+        onMembersButtonClick = onMembersButtonClick,
+        onChannelsButtonClick = onChannelsButtonClick,
         inputText = viewModel.inputText,
         onInputTextChange = viewModel::updateInputText,
         onInputTextSend = viewModel::sendMessage
@@ -53,49 +64,11 @@ fun HomeChatPanel(
     Scaffold(
         modifier = modifier,
         topBar = {
-            TopAppBar(
-                title = {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(2.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        if (channelName.isNotEmpty()) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_tag),
-                                contentDescription = null,
-                                modifier = Modifier,
-                            )
-                        }
-                        Text(
-                            text = channelName,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            style = MaterialTheme.typography.titleLarge,
-                        )
-                    }
-                },
-                navigationIcon = {
-                    IconButton(onChannelsButtonClick) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_menu),
-                            contentDescription = null,
-                        )
-                    }
-                },
-                actions = {
-                    IconButton(onClick = onPinsButtonClick) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_pin),
-                            contentDescription = null,
-                        )
-                    }
-                    IconButton(onMembersButtonClick) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_people),
-                            contentDescription = null,
-                        )
-                    }
-                },
+            HomeChatPanelTopBar(
+                channelName = channelName,
+                onChannelsButtonClick = onChannelsButtonClick,
+                onPinsButtonClick = onPinsButtonClick,
+                onMembersButtonClick = onMembersButtonClick
             )
         },
     ) { paddingValues ->

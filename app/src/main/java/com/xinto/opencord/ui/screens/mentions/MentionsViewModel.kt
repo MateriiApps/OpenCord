@@ -8,11 +8,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import com.xinto.opencord.domain.message.DomainMessage
-import com.xinto.opencord.domain.message.toDomain
 import com.xinto.opencord.manager.ToastManager
 import com.xinto.opencord.rest.service.DiscordApiService
 import com.xinto.opencord.store.GuildStore
 import com.xinto.opencord.store.PersistentDataStore
+import com.xinto.opencord.ui.screens.mentions.model.MentionsPagingSource
 import com.xinto.opencord.util.collectIn
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -87,37 +87,4 @@ class MentionsViewModel(
         ).flow.cachedIn(viewModelScope)
     }
 
-    private class MentionsPagingSource(
-        private val api: DiscordApiService,
-        private val includeRoles: Boolean,
-        private val includeEveryone: Boolean,
-        private val guildId: Long?,
-    ) : PagingSource<Long, DomainMessage>() {
-        override fun getRefreshKey(state: PagingState<Long, DomainMessage>) = null
-
-        override suspend fun load(params: LoadParams<Long>): LoadResult<Long, DomainMessage> {
-            return try {
-                val beforeMessageId = params.key
-                val messages = api.getUserMentions(
-                    includeRoles = includeRoles,
-                    includeEveryone = includeEveryone,
-                    guildId = guildId,
-                    beforeId = beforeMessageId,
-                )
-
-                LoadResult.Page(
-                    data = messages.map { it.toDomain() },
-                    prevKey = null,
-                    nextKey = if (messages.size < params.loadSize) {
-                        null
-                    } else {
-                        messages.lastOrNull()?.id?.value
-                    },
-                )
-            } catch (e: Exception) {
-                e.printStackTrace()
-                LoadResult.Error(e)
-            }
-        }
-    }
 }

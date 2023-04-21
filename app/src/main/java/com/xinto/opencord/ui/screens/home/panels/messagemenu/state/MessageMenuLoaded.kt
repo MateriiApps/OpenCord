@@ -17,12 +17,13 @@ import com.xinto.opencord.domain.emoji.DomainUnknownEmoji
 import com.xinto.opencord.ui.components.OCImage
 import com.xinto.opencord.ui.components.OCSize
 import com.xinto.opencord.ui.screens.home.panels.messagemenu.MessageMenuPreviewMessage
-import com.xinto.opencord.ui.screens.home.panels.messagemenu.MessageMenuViewModel
+import com.xinto.opencord.ui.screens.home.panels.messagemenu.HomeMessageMenuPanelViewModel
+import com.xinto.opencord.ui.screens.home.panels.messagemenu.HomeMessageMenuPinState
 import com.xinto.opencord.util.Quad
 
 @Composable
 fun MessageMenuLoaded(
-    viewModel: MessageMenuViewModel,
+    viewModel: HomeMessageMenuPanelViewModel,
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(2.dp),
@@ -119,8 +120,8 @@ fun MessageMenuLoaded(
                 Quad("Copy Message Link", R.drawable.ic_link, viewModel::onCopyLink, true),
                 Quad("Copy Message", R.drawable.ic_file_copy, viewModel::onCopyMessage, true),
                 Quad("Mark Unread", R.drawable.ic_mark_unread, viewModel::onMarkUnread, true),
-                Quad("Pin", R.drawable.ic_pin, viewModel::togglePinned, viewModel.pinState == MessageMenuViewModel.PinState.Pinnable),
-                Quad("Unpin", R.drawable.ic_pin, viewModel::togglePinned, viewModel.pinState == MessageMenuViewModel.PinState.Unpinnable),
+                Quad("Pin", R.drawable.ic_pin, viewModel::togglePinned, viewModel.pinState == HomeMessageMenuPinState.Pinnable),
+                Quad("Unpin", R.drawable.ic_pin, viewModel::togglePinned, viewModel.pinState == HomeMessageMenuPinState.Unpinnable),
                 Quad("Copy ID", R.drawable.ic_file_copy, viewModel::onCopyId, true),
             )
         }

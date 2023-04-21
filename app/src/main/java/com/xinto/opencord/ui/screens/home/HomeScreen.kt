@@ -24,6 +24,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import com.xinto.opencord.ui.navigation.AppDestination
+import com.xinto.opencord.ui.navigation.AppNavigator
 import com.xinto.opencord.ui.navigation.PinsScreenData
 import com.xinto.opencord.ui.screens.home.panels.HomeNavButtons
 import com.xinto.opencord.ui.screens.home.panels.channel.HomeChannelsPanel
@@ -32,9 +34,30 @@ import com.xinto.opencord.ui.screens.home.panels.guild.HomeGuildsPanel
 import com.xinto.opencord.ui.screens.home.panels.member.MembersList
 import com.xinto.opencord.ui.screens.home.panels.user.HomeUserPanel
 import com.xinto.opencord.ui.util.animateCornerBasedShapeAsState
+import dev.olshevski.navigation.reimagined.navigate
+import dev.olshevski.navigation.reimagined.popUpTo
 import io.github.materiiapps.panels.SwipePanels
 import io.github.materiiapps.panels.SwipePanelsValue
 import io.github.materiiapps.panels.rememberSwipePanelsState
+
+@Composable
+fun HomeScreen(
+    modifier: Modifier = Modifier,
+    navigator: AppNavigator,
+) {
+    HomeScreen(
+        modifier = modifier,
+        onSettingsClick = {
+            navigator.navigate(AppDestination.Settings)
+        },
+        onPinsClick = {
+            navigator.navigate(AppDestination.Pins(it))
+        },
+        onSearchClick = { /*TODO*/ },
+        onMentionsClick = { navigator.navigate(AppDestination.Mentions) },
+        onFriendsClick = { /*TODO*/ },
+    )
+}
 
 @Composable
 fun HomeScreen(
@@ -84,6 +107,7 @@ fun HomeScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 6.dp),
+                    onSettingsClick = onSettingsClick
                 )
             }
 
@@ -114,6 +138,13 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .clip(centerPanelShape),
+                onPinsButtonClick = onPinsClick,
+                onMembersButtonClick = {
+                    panelState.openEnd()
+                },
+                onChannelsButtonClick = {
+                    panelState.openStart()
+                }
             )
 
         },

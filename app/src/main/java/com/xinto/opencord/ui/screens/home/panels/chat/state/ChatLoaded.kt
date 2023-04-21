@@ -34,7 +34,7 @@ import com.xinto.opencord.ui.components.message.reply.MessageReferenced
 import com.xinto.opencord.ui.components.message.reply.MessageReferencedAuthor
 import com.xinto.opencord.ui.components.message.reply.MessageReferencedContent
 import com.xinto.opencord.ui.screens.home.panels.chat.model.MessageItem
-import com.xinto.opencord.ui.screens.home.panels.messagemenu.MessageMenu
+import com.xinto.opencord.ui.screens.home.panels.messagemenu.HomeMessageMenu
 import com.xinto.opencord.ui.util.ifComposable
 import com.xinto.opencord.ui.util.ifNotEmptyComposable
 import com.xinto.opencord.ui.util.ifNotNullComposable
@@ -57,7 +57,7 @@ fun ChatLoaded(
     }
 
     if (messageMenuTarget != null) {
-        MessageMenu(
+        HomeMessageMenu(
             messageId = messageMenuTarget!!,
             onDismiss = { messageMenuTarget = null },
         )

@@ -1,4 +1,4 @@
-package com.xinto.opencord.ui.screens.home.panels.channel
+package com.xinto.opencord.ui.screens.home.panels.channel.state
 
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
