@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="navigation_back">돌아가기</string>
-    <string name="nav_open_friends">Open friends list</string>
-    <string name="nav_open_search">Open channel search</string>
-    <string name="nav_open_mentions">View global mentions</string>
+    <string name="nav_open_friends">친구 목록 열기</string>
+    <string name="nav_open_search">채널 검색 열기</string>
+    <string name="nav_open_mentions">전체 언급 보기</string>
     <string name="login_landing_title">OpenCord에 오신 걸 환영해요!</string>
     <string name="login_landing_subtitle">Discord 앱을 대체하는 OpenCord를 사용하는 0명과 함께 참가해 보세요.</string>
     <string name="login_login_title">다시 돌아오신 걸 환영해요!</string>
     <string name="login_login_subtitle">다시 만나게 돼서 정말 기뻐요!</string>
     <string name="login_action_login">로그인</string>
     <string name="login_action_register">가입</string>
-    <string name="login_field_username">이메일 또는 폰 전화번호</string>
+    <string name="login_field_username">이메일 또는 전화번호</string>
     <string name="login_field_password">비밀번호</string>
-    <string name="login_mfa_title">2FA 필요!</string>
+    <string name="login_mfa_title">2단계 인증 필요!</string>
     <string name="login_mfa_code">2FA 또는 백업 코드</string>
     <string name="login_mfa_confirm">확인</string>
     <string name="login_mfa_cancel">취소</string>
