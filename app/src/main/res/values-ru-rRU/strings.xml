@@ -2,7 +2,7 @@
 <resources>
     <string name="navigation_back">Назад</string>
     <string name="nav_open_friends">Открыть список друзей</string>
-    <string name="nav_open_search">Поиск канала</string>
+    <string name="nav_open_search">Открыть поиск каналов</string>
     <string name="nav_open_mentions">Просмотр глобальных упоминаний</string>
     <string name="login_landing_title">Добро пожаловать в OpenCord!</string>
     <string name="login_landing_subtitle">Присоединяйтесь к более чем 0 людям, которые используют OpenCord в качестве альтернативы стандартному приложению Discord.</string>
@@ -35,5 +35,5 @@
     <string name="guild_boost_level">Уровень буста сервера</string>
     <string name="current_user_set_status">Установить пользовательский статус</string>
     <string name="current_user_clear_status">Очистить статус</string>
-    <string name="accounts_open">Открыть переключение аккаунтов</string>
+    <string name="accounts_open">Открыть переключатель аккаунтов</string>
 </resources>
