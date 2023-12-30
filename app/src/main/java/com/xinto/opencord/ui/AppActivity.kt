@@ -15,20 +15,20 @@ import androidx.core.view.WindowCompat
 import com.xinto.opencord.db.database.CacheDatabase
 import com.xinto.opencord.gateway.DiscordGateway
 import com.xinto.opencord.ui.navigation.AppDestination
-import com.xinto.opencord.ui.navigation.back
+import com.xinto.opencord.ui.screens.ImageViewerScreen
 import com.xinto.opencord.ui.screens.Settings
 import com.xinto.opencord.ui.screens.home.HomeScreen
 import com.xinto.opencord.ui.screens.mentions.MentionsScreen
 import com.xinto.opencord.ui.screens.pins.PinsScreen
 import com.xinto.opencord.ui.theme.OpenCordTheme
 import com.xinto.opencord.ui.util.SystemBarsControl
+import com.xinto.opencord.ui.viewmodel.NavigationViewModel
 import dev.olshevski.navigation.reimagined.AnimatedNavHost
-import dev.olshevski.navigation.reimagined.navigate
-import dev.olshevski.navigation.reimagined.rememberNavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.get
+import org.koin.androidx.compose.getViewModel
 
 class AppActivity : ComponentActivity() {
     private val scope = MainScope()
@@ -52,16 +52,16 @@ class AppActivity : ComponentActivity() {
         }
 
         setContent {
-            val nav = rememberNavController<AppDestination>(startDestination = AppDestination.Main)
-
-            BackHandler { nav.back() }
-
             OpenCordTheme {
                 SystemBarsControl()
 
+                val nav = getViewModel<NavigationViewModel>(extras = defaultViewModelCreationExtras)
+
+                BackHandler { nav.back() }
+
                 AnimatedNavHost(
-                    controller = nav,
-                    emptyBackstackPlaceholder = { nav.navigate(AppDestination.Main) },
+                    backstack = nav.backstack,
+                    emptyBackstackPlaceholder = { nav.resetToMain() },
                     transitionSpec = { _, _, to ->
                         if (to == AppDestination.Main) {
                             slideIntoContainer(
@@ -87,11 +87,6 @@ class AppActivity : ComponentActivity() {
                             modifier = Modifier
                                 .fillMaxSize()
                                 .imePadding(),
-                            onPinsClick = { nav.navigate(AppDestination.Pins(data = it)) },
-                            onSettingsClick = { nav.navigate(AppDestination.Settings) },
-                            onMentionsClick = { nav.navigate(AppDestination.Mentions) },
-                            onFriendsClick = { /* TODO */ },
-                            onSearchClick = { /* TODO */ },
                         )
 
                         AppDestination.Settings -> Settings(
@@ -114,6 +109,14 @@ class AppActivity : ComponentActivity() {
                                 .fillMaxSize()
                                 .imePadding(),
                             onBackClick = { nav.back() },
+                        )
+
+                        is AppDestination.ImageViewer -> ImageViewerScreen(
+                            data = dest.data,
+                            onBackClick = { nav.back() },
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .imePadding(),
                         )
                     }
                 }
