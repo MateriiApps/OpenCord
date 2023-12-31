@@ -1,31 +1,41 @@
 package com.xinto.opencord.ui.screens.home.panels.guild
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
-import com.xinto.opencord.ui.viewmodel.GuildsViewModel
-import org.koin.androidx.compose.getViewModel
+import com.xinto.opencord.ui.screens.home.panels.guild.model.GuildItem
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun GuildsList(
-    onGuildSelect: () -> Unit,
+fun HomeGuildsPanel(modifier: Modifier = Modifier) {
+    val viewModel: GuildsViewModel = koinViewModel()
+    HomeGuildsPanel(
+        modifier = modifier,
+        onGuildSelect = viewModel::selectGuild,
+        state = viewModel.state,
+        guilds = viewModel.listItems
+    )
+}
+
+@Composable
+fun HomeGuildsPanel(
+    onGuildSelect: (Long) -> Unit,
+    state: HomeGuildPanelState,
+    guilds: SnapshotStateList<GuildItem>,
     modifier: Modifier = Modifier,
-    viewModel: GuildsViewModel = getViewModel(),
 ) {
-    when (viewModel.state) {
-        GuildsViewModel.State.Loading -> {
+    when (state) {
+        HomeGuildPanelState.Loading -> {
             GuildsListLoading(modifier = modifier)
         }
-        GuildsViewModel.State.Loaded -> {
+        HomeGuildPanelState.Loaded -> {
             GuildsListLoaded(
-                items = viewModel.listItems,
+                items = guilds,
                 modifier = modifier,
-                onGuildSelect = {
-                    viewModel.selectGuild(it)
-                    onGuildSelect()
-                },
+                onGuildSelect = onGuildSelect,
             )
         }
-        GuildsViewModel.State.Error -> {
+        HomeGuildPanelState.Error -> {
 
         }
     }
