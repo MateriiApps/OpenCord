@@ -9,6 +9,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.xinto.opencord.R
+import com.xinto.opencord.ui.navigation.AppNavigator
+import dev.olshevski.navigation.reimagined.pop
+
+@Composable
+fun Settings(
+    modifier: Modifier = Modifier,
+    navigator: AppNavigator
+) {
+    Settings(
+        modifier = modifier,
+        onBackClick = { navigator.pop() }
+    )
+}
 
 @Composable
 fun Settings(

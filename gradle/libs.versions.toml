@@ -9,7 +9,7 @@ androidx-media3 = "1.0.0"
 materii-panels = "1.0.1"
 materii-partial = "1.1.0"
 materii-enumutil = "1.0.0"
-agp = "7.4.1"
+agp = "8.0.0"
 kotlin = "1.8.10"
 ksp = "1.8.10-1.0.9"
 
@@ -17,6 +17,7 @@ ksp = "1.8.10-1.0.9"
 androidx-core = { group = "androidx.core", name = "core-ktx", version = "1.9.0" }
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version = "1.0.0" }
 androidx-preferences = { group = "androidx.preference", name = "preference", version = "1.2.0" }
+androidx-datastore = { group = "androidx.datastore", name = "datastore-preferences", version = "1.0.0"}
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
@@ -54,7 +55,7 @@ ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version
 ktor-serialization-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
 [bundles]
-androidx-core = ["androidx-core", "androidx-core-splashscreen", "androidx-preferences"]
+androidx-core = ["androidx-core", "androidx-core-splashscreen", "androidx-datastore"]
 androidx-room = ["androidx-room-ktx", "androidx-room-runtime"]
 androidx-compose = ["androidx-compose-activity", "androidx-compose-foundation", "androidx-compose-material", "androidx-compose-material3"]
 androidx-paging = ["androidx-paging-runtime", "androidx-paging-compose"]
