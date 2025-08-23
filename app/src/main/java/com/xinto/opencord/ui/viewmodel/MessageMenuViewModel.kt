@@ -71,7 +71,7 @@ class MessageMenuViewModel(
     }
 
     fun onCopyLink() {
-        clipboard.setLink(message?.url ?: return)
+        clipboard.setText(message?.url ?: return)
         toasts.showToast("Copied message link!")
     }
 

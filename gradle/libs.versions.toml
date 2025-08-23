@@ -52,6 +52,7 @@ ktor-client-websockets = { group = "io.ktor", name = "ktor-client-websockets", v
 ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
 ktor-serialization-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+zooomable = { group = "net.engawapg.lib", name = "zoomable", version = "1.4.1" }
 
 [bundles]
 androidx-core = ["androidx-core", "androidx-core-splashscreen", "androidx-preferences"]
