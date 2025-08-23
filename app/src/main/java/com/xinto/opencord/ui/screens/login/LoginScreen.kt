@@ -18,7 +18,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.xinto.opencord.R
 import com.xinto.opencord.ui.components.captcha.HCaptcha
-import com.xinto.opencord.ui.viewmodel.LoginViewModel
 import org.koin.androidx.compose.getViewModel
 
 @Composable

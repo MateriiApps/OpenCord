@@ -87,25 +87,21 @@ class AppActivity : ComponentActivity() {
                             modifier = Modifier
                                 .fillMaxSize()
                                 .imePadding(),
-                            onPinsClick = { nav.navigate(AppDestination.Pins(data = it)) },
-                            onSettingsClick = { nav.navigate(AppDestination.Settings) },
-                            onMentionsClick = { nav.navigate(AppDestination.Mentions) },
-                            onFriendsClick = { /* TODO */ },
-                            onSearchClick = { /* TODO */ },
+                            navigator = nav,
                         )
 
                         AppDestination.Settings -> Settings(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .imePadding(),
-                            onBackClick = { nav.back() },
+                            navigator = nav,
                         )
 
                         AppDestination.Mentions -> MentionsScreen(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .imePadding(),
-                            onBackClick = { nav.back() },
+                            navigator = nav,
                         )
 
                         is AppDestination.Pins -> PinsScreen(
@@ -113,7 +109,7 @@ class AppActivity : ComponentActivity() {
                             modifier = Modifier
                                 .fillMaxSize()
                                 .imePadding(),
-                            onBackClick = { nav.back() },
+                            navigator = nav,
                         )
                     }
                 }
